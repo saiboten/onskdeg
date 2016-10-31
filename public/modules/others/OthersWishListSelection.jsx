@@ -16,7 +16,7 @@ export default React.createClass({
 
     componentDidMount() {
       debug('this.state.users',this.state.users);
-        var peers = ["http://localhost:3000/gun"];
+        var peers = ["http://spotocracy.net/gun"];
         this.gun = Gun(peers);
         this.getUsers();
     },
