@@ -20,7 +20,7 @@ export default React.createClass({
   },
 
   componentDidMount: function() {
-    var peers = ["http://spotocracy.net/gun"];
+    var peers = ["http://localhost:3000/gun"];
     this.gun = Gun(peers);
     this.fillWishList();
   },
