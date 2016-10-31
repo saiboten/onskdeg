@@ -3,16 +3,19 @@ var React = require('react');
 import { Link } from 'react-router';
 import Container from '../../common/container/Container';
 
+require('./choosepath.css')
+
 var ChoosePath = React.createClass( {
   render: function() {
 
     return (
       <Container>
         <h1>Velg</h1>
-        <li><Link to="/yours">Din ønskeliste</Link></li>
-          <li><Link to="/others">Andres ønskelister</Link></li>
-          <li><Link to="/selectuser">Bytt bruker</Link></li>
-
+        <div className="ChoosePath__list">
+          <Link className="ChoosePath__anchor-link" to="/yours">Din ønskeliste</Link>
+          <Link className="ChoosePath__anchor-link" to="/others">Andres ønskelister</Link>
+          <Link className="ChoosePath__anchor-link" to="/selectuser">Bytt bruker</Link>
+        </div>
       </Container>
     );
   }

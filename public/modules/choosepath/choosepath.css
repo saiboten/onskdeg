@@ -1,0 +1,15 @@
+.ChoosePath__list {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  margin: 10px;
+  padding: 10px;
+}
+
+.ChoosePath__anchor-link {
+  border: 1px solid;
+  padding: 5px;
+  margin: 5px;
+  flex: 1;
+  text-align: center;
+}

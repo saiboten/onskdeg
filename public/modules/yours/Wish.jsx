@@ -2,6 +2,9 @@ var React = require('react');
 var debug = require('debug')('Wish');
 var ReactDOM = require('react-dom');
 
+
+require('./wish.css');
+
 var Wish = React.createClass( {
 
   componentDidUpdate: function() {
@@ -30,7 +33,7 @@ var Wish = React.createClass( {
     });
     this.props.save({
       newWish: this.state.text,
-      oldWish: this.props.children
+      id: this.props.id
     });
   },
 
@@ -41,14 +44,14 @@ var Wish = React.createClass( {
   },
 
   delete: function(e) {
-    this.props.delete(this.state.text);
+    this.props.delete(this.props.id);
   },
 
   render: function() {
 
     var html = this.state.edit ? <input ref="input" onBlur={this.focusLost} onChange={this.updateText} value={this.state.text} /> : <span onClick={this.click}>{this.state.text}</span>;
     return (
-      <li>{html} <button onClick={this.delete}>Slett</button></li>
+      <li>{html} <button className="wish__delete-button" onClick={this.delete}>Slett</button></li>
     )
   }
 });
