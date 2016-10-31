@@ -5,6 +5,7 @@ var debug = require('debug')('YourWishList');
 var Gun = require('gun/gun');
 var user = require('../../common/User');
 var Wish = require('./Wish');
+var config = require('../../Config');
 
 require('./yourwishlist.css');
 
@@ -20,7 +21,7 @@ export default React.createClass({
   },
 
   componentDidMount: function() {
-    var peers = ["http://localhost:3000/gun"];
+    var peers = [config.domain + "/gun"];
     this.gun = Gun(peers);
     this.fillWishList();
   },

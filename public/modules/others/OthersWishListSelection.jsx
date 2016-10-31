@@ -4,6 +4,7 @@ import {Link} from 'react-router';
 var Gun = require('gun/gun');
 var user = require('../../common/User');
 var debug = require('debug')('OthersWishListSelection')
+var config = require('../../Config');
 
 export default React.createClass({
 
@@ -16,7 +17,7 @@ export default React.createClass({
 
     componentDidMount() {
       debug('this.state.users',this.state.users);
-        var peers = ["http://localhost:3000/gun"];
+        var peers = [config.domain + "/gun"];
         this.gun = Gun(peers);
         this.getUsers();
     },

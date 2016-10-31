@@ -2,6 +2,8 @@ import React from 'react'
 import Container from '../../common/container/Container';
 import { Link } from 'react-router';
 var debug = require('debug')('OthersWishList');
+var config = require('../../Config');
+
 
 export default React.createClass({
 
@@ -12,7 +14,7 @@ export default React.createClass({
   },
 
   componentDidMount() {
-    var peers = ["http://localhost:3000/gun"];
+    var peers = [config.domain + "/gun"];
     this.gun = Gun(peers);
 
     this.updateWishState();
