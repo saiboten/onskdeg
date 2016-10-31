@@ -11,7 +11,7 @@ export default React.createClass({
   },
 
   componentDidMount() {
-    var peers = ["/gun"];
+    var peers = ["http://spotocracy.net/gun"];
     this.gun = Gun(peers);
     var that = this;
 

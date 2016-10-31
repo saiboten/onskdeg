@@ -18,7 +18,7 @@ export default React.createClass({
   },
 
   componentDidMount: function() {
-    var peers = ["/gun"];
+    var peers = ["http://spotocracy.net/gun"];
     this.gun = Gun(peers);
     this.fillWishList();
   },
