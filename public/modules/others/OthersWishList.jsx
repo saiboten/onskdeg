@@ -62,8 +62,11 @@ export default React.createClass({
 
   render() {
 
+
+
     var wishes = this.state.wishes.map(function(el) {
-      return (<li>{el.name}<input onChange={this.check} checked={el.checked} value={el.id} type="checkbox"></input></li>);
+      var item = el.checked ? (<del>{el.name}</del>) : el.name;
+      return (<li>{item}<input onChange={this.check} checked={el.checked} value={el.id} type="checkbox"></input></li>);
     },this);
 
     return <Container>Ønskelisten til {this.props.params.name}
