@@ -9,7 +9,8 @@ export default React.createClass({
 
   getInitialState() {
     return {
-      wishes: []
+      wishes: [],
+      hideSelected: false
     }
   },
 
@@ -60,11 +61,17 @@ export default React.createClass({
     })
   },
 
+  toggleShowSelected() {
+    this.setState({
+      hideSelected: !this.state.hideSelected
+    })
+  },
+
   render() {
-
-
-
-    var wishes = this.state.wishes.map(function(el) {
+    var wishes = this.state.wishes.filter(function(el) {
+      debug("EL: ", el);
+      return !el.checked || !this.state.hideSelected;
+    },this).map(function(el) {
       var item = el.checked ? (<del>{el.name}</del>) : el.name;
       return (<li>{item}<input onChange={this.check} checked={el.checked} value={el.id} type="checkbox"></input></li>);
     },this);
@@ -73,6 +80,9 @@ export default React.createClass({
     <ul>
       {wishes}
     </ul>
+
+    <button onClick={this.toggleShowSelected}>{this.state.hideSelected ? 'Vis utkrysset': 'Skjul utkrysset'}</button>
+
 
     <li><Link to="/">Tilbake</Link></li>
     </Container>
