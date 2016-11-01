@@ -13,10 +13,17 @@ var Wish = React.createClass( {
     }
   },
 
+  componentWillReceiveProps(nextProps) {
+    debug("nextProps", nextProps);
+    this.setState({
+      text: nextProps.wish.name
+    })
+  },
+
   getInitialState() {
     return {
       edit: false,
-      text: this.props.children
+      text: this.props.wish.name
     }
   },
 
@@ -24,16 +31,15 @@ var Wish = React.createClass( {
     this.setState({
       edit: true
     });
-    debug("This refs", this.refs);
   },
 
   focusLost: function() {
     this.setState({
       edit: false
     });
-    this.props.save({
+    this.props.update({
       newWish: this.state.text,
-      id: this.props.id
+      id: this.props.wish.id
     });
   },
 
@@ -44,11 +50,10 @@ var Wish = React.createClass( {
   },
 
   delete: function(e) {
-    this.props.delete(this.props.id);
+    this.props.delete(this.props.wish.id);
   },
 
   render: function() {
-
     var html = this.state.edit ? <input ref="input" onBlur={this.focusLost} onChange={this.updateText} value={this.state.text} /> : <span onClick={this.click}>{this.state.text}</span>;
     return (
       <li>{html} <button className="wish__delete-button" onClick={this.delete}>Slett</button></li>

@@ -16,32 +16,29 @@ export default React.createClass({
   getInitialState: function() {
     return {
       wishes: [],
-      newWish: ""
+      newWish: "",
+      callbacks: 0
     }
   },
 
   componentDidMount: function() {
     var peers = [config.domain + "/gun"];
     this.gun = Gun(peers);
-    this.fillWishList();
+    this.setGunWishCallback();
   },
 
-  fillWishList: function() {
+  setGunWishCallback: function() {
     var that = this;
 
-    this.gun.get('wishes/'+user.getUser().toLowerCase(), function(error,data) {
-      console.log("GUN data: ", error, data);
+    var ref = this.gun.get('wishes/'+user.getUser().toLowerCase());
 
-      if(error) {
-        debug('Error: ', error);
-      }
-      else if(data) {
-        var list = JSON.parse(data.wishes);
-        console.log("Data retrieved: ", list);
-        that.setState({
-          wishes: list
-        })
-      }
+    ref.on(function(data){
+      var list = JSON.parse(data.wishes);
+      console.log("Got new wish list data: ", list);
+      that.setState({
+        wishes: list,
+        callbacks: that.state.callbacks+1
+      });
     });
   },
 
@@ -62,7 +59,7 @@ export default React.createClass({
     e.preventDefault();
 
     debug("Adding wish");
-    var newWishList = this.state.wishes;
+    var newWishList = Object.assign([],this.state.wishes);
       newWishList.push({
         name: this.state.newWish,
         checked: false,
@@ -70,14 +67,12 @@ export default React.createClass({
       });
 
     this.gun.put({wishes: JSON.stringify(newWishList)}).key('wishes/' + user.getUser().toLowerCase());
-
     this.setState({
-      wishes: newWishList,
       newWish: ""
     })
   },
 
-  save(wish) {
+  update(wish) {
       debug("Saving wishlist: ", wish);
       var newWishList = this.state.wishes.map(function(e) {
           if(e.id === wish.id) {
@@ -92,28 +87,29 @@ export default React.createClass({
           }
       });
       this.gun.put({wishes: JSON.stringify(newWishList)}).key('wishes/' + user.getUser().toLowerCase());
-      this.setState({
-        wishes: newWishList,
-        newWish: ""
-      })
   },
 
   delete(deleteId) {
-      var newWishList = this.state.wishes.filter(function(e) {
+    debug("Delete id: ", deleteId);
+      var newWishList = Object.assign([],this.state.wishes);
+
+      var newWishList = newWishList.filter(function(e) {
         return e.id === deleteId ? false : true;
       });
+
+      debug("Wish list after deletion: ", newWishList);
+
       this.gun.put({wishes: JSON.stringify(newWishList)}).key('wishes/' + user.getUser().toLowerCase());
-      this.setState({
-        wishes: newWishList,
-        newWish: ""
-      })
   },
 
   render() {
 
     var wishes = this.state.wishes.map(function(el) {
-      return (<Wish save={this.save} delete={this.delete} wishlist={this.state.wishes} id={el.id}>{el.name}</Wish>);
+      debug("Creating wish based on this el: ",el);
+      return (<Wish update={this.update} delete={this.delete} wishlist={this.state.wishes} wish={el}></Wish>);
     },this);
+
+    debug("Wishes: ", wishes);
 
     return <Container>Din ønskeliste
 
@@ -125,7 +121,7 @@ export default React.createClass({
       <input value={this.state.newWish} onChange={this.updateWishState}></input>
       <input type="submit" value="Legg til" />
     </form>
-
+    <p>Callbacks: {this.state.callbacks}</p>
     <li><Link to="/">Tilbake</Link></li>
 
     </Container>

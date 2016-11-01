@@ -18,11 +18,3 @@ var Gun = require('gun');
 var gun = Gun();
 
 gun.wsp(app.server);
-
-// Read `greetings`, saving it to a variable.
-var wishes = gun.get('random/123');
-
-// Print the value!
-wishes.on(function (update) {
-    console.log('Update:', update)
-})
