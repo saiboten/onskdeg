@@ -3,7 +3,7 @@ import Container from '../../common/container/Container';
 import { Link } from 'react-router';
 var debug = require('debug')('OthersWishList');
 var config = require('../../Config');
-
+var gun = require('../../common/gun/gun')
 
 export default React.createClass({
 
@@ -15,16 +15,16 @@ export default React.createClass({
   },
 
   componentDidMount() {
-    var peers = [config.domain + "/gun"];
-    this.gun = Gun(peers);
-
     this.updateWishState();
 
   },
 
   updateWishState() {
+
+    debug("Wish state update");
+
     var that = this;
-    this.gun.get('wishes/'+this.props.params.name.toLowerCase(), function(error,data) {
+    gun.get('wishes/'+this.props.params.name.toLowerCase(), function(error,data) {
       debug("GUN data: ", error, data);
 
       if(error) {
@@ -54,7 +54,7 @@ export default React.createClass({
           return e;
         }
     });
-    this.gun.put({wishes: JSON.stringify(newWishList)}).key('wishes/'+this.props.params.name.toLowerCase());
+    gun.put({wishes: JSON.stringify(newWishList)}).key('wishes/'+this.props.params.name.toLowerCase());
     this.setState({
       wishes: newWishList,
       newWish: ""

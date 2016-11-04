@@ -2,16 +2,14 @@ import React from 'react'
 import Container from '../../common/container/Container';
 import { Link } from 'react-router';
 var debug = require('debug')('YourWishList');
-var Gun = require('gun/gun');
 var user = require('../../common/User');
 var Wish = require('./Wish');
 var config = require('../../Config');
+var firebase = require('../../common/gun/gun');
 
 require('./yourwishlist.css');
 
 export default React.createClass({
-
-  gun: undefined,
 
   getInitialState: function() {
     return {
@@ -22,23 +20,21 @@ export default React.createClass({
   },
 
   componentDidMount: function() {
-    var peers = [config.domain + "/gun"];
-    this.gun = Gun(peers);
     this.setGunWishCallback();
+    debug("componentDidMount");
   },
 
   setGunWishCallback: function() {
     var that = this;
 
-    var ref = this.gun.get('wishes/'+user.getUser().toLowerCase());
+    var ref = firebase.database().ref('wishes/'+user.getUser().toLowerCase());
+    ref.on('value', function(snapshot) {
+      debug("snapshot data :", snapshot);
 
-    ref.on(function(data){
-      var list = JSON.parse(data.wishes);
-      console.log("Got new wish list data: ", list);
-      that.setState({
+      /*that.setState({
         wishes: list,
         callbacks: that.state.callbacks+1
-      });
+      });*/
     });
   },
 
@@ -66,7 +62,8 @@ export default React.createClass({
         id: this.createGuid()
       });
 
-    this.gun.put({wishes: JSON.stringify(newWishList)}).key('wishes/' + user.getUser().toLowerCase());
+    firebase.database().ref('wishes/' + user.getUser().toLowerCase()).set({wishes: JSON.stringify(newWishList)});
+
     this.setState({
       newWish: ""
     })
@@ -86,7 +83,7 @@ export default React.createClass({
             return e;
           }
       });
-      this.gun.put({wishes: JSON.stringify(newWishList)}).key('wishes/' + user.getUser().toLowerCase());
+      firebase.database().ref('wishes/' + user.getUser().toLowerCase()).set({wishes: JSON.stringify(newWishList)});
   },
 
   delete(deleteId) {
@@ -99,7 +96,7 @@ export default React.createClass({
 
       debug("Wish list after deletion: ", newWishList);
 
-      this.gun.put({wishes: JSON.stringify(newWishList)}).key('wishes/' + user.getUser().toLowerCase());
+      firebase.database().ref('wishes/' + user.getUser().toLowerCase()).set({wishes: JSON.stringify(newWishList)});
   },
 
   render() {

@@ -1,7 +1,7 @@
 import React from 'react'
 import Container from '../../common/container/Container';
 import {Link} from 'react-router';
-var Gun = require('gun/gun');
+var gun = require('../../common/gun/gun');
 var user = require('../../common/User');
 var debug = require('debug')('OthersWishListSelection')
 var config = require('../../Config');
@@ -17,14 +17,12 @@ export default React.createClass({
 
     componentDidMount() {
       debug('this.state.users',this.state.users);
-        var peers = [config.domain + "/gun"];
-        this.gun = Gun(peers);
         this.getUsers();
     },
 
     getUsers: function() {
         var that = this;
-        this.gun.get('users/' + user.getUser().toLowerCase(), function(error, data) {
+        gun.get('users/' + user.getUser().toLowerCase(), function(error, data) {
             console.log("GUN data: ", error, data);
 
             if (error) {
@@ -46,7 +44,7 @@ export default React.createClass({
         var newList = this.state.users.concat([this.state.newUser]);
 
         debug('New list: ', newList);
-        this.gun.put({users: JSON.stringify(newList)}).key('users/' + user.getUser().toLowerCase());
+        gun.put({users: JSON.stringify(newList)}).key('users/' + user.getUser().toLowerCase());
         this.setState({users: this.state.users.concat([this.state.newUser]), newUser: ""});
     },
 

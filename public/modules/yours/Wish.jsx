@@ -14,7 +14,6 @@ var Wish = React.createClass( {
   },
 
   componentWillReceiveProps(nextProps) {
-    debug("nextProps", nextProps);
     this.setState({
       text: nextProps.wish.name
     })
