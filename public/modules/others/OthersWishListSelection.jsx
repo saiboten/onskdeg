@@ -75,11 +75,8 @@ export default React.createClass({
             <div><p>Dette er brukernavn til de forskjellige hvis du lurer på hva du skal legge til:</p>
               <ul>
                 <li>Tobias: saiboten</li>
-                <li>Synne</li>
-                <li>Mariann</li>
-                <li>Agathe</li>
-                <li>Snorre</li>
                 <li>Karina: karinarusaasolsen</li>
+                <li>Synne: synnemarte</li>
               </ul>
 
             </div>

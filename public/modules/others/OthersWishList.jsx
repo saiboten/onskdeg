@@ -60,8 +60,6 @@ export default React.createClass({
     })
   },
 
-
-
   toggleShowSelected() {
     this.setState({
       hideSelected: !this.state.hideSelected
@@ -71,7 +69,7 @@ export default React.createClass({
   render() {
 
     var wishes = this.state.wishes.filter(function(el) {
-      debug("EL: ", el);
+      debug("Wish to be filtered: ", el);
       return !el.checked || !this.state.hideSelected;
     },this).map(function(el) {
       var item = el.checked ? (<del>{el.name}</del>) : el.name;
