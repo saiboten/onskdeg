@@ -77,6 +77,7 @@ export default React.createClass({
                 <li>Tobias: saiboten</li>
                 <li>Karina: karinarusaasolsen</li>
                 <li>Synne: synnemarte</li>
+                <li>Agathe: arolsen</li>
               </ul>
 
             </div>
