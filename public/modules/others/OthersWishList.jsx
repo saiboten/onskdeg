@@ -63,7 +63,7 @@ export default React.createClass({
                 return e;
             }
         });
-        firebase.database().ref('wishes/' + this.props.params.name.toLowerCase()).set({wishes: newWishList});
+        firebase.database().ref('wishes/' + this.props.params.name).set({wishes: newWishList});
         this.setState({wishes: newWishList, newWish: ""})
     },
 
