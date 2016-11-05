@@ -3,7 +3,7 @@ import Container from '../../common/container/Container';
 import { Link } from 'react-router';
 var debug = require('debug')('OthersWishList');
 var config = require('../../Config');
-var gun = require('../../common/gun/gun')
+var database = require('../../common/gun/gun')
 
 export default React.createClass({
 
@@ -24,18 +24,16 @@ export default React.createClass({
     debug("Wish state update");
 
     var that = this;
-    gun.get('wishes/'+this.props.params.name.toLowerCase(), function(error,data) {
-      debug("GUN data: ", error, data);
 
-      if(error) {
-        debug('Error: ', error);
-      }
-      else if(data) {
-        var list = JSON.parse(data.wishes);
-        console.log("Data retrieved: ", list);
+    var ref = database.ref('wishes/'+this.props.params.name.toLowerCase());
+    ref.on('value', function(snapshot) {
+      if(snapshot.val() != null ) {
+        var list = snapshot.val().wishes;
+        debug("data :", list);
+
         that.setState({
           wishes: list
-        })
+        });
       }
     });
   },
@@ -54,7 +52,7 @@ export default React.createClass({
           return e;
         }
     });
-    gun.put({wishes: JSON.stringify(newWishList)}).key('wishes/'+this.props.params.name.toLowerCase());
+    database.ref('wishes/'+this.props.params.name.toLowerCase()).set({wishes: newWishList});
     this.setState({
       wishes: newWishList,
       newWish: ""

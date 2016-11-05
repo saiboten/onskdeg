@@ -1,12 +1,14 @@
-// `http` is a standard library
-// built into node.
+var express = require('express');
+var app = express();
 var http = require('http');
 
-// Create a new server instance.
-var server = new http.Server();
+app.use(express.static('public'));
 
-// Start the server on port 8080.
-server.listen(3003, function () {
-  console.log('Server listening on http://localhost:3000/gun')
-})
+app.get('/', function (req, res) {
+  res.send('Hello World!');
+});
 
+app.server = http.createServer(app);
+app.server.listen(3000, function() {
+  console.log("Listening on port 3000")
+});

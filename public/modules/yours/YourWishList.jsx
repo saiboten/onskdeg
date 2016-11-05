@@ -5,7 +5,7 @@ var debug = require('debug')('YourWishList');
 var user = require('../../common/User');
 var Wish = require('./Wish');
 var config = require('../../Config');
-var firebase = require('../../common/gun/gun');
+var database = require('../../common/gun/gun');
 
 require('./yourwishlist.css');
 
@@ -14,8 +14,7 @@ export default React.createClass({
   getInitialState: function() {
     return {
       wishes: [],
-      newWish: "",
-      callbacks: 0
+      newWish: ""
     }
   },
 
@@ -27,14 +26,16 @@ export default React.createClass({
   setGunWishCallback: function() {
     var that = this;
 
-    var ref = firebase.database().ref('wishes/'+user.getUser().toLowerCase());
+    var ref = database.ref('wishes/'+user.getUser().toLowerCase());
     ref.on('value', function(snapshot) {
-      debug("snapshot data :", snapshot);
+      if(snapshot.val() != null ) {
+        var list = snapshot.val().wishes;
+        debug("data :", list);
 
-      /*that.setState({
-        wishes: list,
-        callbacks: that.state.callbacks+1
-      });*/
+        that.setState({
+          wishes: list
+        });
+      }
     });
   },
 
@@ -62,7 +63,7 @@ export default React.createClass({
         id: this.createGuid()
       });
 
-    firebase.database().ref('wishes/' + user.getUser().toLowerCase()).set({wishes: JSON.stringify(newWishList)});
+    database.ref('wishes/' + user.getUser().toLowerCase()).set({wishes: newWishList});
 
     this.setState({
       newWish: ""
@@ -83,7 +84,7 @@ export default React.createClass({
             return e;
           }
       });
-      firebase.database().ref('wishes/' + user.getUser().toLowerCase()).set({wishes: JSON.stringify(newWishList)});
+      database.ref('wishes/' + user.getUser().toLowerCase()).set({wishes: newWishList});
   },
 
   delete(deleteId) {
@@ -96,7 +97,7 @@ export default React.createClass({
 
       debug("Wish list after deletion: ", newWishList);
 
-      firebase.database().ref('wishes/' + user.getUser().toLowerCase()).set({wishes: JSON.stringify(newWishList)});
+      database.ref('wishes/' + user.getUser().toLowerCase()).set({wishes: newWishList});
   },
 
   render() {
@@ -118,7 +119,6 @@ export default React.createClass({
       <input value={this.state.newWish} onChange={this.updateWishState}></input>
       <input type="submit" value="Legg til" />
     </form>
-    <p>Callbacks: {this.state.callbacks}</p>
     <li><Link to="/">Tilbake</Link></li>
 
     </Container>

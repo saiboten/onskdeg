@@ -1,7 +1,7 @@
 import React from 'react'
 import Container from '../../common/container/Container';
 import {Link} from 'react-router';
-var gun = require('../../common/gun/gun');
+var database = require('../../common/gun/gun');
 var user = require('../../common/User');
 var debug = require('debug')('OthersWishListSelection')
 var config = require('../../Config');
@@ -21,18 +21,17 @@ export default React.createClass({
     },
 
     getUsers: function() {
-        var that = this;
-        gun.get('users/' + user.getUser().toLowerCase(), function(error, data) {
-            console.log("GUN data: ", error, data);
+      var that = this;
 
-            if (error) {
-                debug('Error: ', error);
-            } else if (data) {
-                var list = JSON.parse(data.users);
-                console.log("Data retrieved: ", list);
-                that.setState({users: list})
-            }
-        });
+      var ref = database.ref('users/' + user.getUser().toLowerCase());
+      ref.on('value', function(snapshot) {
+        if(snapshot.val() != null ) {
+          var list = snapshot.val().users;
+          debug("data :", list);
+
+          that.setState({users: list})
+        }
+      });
     },
 
     updateUserState: function(e) {
@@ -44,7 +43,7 @@ export default React.createClass({
         var newList = this.state.users.concat([this.state.newUser]);
 
         debug('New list: ', newList);
-        gun.put({users: JSON.stringify(newList)}).key('users/' + user.getUser().toLowerCase());
+        database.ref('users/' + user.getUser().toLowerCase()).set({users: newList});
         this.setState({users: this.state.users.concat([this.state.newUser]), newUser: ""});
     },
 
