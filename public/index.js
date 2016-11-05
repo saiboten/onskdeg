@@ -9,8 +9,8 @@ import SelectUser from './modules/selectuser/SelectUser'
 
 render((
   <Router history={hashHistory}>
-    <Route path="/" component={ChoosePath}/>
-    <Route path="/selectuser" component={SelectUser}/>
+    <Route path="/" component={SelectUser}/>
+    <Route path="/choosepath" component={ChoosePath}/>
     <Route path="/yours" component={YourWishList}/>
     <Route path="/others" component={OthersWishListSelection}/>
     <Route path="/other/:name" component={OthersWishList}/>

@@ -1,7 +1,7 @@
 import React from 'react'
 import Container from '../../common/container/Container';
 import {Link} from 'react-router';
-var database = require('../../common/gun/gun');
+var firebase = require('../../common/firebase/firebase');
 var user = require('../../common/User');
 var debug = require('debug')('OthersWishListSelection')
 var config = require('../../Config');
@@ -11,7 +11,8 @@ export default React.createClass({
     getInitialState() {
         return {
           users: [],
-          newUser: ""
+          newUser: "",
+          feedback: ""
         }
     },
 
@@ -23,7 +24,7 @@ export default React.createClass({
     getUsers: function() {
       var that = this;
 
-      var ref = database.ref('users/' + user.getUser().toLowerCase());
+      var ref = firebase.database().ref('users/' + user.getUser().toLowerCase());
       ref.on('value', function(snapshot) {
         if(snapshot.val() != null ) {
           var list = snapshot.val().users;
@@ -39,12 +40,25 @@ export default React.createClass({
     },
 
     addUser: function(e) {
-        e.preventDefault();
+      e.preventDefault();
+
+      if(this.state.users.includes(this.state.newUser)) {
+        this.setState({
+          feedback: "Brukeren finnes fra før"
+        })
+      }
+      else if(this.state.newUser == user.getUser()) {
+          this.setState({
+              feedback: "Du har ikke lov å legge til deg selv"
+          });
+      }
+      else {
         var newList = this.state.users.concat([this.state.newUser]);
 
         debug('New list: ', newList);
-        database.ref('users/' + user.getUser().toLowerCase()).set({users: newList});
+        firebase.database().ref('users/' + user.getUser().toLowerCase()).set({users: newList});
         this.setState({users: this.state.users.concat([this.state.newUser]), newUser: ""});
+      }
     },
 
     render() {
@@ -57,8 +71,19 @@ export default React.createClass({
             )
         });
 
-        return <Container>Others Wish List
+        return <Container><h1>Andres ønskeliste</h1>
+            <div><p>Dette er brukernavn til de forskjellige hvis du lurer på hva du skal legge til:</p>
+              <ul>
+                <li>Tobias: saiboten</li>
+                <li>Synne</li>
+                <li>Mariann</li>
+                <li>Agathe</li>
+                <li>Snorre</li>
+                <li>Karina: karinarusaasolsen</li>
+              </ul>
 
+            </div>
+            <h2>Velg bruker</h2>
             <ul>
                 {users}
             </ul>
@@ -69,8 +94,10 @@ export default React.createClass({
                 <input type="submit"/>
             </form>
 
+            <p>{this.state.feedback}</p>
+
             <li>
-                <Link to="/">Tilbake</Link>
+                <Link to="/choosepath">Tilbake</Link>
             </li>
         </Container>
     }

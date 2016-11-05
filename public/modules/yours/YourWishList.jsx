@@ -5,7 +5,7 @@ var debug = require('debug')('YourWishList');
 var user = require('../../common/User');
 var Wish = require('./Wish');
 var config = require('../../Config');
-var database = require('../../common/gun/gun');
+var firebase = require('../../common/firebase/firebase');
 
 require('./yourwishlist.css');
 
@@ -26,7 +26,7 @@ export default React.createClass({
   setGunWishCallback: function() {
     var that = this;
 
-    var ref = database.ref('wishes/'+user.getUser().toLowerCase());
+    var ref = firebase.database().ref('wishes/'+user.getUser().toLowerCase());
     ref.on('value', function(snapshot) {
       if(snapshot.val() != null ) {
         var list = snapshot.val().wishes;
@@ -63,7 +63,7 @@ export default React.createClass({
         id: this.createGuid()
       });
 
-    database.ref('wishes/' + user.getUser().toLowerCase()).set({wishes: newWishList});
+    firebase.database().ref('wishes/' + user.getUser().toLowerCase()).set({wishes: newWishList});
 
     this.setState({
       newWish: ""
@@ -84,7 +84,7 @@ export default React.createClass({
             return e;
           }
       });
-      database.ref('wishes/' + user.getUser().toLowerCase()).set({wishes: newWishList});
+      firebase.database().ref('wishes/' + user.getUser().toLowerCase()).set({wishes: newWishList});
   },
 
   delete(deleteId) {
@@ -97,7 +97,7 @@ export default React.createClass({
 
       debug("Wish list after deletion: ", newWishList);
 
-      database.ref('wishes/' + user.getUser().toLowerCase()).set({wishes: newWishList});
+      firebase.database().ref('wishes/' + user.getUser().toLowerCase()).set({wishes: newWishList});
   },
 
   render() {
@@ -119,7 +119,7 @@ export default React.createClass({
       <input value={this.state.newWish} onChange={this.updateWishState}></input>
       <input type="submit" value="Legg til" />
     </form>
-    <li><Link to="/">Tilbake</Link></li>
+    <li><Link to="/choosepath">Tilbake</Link></li>
 
     </Container>
   }

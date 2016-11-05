@@ -14,7 +14,7 @@ var ChoosePath = React.createClass( {
         <div className="ChoosePath__list">
           <Link className="ChoosePath__anchor-link" to="/yours">Din ønskeliste</Link>
           <Link className="ChoosePath__anchor-link" to="/others">Andres ønskelister</Link>
-          <Link className="ChoosePath__anchor-link" to="/selectuser">Bytt bruker</Link>
+          <Link className="ChoosePath__anchor-link" to="/">Bytt bruker</Link>
         </div>
       </Container>
     );

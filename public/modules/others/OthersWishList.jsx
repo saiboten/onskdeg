@@ -3,7 +3,9 @@ import Container from '../../common/container/Container';
 import { Link } from 'react-router';
 var debug = require('debug')('OthersWishList');
 var config = require('../../Config');
-var database = require('../../common/gun/gun')
+var firebase = require('../../common/firebase/firebase')
+var user = require('../../common/User');
+var Comments = require('./Comments');
 
 export default React.createClass({
 
@@ -16,7 +18,6 @@ export default React.createClass({
 
   componentDidMount() {
     this.updateWishState();
-
   },
 
   updateWishState() {
@@ -25,8 +26,8 @@ export default React.createClass({
 
     var that = this;
 
-    var ref = database.ref('wishes/'+this.props.params.name.toLowerCase());
-    ref.on('value', function(snapshot) {
+    var wishesRef = firebase.database().ref('wishes/'+this.props.params.name.toLowerCase());
+    wishesRef.on('value', function(snapshot) {
       if(snapshot.val() != null ) {
         var list = snapshot.val().wishes;
         debug("data :", list);
@@ -52,12 +53,14 @@ export default React.createClass({
           return e;
         }
     });
-    database.ref('wishes/'+this.props.params.name.toLowerCase()).set({wishes: newWishList});
+    firebase.database().ref('wishes/'+this.props.params.name.toLowerCase()).set({wishes: newWishList});
     this.setState({
       wishes: newWishList,
       newWish: ""
     })
   },
+
+
 
   toggleShowSelected() {
     this.setState({
@@ -66,6 +69,7 @@ export default React.createClass({
   },
 
   render() {
+
     var wishes = this.state.wishes.filter(function(el) {
       debug("EL: ", el);
       return !el.checked || !this.state.hideSelected;
@@ -79,10 +83,12 @@ export default React.createClass({
       {wishes}
     </ul>
 
+    <Comments params={this.props.params} />
+
     <button onClick={this.toggleShowSelected}>{this.state.hideSelected ? 'Vis utkrysset': 'Skjul utkrysset'}</button>
 
 
-    <li><Link to="/">Tilbake</Link></li>
+    <li><Link to="/others">Tilbake</Link></li>
     </Container>
   }
 })

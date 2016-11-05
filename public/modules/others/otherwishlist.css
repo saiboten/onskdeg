@@ -1,0 +1,18 @@
+.other-wishlist__comment-input {
+    height: 50px;
+    width: 100%;
+}
+
+.other-wishlist__comment-writtenby {
+  font-size: 0.7em;
+}
+
+.other-wishlist__comment-comment {
+
+}
+
+.other-wishlist__comment-wrapper {
+  border: 1px solid;
+  padding: 5px;
+  margin: 5px;
+}
