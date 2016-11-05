@@ -42,12 +42,15 @@ export default React.createClass({
   logIn: function(e) {
     debug("Logging user in with the following credentials: ", this.state.user, this.state.password);
     e.preventDefault();
+    var that = this;
     firebase.auth().signInWithEmailAndPassword(this.state.user, this.state.password).catch(function(error) {
       var errorCode = error.code;
       var errorMessage = error.message;
       debug("Errorcode: ", errorCode, "errorMessage", errorMessage);
       if(errorCode) {
-        feedback: "Klarte ikke å logge deg inn, beklager det."
+        that.setState({
+          feedback: "Klarte ikke å logge deg inn, beklager det."
+        })
       }
     });
   },

@@ -19,6 +19,9 @@ export default React.createClass({
   },
 
   componentDidMount: function() {
+    if(user.getUserUid() == undefined) {
+      this.props.router.push('/')
+    }
     this.setGunWishCallback();
     debug("componentDidMount");
   },
@@ -26,7 +29,7 @@ export default React.createClass({
   setGunWishCallback: function() {
     var that = this;
 
-    var ref = firebase.database().ref('wishes/'+user.getUser().toLowerCase());
+    var ref = firebase.database().ref('wishes/'+user.getUserUid());
     ref.on('value', function(snapshot) {
       if(snapshot.val() != null ) {
         var list = snapshot.val().wishes;
@@ -63,7 +66,7 @@ export default React.createClass({
         id: this.createGuid()
       });
 
-    firebase.database().ref('wishes/' + user.getUser().toLowerCase()).set({wishes: newWishList});
+    firebase.database().ref('wishes/' + user.getUserUid()).set({wishes: newWishList});
 
     this.setState({
       newWish: ""
@@ -84,7 +87,7 @@ export default React.createClass({
             return e;
           }
       });
-      firebase.database().ref('wishes/' + user.getUser().toLowerCase()).set({wishes: newWishList});
+      firebase.database().ref('wishes/' + user.getUserUid()).set({wishes: newWishList});
   },
 
   delete(deleteId) {
@@ -97,7 +100,7 @@ export default React.createClass({
 
       debug("Wish list after deletion: ", newWishList);
 
-      firebase.database().ref('wishes/' + user.getUser().toLowerCase()).set({wishes: newWishList});
+      firebase.database().ref('wishes/' + user.getUserUid()).set({wishes: newWishList});
   },
 
   render() {

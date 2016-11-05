@@ -1,6 +1,6 @@
 import React from 'react'
 import Container from '../../common/container/Container';
-import { Link } from 'react-router';
+import {Link} from 'react-router';
 var debug = require('debug')('OthersWishList');
 var config = require('../../Config');
 var firebase = require('../../common/firebase/firebase')
@@ -9,84 +9,102 @@ var Comments = require('./Comments');
 
 export default React.createClass({
 
-  getInitialState() {
-    return {
-      wishes: [],
-      hideSelected: false
-    }
-  },
+    getInitialState() {
+        return {wishes: [], hideSelected: false, user: ""}
+    },
 
-  componentDidMount() {
-    this.updateWishState();
-  },
+    componentDidMount() {
+        if (user.getUserUid() == undefined) {
+            this.props.router.push('/')
+        }
+        this.updateWishState();
 
-  updateWishState() {
-
-    debug("Wish state update");
-
-    var that = this;
-
-    var wishesRef = firebase.database().ref('wishes/'+this.props.params.name.toLowerCase());
-    wishesRef.on('value', function(snapshot) {
-      if(snapshot.val() != null ) {
-        var list = snapshot.val().wishes;
-        debug("data :", list);
-
-        that.setState({
-          wishes: list
+        var that = this;
+        firebase.database().ref('userlist').on('value', function(data) {
+            var userlist = data.val();
+            userlist.forEach(user => {
+                debug("User : ", user, that.props.params.name);
+                if (user.uid == that.props.params.name) {
+                    debug("Found it! ", user);
+                    that.setState({user: user.email})
+                }
+            })
         });
-      }
-    });
-  },
+    },
 
-  check(event) {
-    debug("Check!", event.target.value);
-    var newWishList = this.state.wishes.map(function(e) {
-        if(event.target.value === e.id) {
-          return {
-            name: e.name,
-            checked: !e.checked,
-            id: e.id
-          }
-        }
-        else {
-          return e;
-        }
-    });
-    firebase.database().ref('wishes/'+this.props.params.name.toLowerCase()).set({wishes: newWishList});
-    this.setState({
-      wishes: newWishList,
-      newWish: ""
-    })
-  },
+    updateWishState() {
 
-  toggleShowSelected() {
-    this.setState({
-      hideSelected: !this.state.hideSelected
-    })
-  },
+        debug("Wish state update");
 
-  render() {
+        var that = this;
 
-    var wishes = this.state.wishes.filter(function(el) {
-      debug("Wish to be filtered: ", el);
-      return !el.checked || !this.state.hideSelected;
-    },this).map(function(el) {
-      var item = el.checked ? (<del>{el.name}</del>) : el.name;
-      return (<li>{item}<input onChange={this.check} checked={el.checked} value={el.id} type="checkbox"></input></li>);
-    },this);
+        var wishesRef = firebase.database().ref('wishes/' + this.props.params.name);
+        wishesRef.on('value', function(snapshot) {
+            debug("Callback from wish list: ", snapshot);
+            if (snapshot.val() != null) {
+                var list = snapshot.val().wishes;
+                debug("data :", list);
 
-    return <Container>Ønskelisten til {this.props.params.name}
-    <ul>
-      {wishes}
-    </ul>
+                that.setState({wishes: list});
+            }
+        });
+    },
 
-    <Comments params={this.props.params} />
+    check(event) {
+        debug("Check!", event.target.value);
+        var newWishList = this.state.wishes.map(function(e) {
+            if (event.target.value === e.id) {
+                return {
+                    name: e.name,
+                    checked: !e.checked,
+                    id: e.id
+                }
+            } else {
+                return e;
+            }
+        });
+        firebase.database().ref('wishes/' + this.props.params.name.toLowerCase()).set({wishes: newWishList});
+        this.setState({wishes: newWishList, newWish: ""})
+    },
 
-    <button onClick={this.toggleShowSelected}>{this.state.hideSelected ? 'Vis utkrysset': 'Skjul utkrysset'}</button>
+    toggleShowSelected() {
+        this.setState({
+            hideSelected: !this.state.hideSelected
+        })
+    },
 
+    render() {
 
-    <li><Link to="/others">Tilbake</Link></li>
-    </Container>
-  }
+        var wishes = this.state.wishes.filter(function(el) {
+            debug("Wish to be filtered: ", el);
+            return !el.checked || !this.state.hideSelected;
+        }, this).map(function(el) {
+            var item = el.checked
+                ? (
+                    <del>{el.name}</del>
+                )
+                : el.name;
+            return (
+                <li>{item}
+                    <input onChange={this.check} checked={el.checked} value={el.id} type="checkbox"></input>
+                </li>
+            );
+        }, this);
+
+        return <Container>Ønskelisten til {this.state.user}
+            <ul>
+                {wishes}
+            </ul>
+
+            <Comments params={this.props.params}/>
+
+            <button onClick={this.toggleShowSelected}>{this.state.hideSelected
+                    ? 'Vis utkrysset'
+                    : 'Skjul utkrysset'}</button>
+
+            <li>
+                <Link to="/others">Tilbake</Link>
+            </li>
+        </Container>
+    }
 })

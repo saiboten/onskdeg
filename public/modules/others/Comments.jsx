@@ -16,7 +16,7 @@ var Comments = React.createClass({
 
   componentDidMount() {
     var that = this;
-    var commentsRef = firebase.database().ref('comments/'+this.props.params.name.toLowerCase());
+    var commentsRef = firebase.database().ref('comments/'+this.props.params.name);
     commentsRef.on('value', function(snapshot) {
       if(snapshot.val() != null ) {
         var list = snapshot.val();
@@ -39,12 +39,12 @@ var Comments = React.createClass({
     var comments = Object.assign([],this.state.comments);
 
     comments.push({
-      user: user.getUser(),
+      user: user.getUserEmail(),
       comment: this.state.comment
     });
 
     debug("New comment list: ", comments);
-    firebase.database().ref('comments/'+this.props.params.name.toLowerCase()).set(comments);
+    firebase.database().ref('comments/'+this.props.params.name).set(comments);
     this.setState({
       comments: comments,
       comment: ""
@@ -63,7 +63,7 @@ var Comments = React.createClass({
         {comments}
 
         <div>
-          <textarea onChange={this.updateCommentState} className="other-wishlist__comment-input" placeholder="Kommenter" />
+          <textarea onChange={this.updateCommentState} className="other-wishlist__comment-input" value={this.state.comment} placeholder="Kommenter"></textarea>
           <button onClick={this.addComment}>Legg til kommentar</button>
         </div>
       </div>

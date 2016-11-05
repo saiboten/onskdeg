@@ -2,10 +2,19 @@ var React = require('react');
 
 import { Link } from 'react-router';
 import Container from '../../common/container/Container';
+import { withRouter } from 'react-router';
+var user = require('../../common/User');
 
 require('./choosepath.css')
 
 var ChoosePath = React.createClass( {
+
+  componentDidMount() {
+    if(user.getUserUid() == undefined) {
+      this.props.router.push('/')
+    }
+  },
+
   render: function() {
 
     return (
