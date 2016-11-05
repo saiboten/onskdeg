@@ -49,7 +49,7 @@ firebase.auth().onAuthStateChanged(function(user) {
         debug("Users to be stored", users);
         firebase.database().ref('/userlist').set(users);
       }
-      else if(!users.includes(user.email)) {
+      else if(users.filter(el=> { return el.email == user.email}).length === 0) {
         users.push({
           email: user.email,
           uid: user.uid

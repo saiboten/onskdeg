@@ -7,6 +7,8 @@ import OthersWishList from './modules/others/OthersWishList'
 import ChoosePath from './modules/choosepath/ChoosePath'
 import SelectUser from './modules/selectuser/SelectUser'
 
+require('./global.css');
+
 render((
   <Router history={hashHistory}>
     <Route path="/" component={SelectUser}/>

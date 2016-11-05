@@ -71,7 +71,7 @@ export default React.createClass({
 
   render() {
 
-    var nextPage = this.state.loggedInUser ? (<Link to="/choosepath">Gå videre</Link>) : "";
+    var nextPage = this.state.loggedInUser ? (<Link className="navigation-link" to="/choosepath">Gå videre</Link>) : "";
     var logoutLink = this.state.loggedInUser ? (<button onClick={this.logOut}>Logg ut</button>) : "";
     var loginForm = this.state.loggedInUser ? "": (
       <form onSubmit={this.logIn} >
@@ -83,7 +83,7 @@ export default React.createClass({
 
     return <Container>
 
-    <p>Innlogget bruker:{this.state.loggedInUser}</p>
+    <p>Du er logget inn som: <strong>{this.state.loggedInUser}</strong></p>
 
      {loginForm}
 
@@ -91,9 +91,7 @@ export default React.createClass({
 
     {logoutLink}
 
-    <div>
       {nextPage}
-    </div>
 
     </Container>
   }
