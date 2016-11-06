@@ -29,7 +29,6 @@ h1 {
     white-space: nowrap;
     overflow: hidden;
     padding: 0 18px;
-    margin-right: 18px;
     border: 0 none;
     border-radius: 3px;
     display: inline-block;
@@ -37,6 +36,10 @@ h1 {
     height: 32px;
     line-height: 32px;
     text-decoration: none;
+}
+
+.right {
+  float: right;
 }
 
 ul, ol {
@@ -47,6 +50,8 @@ ul, ol {
 
 ul {
     list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .regular {

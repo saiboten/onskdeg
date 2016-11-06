@@ -17,13 +17,14 @@ var ChoosePath = React.createClass( {
 
   render: function() {
 
+    //<Link className="ChoosePath__anchor-link button" to="/">Bytt bruker</Link>
+
     return (
       <Container>
         <h1>Velg</h1>
         <div className="ChoosePath__list">
           <Link className="ChoosePath__anchor-link button" to="/yours">Din ønskeliste</Link>
           <Link className="ChoosePath__anchor-link button" to="/others">Andres ønskelister</Link>
-          <Link className="ChoosePath__anchor-link button" to="/">Bytt bruker</Link>
         </div>
       </Container>
     );

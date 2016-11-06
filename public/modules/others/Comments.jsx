@@ -2,6 +2,7 @@ var React = require('react');
 var debug = require('debug')('Comments');
 var firebase = require('../../common/firebase/firebase')
 var user = require('../../common/User');
+var moment = require('moment');
 
 require('./comments.css');
 
@@ -41,7 +42,8 @@ var Comments = React.createClass({
 
     comments.push({
       user: user.getUserEmail(),
-      comment: this.state.comment
+      comment: this.state.comment,
+      time: moment().format()
     });
 
     debug("New comment list: ", comments);
@@ -56,14 +58,23 @@ var Comments = React.createClass({
 
     var comments = this.state.comments.map(function(comment) {
       debug("Comment: ", comment.comment);
-      return (<div className="comments__comment-wrapper"><div className="other-wishlist__comment-comment">{comment.comment}</div><div  className="other-wishlist__comment-writtenby">Skrevet av {comment.user}</div></div>)
+      return (
+        <div className="comments__comment-wrapper">
+          <div className="other-wishlist__comment-comment">{comment.comment}</div>
+          <div  className="other-wishlist__comment-writtenby">Skrevet av {comment.user} - {comment.time ? moment(comment.time).format("DD.MM.YY, H:mm") : ""}</div>
+        </div>)
     })
 
     return (
       <div>
-        {comments}
+        <div className="comments__add-comment-container">
           <textarea onChange={this.updateCommentState} className="other-wishlist__comment-input" value={this.state.comment} placeholder="Kommenter"></textarea>
-          <a className="comments__add-comment-button button" href="#" onClick={this.addComment}>Legg til kommentar</a>
+          <a className="comments__add-comment-button button" href="#" onClick={this.addComment}>Lagre</a>
+        </div>
+
+        <div className="comments_comments-wrapper">
+          {comments}
+        </div>
       </div>
     )
   }

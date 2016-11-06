@@ -1,6 +1,16 @@
 .your-wishlist__wishlist {
   display: flex;
   flex-direction: column;
+}
+.your-wishlist_add-wish-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.your-wishlist_add-wish-textarea {
+  height: 70px;
+}
+
+.your-wishlist_add-wish-submit {
   margin: 10px;
-  padding: 10px;
 }

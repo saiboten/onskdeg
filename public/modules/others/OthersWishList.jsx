@@ -60,7 +60,8 @@ export default React.createClass({
                 return {
                     name: e.name,
                     checked: !e.checked,
-                    id: e.id
+                    id: e.id,
+                    checkedby: user.getUserEmail()
                 }
             } else {
                 return e;
@@ -90,7 +91,7 @@ export default React.createClass({
                 : el.name;
             return (
                 <li className="regular">{item}
-                    <input onChange={this.check} checked={el.checked} value={el.id} type="checkbox"></input>
+                    <input onChange={this.check} checked={el.checked} value={el.id} type="checkbox"></input><span>{el.checked ? el.checkedby : ""}</span>
                 </li>
             );
         }, this);

@@ -120,8 +120,10 @@ export default React.createClass({
     </div>
 
     <form onSubmit={this.addWish} >
-      <input value={this.state.newWish} onChange={this.updateWishState}></input>
-      <input type="submit" value="Legg til ønske" />
+      <div className="your-wishlist_add-wish-wrapper">
+        <textarea className="your-wishlist_add-wish-textarea" value={this.state.newWish} onChange={this.updateWishState}></textarea>
+        <input type="submit" className="your-wishlist_add-wish-submit button" value="Legg til" />
+      </div>
     </form>
     <li><Link to="/choosepath">Tilbake</Link></li>
 
