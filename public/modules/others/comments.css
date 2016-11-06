@@ -18,3 +18,11 @@
   display: flex;
   flex-wrap: wrap;
 }
+
+.comments__comment-comment {
+  font-size: 1.5em;
+}
+
+.comments__comment-writtenby {
+  font-size: 1em;
+}

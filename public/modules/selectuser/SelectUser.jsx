@@ -73,7 +73,7 @@ export default React.createClass({
   render() {
 
     var nextPage = this.state.loggedInUser ? (<Link className="button right" to="/choosepath">Gå videre</Link>) : "";
-    var logoutLink = this.state.loggedInUser ? (<a className="button" onClick={this.logOut}>Logg ut</a>) : "";
+    var logoutLink = this.state.loggedInUser ? (<a className="button-navigation" onClick={this.logOut}>Logg ut</a>) : "";
     var loginForm = this.state.loggedInUser ? "": (
       <form onSubmit={this.logIn} >
         <div><label>Brukernavn</label><input value={this.state.user} onChange={this.updateUserState}></input></div>

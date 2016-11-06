@@ -60,8 +60,8 @@ var Comments = React.createClass({
       debug("Comment: ", comment.comment);
       return (
         <div className="comments__comment-wrapper">
-          <div className="other-wishlist__comment-comment">{comment.comment}</div>
-          <div  className="other-wishlist__comment-writtenby">Skrevet av {comment.user} - {comment.time ? moment(comment.time).format("DD.MM.YY, H:mm") : ""}</div>
+          <div className="comments__comment-comment">{comment.comment}</div>
+          <div  className="comments__comment-writtenby">Skrevet av {comment.user} - {comment.time ? moment(comment.time).format("DD.MM.YY, H:mm") : ""}</div>
         </div>)
     })
 

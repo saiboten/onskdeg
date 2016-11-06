@@ -148,9 +148,9 @@ var OthersWishListSelection = React.createClass({
 
             <p>{this.state.feedback}</p>
 
-            <li>
-                <Link to="/choosepath">Tilbake</Link>
-            </li>
+            <hr />
+            <Link className="button-navigation" to="/choosepath">Tilbake</Link>
+
         </Container>
     }
 })

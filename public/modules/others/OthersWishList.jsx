@@ -91,7 +91,7 @@ export default React.createClass({
                 : el.name;
             return (
                 <li className="regular">{item}
-                    <input onChange={this.check} checked={el.checked} value={el.id} type="checkbox"></input><span>{el.checked ? el.checkedby : ""}</span>
+                    <input className="other-wishlist__checkbox" onChange={this.check} checked={el.checked} value={el.id} type="checkbox"></input><span>{el.checked ? el.checkedby : ""}</span>
                 </li>
             );
         }, this);
@@ -104,12 +104,12 @@ export default React.createClass({
 
             <Comments params={this.props.params}/>
 
-            <a className="other-wishlist__toggle-selected  button" onClick={this.toggleShowSelected}>{this.state.hideSelected
+            <a className="other-wishlist__toggle-selected button" onClick={this.toggleShowSelected}>{this.state.hideSelected
                     ? 'Vis utkrysset'
                     : 'Skjul utkrysset'}</a>
 
 
-                <Link className="other-wishlist__toggle-selected button" to="/others">Tilbake</Link>
+                <Link className="other-wishlist__toggle-selected button-navigation" to="/others">Tilbake</Link>
 
         </Container>
     }

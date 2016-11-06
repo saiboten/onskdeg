@@ -4,9 +4,7 @@
     border: 1px solid black;
 }
 
-.other-wishlist__comment-writtenby {
-  font-size: 0.7em;
-}
+
 
 .other-wishlist__comment-comment {
 
@@ -15,4 +13,9 @@
 .other-wishlist__toggle-selected {
   margin: 10px;
   padding: 10px;
+}
+
+.other-wishlist__checkbox {
+  width: 20px;
+  height: 20px;
 }

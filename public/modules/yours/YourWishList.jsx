@@ -128,7 +128,7 @@ export default React.createClass({
       </div>
     </form>
     <hr />
-    <Link className="button" to="/choosepath">Tilbake</Link>
+    <Link className="button-navigation" to="/choosepath">Tilbake</Link>
 
     </Container>
   }
