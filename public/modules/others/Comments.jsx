@@ -3,7 +3,7 @@ var debug = require('debug')('Comments');
 var firebase = require('../../common/firebase/firebase')
 var user = require('../../common/User');
 
-require('./otherwishlist.css');
+require('./comments.css');
 
 var Comments = React.createClass({
 
@@ -35,6 +35,7 @@ var Comments = React.createClass({
   },
 
   addComment(e) {
+    e.preventDefault();
     debug("Adding comment: ", this.state.comment);
     var comments = Object.assign([],this.state.comments);
 
@@ -55,17 +56,14 @@ var Comments = React.createClass({
 
     var comments = this.state.comments.map(function(comment) {
       debug("Comment: ", comment.comment);
-      return (<div className="other-wishlist__comment-wrapper"><div className="other-wishlist__comment-comment">{comment.comment}</div><div  className="other-wishlist__comment-writtenby">Skrevet av {comment.user}</div></div>)
+      return (<div className="comments__comment-wrapper"><div className="other-wishlist__comment-comment">{comment.comment}</div><div  className="other-wishlist__comment-writtenby">Skrevet av {comment.user}</div></div>)
     })
 
     return (
       <div>
         {comments}
-
-        <div>
           <textarea onChange={this.updateCommentState} className="other-wishlist__comment-input" value={this.state.comment} placeholder="Kommenter"></textarea>
-          <button onClick={this.addComment}>Legg til kommentar</button>
-        </div>
+          <a className="comments__add-comment-button button" href="#" onClick={this.addComment}>Legg til kommentar</a>
       </div>
     )
   }

@@ -22,7 +22,8 @@ var AddableUsers = React.createClass({
     });
   },
 
-  addUser(userUid) {
+  addUser(e,userUid) {
+    e.preventDefault();
     debug("User added: ", userUid);
     this.props.addUser(userUid);
   },
@@ -30,7 +31,7 @@ var AddableUsers = React.createClass({
   render() {
 
     var addableUsers = this.state.userlist.map(user => {
-      return (<a className="addable-users__list-element" onClick={function() { this.addUser(user.uid)}.bind(this)}>{user.email}</a>)
+      return (<a href="#" className="addable-users__list-element button" onClick={function(e) { this.addUser(e, user.uid)}.bind(this)}>{user.email}</a>)
     })
 
     return (

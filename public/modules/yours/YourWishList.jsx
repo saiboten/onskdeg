@@ -112,15 +112,16 @@ export default React.createClass({
 
     debug("Wishes: ", wishes);
 
-    return <Container>Din ønskeliste
+    return <Container>
+      <h1>Din ønskeliste</h1>
 
-    <ul className="your-wishlist__wishlist">
+    <div className="your-wishlist__wishlist">
       {wishes}
-    </ul>
+    </div>
 
     <form onSubmit={this.addWish} >
       <input value={this.state.newWish} onChange={this.updateWishState}></input>
-      <input type="submit" value="Legg til" />
+      <input type="submit" value="Legg til ønske" />
     </form>
     <li><Link to="/choosepath">Tilbake</Link></li>
 

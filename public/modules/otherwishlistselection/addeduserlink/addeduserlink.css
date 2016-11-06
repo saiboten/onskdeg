@@ -1,10 +1,8 @@
 .added-user-link__wrapper {
-  border: 1px solid black;
-  padding: 10px;
   margin: 10px;
 }
 
 .added-user-link__link {
-  width: 100%;
   height: 100%;
+  width: 85%;
 }

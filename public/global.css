@@ -1,11 +1,90 @@
 html {
-
+    background-color: #c9dde6;
 }
 
 .navigation-link {
-  padding: 10px;
+    padding: 10px;
 }
 
-button {
-  background-color: #83A9BB;
+h1 {
+    font-size: 30px;
+    line-height: 1.6em;
+    margin-bottom: .2em;
+    letter-spacing: -0.029em;
+    text-transform: capitalize;
+}
+
+.button {
+    color: #484848;
+    background-color: #e0e0e0;
+    -ms-transition: background-color 0.2s ease-in-out 0s, opacity 0.2s ease-in-out 0s;
+    transition: background-color 0.2s ease-in-out 0s, opacity 0.2s ease-in-out 0s;
+    font-weight: 600;
+    font-family: "Open Sans", "Helvetica Neue", Arial, Helvetica, Verdana, sans-serif;
+    text-align: center;
+    vertical-align: middle;
+    text-transform: capitalize;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    white-space: nowrap;
+    overflow: hidden;
+    padding: 0 18px;
+    margin-right: 18px;
+    border: 0 none;
+    border-radius: 3px;
+    display: inline-block;
+    font-size: 13px;
+    height: 32px;
+    line-height: 32px;
+    text-decoration: none;
+}
+
+ul, ol {
+    font-size: 15px;
+    line-height: 24px;
+    outline: 0;
+}
+
+ul {
+    list-style: none;
+}
+
+.regular {
+    padding: 12px;
+    border-radius: 5px;
+    margin-bottom: 6px;
+    color: #484848;
+    display: block;
+    line-height: 1em;
+}
+
+h1, h2, h3, h4, h5, .h1, .h2, .h3, .h4, .h5 {
+    font-weight: 600;
+    color: #484848;
+    font-family: "Open Sans","Helvetica Neue",Arial,Helvetica,Verdana,sans-serif;
+    outline: 0;
+}
+
+h1, .h1 {
+    font-size: 30px;
+    line-height: 1.6em;
+    margin-bottom: 10px;
+    letter-spacing: -0.029em;
+    text-transform: capitalize;
+}
+
+h3, .h3 {
+    font-size: 21px;
+    line-height: 1.14285714em;
+    margin-bottom: 10px;
+    letter-spacing: -0.025em;
+    font-style: italic;
+}
+
+
+h2, .h2 {
+    font-size: 25px;
+    line-height: 1.44em;
+    margin-bottom: 10px;
+    letter-spacing: -0.024em;
 }

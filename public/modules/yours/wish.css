@@ -1,3 +1,12 @@
 .wish__delete-button {
-  
+  float: right;
+}
+
+.wish__wish-listelement {
+  margin: 10px;
+}
+
+.wish__wish-input {
+  display: inline;
+  width: 120px;
 }

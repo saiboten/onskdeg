@@ -49,7 +49,7 @@ var AddedUserLink = React.createClass({
         var connectDragSource = this.props.connectDragSource;
 
         return connectDragSource(
-            <div className="added-user-link__wrapper"><Link className="added-user-link__link" to={"/other/" + this.props.el.uid}>{this.props.el.email}</Link></div>
+            <div className="added-user-link__wrapper"><Link className="added-user-link__link button" to={"/other/" + this.props.el.uid}>{this.props.el.email}</Link></div>
         );
     }
 })

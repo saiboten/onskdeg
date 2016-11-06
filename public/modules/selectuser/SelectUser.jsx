@@ -55,7 +55,8 @@ export default React.createClass({
     });
   },
 
-  logOut: function() {
+  logOut: function(e) {
+    e.preventDefault();
     var that = this;
     firebase.auth().signOut().then(function() {
       that.setState({
@@ -71,8 +72,8 @@ export default React.createClass({
 
   render() {
 
-    var nextPage = this.state.loggedInUser ? (<Link className="navigation-link" to="/choosepath">Gå videre</Link>) : "";
-    var logoutLink = this.state.loggedInUser ? (<button onClick={this.logOut}>Logg ut</button>) : "";
+    var nextPage = this.state.loggedInUser ? (<Link className="button" to="/choosepath">Gå videre</Link>) : "";
+    var logoutLink = this.state.loggedInUser ? (<a className="button" onClick={this.logOut}>Logg ut</a>) : "";
     var loginForm = this.state.loggedInUser ? "": (
       <form onSubmit={this.logIn} >
         <div><label>Brukernavn</label><input value={this.state.user} onChange={this.updateUserState}></input></div>
@@ -82,6 +83,7 @@ export default React.createClass({
     );
 
     return <Container>
+      <h1>Innlogging</h1>
 
     <p>Du er logget inn som: <strong>{this.state.loggedInUser}</strong></p>
 

@@ -7,6 +7,9 @@ var firebase = require('../../common/firebase/firebase')
 var user = require('../../common/User');
 var Comments = require('./Comments');
 
+require('./otherwishlist.css');
+
+
 export default React.createClass({
 
     getInitialState() {
@@ -67,7 +70,8 @@ export default React.createClass({
         this.setState({wishes: newWishList, newWish: ""})
     },
 
-    toggleShowSelected() {
+    toggleShowSelected(e) {
+      e.preventDefault();
         this.setState({
             hideSelected: !this.state.hideSelected
         })
@@ -85,26 +89,27 @@ export default React.createClass({
                 )
                 : el.name;
             return (
-                <li>{item}
+                <li className="regular">{item}
                     <input onChange={this.check} checked={el.checked} value={el.id} type="checkbox"></input>
                 </li>
             );
         }, this);
 
-        return <Container>Ønskelisten til {this.state.user}
+        return <Container>
+            <h3>Ønskelisten til <strong>{this.state.user}</strong></h3>
             <ul>
                 {wishes}
             </ul>
 
             <Comments params={this.props.params}/>
 
-            <button onClick={this.toggleShowSelected}>{this.state.hideSelected
+            <a className="other-wishlist__toggle-selected  button" onClick={this.toggleShowSelected}>{this.state.hideSelected
                     ? 'Vis utkrysset'
-                    : 'Skjul utkrysset'}</button>
+                    : 'Skjul utkrysset'}</a>
 
-            <li>
-                <Link to="/others">Tilbake</Link>
-            </li>
+
+                <Link className="other-wishlist__toggle-selected button" to="/others">Tilbake</Link>
+
         </Container>
     }
 })
