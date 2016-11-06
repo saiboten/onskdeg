@@ -6,6 +6,8 @@ var debug = require('debug')('OthersWishListSelection')
 var config = require('../../Config');
 var AddableUsers = require('./addableusers/AddableUsers');
 var HTML5Backend = require('react-dnd-html5-backend');
+import { default as TouchBackend } from 'react-dnd-touch-backend';
+
 var DragDropContext = require('react-dnd').DragDropContext;
 var AddedUserLink = require('./addeduserlink/AddedUserLink');
 import {Link} from 'react-router';
@@ -153,4 +155,4 @@ var OthersWishListSelection = React.createClass({
     }
 })
 
-module.exports = DragDropContext(HTML5Backend)(OthersWishListSelection);
+module.exports = DragDropContext(TouchBackend)(OthersWishListSelection);
