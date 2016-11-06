@@ -1,16 +1,26 @@
 import React from 'react'
 import Container from '../../common/container/Container';
-import {Link} from 'react-router';
 var firebase = require('../../common/firebase/firebase');
 var user = require('../../common/User');
 var debug = require('debug')('OthersWishListSelection')
 var config = require('../../Config');
-var AddableUsers = require('./AddableUsers');
+var AddableUsers = require('./addableusers/AddableUsers');
+var HTML5Backend = require('react-dnd-html5-backend');
+var DragDropContext = require('react-dnd').DragDropContext;
+var AddedUserLink = require('./addeduserlink/AddedUserLink');
+import {Link} from 'react-router';
+var DeleteUserDropTarget = require('./DeleteUserDropTarget');
 
-export default React.createClass({
+require('./otherswishlistselection.css');
+
+var OthersWishListSelection = React.createClass({
 
     getInitialState() {
-        return {users: [], newUser: "", feedback: ""}
+        return {
+          users: [],
+          newUser: "",
+          feedback: ""
+        }
     },
 
     componentDidMount() {
@@ -41,18 +51,9 @@ export default React.createClass({
 
     addUserLinkClick(uid) {
         return firebase.database().ref('userlist').once('value').then(function(snapshot) {
-            var users = snapshot.val();
-            debug("Users: ", users);
-            var userfromdb = users.filter(function(userdb) {
-                debug("User from db: ", userdb);
-                if (userdb.uid === uid) {
-                    return true;
-                } else {
-                    return false;
-                }
+            var userfromdb = snapshot.val().filter(function(userdb) {
+                return userdb.uid === uid;
             })[0];
-
-            debug("User form db: ", userfromdb);
             this.addUser(userfromdb.email);
         }.bind(this));
     },
@@ -67,7 +68,7 @@ export default React.createClass({
         var wishesRef = firebase.database().ref('userlist');
         var that = this;
 
-        return firebase.database().ref('/userlist').once('value').then(function(snapshot) {
+        return firebase.database().ref('userlist').once('value').then(function(snapshot) {
             var users = snapshot.val();
             debug("Users: ", users);
 
@@ -97,34 +98,51 @@ export default React.createClass({
                 that.setState({feedback: "Denne brukeren finnes ikke"});
             }
         });
+    },
 
+    deleteUser(email) {
+      debug("Deleting user by email: ", email);
+      var userList = Object.assign([], this.state.users);
+      var newUserList = userList.filter(user=> {
+        return user.email !== email
+      });
+
+      firebase.database().ref('users/' + user.getUserUid()).set({users: newUserList});
+      if(newUserList.length == 0) {
+        this.setState({
+          users: []
+        })
+      }
     },
 
     render() {
 
         var users = this.state.users.map(el => {
             return (
-                <li>
-                    <Link to={"/other/" + el.uid}>{el.email}</Link>
-                </li>
+              <AddedUserLink el={el} />
             )
         });
+
+        /* This is removed until further notice
+        <form onSubmit={this.addUserClickEvent}>
+            <p>Legg til</p>
+            <input value={this.state.newUser} onChange={this.updateUserState}></input>
+            <input type="submit"/>
+        </form>*/
 
         return <Container>
             <h1>Andres ønskeliste</h1>
 
             <h2>Velg bruker</h2>
-            <ul>
+            <div className="wishlist-selection__added-users-container">
                 {users}
-            </ul>
+            </div>
+
+            <DeleteUserDropTarget delete={this.deleteUser} />
 
             <AddableUsers addUser={this.addUserLinkClick}/>
 
-            <form onSubmit={this.addUserClickEvent}>
-                <p>Legg til</p>
-                <input value={this.state.newUser} onChange={this.updateUserState}></input>
-                <input type="submit"/>
-            </form>
+
 
             <p>{this.state.feedback}</p>
 
@@ -134,3 +152,5 @@ export default React.createClass({
         </Container>
     }
 })
+
+module.exports = DragDropContext(HTML5Backend)(OthersWishListSelection);

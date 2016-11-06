@@ -1,6 +1,7 @@
 var React = require('react');
-var firebase = require('../../common/firebase/firebase');
+var firebase = require('../../../common/firebase/firebase');
 var debug = require('debug')('AddableUser');
+require('./addableusers.css');
 
 var AddableUsers = React.createClass({
 
@@ -29,16 +30,15 @@ var AddableUsers = React.createClass({
   render() {
 
     var addableUsers = this.state.userlist.map(user => {
-      debug("Addable user: ", user);
-      return (<li><a onClick={function() { this.addUser(user.uid)}.bind(this)}>{user.email}</a></li>)
+      return (<a className="addable-users__list-element" onClick={function() { this.addUser(user.uid)}.bind(this)}>{user.email}</a>)
     })
 
     return (
       <div>
         <h2>Legg til eksisterende brukere</h2>
-      <ul>
+      <div className="addable-users__list">
         {addableUsers}
-      </ul>
+      </div>
       </div>
     );
   }
