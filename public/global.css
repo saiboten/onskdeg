@@ -6,12 +6,23 @@ html {
     padding: 10px;
 }
 
-h1 {
-    font-size: 30px;
-    line-height: 1.6em;
-    margin-bottom: .2em;
-    letter-spacing: -0.029em;
-    text-transform: capitalize;
+.space {
+  padding: 10px;
+  margin: 10px;
+}
+
+.smallspace {
+  padding: 5px;
+  margin: 5px;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.overflow-hidden {
+  overflow: hidden;
 }
 
 .button {
@@ -35,6 +46,15 @@ h1 {
     height: 60px;
     line-height: 60px;
     text-decoration: none;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.space-between {
+  justify-content: space-between;
 }
 
 .button-navigation {
@@ -90,12 +110,25 @@ h1, h2, h3, h4, h5, .h1, .h2, .h3, .h4, .h5 {
     outline: 0;
 }
 
+.grow {
+  flex-grow: 1;
+  flex-shrink: 0;
+}
+
+.shrink {
+  flex-grow: 0;
+  flex-shrink: 1;
+}
+
+.header-align-center {
+    align-items: center;
+}
+
 h1, .h1 {
-    font-size: 30px;
+    font-size: 22px;
     line-height: 1.6em;
     margin-bottom: 10px;
     letter-spacing: -0.029em;
-    text-transform: capitalize;
 }
 
 h3, .h3 {
@@ -103,6 +136,7 @@ h3, .h3 {
     line-height: 1.14285714em;
     margin-bottom: 10px;
     letter-spacing: -0.025em;
+    overflow-wrap: break-word;
 }
 
 

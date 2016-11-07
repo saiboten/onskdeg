@@ -96,21 +96,27 @@ export default React.createClass({
             );
         }, this);
 
-        return <Container>
-            <h3>Ønskelisten til <strong>{this.state.user}</strong></h3>
-            <ul>
-                {wishes}
-            </ul>
+        return (
+            <Container>
 
-            <Comments params={this.props.params}/>
+              <div className="flex-row space-between">
+                <h1 className="shrink overflow-hidden">Ønskelisten til {this.state.user}</h1>
+                <Link className="grow button-navigation smallspace" to="/others">Tilbake</Link>
+              </div>
+              <hr />
 
-            <a className="other-wishlist__toggle-selected button" onClick={this.toggleShowSelected}>{this.state.hideSelected
-                    ? 'Vis utkrysset'
-                    : 'Skjul utkrysset'}</a>
+              <ul>
+                  {wishes}
+              </ul>
 
+              <Comments params={this.props.params}/>
+              <div className="flex-row space-between">
+                  <a className="other-wishlist__toggle-selected space button" onClick={this.toggleShowSelected}>{this.state.hideSelected
+                            ? 'Vis utkrysset'
+                            : 'Skjul utkrysset'}</a>
+              </div>
 
-                <Link className="other-wishlist__toggle-selected button-navigation" to="/others">Tilbake</Link>
-
-        </Container>
+            </Container>
+      )
     }
 })

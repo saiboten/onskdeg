@@ -4,8 +4,3 @@
   align-items: stretch;;
   flex-direction: column;
 }
-
-.ChoosePath__anchor-link {
-  padding: 5px;
-  margin: 5px;
-}

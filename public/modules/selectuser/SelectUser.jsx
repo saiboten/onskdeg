@@ -5,6 +5,8 @@ var debug = require('debug')('YourWishList');
 var user = require('../../common/User');
 var firebase = require('../../common/firebase/firebase');
 
+require('./selectuser.css');
+
 export default React.createClass({
 
   getInitialState: function() {
@@ -72,13 +74,13 @@ export default React.createClass({
 
   render() {
 
-    var nextPage = this.state.loggedInUser ? (<Link className="button right" to="/choosepath">Gå videre</Link>) : "";
+    var nextPage = this.state.loggedInUser ? (<Link className="button" to="/choosepath">Gå videre</Link>) : "";
     var logoutLink = this.state.loggedInUser ? (<a className="button-navigation" onClick={this.logOut}>Logg ut</a>) : "";
     var loginForm = this.state.loggedInUser ? "": (
-      <form onSubmit={this.logIn} >
-        <div><label>Brukernavn</label><input value={this.state.user} onChange={this.updateUserState}></input></div>
-        <div><label>Passord</label><input value={this.state.password} onChange={this.updatePasswordState}></input></div>
-        <input type="submit" value="Logg inn" />
+      <form className="select-user__form" onSubmit={this.logIn} >
+        <label className="smallspace">Brukernavn</label><input className="smallspace" value={this.state.user} onChange={this.updateUserState}></input>
+        <label className="smallspace">Passord</label><input type="password" className="smallspace" value={this.state.password} onChange={this.updatePasswordState}></input>
+        <input className="button" type="submit" value="Logg inn" />
       </form>
     );
 
@@ -91,9 +93,10 @@ export default React.createClass({
 
     {this.state.feedback}
 
-    {logoutLink}
-
+    <div className="flex-row space-between">
+      {logoutLink}
       {nextPage}
+      </div>
 
     </Container>
   }

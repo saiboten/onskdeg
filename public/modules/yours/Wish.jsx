@@ -53,9 +53,9 @@ var Wish = React.createClass( {
   },
 
   render: function() {
-    var html = this.state.edit ? <textarea className="wish__wish-input" ref="input" onBlur={this.focusLost} onChange={this.updateText} value={this.state.text} /> : <span className="wish__wish-text" onClick={this.click}>{this.state.text}</span>;
+    var html = this.state.edit ? <textarea className="wish__wish-input" ref="input" onBlur={this.focusLost} onChange={this.updateText} value={this.state.text} /> : <span onClick={this.click} className="wish__wish-text">{this.state.text}</span>;
     return (
-      <div className="wish__wish-listelement">{html} <a className="wish__delete-button button" onClick={this.delete}>Slett</a></div>
+      <div className="wish__wish-listelement flex-row space-between">{html} <a className="wish__delete-button button" onClick={this.delete}>Slett</a></div>
     )
   }
 });

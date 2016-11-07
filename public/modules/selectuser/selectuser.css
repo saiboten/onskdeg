@@ -1,0 +1,8 @@
+.select-user__form {
+  display: flex;
+  flex-direction: column;
+}
+
+.select-user__navigation {
+  justify-content: space-between;
+}

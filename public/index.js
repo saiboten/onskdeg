@@ -7,6 +7,7 @@ import OthersWishList from './modules/others/OthersWishList'
 import ChoosePath from './modules/choosepath/ChoosePath'
 import SelectUser from './modules/selectuser/SelectUser'
 
+require('normalize.css');
 require('./global.css');
 
 render((

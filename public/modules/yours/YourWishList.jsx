@@ -14,7 +14,8 @@ export default React.createClass({
   getInitialState: function() {
     return {
       wishes: [],
-      newWish: ""
+      newWish: "",
+      feedback: ""
     }
   },
 
@@ -58,6 +59,13 @@ export default React.createClass({
   addWish: function(e) {
     e.preventDefault();
 
+    if(this.state.newWish === "") {
+      this.setState({
+        feedback: "Ønsket kan ikke være tomt"
+      })
+      return;
+    }
+
     debug("Adding wish");
     var newWishList = Object.assign([],this.state.wishes);
       newWishList.push({
@@ -69,7 +77,8 @@ export default React.createClass({
     firebase.database().ref('wishes/' + user.getUserUid()).set({wishes: newWishList});
 
     this.setState({
-      newWish: ""
+      newWish: "",
+      feedback: ""
     })
   },
 
@@ -113,7 +122,12 @@ export default React.createClass({
     debug("Wishes: ", wishes);
 
     return <Container>
-      <h1>Din ønskeliste</h1>
+
+      <div className="flex-row space-between">
+          <h1>Din ønskeliste</h1>
+            <Link className="shrink button-navigation smallspace" to="/choosepath">Tilbake</Link>
+      </div>
+      <hr />
 
     <div className="your-wishlist__wishlist">
       {wishes}
@@ -125,10 +139,9 @@ export default React.createClass({
       <div className="your-wishlist_add-wish-wrapper">
         <textarea className="your-wishlist_add-wish-textarea" value={this.state.newWish} onChange={this.updateWishState}></textarea>
         <input type="submit" className="your-wishlist_add-wish-submit button" value="Legg til" />
+        <div>{this.state.feedback}</div>
       </div>
     </form>
-    <hr />
-    <Link className="button-navigation" to="/choosepath">Tilbake</Link>
 
     </Container>
   }

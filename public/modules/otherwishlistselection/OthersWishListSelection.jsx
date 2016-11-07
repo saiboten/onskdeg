@@ -133,7 +133,12 @@ var OthersWishListSelection = React.createClass({
         </form>*/
 
         return <Container>
-            <h1>Andres ønskeliste</h1>
+
+          <div className="flex-row space-between">
+                <h1>Andres ønskeliste</h1>
+                  <Link className="shrink button-navigation smallspace" to="/choosepath">Tilbake</Link>
+              </div>
+              <hr />
 
             <h2>Velg bruker</h2>
             <div className="wishlist-selection__added-users-container">
@@ -147,9 +152,6 @@ var OthersWishListSelection = React.createClass({
 
 
             <p>{this.state.feedback}</p>
-
-            <hr />
-            <Link className="button-navigation" to="/choosepath">Tilbake</Link>
 
         </Container>
     }

@@ -11,7 +11,8 @@ var Comments = React.createClass({
   getInitialState() {
     return {
       comment: "",
-      comments: []
+      comments: [],
+      feedback: ""
     }
   },
 
@@ -37,6 +38,14 @@ var Comments = React.createClass({
 
   addComment(e) {
     e.preventDefault();
+
+    if(this.state.comment === "") {
+      this.setState({
+        feedback: "Kommentaren kan ikke være tom"
+      })
+      return;
+    }
+
     debug("Adding comment: ", this.state.comment);
     var comments = Object.assign([],this.state.comments);
 
@@ -50,7 +59,8 @@ var Comments = React.createClass({
     firebase.database().ref('comments/'+this.props.params.name).set(comments);
     this.setState({
       comments: comments,
-      comment: ""
+      comment: "",
+      feedback: ""
     })
   },
 
@@ -69,7 +79,10 @@ var Comments = React.createClass({
       <div>
         <div className="comments__add-comment-container">
           <textarea onChange={this.updateCommentState} className="other-wishlist__comment-input" value={this.state.comment} placeholder="Kommenter"></textarea>
-          <a className="comments__add-comment-button button" href="#" onClick={this.addComment}>Lagre</a>
+          <div className="flex-row space-between">
+            <a className="comments__add-comment-button button" href="#" onClick={this.addComment}>Lagre</a>
+            <div>{this.state.feedback}</div>
+          </div>
         </div>
 
         <div className="comments_comments-wrapper">
