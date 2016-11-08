@@ -6,3 +6,8 @@
 .select-user__navigation {
   justify-content: space-between;
 }
+
+button.select-user__facebook-button {
+    line-height: 20px;
+    background-color: #3b5998;
+}

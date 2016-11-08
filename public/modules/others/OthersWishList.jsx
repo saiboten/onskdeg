@@ -91,7 +91,7 @@ export default React.createClass({
                 : el.name;
             return (
                 <li className="regular">{item}
-                    <input className="other-wishlist__checkbox" onChange={this.check} checked={el.checked} value={el.id} type="checkbox"></input><span>{el.checked ? el.checkedby : ""}</span>
+                    <input className="other-wishlist__checkbox smallspace" onChange={this.check} checked={el.checked} value={el.id} type="checkbox"></input><span>{el.checked ? el.checkedby : ""}</span>
                 </li>
             );
         }, this);

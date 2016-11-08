@@ -4,6 +4,8 @@ import { Link } from 'react-router';
 var debug = require('debug')('YourWishList');
 var user = require('../../common/User');
 var firebase = require('../../common/firebase/firebase');
+var facebook = require('../../common/firebase/facebooklogin');
+
 
 require('./selectuser.css');
 
@@ -57,6 +59,21 @@ export default React.createClass({
     });
   },
 
+  loginFacebook: function(e) {
+    e.preventDefault();
+    var that = this;
+    firebase.auth().signInWithPopup(facebook).then(function(result) {
+      debug("Login was apparently successful");
+    }).catch(function(error) {
+      debug("Facebook login failed: ", error);
+      if(error) {
+        that.setState({
+          feedback: "Klarte ikke å logge deg inn med facebook, beklager det."
+        })
+      }
+    });
+  },
+
   logOut: function(e) {
     e.preventDefault();
     var that = this;
@@ -80,7 +97,10 @@ export default React.createClass({
       <form className="select-user__form" onSubmit={this.logIn} >
         <label className="smallspace">Brukernavn</label><input className="smallspace" value={this.state.user} onChange={this.updateUserState}></input>
         <label className="smallspace">Passord</label><input type="password" className="smallspace" value={this.state.password} onChange={this.updatePasswordState}></input>
-        <input className="button" type="submit" value="Logg inn" />
+        <div className="flex-row space-between">
+          <input className="button" type="submit" value="Logg inn" />
+          <button className="button select-user__facebook-button" onClick={this.loginFacebook}>Logg inn <br />med facebook</button>
+          </div>
       </form>
     );
 
