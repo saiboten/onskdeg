@@ -66,6 +66,9 @@ export default React.createClass({
       debug("Login was apparently successful");
     }).catch(function(error) {
       debug("Facebook login failed: ", error);
+      alert(error.code);
+      alert(error.message);
+
       if(error) {
         that.setState({
           feedback: "Klarte ikke å logge deg inn med facebook, beklager det."

@@ -69,7 +69,7 @@ var Comments = React.createClass({
     var comments = this.state.comments.map(function(comment) {
       debug("Comment: ", comment.comment);
       return (
-        <div className="comments__comment-wrapper">
+        <div className="comments__comment-wrapper smallspace">
           <div className="comments__comment-comment">{comment.comment}</div>
           <div  className="comments__comment-writtenby">Skrevet av {comment.user} - {comment.time ? moment(comment.time).format("DD.MM.YY, H:mm") : ""}</div>
         </div>)
@@ -80,7 +80,7 @@ var Comments = React.createClass({
         <div className="comments__add-comment-container">
           <textarea onChange={this.updateCommentState} className="other-wishlist__comment-input" value={this.state.comment} placeholder="Kommenter"></textarea>
           <div className="flex-row space-between">
-            <a className="comments__add-comment-button button" href="#" onClick={this.addComment}>Lagre</a>
+            <a className="space button" href="#" onClick={this.addComment}>Lagre</a>
             <div>{this.state.feedback}</div>
           </div>
         </div>

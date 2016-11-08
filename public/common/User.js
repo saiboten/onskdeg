@@ -17,7 +17,7 @@ var userObj = {
   },
   getUserUid(user) {
     var currentUser = firebase.auth().currentUser;
-    debug('Returning current user: ', currentUser);
+
     if(currentUser) {
       return currentUser.uid;
     }

@@ -25,6 +25,10 @@ html {
   overflow: hidden;
 }
 
+.border {
+  border: 1px solid;
+}
+
 .button {
     color: white;
     background-color: #666;

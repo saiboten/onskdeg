@@ -4,12 +4,29 @@ import { Link } from 'react-router';
 import Container from '../../common/container/Container';
 import { withRouter } from 'react-router';
 var user = require('../../common/User');
+import firebase from '../../common/firebase/firebase';
+var debug = require('debug')('ChoosePath');
+
 
 require('./choosepath.css')
 
 var ChoosePath = React.createClass( {
 
   componentDidMount() {
+
+    var username = "";
+    firebase.database().ref('/userlist').once('value').then(function(snapshot) {
+      var users = snapshot.val();
+      var filteredUserList = users.filter(dbuser => {
+       return user.getUserUid() === dbuser.uid; });
+       debug("Filtered user list: ", filteredUserList[0].name);
+       username = filteredUserList[0].name;
+
+       if(!username) {
+         this.props.router.push('/nameselect')
+       }
+    });
+
     if(user.getUserUid() == undefined) {
       this.props.router.push('/')
     }

@@ -65,7 +65,7 @@ var DeleteUserDropTarget = React.createClass({
     var connectDropTarget = this.props.connectDropTarget;
 
     return connectDropTarget(
-      <div className="deleteuser__container">
+      <div className="border space">
         <p>Dra en bruker ned her for å slette brukeren</p>
       </div>
     );

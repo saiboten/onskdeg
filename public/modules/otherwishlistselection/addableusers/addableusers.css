@@ -4,8 +4,5 @@
 }
 
 .addable-users__list-element {
-  margin: 10px;
-  padding: 10px;
-  border: 1px solid black;
   border-radius: 5px;
 }

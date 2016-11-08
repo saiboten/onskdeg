@@ -1,12 +1,5 @@
-.comments__add-comment-button {
-  margin: 10px;
-  padding: 10px;
-}
-
 .comments__comment-wrapper {
   border: 1px solid;
-  padding: 5px;
-  margin: 5px;
 }
 
 .comments_comments-wrapper {

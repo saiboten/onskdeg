@@ -31,7 +31,7 @@ var AddableUsers = React.createClass({
   render() {
 
     var addableUsers = this.state.userlist.map(user => {
-      return (<a href="#" className="addable-users__list-element button" onClick={function(e) { this.addUser(e, user.uid)}.bind(this)}>{user.email}</a>)
+      return (<a href="#" className="addable-users__list-element border space button" onClick={function(e) { this.addUser(e, user.uid)}.bind(this)}>{user.email}</a>)
     })
 
     return (
