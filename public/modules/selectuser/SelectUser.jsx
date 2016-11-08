@@ -62,7 +62,7 @@ export default React.createClass({
   loginFacebook: function(e) {
     e.preventDefault();
     var that = this;
-    firebase.auth().signInWithPopup(facebook).then(function(result) {
+    firebase.auth().signInWithRedirect(facebook).then(function(result) {
       debug("Login was apparently successful");
     }).catch(function(error) {
       debug("Facebook login failed: ", error);
