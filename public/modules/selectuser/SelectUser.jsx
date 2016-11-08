@@ -29,6 +29,21 @@ export default React.createClass({
         loggedInUser: user
       })
     });
+
+    firebase.auth().getRedirectResult().then(function(result) {
+      debug("Login was apparently successful");
+    }).catch(function(error) {
+      debug("Facebook login failed: ", error);
+      alert(error.code);
+      alert(error.message);
+
+      if(error) {
+        that.setState({
+          feedback: "Klarte ikke å logge deg inn med facebook, beklager det."
+        })
+      }
+    });
+
   },
 
   updateUserState: function(e) {
@@ -62,19 +77,7 @@ export default React.createClass({
   loginFacebook: function(e) {
     e.preventDefault();
     var that = this;
-    firebase.auth().signInWithRedirect(facebook).then(function(result) {
-      debug("Login was apparently successful");
-    }).catch(function(error) {
-      debug("Facebook login failed: ", error);
-      alert(error.code);
-      alert(error.message);
-
-      if(error) {
-        that.setState({
-          feedback: "Klarte ikke å logge deg inn med facebook, beklager det."
-        })
-      }
-    });
+    firebase.auth().signInWithRedirect(facebook);
   },
 
   logOut: function(e) {
