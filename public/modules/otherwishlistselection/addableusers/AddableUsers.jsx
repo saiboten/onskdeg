@@ -32,7 +32,10 @@ var AddableUsers = React.createClass({
         var userlist = data.val();
 
         firebase.database().ref('users/' + user.getUserUid()).on('value', function(snapshot) {
-            var addedUsers = snapshot.val().users;
+
+
+
+            var addedUsers = snapshot.val() ? snapshot.val().users : undefined;
             var filteredUserList = userlist.filter(dbuser=> {
               if(dbuser.uid === user.getUserUid()) {
                 return false;
