@@ -82,7 +82,7 @@ var AddableUsers = React.createClass({
 
     return (
       <div>
-        <div className="button addable-users__expand-button" onClick={this.toggleOpen}>{this.state.open ? "-" : "+"}</div>
+        <div className="button addable-users__expand-button smallspace" onClick={this.toggleOpen}>{this.state.open ? "-" : "+"}</div>
         {content}
 
       </div>

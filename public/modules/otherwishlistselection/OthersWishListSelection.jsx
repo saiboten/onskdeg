@@ -114,8 +114,6 @@ var OthersWishListSelection = React.createClass({
         this.setState({
           users: []
         });
-        alert('this.addableUsers', this.addableUsers);
-        this.addableUsers.clearList();
       }
 
     },
@@ -149,7 +147,7 @@ var OthersWishListSelection = React.createClass({
             </div>
 
             <DeleteUserDropTarget delete={this.deleteUser} />
-            <AddableUsers ref={(el) => this.addableUsers = el} addUser={this.addUserLinkClick}/>
+            <AddableUsers addUser={this.addUserLinkClick}/>
 
             <p>{this.state.feedback}</p>
 
