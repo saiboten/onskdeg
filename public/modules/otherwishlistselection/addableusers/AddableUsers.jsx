@@ -58,6 +58,12 @@ var AddableUsers = React.createClass({
     this.props.addUser(userUid);
   },
 
+  clearList() {
+    this.setState({
+      userlist: []
+    })
+  },
+
   toggleOpen() {
     this.setState({
       open: !this.state.open
