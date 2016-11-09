@@ -31,7 +31,7 @@ var AddableUsers = React.createClass({
       debug('Data returned: ', data.val());
         var userlist = data.val();
 
-        var ref = firebase.database().ref('users/' + user.getUserUid()).once('value', function(snapshot) {
+        firebase.database().ref('users/' + user.getUserUid()).on('value', function(snapshot) {
             var addedUsers = snapshot.val().users;
             var filteredUserList = userlist.filter(dbuser=> {
               if(dbuser.uid === user.getUserUid()) {
@@ -49,8 +49,6 @@ var AddableUsers = React.createClass({
               userlist: filteredUserList
             });
         }.bind(this));
-
-
     });
   },
 
