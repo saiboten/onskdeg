@@ -5,6 +5,8 @@ import { Link } from 'react-router';
 var debug = require('debug')('NameSelect');
 import firebase from '../../common/firebase/firebase';
 
+require('./nameselect.css');
+
 var NameSelect = React.createClass({
 
   getInitialState() {
@@ -48,8 +50,12 @@ var NameSelect = React.createClass({
   },
 
   render() {
-    var continueLink = this.state.confirmedName === "" ? "": (<Link to="/choosepath">Continue</Link>);
-    var input = this.state.confirmedName === "" ? (<span><input className="space" value={this.state.name} onChange={this.updateNameState} placeholder="Skriv navn her" /><input type="submit" value="OK" /></span>) : (<div>{this.state.confirmedName}</div>);
+    var continueLink = this.state.confirmedName === "" ? "": (<Link className="button" to="/choosepath">Fortsett</Link>);
+    var input = this.state.confirmedName === "" ? (
+        <div className="flex-row space-between">
+          <input className="space shrink smallspace" value={this.state.name} onChange={this.updateNameState} placeholder="Skriv navn her" />
+          <input className="button grow smallspace" type="submit" value="OK" />
+        </div>) : (<div>Ditt brukernavn er: {this.state.confirmedName}</div>);
 
     return(
       <Container>

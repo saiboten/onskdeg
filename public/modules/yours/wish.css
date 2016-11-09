@@ -13,6 +13,7 @@
 }
 
 .wish__wish-text {
-  line-height: 60px;
+  line-height: 20px;
   width: 70%;
+  word-wrap: break-word
 }

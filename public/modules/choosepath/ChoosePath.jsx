@@ -25,7 +25,7 @@ var ChoosePath = React.createClass( {
        if(!username) {
          this.props.router.push('/nameselect')
        }
-    });
+    }.bind(this));
 
     if(user.getUserUid() == undefined) {
       this.props.router.push('/')

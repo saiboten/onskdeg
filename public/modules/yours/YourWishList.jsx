@@ -137,7 +137,7 @@ export default React.createClass({
 
     <form onSubmit={this.addWish} >
       <div className="your-wishlist_add-wish-wrapper">
-        <textarea className="your-wishlist_add-wish-textarea" value={this.state.newWish} onChange={this.updateWishState}></textarea>
+        <textarea placeholder="Legg inn nye ønsker her" className="your-wishlist_add-wish-textarea" value={this.state.newWish} onChange={this.updateWishState}></textarea>
         <input type="submit" className="your-wishlist_add-wish-submit button" value="Legg til" />
         <div>{this.state.feedback}</div>
       </div>

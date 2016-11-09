@@ -6,3 +6,7 @@
 .addable-users__list-element {
   border-radius: 5px;
 }
+
+.addable-users__expand-button {
+  width: 25px;
+}

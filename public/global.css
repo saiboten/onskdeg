@@ -1,5 +1,5 @@
 html {
-    background-color: #c9dde6;
+    background-color: #465877;
 }
 
 .navigation-link {
@@ -105,6 +105,7 @@ ul {
     color: #484848;
     display: block;
     line-height: 1em;
+    word-wrap: break-word;
 }
 
 h1, h2, h3, h4, h5, .h1, .h2, .h3, .h4, .h5 {

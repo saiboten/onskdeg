@@ -140,7 +140,7 @@ var OthersWishListSelection = React.createClass({
               </div>
               <hr />
 
-            <h2>Velg bruker</h2>
+            <h2>Se ønskeliste til</h2>
             <div className="wishlist-selection__added-users-container">
                 {users}
             </div>

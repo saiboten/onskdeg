@@ -29,7 +29,7 @@ export default React.createClass({
                 debug("User : ", user, that.props.params.name);
                 if (user.uid == that.props.params.name) {
                     debug("Found it! ", user);
-                    that.setState({user: user.email})
+                    that.setState({user: user.name})
                 }
             })
         });
