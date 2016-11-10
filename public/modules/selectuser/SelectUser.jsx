@@ -111,7 +111,7 @@ export default React.createClass({
     );
 
     return <Container>
-      <h1>Innlogging</h1>
+      <h1>Logg inn</h1>
 
     <p>Du er logget inn som: <strong>{this.state.loggedInUser}</strong></p>
 
