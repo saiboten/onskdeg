@@ -10,6 +10,7 @@ import NameSelect from './modules/nameselect/NameSelect'
 
 require('normalize.css');
 require('./global.css');
+require("babel-polyfill");
 
 render((
   <Router history={hashHistory}>
