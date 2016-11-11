@@ -42,6 +42,8 @@ var ChoosePath = React.createClass( {
         <div className="ChoosePath__list">
           <Link className="smallspace button" to="/yours">Din ønskeliste</Link>
           <Link className="smallspace button" to="/others">Andres ønskelister</Link>
+          <Link className="smallspace button" to="/">Bytt bruker</Link>
+
         </div>
       </Container>
     );
