@@ -4,7 +4,6 @@ import { Link } from 'react-router';
 var debug = require('debug')('YourWishList');
 var user = require('../../common/User');
 var Wish = require('./Wish');
-var config = require('../../Config');
 var firebase = require('../../common/firebase/firebase');
 
 require('./yourwishlist.css');

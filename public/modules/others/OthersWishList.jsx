@@ -2,7 +2,6 @@ import React from 'react'
 import Container from '../../common/container/Container';
 import {Link} from 'react-router';
 var debug = require('debug')('OthersWishList');
-var config = require('../../Config');
 var firebase = require('../../common/firebase/firebase')
 var user = require('../../common/User');
 var Comments = require('./Comments');

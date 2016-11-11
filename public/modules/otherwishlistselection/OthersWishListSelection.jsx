@@ -3,7 +3,6 @@ import Container from '../../common/container/Container';
 var firebase = require('../../common/firebase/firebase');
 var user = require('../../common/User');
 var debug = require('debug')('OthersWishListSelection')
-var config = require('../../Config');
 var AddableUsers = require('./addableusers/AddableUsers');
 var HTML5Backend = require('react-dnd-html5-backend');
 import { default as TouchBackend } from 'react-dnd-touch-backend';

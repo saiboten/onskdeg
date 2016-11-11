@@ -22,7 +22,8 @@ var Wish = React.createClass( {
   getInitialState() {
     return {
       edit: false,
-      text: this.props.wish.name
+      text: this.props.wish.name,
+      confirm: false
     }
   },
 
@@ -49,13 +50,30 @@ var Wish = React.createClass( {
   },
 
   delete: function(e) {
+    this.setState({
+      confirm: true
+    })
+  },
+
+  cancel: function(e) {
+    this.setState({
+      confirm: false
+    })
+  },
+
+  deleteConfirmed: function(e) {
     this.props.delete(this.props.wish.id);
   },
 
   render: function() {
-    var html = this.state.edit ? <textarea className="wish__wish-input" ref="input" onBlur={this.focusLost} onChange={this.updateText} value={this.state.text} /> : <span onClick={this.click} className="wish__wish-text">{this.state.text}</span>;
+
+    var deleteWish = this.state.confirm ? (<div className="flex-row space-between right"><a className="button" onClick={this.cancel}>Avbryt</a><a className="button wish__confirm-delete-button" onClick={this.deleteConfirmed}>Slett</a></div>) : (<a className="wish__delete-button button" onClick={this.delete}>Slett</a>);
+
+    var html = this.state.edit ?
+    (<textarea className="wish__wish-input" ref="input" onBlur={this.focusLost} onChange={this.updateText} value={this.state.text} /> ):
+    (<span onClick={this.click} className="wish__wish-text">{this.state.text}</span>);
     return (
-      <div className="wish__wish-listelement flex-row space-between">{html} <a className="wish__delete-button button" onClick={this.delete}>Slett</a></div>
+      <div className="wish__wish-listelement flex-row space-between">{html} {deleteWish}</div>
     )
   }
 });
