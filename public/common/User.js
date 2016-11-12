@@ -1,39 +1,17 @@
 var firebase = require('./firebase/firebase');
 var debug = require('debug')('User');
+import store from '../store';
+import { setUser } from '../actions/useractions';
 
 var userObj = {
-
   callback: undefined,
-
-  getUserEmail(user) {
-    var currentUser = firebase.auth().currentUser;
-    debug('Returning current user: ', currentUser);
-    if(currentUser) {
-      return currentUser.email;
-    }
-    else {
-      return null;
-    }
-  },
-  getUserUid(user) {
-    var currentUser = firebase.auth().currentUser;
-
-    if(currentUser) {
-      return currentUser.uid;
-    }
-    else {
-      return null;
-    }
-  },
-  useThisCallback(func) {
-    this.callback = func;
-  }
 }
 
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     debug('User auth state changed, user logged in: ', user);
-    userObj.callback(user.email);
+
+    store.dispatch(setUser(user));
 
     return firebase.database().ref('/userlist').once('value').then(function(snapshot) {
       var users = snapshot.val();

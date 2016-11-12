@@ -1,44 +1,45 @@
 import React from 'react'
 import Container from '../../common/container/Container';
 import { Link } from 'react-router';
-var debug = require('debug')('YourWishList');
+var debug = require('debug')('SelectUser');
 var user = require('../../common/User');
 var firebase = require('../../common/firebase/firebase');
 var facebook = require('../../common/firebase/facebooklogin');
-
+import { connect } from 'react-redux'
 
 require('./selectuser.css');
 
-export default React.createClass({
+const mapStateToProps = function(state, ownProps) {
+  debug("mapDispatchToProps: ", state, ownProps);
+  return {
+    user: state.userReducer
+  }
+};
+
+
+const mapDispatchToProps = (dispatch, ownProps) => (
+  {}
+)
+
+var SelectUser =  React.createClass({
 
   getInitialState: function() {
     return {
       user: "",
       password: "",
-      feedback: "",
-      loggedInUser: ""
-    }
+      feedback: ""    }
   },
 
   componentDidMount() {
-    var that = this;
-
-    user.useThisCallback(function(user) {
-      debug("User callback: ", user);
-      that.setState({
-        loggedInUser: user
-      })
-    });
-
     firebase.auth().getRedirectResult().then(function(result) {
       debug("Login was apparently successful");
-    }).catch(function(error) {
+    }).catch(error => {
       debug("Facebook login failed: ", error);
-      alert(error.code);
-      alert(error.message);
+      //alert(error.code); - might be handy later
+      //alert(error.message);
 
       if(error) {
-        that.setState({
+        this.setState({
           feedback: "Klarte ikke å logge deg inn med facebook, beklager det."
         })
       }
@@ -46,60 +47,57 @@ export default React.createClass({
 
   },
 
-  updateUserState: function(e) {
+  updateUserState(e) {
     this.setState({
       user: e.target.value
     })
   },
 
-  updatePasswordState: function(e) {
+  updatePasswordState(e) {
     this.setState({
       password: e.target.value
     })
   },
 
-  logIn: function(e) {
+  logIn(e) {
     debug("Logging user in with the following credentials: ", this.state.user, this.state.password);
     e.preventDefault();
-    var that = this;
     firebase.auth().signInWithEmailAndPassword(this.state.user, this.state.password).catch(function(error) {
       var errorCode = error.code;
       var errorMessage = error.message;
       debug("Errorcode: ", errorCode, "errorMessage", errorMessage);
+
       if(errorCode) {
-        that.setState({
+        this.setState({
           feedback: "Klarte ikke å logge deg inn, beklager det."
         })
       }
-    });
+    }.bind(this));
   },
 
-  loginFacebook: function(e) {
+  loginFacebook(e) {
     e.preventDefault();
-    var that = this;
     firebase.auth().signInWithRedirect(facebook);
   },
 
-  logOut: function(e) {
+  logOut(e) {
     e.preventDefault();
-    var that = this;
+
     firebase.auth().signOut().then(function() {
-      that.setState({
-        feedback: "Du er nå logget ut",
-        loggedInUser: ""
+      this.setState({
+        feedback: "Du er nå logget ut"
       })
-    }, function(error) {
-      that.setState({
+    }.bind(this), function(error) {
+      this.setState({
         feedback: "Klarte ikke å logge deg ut, beklager det!"
       })
-    });
+    }.bind(this));
   },
 
   render() {
-
-    var nextPage = this.state.loggedInUser ? (<Link className="button" to="/choosepath">Gå videre</Link>) : "";
-    var logoutLink = this.state.loggedInUser ? (<a className="button-navigation" onClick={this.logOut}>Logg ut</a>) : "";
-    var loginForm = this.state.loggedInUser ? "": (
+    var nextPage = this.props.user ? (<Link className="button" to="/choosepath">Gå videre</Link>) : "";
+    var logoutLink = this.props.user ? (<a className="button-navigation" onClick={this.logOut}>Logg ut</a>) : "";
+    var loginForm = this.props.user ? "": (
       <form className="select-user__form" onSubmit={this.logIn} >
         <label className="smallspace">Brukernavn</label><input className="smallspace" value={this.state.user} onChange={this.updateUserState}></input>
         <label className="smallspace">Passord</label><input type="password" className="smallspace" value={this.state.password} onChange={this.updatePasswordState}></input>
@@ -113,7 +111,7 @@ export default React.createClass({
     return <Container>
       <h1>Logg inn</h1>
 
-    <p>Du er logget inn som: <strong>{this.state.loggedInUser}</strong></p>
+    <p>Du er logget inn som: <strong>{this.props.user.email}</strong></p>
 
      {loginForm}
 
@@ -127,3 +125,8 @@ export default React.createClass({
     </Container>
   }
 })
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SelectUser)
