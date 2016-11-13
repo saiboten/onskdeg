@@ -13,6 +13,7 @@ import { createStore } from 'redux'
 import store from './store';
 import authListener from './listeners/authListener';
 import userlistListener from './listeners/userlistListener';
+import suggestionsListener from './listeners/suggestionsListener';
 
 
 require('normalize.css');
@@ -21,6 +22,7 @@ require("babel-polyfill");
 
 authListener.authChangeListener();
 userlistListener.setupUserlistListener();
+suggestionsListener.setupSuggestionListener();
 
 render((
   <Provider store={store}>

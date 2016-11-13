@@ -80,7 +80,7 @@ var Comments = React.createClass({
         <div className="comments__add-comment-container">
           <textarea onChange={this.updateCommentState} className="other-wishlist__comment-input" value={this.state.comment} placeholder="Kommenter"></textarea>
           <div className="flex-row space-between">
-            <a className="space button" href="#" onClick={this.addComment}>Lagre</a>
+            <a className="smallspace button" href="#" onClick={this.addComment}>Lagre kommentar</a>
             <div>{this.state.feedback}</div>
           </div>
         </div>

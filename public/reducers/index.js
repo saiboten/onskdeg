@@ -1,10 +1,12 @@
 import { combineReducers } from 'redux'
-import user from './user'
+import userReducer from './userReducer'
 import allUserReducer from './allUserReducer'
+import suggestionReducer from './suggestionReducer'
 
 const onskdegReducers = combineReducers({
-  user,
-  allUserReducer
+  userReducer,
+  allUserReducer,
+  suggestionReducer
 })
 
 export default onskdegReducers

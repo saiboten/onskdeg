@@ -12,7 +12,7 @@ require('./selectuser.css');
 const mapStateToProps = function(state, ownProps) {
   debug("mapDispatchToProps: ", state, ownProps);
   return {
-    user: state.user
+    userReducer: state.userReducer
   }
 };
 
@@ -105,10 +105,10 @@ var SelectUser =  React.createClass({
 
   render() {
 
-    var loggedInAs = this.props.user.uid ? (<p>Du er logget inn som: <strong>{this.props.user.email}</strong></p>) : "";
-    var logoutLink = this.props.user.uid ? (<a className="button-navigation" onClick={this.logOut}>Logg ut</a>) : "";
-    var nextPage = this.props.user.uid ? (<Link className="button" to="/choosepath">Gå videre</Link>) : "";
-    var loginForm = this.props.user.uid ? "": (
+    var loggedInAs = this.props.userReducer.uid ? (<p>Du er logget inn som: <strong>{this.props.userReducer.email}</strong></p>) : "";
+    var logoutLink = this.props.userReducer.uid ? (<a className="button-navigation" onClick={this.logOut}>Logg ut</a>) : "";
+    var nextPage = this.props.userReducer.uid ? (<Link className="button" to="/choosepath">Gå videre</Link>) : "";
+    var loginForm = this.props.userReducer.uid ? "": (
       <form className="select-user__form" onSubmit={this.logIn} >
         <label className="smallspace">Brukernavn</label><input className="smallspace" value={this.state.user} onChange={this.updateUserState}></input>
         <label className="smallspace">Passord</label><input type="password" className="smallspace" value={this.state.password} onChange={this.updatePasswordState}></input>

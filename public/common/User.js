@@ -5,10 +5,10 @@ import { setUser } from '../actions/useractions';
 
 var userObj = {
   getUserUid() {
-    return store.getState().user.uid;
+    return store.getState().userReducer.uid;
   },
   getUserEmail() {
-    return store.getState().user.email;
+    return store.getState().userReducer.email;
   }
 }
 

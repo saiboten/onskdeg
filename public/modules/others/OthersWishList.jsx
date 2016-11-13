@@ -5,11 +5,24 @@ var debug = require('debug')('OthersWishList');
 var firebase = require('../../common/firebase/firebase')
 var user = require('../../common/User');
 var Comments = require('./Comments');
+import { connect } from 'react-redux'
+import Suggestions from './suggestion/Suggestions';
+import OtherWish from './OtherWish';
 
 require('./otherwishlist.css');
 
+const mapStateToProps = function(state, ownProps) {
+  debug("mapDispatchToProps: ", state, ownProps);
+  return {
+    userlist: state.allUserReducer
+  }
+};
 
-export default React.createClass({
+const mapDispatchToProps = (dispatch, ownProps) => (
+  {}
+)
+
+var OthersWishList = React.createClass({
 
     getInitialState() {
         return {wishes: [], hideSelected: false, user: ""}
@@ -21,17 +34,13 @@ export default React.createClass({
         }
         this.updateWishState();
 
-        var that = this;
-        firebase.database().ref('userlist').on('value', function(data) {
-            var userlist = data.val();
-            userlist.forEach(user => {
-                debug("User : ", user, that.props.params.name);
-                if (user.uid == that.props.params.name) {
-                    debug("Found it! ", user);
-                    that.setState({user: user.name})
-                }
-            })
-        });
+        var userlist = this.props.userlist;
+        userlist.forEach(user => {
+            if (user.uid == this.props.params.name) {
+                debug("Found it! ", user);
+                this.setState({user: user.name})
+            }
+        })
     },
 
     updateWishState() {
@@ -52,10 +61,10 @@ export default React.createClass({
         });
     },
 
-    check(event) {
-        debug("Check!", event.target.value);
+    check(id) {
+        debug("Check!", id);
         var newWishList = this.state.wishes.map(function(e) {
-            if (event.target.value === e.id) {
+            if (id === e.id) {
                 return {
                     name: e.name,
                     checked: !e.checked,
@@ -82,18 +91,9 @@ export default React.createClass({
         var wishes = this.state.wishes.filter(function(el) {
             debug("Wish to be filtered: ", el);
             return !el.checked || !this.state.hideSelected;
-        }, this).map(function(el) {
-            var item = el.checked
-                ? (
-                    <del>{el.name}</del>
-                )
-                : el.name;
-            return (
-                <li className="regular">{item}
-                    <input className="other-wishlist__checkbox smallspace" onChange={this.check} checked={el.checked} value={el.id} type="checkbox"></input><span>{el.checked ? el.checkedby : ""}</span>
-                </li>
-            );
-        }, this);
+        }, this).map(function(wishInfo) {
+            return (<OtherWish onClick={this.check} wishInfo={wishInfo} />);
+        },this);
 
         return (
             <Container>
@@ -104,10 +104,14 @@ export default React.createClass({
               </div>
               <hr />
 
+              <h2>Dette ønsker {this.state.user} seg</h2>
+
               <ul>
                   {wishes}
               </ul>
 
+              <Suggestions username={this.state.user} userUid={this.props.params.name} />
+              <hr />
               <Comments params={this.props.params}/>
               <div className="flex-row space-between">
                   <a className="other-wishlist__toggle-selected space button" onClick={this.toggleShowSelected}>{this.state.hideSelected
@@ -119,3 +123,8 @@ export default React.createClass({
       )
     }
 })
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(OthersWishList)
