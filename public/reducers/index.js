@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux'
-import userReducer from './userReducer'
+import user from './user'
 import allUserReducer from './allUserReducer'
 
 const onskdegReducers = combineReducers({
-  userReducer,
+  user,
   allUserReducer
 })
 

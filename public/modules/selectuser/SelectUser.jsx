@@ -12,7 +12,7 @@ require('./selectuser.css');
 const mapStateToProps = function(state, ownProps) {
   debug("mapDispatchToProps: ", state, ownProps);
   return {
-    user: state.userReducer
+    user: state.user
   }
 };
 
@@ -44,7 +44,6 @@ var SelectUser =  React.createClass({
         })
       }
     });
-
   },
 
   updateUserState(e) {
@@ -62,6 +61,11 @@ var SelectUser =  React.createClass({
   logIn(e) {
     debug("Logging user in with the following credentials: ", this.state.user, this.state.password);
     e.preventDefault();
+
+    this.setState({
+      feedback: ""
+    })
+
     firebase.auth().signInWithEmailAndPassword(this.state.user, this.state.password).catch(function(error) {
       var errorCode = error.code;
       var errorMessage = error.message;
@@ -83,6 +87,11 @@ var SelectUser =  React.createClass({
   logOut(e) {
     e.preventDefault();
 
+    this.setState({
+      feedback: "",
+      password: ""
+    })
+
     firebase.auth().signOut().then(function() {
       this.setState({
         feedback: "Du er nå logget ut"
@@ -95,9 +104,11 @@ var SelectUser =  React.createClass({
   },
 
   render() {
-    var nextPage = this.props.user ? (<Link className="button" to="/choosepath">Gå videre</Link>) : "";
-    var logoutLink = this.props.user ? (<a className="button-navigation" onClick={this.logOut}>Logg ut</a>) : "";
-    var loginForm = this.props.user ? "": (
+
+    var loggedInAs = this.props.user.uid ? (<p>Du er logget inn som: <strong>{this.props.user.email}</strong></p>) : "";
+    var logoutLink = this.props.user.uid ? (<a className="button-navigation" onClick={this.logOut}>Logg ut</a>) : "";
+    var nextPage = this.props.user.uid ? (<Link className="button" to="/choosepath">Gå videre</Link>) : "";
+    var loginForm = this.props.user.uid ? "": (
       <form className="select-user__form" onSubmit={this.logIn} >
         <label className="smallspace">Brukernavn</label><input className="smallspace" value={this.state.user} onChange={this.updateUserState}></input>
         <label className="smallspace">Passord</label><input type="password" className="smallspace" value={this.state.password} onChange={this.updatePasswordState}></input>
@@ -111,7 +122,7 @@ var SelectUser =  React.createClass({
     return <Container>
       <h1>Logg inn</h1>
 
-    <p>Du er logget inn som: <strong>{this.props.user.email}</strong></p>
+      {loggedInAs}
 
      {loginForm}
 

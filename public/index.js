@@ -11,10 +11,13 @@ import NameSelect from './modules/nameselect/NameSelect'
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import store from './store';
+import authListener from './authListener';
 
 require('normalize.css');
 require('./global.css');
 require("babel-polyfill");
+
+authListener.authChangeListener();
 
 render((
   <Provider store={store}>
