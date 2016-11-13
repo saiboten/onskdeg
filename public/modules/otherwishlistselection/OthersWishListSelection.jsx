@@ -11,6 +11,7 @@ var DragDropContext = require('react-dnd').DragDropContext;
 var AddedUserLink = require('./addeduserlink/AddedUserLink');
 import {Link} from 'react-router';
 var DeleteUserDropTarget = require('./DeleteUserDropTarget');
+import store from '../../store';
 
 require('./otherswishlistselection.css');
 
@@ -51,12 +52,11 @@ var OthersWishListSelection = React.createClass({
     },
 
     addUserLinkClick(uid) {
-        return firebase.database().ref('userlist').once('value').then(function(snapshot) {
-            var userfromdb = snapshot.val().filter(function(userdb) {
-                return userdb.uid === uid;
-            })[0];
-            this.addUser(userfromdb.email);
-        }.bind(this));
+      debug('Store.getState.allUserReducer:', store.getState().allUserReducer);
+      var userfromdb = store.getState().allUserReducer.filter(function(userdb) {
+          return userdb.uid === uid;
+      })[0];
+      this.addUser(userfromdb.email);
     },
 
     addUserClickEvent(e) {
@@ -66,39 +66,35 @@ var OthersWishListSelection = React.createClass({
 
     addUser: function(newUserMail) {
         debug("Adding user: ", newUserMail);
-        var wishesRef = firebase.database().ref('userlist');
-        var that = this;
 
-        return firebase.database().ref('userlist').once('value').then(function(snapshot) {
-            var users = snapshot.val();
-            debug("Users: ", users);
+        var users = store.getState().allUserReducer;
+        debug("Users: ", users);
 
-            var userfromdb = users.filter(function(userdb) {
-                if (userdb.email === newUserMail) {
-                    return true;
-                } else {
-                    return false;
-                }
-            })[0];
-
-            debug("User from db : ", userfromdb);
-
-            if (userfromdb) {
-                if (that.state.users.filter(user => { return user.email === newUserMail }).length === 1) {
-                    that.setState({feedback: "Brukeren er lagt til fra før"})
-                } else if (newUserMail == user.getUserEmail()) {
-                    that.setState({feedback: "Du har ikke lov å legge til deg selv"});
-                } else {
-                    var newList = that.state.users.concat([userfromdb]);
-
-                    debug('New list: ', newList);
-                    firebase.database().ref('users/' + user.getUserUid()).set({users: newList});
-                    that.setState({newUser: ""})
-                }
+        var userfromdb = users.filter(function(userdb) {
+            if (userdb.email === newUserMail) {
+                return true;
             } else {
-                that.setState({feedback: "Denne brukeren finnes ikke"});
+                return false;
             }
-        });
+        })[0];
+
+        debug("User from db : ", userfromdb);
+
+        if (userfromdb) {
+            if (this.state.users.filter(user => { return user.email === newUserMail }).length === 1) {
+                this.setState({feedback: "Brukeren er lagt til fra før"})
+            } else if (newUserMail == user.getUserEmail()) {
+                this.setState({feedback: "Du har ikke lov å legge til deg selv"});
+            } else {
+                var newList = this.state.users.concat([userfromdb]);
+
+                debug('New list: ', newList);
+                firebase.database().ref('users/' + user.getUserUid()).set({users: newList});
+                this.setState({newUser: ""})
+            }
+        } else {
+            this.setState({feedback: "Denne brukeren finnes ikke"});
+        }
     },
 
     deleteUser(email) {

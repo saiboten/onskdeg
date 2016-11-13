@@ -11,13 +11,16 @@ import NameSelect from './modules/nameselect/NameSelect'
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import store from './store';
-import authListener from './authListener';
+import authListener from './listeners/authListener';
+import userlistListener from './listeners/userlistListener';
+
 
 require('normalize.css');
 require('./global.css');
 require("babel-polyfill");
 
 authListener.authChangeListener();
+userlistListener.setupUserlistListener();
 
 render((
   <Provider store={store}>

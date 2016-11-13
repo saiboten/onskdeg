@@ -3,8 +3,9 @@ let initialState = [];
 
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'SET_USERS':
-      return action.user;
+    case 'SET_USERLIST':
+      debug("Setting userlist: ", action.userList);
+      return action.userList;
     default:
       return state
   }
