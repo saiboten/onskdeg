@@ -11,18 +11,17 @@ import NameSelect from './modules/nameselect/NameSelect'
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import store from './store';
-import authListener from './listeners/authListener';
-import userlistListener from './listeners/userlistListener';
-import suggestionsListener from './listeners/suggestionsListener';
-
+import authFirebase from './firebase/authFirebase';
+import userlistFirebase from './firebase/userlistFirebase';
+import suggestionsFirebase from './firebase/suggestionsFirebase';
 
 require('normalize.css');
 require('./global.css');
 require("babel-polyfill");
 
-authListener.authChangeListener();
-userlistListener.setupUserlistListener();
-suggestionsListener.setupSuggestionListener();
+authFirebase.authChangeListener();
+userlistFirebase.setupUserlistListener();
+suggestionsFirebase.setupSuggestionListener();
 
 render((
   <Provider store={store}>

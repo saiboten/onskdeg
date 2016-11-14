@@ -11,7 +11,7 @@ import OtherWish from './OtherWish';
 
 require('./otherwishlist.css');
 
-const mapStateToProps = function(state, ownProps) {
+const mapStateToProps = (state, ownProps) => {
   debug("mapDispatchToProps: ", state, ownProps);
   return {
     userlist: state.allUserReducer
@@ -50,7 +50,7 @@ var OthersWishList = React.createClass({
         var that = this;
 
         var wishesRef = firebase.database().ref('wishes/' + this.props.params.name);
-        wishesRef.on('value', function(snapshot) {
+        wishesRef.on('value', snapshot => {
             debug("Callback from wish list: ", snapshot);
             if (snapshot.val() != null) {
                 var list = snapshot.val().wishes;
@@ -63,7 +63,7 @@ var OthersWishList = React.createClass({
 
     check(id) {
         debug("Check!", id);
-        var newWishList = this.state.wishes.map(function(e) {
+        var newWishList = this.state.wishes.map((e) => {
             if (id === e.id) {
                 return {
                     name: e.name,
@@ -88,10 +88,10 @@ var OthersWishList = React.createClass({
 
     render() {
 
-        var wishes = this.state.wishes.filter(function(el) {
+        var wishes = this.state.wishes.filter(el => {
             debug("Wish to be filtered: ", el);
             return !el.checked || !this.state.hideSelected;
-        }, this).map(function(wishInfo) {
+        }, this).map(wishInfo => {
             return (<OtherWish onClick={this.check} wishInfo={wishInfo} />);
         },this);
 

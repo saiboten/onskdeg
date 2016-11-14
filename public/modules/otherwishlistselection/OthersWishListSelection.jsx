@@ -33,11 +33,11 @@ var OthersWishListSelection = React.createClass({
         this.getUsers();
     },
 
-    getUsers: function() {
+    getUsers() {
         var that = this;
 
         var ref = firebase.database().ref('users/' + user.getUserUid());
-        ref.on('value', function(snapshot) {
+        ref.on('value', (snapshot) => {
             if (snapshot.val() != null) {
                 var list = snapshot.val().users;
                 debug("data :", list);
@@ -47,13 +47,13 @@ var OthersWishListSelection = React.createClass({
         });
     },
 
-    updateUserState: function(e) {
+    updateUserState(e) {
         this.setState({newUser: e.target.value})
     },
 
     addUserLinkClick(uid) {
       debug('Store.getState.allUserReducer:', store.getState().allUserReducer);
-      var userfromdb = store.getState().allUserReducer.filter(function(userdb) {
+      var userfromdb = store.getState().allUserReducer.filter((userdb) => {
           return userdb.uid === uid;
       })[0];
       this.addUser(userfromdb.email);
@@ -64,13 +64,13 @@ var OthersWishListSelection = React.createClass({
       this.addUser(this.state.newUser);
     },
 
-    addUser: function(newUserMail) {
+    addUser(newUserMail) {
         debug("Adding user: ", newUserMail);
 
         var users = store.getState().allUserReducer;
         debug("Users: ", users);
 
-        var userfromdb = users.filter(function(userdb) {
+        var userfromdb = users.filter((userdb) => {
             if (userdb.email === newUserMail) {
                 return true;
             } else {

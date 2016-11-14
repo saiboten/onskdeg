@@ -19,7 +19,7 @@ var Comments = React.createClass({
   componentDidMount() {
     var that = this;
     var commentsRef = firebase.database().ref('comments/'+this.props.params.name);
-    commentsRef.on('value', function(snapshot) {
+    commentsRef.on('value', snapshot => {
       if(snapshot.val() != null ) {
         var list = snapshot.val();
         debug("Comments list :", list);
@@ -66,7 +66,7 @@ var Comments = React.createClass({
 
   render() {
 
-    var comments = this.state.comments.map(function(comment) {
+    var comments = this.state.comments.map(comment => {
       debug("Comment: ", comment.comment);
       return (
         <div className="comments__comment-wrapper smallspace">

@@ -5,7 +5,7 @@ var debug = require('debug')('userlistListener');
 
 var obj = {
   setupUserlistListener() {
-    firebase.database().ref('userlist').on('value',function(userlistdb) {
+    firebase.database().ref('userlist').on('value', userlistdb => {
       store.dispatch(setUserlist(userlistdb.val()));
     });
   }

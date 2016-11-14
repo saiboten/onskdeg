@@ -27,11 +27,11 @@ var AddableUsers = React.createClass({
 
   componentDidMount() {
     var that = this;
-    firebase.database().ref('userlist').on('value', function(data) {
+    firebase.database().ref('userlist').on('value', (data) => {
       debug('Data returned: ', data.val());
         var userlist = data.val();
 
-        firebase.database().ref('users/' + user.getUserUid()).on('value', function(snapshot) {
+        firebase.database().ref('users/' + user.getUserUid()).on('value', (snapshot) => {
 
 
 
@@ -51,7 +51,7 @@ var AddableUsers = React.createClass({
             that.setState({
               userlist: filteredUserList
             });
-        }.bind(this));
+        });
     });
   },
 
@@ -76,7 +76,7 @@ var AddableUsers = React.createClass({
   render() {
 
     var addableUsers = this.state.userlist.map(user => {
-      return (<a href="#" className="addable-users__list-element border space button" onClick={function(e) { this.addUser(e, user.uid)}.bind(this)}>{user.name}</a>)
+      return (<a href="#" className="addable-users__list-element border space button" onClick={(e) => { this.addUser(e, user.uid)}}>{user.name}</a>)
     })
 
     var content = this.state.open ? (<div className="addable-users__list">

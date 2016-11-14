@@ -7,10 +7,10 @@ import { connect } from 'react-redux'
 import OtherWish from '../OtherWish';
 import user from '../../../common/User'
 var counter = 0;
-import suggestionsListener from '../../../listeners/suggestionsListener';
+import suggestionsFirebase from '../../../firebase/suggestionsFirebase';
 import store from '../../../store';
 
-const mapStateToProps = function(state, ownProps) {
+const mapStateToProps = (state, ownProps) => {
 
   var keys = Object.keys(state.suggestionReducer);
   var theRightKey = keys.filter(userid => {
@@ -27,13 +27,13 @@ const mapStateToProps = function(state, ownProps) {
 
 const mapDispatchToProps = function(dispatch, ownProps) {
   return {
-    onCheckSuggestion: function() {
+    onCheckSuggestion() {
       dispatch(checkSuggestion(ownProps.userUid, ownProps.suggestion.id, user.getUserEmail()));
-      suggestionsListener.saveSuggestions(store.getState().suggestionReducer);
+      suggestionsFirebase.saveSuggestions(store.getState().suggestionReducer);
     },
-    onDeleteSuggestion: function() {
+    onDeleteSuggestion() {
       dispatch(deleteSuggestion(ownProps.userUid, ownProps.suggestion.id));
-      suggestionsListener.saveSuggestions(store.getState().suggestionReducer);
+      suggestionsFirebase.saveSuggestions(store.getState().suggestionReducer);
     }
   }
 };

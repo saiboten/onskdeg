@@ -5,7 +5,7 @@ var debug = require('debug')('userlistListener');
 
 var obj = {
   setupSuggestionListener() {
-    firebase.database().ref('suggestion').on('value',function(suggestions) {
+    firebase.database().ref('suggestion').on('value',(suggestions) => {
       store.dispatch(setSuggestions(suggestions.val()));
     });
   },

@@ -29,7 +29,7 @@ var NameSelect = React.createClass({
       confirmedName: this.state.name
     });
 
-    firebase.database().ref('/userlist').once('value').then(function(snapshot) {
+    firebase.database().ref('/userlist').once('value').then(snapshot => {
       var users = snapshot.val();
 
       var newUsers = users.map(el=> {
@@ -40,7 +40,7 @@ var NameSelect = React.createClass({
       });
 
       firebase.database().ref('/userlist').set(newUsers);
-    }.bind(this));
+    });
   },
 
   updateNameState(e) {

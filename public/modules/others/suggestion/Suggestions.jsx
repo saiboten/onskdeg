@@ -7,7 +7,7 @@ import AddSuggestion from './AddSuggestion';
 import {addSuggestion} from '../../../actions/suggestionActions';
 import user from '../../../common/User';
 import Suggestion from './Suggestion';
-import suggestionsListener from '../../../listeners/suggestionsListener';
+import suggestionsFirebase from '../../../firebase/suggestionsFirebase';
 import store from '../../../store';
 
 var what = 0; // This is used to force rerender from the mapstatetoprops function.
@@ -31,7 +31,7 @@ const mapStateToProps = function(state, ownProps) {
 };
 
 const createGuid = function() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
   var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
   return v.toString(16);
   });
@@ -42,7 +42,7 @@ const mapDispatchToProps = (dispatch, ownProps) => (
     onAddSuggestion: (suggestion => {
       debug("Adding suggestion", suggestion, user.getUserEmail(), ownProps.userUid);
       dispatch(addSuggestion(suggestion, user.getUserEmail(), ownProps.userUid, createGuid()));
-      suggestionsListener.saveSuggestions(store.getState().suggestionReducer);
+      suggestionsFirebase.saveSuggestions(store.getState().suggestionReducer);
     })
   }
 )
