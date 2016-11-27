@@ -1,10 +1,13 @@
 import React from 'react';
 var debug = require('debug')('OtherWish');
 var store = require('../store');
+var Linkify = require('react-linkify').default;
 
 var OtherWish = React.createClass({
 
-
+  linkifyClick(e) {
+   e.stopPropagation();
+  },
 
   render() {
 
@@ -19,13 +22,13 @@ var OtherWish = React.createClass({
     })[0];
     var suggestedByUser = suggestedBy ? (<div>Foreslått av {suggestedBy.name}</div>) : "";
 
-
-
     var item = this.props.wishInfo.checked ? (<del>{this.props.wishInfo.name}</del>) : this.props.wishInfo.name;
+    var linkifyed = (<Linkify>{item}</Linkify>);
+    debug("Linkyfied: ", linkifyed);
 
     return (
         <div onClick={e => this.props.onClick(this.props.wishInfo.id)} className="flex-column border">
-          <div className="smallspace">{item} </div>
+          <div className="smallspace" onClick={this.linkifyClick}>{linkifyed}</div>
           <div className="smallspace">{suggestedByUser} </div>
           <div className="smallspace">{this.props.wishInfo.checked ? 'Tatt av ' + checkedBy.name : ""}</div>
         </div>
