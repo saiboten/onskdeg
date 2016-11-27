@@ -1,6 +1,6 @@
 import store from '../store';
-import {setUserlist} from '../actions/userlistactions';
-var firebase = require('../common/firebase/firebase');
+import {setUserlist} from './userlistactions';
+var firebase = require('../firebase/firebase');
 var debug = require('debug')('userlistListener');
 
 var obj = {

@@ -1,18 +1,32 @@
 import React from 'react'
-import Container from '../../common/container/Container';
+import Container from '../common/container/Container';
 import { Link } from 'react-router';
 var debug = require('debug')('YourWishList');
-var user = require('../../common/User');
-var Wish = require('./Wish');
-var firebase = require('../../common/firebase/firebase');
+var user = require('../common/User');
+var Wish = require('../wish/Wish');
+var firebase = require('../firebase/firebase');
+import store from '../store';
+import { connect } from 'react-redux'
 
 require('./yourwishlist.css');
 
-export default React.createClass({
+const mapStateToProps = function(state, ownProps) {
+  debug("User wishes", state.wishReducer[user.getUserUid()]);
+  return {
+    wishes: state.wishReducer[user.getUserUid()] ? state.wishReducer[user.getUserUid()].wishes : []
+  }
+};
+
+const mapDispatchToProps = function(dispatch, ownProps) {
+  return {
+    //addWish: dispatch.
+  }
+};
+
+var YourWishList = React.createClass({
 
   getInitialState: function() {
     return {
-      wishes: [],
       newWish: "",
       feedback: ""
     }
@@ -22,24 +36,7 @@ export default React.createClass({
     if(user.getUserUid() == undefined) {
       this.props.router.push('/')
     }
-    this.setGunWishCallback();
     debug("componentDidMount");
-  },
-
-  setGunWishCallback: function() {
-    var that = this;
-
-    var ref = firebase.database().ref('wishes/'+user.getUserUid());
-    ref.on('value', function(snapshot) {
-      if(snapshot.val() != null ) {
-        var list = snapshot.val().wishes;
-        debug("data :", list);
-
-        that.setState({
-          wishes: list
-        });
-      }
-    });
   },
 
   createGuid: function() {
@@ -66,7 +63,7 @@ export default React.createClass({
     }
 
     debug("Adding wish");
-    var newWishList = Object.assign([],this.state.wishes);
+    var newWishList = Object.assign([],this.props.wishes);
       newWishList.push({
         name: this.state.newWish,
         checked: false,
@@ -83,7 +80,7 @@ export default React.createClass({
 
   update(wish) {
       debug("Saving wishlist: ", wish);
-      var newWishList = this.state.wishes.map(function(e) {
+      var newWishList = this.props.wishes.map(function(e) {
           if(e.id === wish.id) {
             return {
               name: wish.newWish,
@@ -112,10 +109,10 @@ export default React.createClass({
   },
 
   render() {
-
-    var wishes = this.state.wishes.map(function(el) {
+    debug("This.props. ", this.props);
+    var wishes = this.props.wishes.map(function(el) {
       debug("Creating wish based on this el: ",el);
-      return (<Wish update={this.update} delete={this.delete} wishlist={this.state.wishes} wish={el}></Wish>);
+      return (<Wish update={this.update} delete={this.delete} wishlist={this.props.wishes} wish={el}></Wish>);
     },this);
 
     debug("Wishes: ", wishes);
@@ -144,4 +141,9 @@ export default React.createClass({
 
     </Container>
   }
-})
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps)
+  (YourWishList);

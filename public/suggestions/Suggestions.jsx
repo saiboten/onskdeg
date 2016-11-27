@@ -1,14 +1,14 @@
 import React from 'react'
-import Container from '../../../common/container/Container';
+import Container from '../common/container/Container';
 import {Link} from 'react-router';
 var debug = require('debug')('Suggestions');
 import { connect } from 'react-redux'
 import AddSuggestion from './AddSuggestion';
-import {addSuggestion} from '../../../actions/suggestionActions';
-import user from '../../../common/User';
+import {addSuggestion} from './suggestionActions';
+import user from '../common/User';
 import Suggestion from './Suggestion';
-import suggestionsFirebase from '../../../firebase/suggestionsFirebase';
-import store from '../../../store';
+import suggestionsFirebase from './suggestionsFirebase';
+import store from '../store';
 
 var what = 0; // This is used to force rerender from the mapstatetoprops function.
 

@@ -1,7 +1,7 @@
 var React = require('react');
 var debug = require('debug')('Comments');
-var firebase = require('../../common/firebase/firebase')
-var user = require('../../common/User');
+var firebase = require('../firebase/firebase')
+var user = require('../common/User');
 var moment = require('moment');
 
 require('./comments.css');

@@ -1,8 +1,8 @@
 var React = require('react');
-var firebase = require('../../../common/firebase/firebase');
+var firebase = require('../../firebase/firebase');
 var debug = require('debug')('AddableUser');
 require('./addableusers.css');
-var user = require('../../../common/User');
+var user = require('../../common/User');
 
 
 var AddableUsers = React.createClass({

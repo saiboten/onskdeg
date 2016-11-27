@@ -1,6 +1,6 @@
 import store from '../store';
-import {setSuggestions} from '../actions/suggestionActions';
-var firebase = require('../common/firebase/firebase');
+import {setSuggestions} from './suggestionActions';
+var firebase = require('../firebase/firebase');
 var debug = require('debug')('userlistListener');
 
 var obj = {

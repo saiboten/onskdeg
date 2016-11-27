@@ -1,7 +1,7 @@
-var firebase = require('../common/firebase/firebase');
+var firebase = require('../firebase/firebase');
 var debug = require('debug')('authListener');
 import store from '../store';
-import { setUser } from '../actions/useractions'
+import { setUser } from '../user/useractions'
 
 var obj = {
   authChangeListener() {

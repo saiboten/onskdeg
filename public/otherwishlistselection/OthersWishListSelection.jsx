@@ -1,7 +1,7 @@
 import React from 'react'
-import Container from '../../common/container/Container';
-var firebase = require('../../common/firebase/firebase');
-var user = require('../../common/User');
+import Container from '../common/container/Container';
+var firebase = require('../firebase/firebase');
+var user = require('../common/User');
 var debug = require('debug')('OthersWishListSelection')
 var AddableUsers = require('./addableusers/AddableUsers');
 var HTML5Backend = require('react-dnd-html5-backend');
@@ -11,7 +11,7 @@ var DragDropContext = require('react-dnd').DragDropContext;
 var AddedUserLink = require('./addeduserlink/AddedUserLink');
 import {Link} from 'react-router';
 var DeleteUserDropTarget = require('./DeleteUserDropTarget');
-import store from '../../store';
+import store from '../store';
 
 require('./otherswishlistselection.css');
 

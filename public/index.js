@@ -1,19 +1,21 @@
 import React from 'react'
 import { render } from 'react-dom'
 import { Router, Route, hashHistory } from 'react-router'
-import YourWishList from './modules/yours/YourWishList'
-import OthersWishListSelection from './modules/otherwishlistselection/OthersWishListSelection'
-import OthersWishList from './modules/others/OthersWishList'
-import ChoosePath from './modules/choosepath/ChoosePath'
-import SelectUser from './modules/selectuser/SelectUser'
-import NameSelect from './modules/nameselect/NameSelect'
+import YourWishList from './yours/YourWishList'
+import OthersWishListSelection from './otherwishlistselection/OthersWishListSelection'
+import OthersWishList from './others/OthersWishList'
+import ChoosePath from './choosepath/ChoosePath'
+import SelectUser from './selectuser/SelectUser'
+import NameSelect from './nameselect/NameSelect'
 
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import store from './store';
+
 import authFirebase from './firebase/authFirebase';
-import userlistFirebase from './firebase/userlistFirebase';
-import suggestionsFirebase from './firebase/suggestionsFirebase';
+import userlistFirebase from './users/userlistFirebase';
+import suggestionsFirebase from './suggestions/suggestionsFirebase';
+import wishesFirebase from './wish/wishesFirebase';
 
 require('normalize.css');
 require('./global.css');
@@ -22,6 +24,7 @@ require("babel-polyfill");
 authFirebase.authChangeListener();
 userlistFirebase.setupUserlistListener();
 suggestionsFirebase.setupSuggestionListener();
+wishesFirebase.setupWishesListener();
 
 render((
   <Provider store={store}>

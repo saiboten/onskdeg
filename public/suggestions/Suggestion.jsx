@@ -1,14 +1,14 @@
 import React from 'react';
 var debug = require('debug')('Suggestion');
-import {checkSuggestion} from '../../../actions/suggestionActions';
-import {deleteSuggestion} from '../../../actions/suggestionActions';
+import {checkSuggestion} from './suggestionActions';
+import {deleteSuggestion} from './suggestionActions';
 
 import { connect } from 'react-redux'
-import OtherWish from '../OtherWish';
-import user from '../../../common/User'
+import OtherWish from '../others/OtherWish';
+import user from '../common/User'
 var counter = 0;
-import suggestionsFirebase from '../../../firebase/suggestionsFirebase';
-import store from '../../../store';
+import suggestionsFirebase from './suggestionsFirebase';
+import store from '../store';
 
 const mapStateToProps = (state, ownProps) => {
 
@@ -55,9 +55,8 @@ var Suggestion = React.createClass({
     return (
       <div className="flex-column">
 
-          <OtherWish wishInfo={wishInfo} onClick={this.props.onCheckSuggestion} />
+          <OtherWish wishInfo={wishInfo} onClick={this.props.onCheckSuggestion} suggestedBy={this.props.suggestion.suggestedBy} />
           <div className="flex-row space-between">
-            <div className="smallspace">Foreslått av {this.props.suggestion.suggestedBy}</div>
             {deleteMe}
          </div>
       </div>

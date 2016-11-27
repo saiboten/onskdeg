@@ -1,11 +1,11 @@
 var React = require('react');
 
 import { Link } from 'react-router';
-import Container from '../../common/container/Container';
+import Container from '../common/container/Container';
 import { withRouter } from 'react-router';
-import user from '../../common/User';
-import firebase from '../../common/firebase/firebase';
+import user from '../common/User';
 var debug = require('debug')('ChoosePath');
+import store from '../store';
 
 require('./choosepath.css')
 
@@ -14,17 +14,21 @@ var ChoosePath = React.createClass( {
   componentDidMount() {
 
     var username = "";
-    firebase.database().ref('/userlist').once('value').then(snapshot => {
-      var users = snapshot.val();
-      var filteredUserList = users.filter(dbuser => {
-       return user.getUserUid() === dbuser.uid; });
-       debug("Filtered user list: ", filteredUserList[0].name);
-       username = filteredUserList[0].name;
 
-       if(!username) {
-         this.props.router.push('/nameselect')
-       }
-    });
+    var users = store.getState().allUserReducer;
+    debug("users: ", users);
+
+    var filteredUserList = users.filter(dbuser => {
+      debug("dbuser: ", dbuser);
+     return user.getUserUid() === dbuser.uid; });
+     debug("Filtered user list: ", filteredUserList);
+
+     debug("Filtered user list name: ", filteredUserList[0].name);
+     username = filteredUserList[0].name;
+
+     if(!username) {
+       this.props.router.push('/nameselect')
+     }
 
     if(user.getUserUid() == undefined) {
       this.props.router.push('/')

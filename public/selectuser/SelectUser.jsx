@@ -1,10 +1,10 @@
 import React from 'react'
-import Container from '../../common/container/Container';
+import Container from '../common/container/Container';
 import { Link } from 'react-router';
 var debug = require('debug')('SelectUser');
-var user = require('../../common/User');
-var firebase = require('../../common/firebase/firebase');
-var facebook = require('../../common/firebase/facebooklogin');
+var user = require('../common/User');
+var firebase = require('../firebase/firebase');
+var facebook = require('../firebase/facebooklogin');
 import { connect } from 'react-redux'
 
 require('./selectuser.css');

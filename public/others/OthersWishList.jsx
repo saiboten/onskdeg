@@ -1,12 +1,12 @@
 import React from 'react'
-import Container from '../../common/container/Container';
+import Container from '../common/container/Container';
 import {Link} from 'react-router';
 var debug = require('debug')('OthersWishList');
-var firebase = require('../../common/firebase/firebase')
-var user = require('../../common/User');
+var firebase = require('../firebase/firebase')
+var user = require('../common/User');
 var Comments = require('./Comments');
 import { connect } from 'react-redux'
-import Suggestions from './suggestion/Suggestions';
+import Suggestions from '../suggestions/Suggestions';
 import OtherWish from './OtherWish';
 
 require('./otherwishlist.css');
@@ -25,7 +25,7 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 var OthersWishList = React.createClass({
 
     getInitialState() {
-        return {wishes: [], hideSelected: false, user: ""}
+        return {wishes: [], hideSelected: true, user: ""}
     },
 
     componentDidMount() {

@@ -1,9 +1,10 @@
 import React from 'react';
-import Container from '../../common/container/Container';
-import user from '../../common/User';
+import Container from '../common/container/Container';
+import user from '../common/User';
 import { Link } from 'react-router';
 var debug = require('debug')('NameSelect');
-import firebase from '../../common/firebase/firebase';
+import store from '../store';
+import {setUserlist} from '../users/userlistactions';
 
 require('./nameselect.css');
 
@@ -25,22 +26,21 @@ var NameSelect = React.createClass({
   nameSelected(e) {
     e.preventDefault();
     debug("Name selected: ", this.state.name);
+
     this.setState({
       confirmedName: this.state.name
     });
 
-    firebase.database().ref('/userlist').once('value').then(snapshot => {
-      var users = snapshot.val();
+    var users = store.getState().allUserReducer;
 
-      var newUsers = users.map(el=> {
-        if(el.email == user.getUserEmail()) {
-          el.name = this.state.confirmedName;
-        }
-        return el;
-      });
-
-      firebase.database().ref('/userlist').set(newUsers);
+    var newUsers = users.map(el=> {
+      if(el.email == user.getUserEmail()) {
+        el.name = this.state.confirmedName;
+      }
+      return el;
     });
+
+    store.dispatch(setUserlist(newUsers));
   },
 
   updateNameState(e) {
