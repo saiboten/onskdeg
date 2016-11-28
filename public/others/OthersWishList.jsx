@@ -25,7 +25,12 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 var OthersWishList = React.createClass({
 
     getInitialState() {
-        return {wishes: [], hideSelected: true, user: ""}
+        return {
+          wishes: [],
+          hideSelected: true,
+          user: "",
+          feedback :""
+        }
     },
 
     componentDidMount() {
@@ -76,7 +81,11 @@ var OthersWishList = React.createClass({
             }
         });
         firebase.database().ref('wishes/' + this.props.params.name).set({wishes: newWishList});
-        this.setState({wishes: newWishList, newWish: ""})
+        this.setState({
+          wishes: newWishList,
+          newWish: "",
+          feedback: "Du kjøpte eller solgte noe!"
+        })
     },
 
     toggleShowSelected(e) {
@@ -105,7 +114,7 @@ var OthersWishList = React.createClass({
               <hr />
 
               <h2>Dette ønsker {this.state.user} seg</h2>
-
+              <p>{this.state.feedback}</p>
               <ul>
                   {wishes}
               </ul>

@@ -5,10 +5,6 @@ var Linkify = require('react-linkify').default;
 
 var OtherWish = React.createClass({
 
-  linkifyClick(e) {
-   e.stopPropagation();
-  },
-
   render() {
 
     var checkedBy = store.getState().allUserReducer.filter(user=>{
@@ -20,17 +16,22 @@ var OtherWish = React.createClass({
       debug("user.email and suggested by ", user.email, this.props.suggestedBy);
       return user.email === this.props.suggestedBy;
     })[0];
-    var suggestedByUser = suggestedBy ? (<div>Foreslått av {suggestedBy.name}</div>) : "";
+    var suggestedByUser = suggestedBy ? (<div className="smallspace">Foreslått av {suggestedBy.name}</div>) : "";
 
     var item = this.props.wishInfo.checked ? (<del>{this.props.wishInfo.name}</del>) : this.props.wishInfo.name;
     var linkifyed = (<Linkify>{item}</Linkify>);
+    var checkedBy = this.props.wishInfo.checked ? (<div className="smallspace">'Tatt av ' + {checkedBy.name}</div>) : "";
+    var checkedText = this.props.wishInfo.checked ? "Selg":"Kjøp";
+
     debug("Linkyfied: ", linkifyed);
 
     return (
-        <div onClick={e => this.props.onClick(this.props.wishInfo.id)} className="flex-column border">
-          <div className="smallspace" onClick={this.linkifyClick}>{linkifyed}</div>
-          <div className="smallspace">{suggestedByUser} </div>
-          <div className="smallspace">{this.props.wishInfo.checked ? 'Tatt av ' + checkedBy.name : ""}</div>
+        <div className="flex-column border">
+          <div className="smallspace" >{linkifyed}</div>
+          <div className="smallspace flex-row space-between"><input className="button" onClick={e => this.props.onClick(this.props.wishInfo.id)} value={checkedText}></input>
+          </div>
+          {suggestedByUser}
+          {checkedBy}
         </div>
     );
   }
