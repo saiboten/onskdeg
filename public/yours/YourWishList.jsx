@@ -97,9 +97,10 @@ var YourWishList = React.createClass({
 
   delete(deleteId) {
     debug("Delete id: ", deleteId);
-      var newWishList = Object.assign([],this.state.wishes);
+      var newWishList = Object.assign([],this.props.wishes);
 
       var newWishList = newWishList.filter(function(e) {
+        debug(e.id);
         return e.id === deleteId ? false : true;
       });
 
