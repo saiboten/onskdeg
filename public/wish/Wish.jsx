@@ -1,3 +1,5 @@
+// @flow
+
 var React = require('react');
 var debug = require('debug')('Wish');
 var ReactDOM = require('react-dom');
@@ -13,7 +15,7 @@ var Wish = React.createClass( {
     }
   },
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: any) {
     this.setState({
       text: nextProps.wish.name
     })
@@ -43,25 +45,27 @@ var Wish = React.createClass( {
     });
   },
 
-  updateText: function(e) {
-    this.setState({
-      text: e.target.value
-    })
+  updateText: function(e: Event) {
+    if (e.target instanceof HTMLInputElement) {
+      this.setState({
+        text: e.target.value
+      })
+    }
   },
 
-  delete: function(e) {
+  delete: function(e: Event) {
     this.setState({
       confirm: true
     })
   },
 
-  cancel: function(e) {
+  cancel: function(e: Event) {
     this.setState({
       confirm: false
     })
   },
 
-  deleteConfirmed: function(e) {
+  deleteConfirmed: function(e : Event) {
     this.props.delete(this.props.wish.id);
   },
 

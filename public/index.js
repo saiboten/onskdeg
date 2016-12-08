@@ -13,16 +13,15 @@ import { createStore } from 'redux'
 import store from './store';
 
 import authFirebase from './firebase/authFirebase';
-import userlistFirebase from './users/userlistFirebase';
 import suggestionsFirebase from './suggestions/suggestionsFirebase';
 import wishesFirebase from './wish/wishesFirebase';
+
 
 require('normalize.css');
 require('./global.css');
 require("babel-polyfill");
 
 authFirebase.authChangeListener();
-userlistFirebase.setupUserlistListener();
 suggestionsFirebase.setupSuggestionListener();
 wishesFirebase.setupWishesListener();
 

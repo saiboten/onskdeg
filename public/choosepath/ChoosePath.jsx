@@ -14,25 +14,15 @@ var ChoosePath = React.createClass( {
   componentDidMount() {
 
     var username = "";
-
     var users = store.getState().allUserReducer;
-    debug("users: ", users);
 
-    var filteredUserList = users.filter(dbuser => {
-      debug("dbuser: ", dbuser);
-     return user.getUserUid() === dbuser.uid; });
-     debug("Filtered user list: ", filteredUserList);
+    users.forEach(dbuser => {
+       debug("User uid match? ", user.getUserUid(), dbuser.uid);
 
-     debug("Filtered user list name: ", filteredUserList[0].name);
-     username = filteredUserList[0].name;
-
-     if(!username) {
-       this.props.router.push('/nameselect')
-     }
-
-    if(user.getUserUid() == undefined) {
-      this.props.router.push('/')
-    }
+       if(user.getUserUid() === dbuser.uid && !dbuser.name) {
+          this.props.router.push('/nameselect')
+       }
+     });
   },
 
   render() {

@@ -13,10 +13,6 @@ const userReducer = (state = initialState, action) => {
       return newuser;
       case 'LOG_OUT':
         return initialState;
-    case 'SET_USERNAME':
-      return Object.assign({
-        name: action.name
-      }, state);
     default:
       return state
   }

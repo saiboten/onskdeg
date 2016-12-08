@@ -1,6 +1,6 @@
 import React from 'react'
 import Container from '../common/container/Container';
-var firebase = require('../firebase/firebase');
+import firebase from '../firebase/firebase';
 var user = require('../common/User');
 var debug = require('debug')('OthersWishListSelection')
 var AddableUsers = require('./addableusers/AddableUsers');
@@ -12,6 +12,7 @@ var AddedUserLink = require('./addeduserlink/AddedUserLink');
 import {Link} from 'react-router';
 var DeleteUserDropTarget = require('./DeleteUserDropTarget');
 import store from '../store';
+import userlistFirebase from '../users/userlistFirebase';
 
 require('./otherswishlistselection.css');
 
@@ -26,11 +27,13 @@ var OthersWishListSelection = React.createClass({
     },
 
     componentDidMount() {
-        if (user.getUserUid() == undefined) {
-            this.props.router.push('/')
-        }
         debug('this.state.users', this.state.users);
         this.getUsers();
+        userlistFirebase.subscribe();
+    },
+
+    componentDidUnmount() {
+        userlistFirebase.unsubscribe();
     },
 
     getUsers() {

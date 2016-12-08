@@ -34,9 +34,6 @@ var OthersWishList = React.createClass({
     },
 
     componentDidMount() {
-        if (user.getUserUid() == undefined) {
-            this.props.router.push('/')
-        }
         this.updateWishState();
 
         var userlist = this.props.userlist;

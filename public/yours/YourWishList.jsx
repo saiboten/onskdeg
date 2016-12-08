@@ -1,3 +1,5 @@
+// @flow
+
 import React from 'react'
 import Container from '../common/container/Container';
 import { Link } from 'react-router';
@@ -33,9 +35,6 @@ var YourWishList = React.createClass({
   },
 
   componentDidMount: function() {
-    if(user.getUserUid() == undefined) {
-      this.props.router.push('/')
-    }
     debug("componentDidMount");
   },
 

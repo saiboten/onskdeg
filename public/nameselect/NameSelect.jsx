@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 var debug = require('debug')('NameSelect');
 import store from '../store';
 import {setUserlist} from '../users/userlistactions';
+import firebase from '../firebase/firebase'
 
 require('./nameselect.css');
 
@@ -34,13 +35,16 @@ var NameSelect = React.createClass({
     var users = store.getState().allUserReducer;
 
     var newUsers = users.map(el=> {
-      if(el.email == user.getUserEmail()) {
-        el.name = this.state.confirmedName;
+      if(el.email === user.getUserEmail()) {
+        el.name = this.state.name;
+        debug("Found the user. New user values: ",  this.state.name, el);
       }
       return el;
     });
 
-    store.dispatch(setUserlist(newUsers));
+    debug("New userlist after name selection : ", newUsers);
+
+    firebase.database().ref('/userlist').set(newUsers);
   },
 
   updateNameState(e) {
