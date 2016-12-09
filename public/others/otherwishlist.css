@@ -8,3 +8,7 @@
   width: 20px;
   height: 20px;
 }
+
+.other-wish__linkify {
+  word-break: break-all;
+}

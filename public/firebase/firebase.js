@@ -1,6 +1,6 @@
-var firebase = require('firebase');
+let firebase = require('firebase');
 
-var config = {
+let config = {
     apiKey: "AIzaSyDRCFzLXgaM36t-0Vnhp2XbbQJrUjDmQAw",
     authDomain: "onskdeg.firebaseapp.com",
     databaseURL: "https://onskdeg.firebaseio.com",

@@ -1,17 +1,19 @@
+let debug = require('debug')('NameSelect');
+
 import React from 'react';
 import Container from '../common/container/Container';
 import user from '../common/User';
 import { Link } from 'react-router';
-var debug = require('debug')('NameSelect');
 import store from '../store';
 import {setUserlist} from '../users/userlistactions';
 import firebase from '../firebase/firebase'
 
 require('./nameselect.css');
 
-var NameSelect = React.createClass({
+let NameSelect = React.createClass({
 
   getInitialState() {
+    debug("getInitialState");
     return {
       name: "",
       confirmedName: ""
@@ -19,12 +21,16 @@ var NameSelect = React.createClass({
   },
 
   componentDidMount() {
+    debug("componentDidMount");
+
     if(user.getUserUid() == undefined) {
       this.props.router.push('/')
     }
   },
 
   nameSelected(e) {
+    debug("nameSelected",e);
+
     e.preventDefault();
     debug("Name selected: ", this.state.name);
 
@@ -48,6 +54,8 @@ var NameSelect = React.createClass({
   },
 
   updateNameState(e) {
+    debug("updateNameState",e);
+
     this.setState({
       name: e.target.value
     })

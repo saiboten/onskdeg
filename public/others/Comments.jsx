@@ -1,14 +1,16 @@
-var React = require('react');
-var debug = require('debug')('Comments');
-var firebase = require('../firebase/firebase')
-var user = require('../common/User');
-var moment = require('moment');
+let debug = require('debug')('Comments');
+
+import React from 'react';
+import firebase from '../firebase/firebase';
+import user from '../common/User';
+import moment from 'moment';
 
 require('./comments.css');
 
 var Comments = React.createClass({
 
   getInitialState() {
+    debug("getInitialState");
     return {
       comment: "",
       comments: [],
@@ -17,13 +19,14 @@ var Comments = React.createClass({
   },
 
   componentDidMount() {
-    var that = this;
+    debug("componentDidMount");
+
     var commentsRef = firebase.database().ref('comments/'+this.props.params.name);
     commentsRef.on('value', snapshot => {
       if(snapshot.val() != null ) {
         var list = snapshot.val();
         debug("Comments list :", list);
-        that.setState({
+        this.setState({
           comments: list
         });
       }
@@ -31,12 +34,16 @@ var Comments = React.createClass({
   },
 
   updateCommentState(e) {
+    debug("updateCommentState",e);
+
     this.setState({
       comment: e.target.value
     })
   },
 
   addComment(e) {
+    debug("addComment", e);
+
     e.preventDefault();
 
     if(this.state.comment === "") {

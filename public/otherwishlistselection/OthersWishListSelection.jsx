@@ -1,16 +1,16 @@
+let debug = require('debug')('OthersWishListSelection')
+let DragDropContext = require('react-dnd').DragDropContext;
+
 import React from 'react'
 import Container from '../common/container/Container';
 import firebase from '../firebase/firebase';
-var user = require('../common/User');
-var debug = require('debug')('OthersWishListSelection')
-var AddableUsers = require('./addableusers/AddableUsers');
-var HTML5Backend = require('react-dnd-html5-backend');
+import user from '../common/User';
+import AddableUsers from './addableusers/AddableUsers';
+import HTML5Backend from 'react-dnd-html5-backend';
 import { default as TouchBackend } from 'react-dnd-touch-backend';
-
-var DragDropContext = require('react-dnd').DragDropContext;
-var AddedUserLink = require('./addeduserlink/AddedUserLink');
+import AddedUserLink from './addeduserlink/AddedUserLink';
 import {Link} from 'react-router';
-var DeleteUserDropTarget = require('./DeleteUserDropTarget');
+import DeleteUserDropTarget from './DeleteUserDropTarget';
 import store from '../store';
 import userlistFirebase from '../users/userlistFirebase';
 
@@ -19,6 +19,7 @@ require('./otherswishlistselection.css');
 var OthersWishListSelection = React.createClass({
 
     getInitialState() {
+      debug("getInitialState");
         return {
           users: [],
           newUser: "",
@@ -27,17 +28,21 @@ var OthersWishListSelection = React.createClass({
     },
 
     componentDidMount() {
+      debug("componentDidMount");
+
         debug('this.state.users', this.state.users);
         this.getUsers();
         userlistFirebase.subscribe();
     },
 
     componentDidUnmount() {
+      debug("componentDidUnmount");
+
         userlistFirebase.unsubscribe();
     },
 
     getUsers() {
-        var that = this;
+      debug("getUsers");
 
         var ref = firebase.database().ref('users/' + user.getUserUid());
         ref.on('value', (snapshot) => {
@@ -45,17 +50,20 @@ var OthersWishListSelection = React.createClass({
                 var list = snapshot.val().users;
                 debug("data :", list);
 
-                that.setState({users: list})
+                this.setState({users: list})
             }
         });
     },
 
     updateUserState(e) {
+      debug("updateUserState");
+
         this.setState({newUser: e.target.value})
     },
 
     addUserLinkClick(uid) {
-      debug('Store.getState.allUserReducer:', store.getState().allUserReducer);
+      debug("addUserLinkClick", uid);
+
       var userfromdb = store.getState().allUserReducer.filter((userdb) => {
           return userdb.uid === uid;
       })[0];
@@ -63,17 +71,18 @@ var OthersWishListSelection = React.createClass({
     },
 
     addUserClickEvent(e) {
+      debug("addUserClickEvent", uid);
+
       e.preventDefault();
       this.addUser(this.state.newUser);
     },
 
     addUser(newUserMail) {
-        debug("Adding user: ", newUserMail);
+      debug("addUserClickEvent", newUserMail);
 
-        var users = store.getState().allUserReducer;
-        debug("Users: ", users);
+        let users = store.getState().allUserReducer;
 
-        var userfromdb = users.filter((userdb) => {
+        let userfromdb = users.filter((userdb) => {
             if (userdb.email === newUserMail) {
                 return true;
             } else {
@@ -101,7 +110,8 @@ var OthersWishListSelection = React.createClass({
     },
 
     deleteUser(email) {
-      debug("Deleting user by email: ", email);
+      debug("deleteUser", email);
+
       var userList = Object.assign([], this.state.users);
       var newUserList = userList.filter(user=> {
         return user.email !== email

@@ -1,11 +1,12 @@
-import React from 'react'
+var debug = require('debug')('SelectUser');
+
+import React from 'react';
 import Container from '../common/container/Container';
 import { Link } from 'react-router';
-var debug = require('debug')('SelectUser');
-var user = require('../common/User');
-var firebase = require('../firebase/firebase');
-var facebook = require('../firebase/facebooklogin');
-import { connect } from 'react-redux'
+import user from '../common/User';
+import firebase from '../firebase/firebase';
+import facebook from '../firebase/facebooklogin';
+import { connect } from 'react-redux';
 
 require('./selectuser.css');
 
@@ -21,9 +22,11 @@ const mapDispatchToProps = (dispatch, ownProps) => (
   {}
 )
 
-var SelectUser =  React.createClass({
+let SelectUser =  React.createClass({
 
-  getInitialState: function() {
+  getInitialState() {
+    debug("getInitialState");
+
     return {
       user: "",
       password: "",
@@ -31,6 +34,8 @@ var SelectUser =  React.createClass({
   },
 
   componentDidMount() {
+    debug("componentDidMount");
+
     firebase.auth().getRedirectResult().then(function(result) {
       debug("Login was apparently successful");
     }).catch(error => {
@@ -47,18 +52,24 @@ var SelectUser =  React.createClass({
   },
 
   updateUserState(e) {
+    debug("updateUserState",e);
+
     this.setState({
       user: e.target.value
     })
   },
 
   updatePasswordState(e) {
+    debug("updatePasswordState",e);
+
     this.setState({
       password: e.target.value
     })
   },
 
   logIn(e) {
+    debug("logIn",e);
+
     debug("Logging user in with the following credentials: ", this.state.user, this.state.password);
     e.preventDefault();
 
@@ -67,8 +78,9 @@ var SelectUser =  React.createClass({
     })
 
     firebase.auth().signInWithEmailAndPassword(this.state.user, this.state.password).catch(function(error) {
-      var errorCode = error.code;
-      var errorMessage = error.message;
+      let errorCode = error.code;
+      let errorMessage = error.message;
+
       debug("Errorcode: ", errorCode, "errorMessage", errorMessage);
 
       if(errorCode) {
@@ -80,11 +92,15 @@ var SelectUser =  React.createClass({
   },
 
   loginFacebook(e) {
+    debug("loginFacebook",e);
+
     e.preventDefault();
     firebase.auth().signInWithRedirect(facebook);
   },
 
   logOut(e) {
+    debug("logOut",e);
+
     e.preventDefault();
 
     this.setState({
@@ -105,10 +121,10 @@ var SelectUser =  React.createClass({
 
   render() {
 
-    var loggedInAs = this.props.userReducer.uid ? (<p>Du er logget inn som: <strong>{this.props.userReducer.email}</strong></p>) : "";
-    var logoutLink = this.props.userReducer.uid ? (<a className="button-navigation" onClick={this.logOut}>Logg ut</a>) : "";
-    var nextPage = this.props.userReducer.uid ? (<Link className="button" to="/choosepath">Gå videre</Link>) : "";
-    var loginForm = this.props.userReducer.uid ? "": (
+    let loggedInAs = this.props.userReducer.uid ? (<p>Du er logget inn som: <strong>{this.props.userReducer.email}</strong></p>) : "";
+    let logoutLink = this.props.userReducer.uid ? (<a className="button-navigation" onClick={this.logOut}>Logg ut</a>) : "";
+    let nextPage = this.props.userReducer.uid ? (<Link className="button" to="/choosepath">Gå videre</Link>) : "";
+    let loginForm = this.props.userReducer.uid ? "": (
       <form className="select-user__form" onSubmit={this.logIn} >
         <label className="smallspace">Brukernavn</label><input className="smallspace" value={this.state.user} onChange={this.updateUserState}></input>
         <label className="smallspace">Passord</label><input type="password" className="smallspace" value={this.state.password} onChange={this.updatePasswordState}></input>

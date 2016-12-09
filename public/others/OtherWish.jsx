@@ -1,40 +1,57 @@
-import React from 'react';
 var debug = require('debug')('OtherWish');
-var store = require('../store');
-var Linkify = require('react-linkify').default;
+
+import React from 'react';
+import store from '../store';
+import Linkify from 'react-linkify';
 
 var OtherWish = React.createClass({
 
-  render() {
+    render() {
 
-    var checkedBy = store.getState().allUserReducer.filter(user=>{
-      return user.email === this.props.wishInfo.checkedby;
-    })[0];
+        let checkedBy = store.getState().allUserReducer.filter(user => {
+            return user.email === this.props.wishInfo.checkedby;
+        })[0];
 
-    var suggestedBy = store.getState().allUserReducer.filter(user=>{
-      if(!this.props.suggestedBy) return false;
-      debug("user.email and suggested by ", user.email, this.props.suggestedBy);
-      return user.email === this.props.suggestedBy;
-    })[0];
-    var suggestedByUser = suggestedBy ? (<div className="smallspace">Foreslått av {suggestedBy.name}</div>) : "";
+        let suggestedBy = store.getState().allUserReducer.filter(user => {
+            if (!this.props.suggestedBy)
+                return false;
+            debug("user.email and suggested by ", user.email, this.props.suggestedBy);
+            return user.email === this.props.suggestedBy;
+        })[0];
+        let suggestedByUser = suggestedBy
+            ? (
+                <div className="smallspace">Foreslått av {suggestedBy.name}</div>
+            )
+            : "";
 
-    var item = this.props.wishInfo.checked ? (<del>{this.props.wishInfo.name}</del>) : this.props.wishInfo.name;
-    var linkifyed = (<Linkify>{item}</Linkify>);
-    var checkedBy = this.props.wishInfo.checked ? (<div className="smallspace">'Tatt av ' + {checkedBy.name}</div>) : "";
-    var checkedText = this.props.wishInfo.checked ? "Selg":"Kjøp";
+        let item = this.props.wishInfo.checked
+            ? (
+                <del>{this.props.wishInfo.name}</del>
+            )
+            : this.props.wishInfo.name;
+        let linkifyed = (
+            <Linkify className="other-wish__linkify">{item}</Linkify>
+        );
+        let checkedByElem = this.props.wishInfo.checked
+            ? (
+                <div className="smallspace">Tatt av + {checkedBy.name}</div>
+            )
+            : "";
+        let checkedText = this.props.wishInfo.checked
+            ? "Selg"
+            : "Kjøp";
 
-    debug("Linkyfied: ", linkifyed);
-
-    return (
-        <div className="flex-column border">
-          <div className="smallspace" >{linkifyed}</div>
-          <div className="smallspace flex-row space-between"><input className="button" onClick={e => this.props.onClick(this.props.wishInfo.id)} value={checkedText}></input>
-          </div>
-          {suggestedByUser}
-          {checkedBy}
-        </div>
-    );
-  }
+        return (
+            <div className="flex-column border">
+                <div className="smallspace">{linkifyed}</div>
+                <div className="smallspace flex-row space-between">
+                    <input className="button" onClick={e => this.props.onClick(this.props.wishInfo.id)} value={checkedText}></input>
+                </div>
+                {suggestedByUser}
+                {checkedByElem}
+            </div>
+        );
+    }
 })
 
 export default OtherWish;

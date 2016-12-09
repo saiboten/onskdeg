@@ -1,10 +1,10 @@
-var React = require('react');
+var debug = require('debug')('ChoosePath');
 
+import React from 'react';
 import { Link } from 'react-router';
 import Container from '../common/container/Container';
 import { withRouter } from 'react-router';
 import user from '../common/User';
-var debug = require('debug')('ChoosePath');
 import store from '../store';
 
 require('./choosepath.css')
@@ -12,14 +12,17 @@ require('./choosepath.css')
 var ChoosePath = React.createClass( {
 
   componentDidMount() {
+    debug("componentDidMount");
 
-    var username = "";
-    var users = store.getState().allUserReducer;
+    let username = "";
+    let users = store.getState().allUserReducer;
+
+    debug("Users: ", users);
 
     users.forEach(dbuser => {
        debug("User uid match? ", user.getUserUid(), dbuser.uid);
-
        if(user.getUserUid() === dbuser.uid && !dbuser.name) {
+         debug("No user name sat. Redirecting to name selection");
           this.props.router.push('/nameselect')
        }
      });

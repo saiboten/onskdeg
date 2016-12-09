@@ -1,96 +1,104 @@
-var React = require('react');
-var firebase = require('../../firebase/firebase');
-var debug = require('debug')('AddableUser');
+let debug = require('debug')('AddableUser');
+
+import React from 'react';
+import firebase from '../../firebase/firebase';
+import user from '../../common/User';
+
 require('./addableusers.css');
-var user = require('../../common/User');
 
+let AddableUsers = React.createClass({
 
-var AddableUsers = React.createClass({
+    getInitialState() {
+        debug("getInitialState");
+        return {userlist: [], open: false}
+    },
 
-  getInitialState() {
-    return {
-      userlist: [],
-      open: false
-    }
-  },
+    userInList(uid, userlist) {
+        debug("userInList: ", uid, userlist);
+        if (!userlist) {
+            return;
+        }
 
-  userInList(uid, userlist) {
-    debug("Userlist: ", uid, userlist);
-    if(!userlist) {
-      return;
-    }
+        return userlist.filter(user => {
+            return user.uid === uid;
+        }).length == 1;
+    },
 
-    return userlist.filter(user=> {
-      return user.uid === uid;
-    }).length == 1;
-  },
+    componentDidMount() {
+        debug("componentDidMount");
 
-  componentDidMount() {
-    var that = this;
-    firebase.database().ref('userlist').on('value', (data) => {
-      debug('Data returned: ', data.val());
-        var userlist = data.val();
+        firebase.database().ref('userlist').on('value', (data) => {
+            debug('Data returned: ', data.val());
+            var userlist = data.val();
 
-        firebase.database().ref('users/' + user.getUserUid()).on('value', (snapshot) => {
+            firebase.database().ref('users/' + user.getUserUid()).on('value', (snapshot) => {
 
+                var addedUsers = snapshot.val()
+                    ? snapshot.val().users
+                    : undefined;
+                var filteredUserList = userlist.filter(dbuser => {
+                    if (dbuser.uid === user.getUserUid()) {
+                        return false;
+                    } else if (this.userInList(dbuser.uid, addedUsers)) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                });
 
-
-            var addedUsers = snapshot.val() ? snapshot.val().users : undefined;
-            var filteredUserList = userlist.filter(dbuser=> {
-              if(dbuser.uid === user.getUserUid()) {
-                return false;
-              }
-              else if(that.userInList(dbuser.uid, addedUsers)) {
-                return false;
-              }
-              else {
-                return true;
-              }
-            });
-
-            that.setState({
-              userlist: filteredUserList
+                this.setState({userlist: filteredUserList});
             });
         });
-    });
-  },
+    },
 
-  addUser(e,userUid) {
-    e.preventDefault();
-    debug("User added: ", userUid);
-    this.props.addUser(userUid);
-  },
+    addUser(e, userUid) {
+        debug("addUser", e, userUid);
+        e.preventDefault();
+        this.props.addUser(userUid);
+    },
 
-  clearList() {
-    this.setState({
-      userlist: []
-    })
-  },
+    clearList() {
+        debug("clearList");
 
-  toggleOpen() {
-    this.setState({
-      open: !this.state.open
-    })
-  },
+        this.setState({userlist: []})
+    },
 
-  render() {
+    toggleOpen() {
+        debug("toggleOpen");
 
-    var addableUsers = this.state.userlist.map(user => {
-      return (<a href="#" className="addable-users__list-element border space button" onClick={(e) => { this.addUser(e, user.uid)}}>{user.name}</a>)
-    })
+        this.setState({
+            open: !this.state.open
+        })
+    },
 
-    var content = this.state.open ? (<div className="addable-users__list">
-      {addableUsers}
-    </div>) : "";
+    render() {
 
-    return (
-      <div>
-        <div className="button addable-users__expand-button smallspace" onClick={this.toggleOpen}>{this.state.open ? "-" : "+"}</div>
-        {content}
+        var addableUsers = this.state.userlist.map(user => {
+            return (
+                <a href="#" className="addable-users__list-element border space button" onClick={(e) => {
+                    this.addUser(e, user.uid)
+                }}>{user.name}</a>
+            )
+        })
 
-      </div>
-    );
-  }
+        var content = this.state.open
+            ? (
+                <div className="addable-users__list">
+                    {addableUsers}
+                </div>
+            )
+            : "";
+
+        return (
+            <div>
+                <div className="button addable-users__expand-button smallspace" onClick={this.toggleOpen}>{this.state.open
+                        ? "-"
+                        : "+"}</div>
+                {content}
+
+            </div>
+        );
+    }
 });
 
 module.exports = AddableUsers;

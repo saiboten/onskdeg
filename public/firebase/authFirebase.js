@@ -1,28 +1,28 @@
-var firebase = require('../firebase/firebase');
-var debug = require('debug')('authListener');
+let debug = require('debug')('authListener');
+
+import firebase from '../firebase/firebase';
 import store from '../store';
 import { setUser } from '../user/useractions'
 
-var obj = {
+let obj = {
   authChangeListener() {
     firebase.auth().onAuthStateChanged(function(user) {
-      if (user) {
-        debug('User auth state changed, user logged in: ', user);
+      debug('onAuthStateChanged. User logged in: ', user);
 
+      if (user) {
         store.dispatch(setUser(user));
 
         return firebase.database().ref('/userlist').once('value').then(function(snapshot) {
           var users = snapshot.val();
-          debug("Users found in db: ", users);
-          if(users == undefined) {
-            debug("Creating user object and adding it", user, "Users: ", users);
+          if(users === undefined) {
             users = [];
+
             users.push({
               email: user.email,
               uid: user.uid
             });
 
-            debug("Users to be stored", users);
+            debug("Users to be stored after new user added", users);
             firebase.database().ref('/userlist').set(users);
           }
           else if(users.filter(el=> { return el.email == user.email}).length === 0) {

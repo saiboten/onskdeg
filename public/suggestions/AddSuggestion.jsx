@@ -1,8 +1,13 @@
+let debug = require('debug')('AddSuggestion');
+
 import React from 'react';
 
-var AddSuggestion = React.createClass({
+
+let AddSuggestion = React.createClass({
 
   getInitialState() {
+    debug('getInitialState');
+
     return {
       suggestion: "",
       feedback: ""
@@ -10,12 +15,16 @@ var AddSuggestion = React.createClass({
   },
 
   changeSuggestion(e) {
+    debug('changeSuggestion');
+
     this.setState({
       suggestion: e.target.value
     })
   },
 
   onClick(e) {
+    debug('onClick');
+
     e.preventDefault();
     if(this.state.suggestion) {
       this.props.onClick(this.state.suggestion);

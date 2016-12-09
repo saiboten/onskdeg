@@ -1,15 +1,18 @@
-var React = require('react');
-var DropTarget = require('react-dnd').DropTarget;
-var debug = require('debug')('DeleteUserDropTarget');
+let DropTarget = require('react-dnd').DropTarget;
+let debug = require('debug')('DeleteUserDropTarget');
+
+import React from 'react';
+
 require('./deleteuserdroptarget.css');
 
 /**
  * Specifies the drop target contract.
  * All methods are optional.
  */
-var deleteTarget = {
+let deleteTarget = {
 
   drop: function (props, monitor, component) {
+    debug("drop");
     if (monitor.didDrop()) {
       // If you want, you can check whether some nested
       // target already handled drop
@@ -17,7 +20,7 @@ var deleteTarget = {
     }
 
     // Obtain the dragged item
-    var item = monitor.getItem();
+    let item = monitor.getItem();
 
     debug("Dropped! Deleting user: ", item.email);
     props.delete(item.email);
@@ -28,6 +31,8 @@ var deleteTarget = {
  * Specifies which props to inject into your component.
  */
 function collect(connect, monitor) {
+  debug("collect");
+
   return {
     // Call this function inside render()
     // to let React DnD handle the drag events:
@@ -42,6 +47,8 @@ function collect(connect, monitor) {
 
 var DeleteUserDropTarget = React.createClass({
   componentWillReceiveProps: function (nextProps) {
+    debug("componentWillReceiveProps");
+
     if (!this.props.isOver && nextProps.isOver) {
       // You can use this as enter handler
     }
@@ -60,9 +67,9 @@ var DeleteUserDropTarget = React.createClass({
 
     // These props are injected by React DnD,
     // as defined by your `collect` function above:
-    var isOver = this.props.isOver;
-    var canDrop = this.props.canDrop;
-    var connectDropTarget = this.props.connectDropTarget;
+    let isOver = this.props.isOver;
+    let canDrop = this.props.canDrop;
+    let connectDropTarget = this.props.connectDropTarget;
 
     return connectDropTarget(
       <div className="border space">

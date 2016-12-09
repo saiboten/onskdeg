@@ -1,5 +1,5 @@
-var firebase = require('./firebase');
+let firebase = require('./firebase');
 
-var provider = new firebase.auth.FacebookAuthProvider();
+let provider = new firebase.auth.FacebookAuthProvider();
 
 module.exports = provider;

@@ -15,7 +15,7 @@
 .wish__wish-text {
   line-height: 20px;
   width: 70%;
-  word-wrap: break-word
+  word-wrap: break-word;
 }
 
 a.wish__confirm-delete-button {

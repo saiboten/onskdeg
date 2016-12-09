@@ -2,9 +2,9 @@ let initialState = {
 
 };
 
-var debug = require('debug')('suggestionReducer');
+let debug = require('debug')('suggestionReducer');
 
-const wishReducer = (state = initialState, action) => {
+const suggestionReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'ADD_SUGGESTION':
       var newState = Object.assign({}, state);
@@ -53,4 +53,4 @@ const wishReducer = (state = initialState, action) => {
   }
 }
 
-export default wishReducer
+export default suggestionReducer

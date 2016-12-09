@@ -1,14 +1,15 @@
-import React from 'react';
 var debug = require('debug')('Suggestion');
+
+import React from 'react';
 import {checkSuggestion} from './suggestionActions';
 import {deleteSuggestion} from './suggestionActions';
-
 import { connect } from 'react-redux'
 import OtherWish from '../others/OtherWish';
 import user from '../common/User'
-var counter = 0;
 import suggestionsFirebase from './suggestionsFirebase';
 import store from '../store';
+
+let counter = 0;
 
 const mapStateToProps = (state, ownProps) => {
 
@@ -39,9 +40,7 @@ const mapDispatchToProps = function(dispatch, ownProps) {
 };
 
 var Suggestion = React.createClass({
-
   render() {
-    debug("This.props.suggestion: ", this.props.suggestion);
 
     var wishInfo = {
       checked: this.props.suggestion.checked,
