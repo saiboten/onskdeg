@@ -1,3 +1,4 @@
+// @flow
 export const setAllWishes = (wishes) => {
   return {
     type: 'SET_ALL_WISHES',

@@ -1,3 +1,4 @@
+// @flow
 let debug = require('debug')('authListener');
 
 import firebase from '../firebase/firebase';

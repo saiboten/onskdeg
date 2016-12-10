@@ -1,3 +1,4 @@
+// @flow
 import onskDegApp from './reducers'
 import { compose, createStore } from 'redux'
 import persistState from 'redux-localstorage'

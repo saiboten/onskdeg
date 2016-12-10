@@ -1,3 +1,4 @@
+// @flow
 let debug = require('debug')('AddedUserLink');
 let DragSource = require('react-dnd').DragSource;
 

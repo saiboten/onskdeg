@@ -1,13 +1,12 @@
 // @flow
-
-var React = require('react');
 var debug = require('debug')('Wish');
-var ReactDOM = require('react-dom');
 
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 require('./wish.css');
 
-var Wish = React.createClass( {
+let Wish = React.createClass( {
 
   componentDidUpdate: function() {
     if(this.refs.input) {
@@ -71,9 +70,9 @@ var Wish = React.createClass( {
 
   render: function() {
 
-    var deleteWish = this.state.confirm ? (<div className="flex-row space-between right"><a className="button" onClick={this.cancel}>Avbryt</a><a className="button wish__confirm-delete-button" onClick={this.deleteConfirmed}>Slett</a></div>) : (<a className="wish__delete-button button" onClick={this.delete}>Slett</a>);
+    let deleteWish = this.state.confirm ? (<div className="flex-row space-between right"><a className="button" onClick={this.cancel}>Avbryt</a><a className="button wish__confirm-delete-button" onClick={this.deleteConfirmed}>Slett</a></div>) : (<a className="wish__delete-button button" onClick={this.delete}>Slett</a>);
 
-    var html = this.state.edit ?
+    let html = this.state.edit ?
     (<textarea className="wish__wish-input" ref="input" onBlur={this.focusLost} onChange={this.updateText} value={this.state.text} /> ):
     (<span onClick={this.click} className="wish__wish-text">{this.state.text}</span>);
     return (

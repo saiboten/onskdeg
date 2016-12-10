@@ -1,3 +1,5 @@
+// @flow
+
 let debug = require('debug')('OthersWishList');
 
 import React from 'react'
@@ -70,7 +72,7 @@ let OthersWishList = React.createClass({
             }
         });
         firebase.database().ref('wishes/' + this.props.params.name).set({wishes: newWishList});
-        this.setState({wishes: newWishList, newWish: "", feedback: "Du kjøpte eller solgte noe!"})
+        this.setState({wishes: newWishList, feedback: "Du kjøpte eller solgte noe!"});
     },
 
     toggleShowSelected(e) {

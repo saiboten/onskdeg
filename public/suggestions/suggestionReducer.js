@@ -1,3 +1,4 @@
+// @flow
 let initialState = {
 
 };
@@ -7,7 +8,7 @@ let debug = require('debug')('suggestionReducer');
 const suggestionReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'ADD_SUGGESTION':
-      var newState = Object.assign({}, state);
+      let newState = Object.assign({}, state);
       if(!newState[action.suggestedTo]) {
         newState[action.suggestedTo] = [];
       }
@@ -22,7 +23,7 @@ const suggestionReducer = (state = initialState, action) => {
       return newState;
     case 'CHECK_SUGGESTION':
       debug("Checking suggestion, action: ", action);
-      var anotherNewState = Object.assign({}, state);
+      let anotherNewState = Object.assign({}, state);
 
       anotherNewState[action.suggestedTo] = anotherNewState[action.suggestedTo].map(el => {
         if(el.id === action.id) {

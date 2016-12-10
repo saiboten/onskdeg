@@ -1,3 +1,4 @@
+// @flow
 let DropTarget = require('react-dnd').DropTarget;
 let debug = require('debug')('DeleteUserDropTarget');
 

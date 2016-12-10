@@ -1,9 +1,11 @@
+// @flow
+let debug = require('debug')('userlistListener');
+
 import store from '../store';
 import {setAllWishes} from './wishactions';
-var firebase = require('../firebase/firebase');
-var debug = require('debug')('userlistListener');
+import firebase from '../firebase/firebase';
 
-var obj = {
+let obj = {
   setupWishesListener() {
     firebase.database().ref('wishes').on('value', wishes => {
       store.dispatch(setAllWishes(wishes.val()));

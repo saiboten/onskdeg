@@ -1,3 +1,4 @@
+// @flow
 let debug = require('debug')('Comments');
 
 import React from 'react';
@@ -33,15 +34,18 @@ var Comments = React.createClass({
     });
   },
 
-  updateCommentState(e) {
+  updateCommentState(e: Event) {
     debug("updateCommentState",e);
 
-    this.setState({
-      comment: e.target.value
-    })
+    if (e.target instanceof HTMLInputElement) {
+      this.setState({
+        comment: e.target.value
+      })
+    }
+
   },
 
-  addComment(e) {
+  addComment(e: Event) {
     debug("addComment", e);
 
     e.preventDefault();

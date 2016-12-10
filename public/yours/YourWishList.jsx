@@ -1,12 +1,12 @@
 // @flow
+var debug = require('debug')('YourWishList');
 
 import React from 'react'
 import Container from '../common/container/Container';
 import { Link } from 'react-router';
-var debug = require('debug')('YourWishList');
-var user = require('../common/User');
-var Wish = require('../wish/Wish');
-var firebase = require('../firebase/firebase');
+import user from '../common/User';
+import Wish from'../wish/Wish';
+import firebase from '../firebase/firebase';
 import store from '../store';
 import { connect } from 'react-redux'
 

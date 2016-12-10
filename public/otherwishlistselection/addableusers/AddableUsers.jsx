@@ -1,3 +1,4 @@
+// @flow
 let debug = require('debug')('AddableUser');
 
 import React from 'react';
@@ -13,7 +14,7 @@ let AddableUsers = React.createClass({
         return {userlist: [], open: false}
     },
 
-    userInList(uid, userlist) {
+    userInList(uid: String, userlist: Array<Object>) {
         debug("userInList: ", uid, userlist);
         if (!userlist) {
             return;
@@ -51,7 +52,7 @@ let AddableUsers = React.createClass({
         });
     },
 
-    addUser(e, userUid) {
+    addUser(e: Event, userUid: String) {
         debug("addUser", e, userUid);
         e.preventDefault();
         this.props.addUser(userUid);

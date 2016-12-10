@@ -1,3 +1,4 @@
+// @flow
 var debug = require('debug')('ChoosePath');
 
 import React from 'react';

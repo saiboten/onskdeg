@@ -1,4 +1,5 @@
-var debug = require('debug')('wishReducer');
+// @flow
+let debug = require('debug')('wishReducer');
 let initialState = {};
 
 const userReducer = (state = initialState, action) => {

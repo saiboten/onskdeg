@@ -1,3 +1,4 @@
+// @flow
 var debug = require('debug')('SelectUser');
 
 import React from 'react';

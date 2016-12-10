@@ -1,3 +1,5 @@
+// @flow
+
 var debug = require('debug')('OtherWish');
 
 import React from 'react';

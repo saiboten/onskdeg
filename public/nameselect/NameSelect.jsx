@@ -1,3 +1,4 @@
+// @flow
 let debug = require('debug')('NameSelect');
 
 import React from 'react';
@@ -28,7 +29,7 @@ let NameSelect = React.createClass({
     }
   },
 
-  nameSelected(e) {
+  nameSelected(e: Event) {
     debug("nameSelected",e);
 
     e.preventDefault();
@@ -53,12 +54,13 @@ let NameSelect = React.createClass({
     firebase.database().ref('/userlist').set(newUsers);
   },
 
-  updateNameState(e) {
+  updateNameState(e: Event) {
     debug("updateNameState",e);
-
-    this.setState({
-      name: e.target.value
-    })
+    if (e.target instanceof HTMLInputElement) {
+      this.setState({
+        name: e.target.value
+      })
+    }
   },
 
   render() {

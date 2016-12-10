@@ -1,3 +1,4 @@
+// @flow
 var debug = require('debug')('Suggestions');
 
 import React from 'react'

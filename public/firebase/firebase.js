@@ -1,3 +1,4 @@
+// @flow
 let firebase = require('firebase');
 
 let config = {

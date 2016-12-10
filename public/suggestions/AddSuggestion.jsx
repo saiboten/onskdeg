@@ -1,7 +1,7 @@
+// @flow
 let debug = require('debug')('AddSuggestion');
 
 import React from 'react';
-
 
 let AddSuggestion = React.createClass({
 
@@ -38,7 +38,7 @@ let AddSuggestion = React.createClass({
 
   render() {
 
-    var feedback = this.state.feedback ? (<span>{this.state.feedback}</span>) : "";
+    let feedback = this.state.feedback ? (<span>{this.state.feedback}</span>) : "";
 
     return(
       <div>

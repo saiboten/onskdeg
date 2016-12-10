@@ -1,0 +1,10 @@
+[ignore]
+.*/node_modules
+
+[include]
+public
+
+[libs]
+
+[options]
+module.name_mapper='.css$' -> 'empty/object'

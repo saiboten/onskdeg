@@ -1,3 +1,4 @@
+// @flow
 let debug = require('debug')('OthersWishListSelection')
 let DragDropContext = require('react-dnd').DragDropContext;
 

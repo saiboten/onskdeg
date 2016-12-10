@@ -1,3 +1,4 @@
+// @flow
 var debug = require('debug')('Suggestion');
 
 import React from 'react';
@@ -29,10 +30,14 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = function(dispatch, ownProps) {
   return {
     onCheckSuggestion() {
+      debug('onCheckSuggestion')
+
       dispatch(checkSuggestion(ownProps.userUid, ownProps.suggestion.id, user.getUserEmail()));
       suggestionsFirebase.saveSuggestions(store.getState().suggestionReducer);
     },
     onDeleteSuggestion() {
+      debug('onDeleteSuggestion')
+
       dispatch(deleteSuggestion(ownProps.userUid, ownProps.suggestion.id));
       suggestionsFirebase.saveSuggestions(store.getState().suggestionReducer);
     }

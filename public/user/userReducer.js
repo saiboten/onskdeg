@@ -1,5 +1,6 @@
+// @flow
 let initialState = {};
-var debug = require('debug')('userReducer');
+let debug = require('debug')('userReducer');
 
 const userReducer = (state = initialState, action) => {
   debug("Input: state: ", state, ". Action: ", action);

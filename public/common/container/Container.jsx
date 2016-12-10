@@ -1,4 +1,6 @@
-var React = require('react');
+// @flow
+import React from 'react';
+
 require('./container.css');
 
 var Container = React.createClass( {
