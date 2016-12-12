@@ -45,11 +45,9 @@ let Wish = React.createClass( {
   },
 
   updateText: function(e: Event) {
-    if (e.target instanceof HTMLInputElement) {
       this.setState({
         text: e.target.value
       })
-    }
   },
 
   delete: function(e: Event) {

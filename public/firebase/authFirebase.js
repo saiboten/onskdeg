@@ -23,7 +23,7 @@ let obj = {
               uid: user.uid
             });
 
-            debug("Users to be stored after new user added", users);
+            debug('Users to be stored after new user added', users);
             firebase.database().ref('/userlist').set(users);
           }
           else if(users.filter(el=> { return el.email == user.email}).length === 0) {
@@ -31,7 +31,7 @@ let obj = {
               email: user.email,
               uid: user.uid
             });
-            debug("Adding user ", user, "Users: ", users);
+            debug('Adding user ', user, 'Users: ', users);
             firebase.database().ref('/userlist').set(users);
           }
         });

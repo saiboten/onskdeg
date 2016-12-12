@@ -1,4 +1,4 @@
-// @flow
+
 let initialState = {
 
 };
@@ -17,7 +17,7 @@ const suggestionReducer = (state = initialState, action) => {
         wishSuggestion: action.wishSuggestion,
         suggestedBy: action.suggestedBy,
         checked: false,
-        checkedBy: ""
+        checkedBy: ''
       });
       debug("Old state: ", state, ". New state: ", newState);
       return newState;
@@ -27,7 +27,7 @@ const suggestionReducer = (state = initialState, action) => {
 
       anotherNewState[action.suggestedTo] = anotherNewState[action.suggestedTo].map(el => {
         if(el.id === action.id) {
-          debug("Found the right id: ", el.id);
+          debug('Found the right id: ', el.id);
           el.checked = !el.checked;
           el.checkedBy = action.checkedBy;
         }

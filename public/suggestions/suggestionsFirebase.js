@@ -11,7 +11,7 @@ let obj = {
       store.dispatch(setSuggestions(suggestions.val()));
     });
   },
-  saveSuggestions(suggestions) {
+  saveSuggestions(suggestions: Object) {
     firebase.database().ref('suggestion').set(suggestions);
   }
 };

@@ -36,12 +36,9 @@ var Comments = React.createClass({
 
   updateCommentState(e: Event) {
     debug("updateCommentState",e);
-
-    if (e.target instanceof HTMLInputElement) {
-      this.setState({
-        comment: e.target.value
-      })
-    }
+    this.setState({
+      comment: e.target.value
+    })
 
   },
 
@@ -58,7 +55,7 @@ var Comments = React.createClass({
     }
 
     debug("Adding comment: ", this.state.comment);
-    var comments = Object.assign([],this.state.comments);
+    var comments = this.state.comments.slice();
 
     comments.push({
       user: user.getUserEmail(),

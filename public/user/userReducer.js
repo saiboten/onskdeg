@@ -1,4 +1,4 @@
-// @flow
+
 let initialState = {};
 let debug = require('debug')('userReducer');
 

@@ -72,7 +72,7 @@ var OthersWishListSelection = React.createClass({
     },
 
     addUserClickEvent(e) {
-      debug("addUserClickEvent", uid);
+      debug("addUserClickEvent", e);
 
       e.preventDefault();
       this.addUser(this.state.newUser);
@@ -113,7 +113,7 @@ var OthersWishListSelection = React.createClass({
     deleteUser(email) {
       debug("deleteUser", email);
 
-      var userList = Object.assign([], this.state.users);
+      var userList = this.state.users.slice();
       var newUserList = userList.filter(user=> {
         return user.email !== email
       });

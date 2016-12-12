@@ -11,7 +11,7 @@ module.exports = {
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                loader: 'babel-loader'
+                loaders: ['babel-loader','eslint-loader']
             },
             {
                 test: /.jsx?$/,
@@ -33,7 +33,6 @@ module.exports = {
                 test: /\.jpg$/,
                 loader: "file-loader"
             }
-
         ],
     },
     resolve: {

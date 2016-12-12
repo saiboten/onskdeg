@@ -56,11 +56,9 @@ let NameSelect = React.createClass({
 
   updateNameState(e: Event) {
     debug("updateNameState",e);
-    if (e.target instanceof HTMLInputElement) {
       this.setState({
         name: e.target.value
       })
-    }
   },
 
   render() {

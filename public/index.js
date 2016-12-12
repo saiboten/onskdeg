@@ -20,7 +20,7 @@ import wishesFirebase from './wish/wishesFirebase';
 
 require('normalize.css');
 require('./global.css');
-require("babel-polyfill");
+require('babel-polyfill');
 
 authFirebase.authChangeListener();
 suggestionsFirebase.setupSuggestionListener();

@@ -14,15 +14,16 @@ let AddSuggestion = React.createClass({
     }
   },
 
-  changeSuggestion(e) {
+  changeSuggestion(e: Event) {
     debug('changeSuggestion');
 
     this.setState({
       suggestion: e.target.value
-    })
+    });
+
   },
 
-  onClick(e) {
+  onClick(e: Event) {
     debug('onClick');
 
     e.preventDefault();
