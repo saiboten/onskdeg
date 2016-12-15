@@ -1,6 +1,5 @@
 // @flow
-let firebase = require('./firebase');
+const firebase = require('./firebase');
 
-let provider = new firebase.auth.FacebookAuthProvider();
-
+const provider = new firebase.auth.FacebookAuthProvider();
 module.exports = provider;

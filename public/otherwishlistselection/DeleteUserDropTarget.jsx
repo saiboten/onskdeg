@@ -1,8 +1,9 @@
 // @flow
-let DropTarget = require('react-dnd').DropTarget;
-let debug = require('debug')('DeleteUserDropTarget');
 
 import React from 'react';
+
+const DropTarget = require('react-dnd').DropTarget;
+const debug = require('debug')('DeleteUserDropTarget');
 
 require('./deleteuserdroptarget.css');
 
@@ -10,10 +11,10 @@ require('./deleteuserdroptarget.css');
  * Specifies the drop target contract.
  * All methods are optional.
  */
-let deleteTarget = {
+const deleteTarget = {
 
-  drop: function (props, monitor, component) {
-    debug("drop");
+  drop(props, monitor, component) {
+    debug('drop');
     if (monitor.didDrop()) {
       // If you want, you can check whether some nested
       // target already handled drop
@@ -21,18 +22,18 @@ let deleteTarget = {
     }
 
     // Obtain the dragged item
-    let item = monitor.getItem();
+    const item = monitor.getItem();
 
-    debug("Dropped! Deleting user: ", item.email);
+    debug('Dropped! Deleting user: ', item.email);
     props.delete(item.email);
-  }
+  },
 };
 
 /**
  * Specifies which props to inject into your component.
  */
 function collect(connect, monitor) {
-  debug("collect");
+  debug('collect');
 
   return {
     // Call this function inside render()
@@ -42,13 +43,13 @@ function collect(connect, monitor) {
     isOver: monitor.isOver(),
     isOverCurrent: monitor.isOver({ shallow: true }),
     canDrop: monitor.canDrop(),
-    itemType: monitor.getItemType()
+    itemType: monitor.getItemType(),
   };
 }
 
-var DeleteUserDropTarget = React.createClass({
-  componentWillReceiveProps: function (nextProps) {
-    debug("componentWillReceiveProps");
+class DeleteUserDropTarget extends React.Component {
+  componentWillReceiveProps(nextProps) {
+    debug('componentWillReceiveProps');
 
     if (!this.props.isOver && nextProps.isOver) {
       // You can use this as enter handler
@@ -62,22 +63,27 @@ var DeleteUserDropTarget = React.createClass({
       // You can be more specific and track enter/leave
       // shallowly, not including nested targets
     }
-  },
+  }
 
-  render: function () {
-
+  render() {
     // These props are injected by React DnD,
     // as defined by your `collect` function above:
-    let isOver = this.props.isOver;
-    let canDrop = this.props.canDrop;
-    let connectDropTarget = this.props.connectDropTarget;
+    const isOver = this.props.isOver;
+    const canDrop = this.props.canDrop;
+    const connectDropTarget = this.props.connectDropTarget;
 
     return connectDropTarget(
       <div className="border space">
         <p>Dra en bruker ned her for å slette brukeren</p>
-      </div>
-    );
+      </div>);
   }
-});
+}
 
-module.exports = DropTarget("deleteUser", deleteTarget, collect)(DeleteUserDropTarget);
+DeleteUserDropTarget.propTypes = {
+  isOver: React.PropTypes.boolean,
+  canDrop: React.PropTypes.boolean,
+  isOverCurrent: React.PropTypes.boolean,
+  connectDropTarget: React.PropTypes.object,
+};
+
+module.exports = DropTarget('deleteUser', deleteTarget, collect)(DeleteUserDropTarget);

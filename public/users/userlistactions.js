@@ -1,7 +1,6 @@
-
-export const setUserlist = (userList) => {
-  return {
+export default (userList => (
+  {
     type: 'SET_USERLIST',
-    userList
+    userList,
   }
-}
+));

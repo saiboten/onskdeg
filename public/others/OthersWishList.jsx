@@ -1,124 +1,128 @@
 // @flow
 
-let debug = require('debug')('OthersWishList');
+import React from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router';
 
-import React from 'react'
 import Container from '../common/container/Container';
-import {Link} from 'react-router';
 import firebase from '../firebase/firebase';
 import user from '../common/User';
 import Comments from './Comments';
-import {connect} from 'react-redux'
 import Suggestions from '../suggestions/Suggestions';
 import OtherWish from './OtherWish';
+
+const debug = require('debug')('OthersWishList');
 
 require('./otherwishlist.css');
 
 const mapStateToProps = (state, ownProps) => {
-    debug("mapDispatchToProps: ", state, ownProps);
-    return {userlist: state.allUserReducer}
+  debug('mapDispatchToProps: ', state, ownProps);
+  return { userlist: state.allUserReducer };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => ({})
+const mapDispatchToProps = (dispatch, ownProps) => ({});
 
-let OthersWishList = React.createClass({
+class OthersWishList extends React.Component {
 
-    getInitialState() {
-        debug("getInitialState");
-        return {wishes: [], hideSelected: true, user: "", feedback: ""}
-    },
+  getInitialState() {
+    debug('getInitialState');
+    return { wishes: [], hideSelected: true, user: '', feedback: '' };
+  }
 
-    componentDidMount() {
-        debug("componentDidMount");
+  componentDidMount() {
+    debug('componentDidMount');
 
-        this.updateWishState();
+    this.updateWishState();
 
-        let userlist = this.props.userlist;
-        userlist.forEach(user => {
-            if (user.uid == this.props.params.name) {
-                debug("Found it! ", user);
-                this.setState({user: user.name})
-            }
-        })
-    },
+    const userlist = this.props.userlist;
+    userlist.forEach((userInUserList) => {
+      if (userInUserList.uid === this.props.params.name) {
+        debug('Found it! ', userInUserList);
+        this.setState({ userInUserList: user.name });
+      }
+    });
+  }
 
-    updateWishState() {
-        debug("updateWishState");
+  updateWishState() {
+    debug('updateWishState');
 
-        let wishesRef = firebase.database().ref('wishes/' + this.props.params.name);
-        wishesRef.on('value', snapshot => {
-            debug("Callback from wish list: ", snapshot);
-            if (snapshot.val() != null) {
-                var list = snapshot.val().wishes;
-                debug("data :", list);
+    const wishesRef = firebase.database().ref(`wishes/${this.props.params.name}`);
+    wishesRef.on('value', (snapshot) => {
+      debug('Callback from wish list: ', snapshot);
+      if (snapshot.val() != null) {
+        const list = snapshot.val().wishes;
+        debug('Data :', list);
 
-                this.setState({wishes: list});
-            }
-        });
-    },
+        this.setState({ wishes: list });
+      }
+    });
+  }
 
-    check(id) {
-        debug("check", id);
-        let newWishList = this.state.wishes.map((e) => {
-            if (id === e.id) {
-                return {
-                    name: e.name,
-                    checked: !e.checked,
-                    id: e.id,
-                    checkedby: user.getUserEmail()
-                }
-            } else {
-                return e;
-            }
-        });
-        firebase.database().ref('wishes/' + this.props.params.name).set({wishes: newWishList});
-        this.setState({wishes: newWishList, feedback: "Du kjøpte eller solgte noe!"});
-    },
+  check(id) {
+    debug('check', id);
+    const newWishList = this.state.wishes.map((e) => {
+      if (id === e.id) {
+        return {
+          name: e.name,
+          checked: !e.checked,
+          id: e.id,
+          checkedby: user.getUserEmail(),
+        };
+      }
 
-    toggleShowSelected(e) {
-        debug("toggleShowSelected", e);
-        e.preventDefault();
-        this.setState({
-            hideSelected: !this.state.hideSelected
-        })
-    },
+      return e;
+    });
+    firebase.database().ref(`wishes/${this.props.params.name}`).set({ wishes: newWishList });
+    this.setState({ wishes: newWishList, feedback: 'Du kjøpte eller solgte noe!' });
+  }
 
-    render() {
+  toggleShowSelected(e) {
+    debug('toggleShowSelected', e);
+    e.preventDefault();
+    this.setState({
+      hideSelected: !this.state.hideSelected,
+    });
+  }
 
-        let wishes = this.state.wishes.filter(el => {
-            debug("Wish to be filtered: ", el);
-            return !el.checked || !this.state.hideSelected;
-        }, this).map(wishInfo => {
-            return (<OtherWish onClick={this.check} wishInfo={wishInfo}/>);
-        }, this);
+  render() {
+    const wishes = this.state.wishes.filter((el) => {
+      debug('Wish to be filtered: ', el);
+      return !el.checked || !this.state.hideSelected;
+    }, this).map(wishInfo => (<OtherWish onClick={this.check} wishInfo={wishInfo} />)
+    , this);
 
-        return (
-            <Container>
+    return (
+      <Container>
 
-                <div className="flex-row space-between">
-                    <h1 className="shrink overflow-hidden">Ønskelisten til {this.state.user}</h1>
-                    <Link className="grow button-navigation smallspace" to="/others">Tilbake</Link>
-                </div>
-                <hr/>
+        <div className="flex-row space-between">
+          <h1 className="shrink overflow-hidden">Ønskelisten til {this.state.user}</h1>
+          <Link className="grow button-navigation smallspace" to="/others">Tilbake</Link>
+        </div>
+        <hr />
 
-                <h2>Dette ønsker {this.state.user} seg</h2>
-                <p>{this.state.feedback}</p>
-                <ul>
-                    {wishes}
-                </ul>
+        <h2>Dette ønsker {this.state.user} seg</h2>
+        <p>{this.state.feedback}</p>
+        <ul>
+          {wishes}
+        </ul>
 
-                <Suggestions username={this.state.user} userUid={this.props.params.name}/>
-                <hr/>
-                <Comments params={this.props.params}/>
-                <div className="flex-row space-between">
-                    <a className="other-wishlist__toggle-selected space button" onClick={this.toggleShowSelected}>{this.state.hideSelected
-                            ? 'Vis utkrysset'
-                            : 'Skjul utkrysset'}</a>
-                </div>
+        <Suggestions username={this.state.user} userUid={this.props.params.name} />
+        <hr />
+        <Comments params={this.props.params} />
+        <div className="flex-row space-between">
+          <button className="other-wishlist__toggle-selected space button" onClick={this.toggleShowSelected}>
+            {this.state.hideSelected
+                  ? 'Vis utkrysset' : 'Skjul utkrysset'}</button>
+        </div>
 
-            </Container>
-        )
-    }
-})
+      </Container>
+    );
+  }
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(OthersWishList)
+OthersWishList.propTypes = {
+  params: React.PropTypes.object,
+  userlist: React.PropTypes.array,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(OthersWishList);

@@ -1,76 +1,85 @@
 // @flow
-var debug = require('debug')('Suggestions');
 
-import React from 'react'
-import Container from '../common/container/Container';
-import {Link} from 'react-router';
-import { connect } from 'react-redux'
+import React from 'react';
+import { Link } from 'react-router';
+import { connect } from 'react-redux';
 import AddSuggestion from './AddSuggestion';
-import {addSuggestion} from './suggestionActions';
+import { addSuggestion } from './suggestionActions';
 import user from '../common/User';
 import Suggestion from './Suggestion';
 import suggestionsFirebase from './suggestionsFirebase';
 import store from '../store';
+import Container from '../common/container/Container';
 
-let what = 0; // This is used to force rerender from the mapstatetoprops function.
+const debug = require('debug')('Suggestions');
 
-const mapStateToProps = function(state, ownProps) {
-  debug("mapStateToProps: ", state, ownProps);
+const what = 0; // This is used to force rerender from the mapstatetoprops function.
 
-  var key = Object.keys(state.suggestionReducer).filter(suggestionKey => {
-    debug("suggestionkey", suggestionKey, ownProps.userUid);
+const mapStateToProps = function (state, ownProps) {
+  debug('mapStateToProps: ', state, ownProps);
+
+  const key = Object.keys(state.suggestionReducer).filter((suggestionKey) => {
+    debug('suggestionkey', suggestionKey, ownProps.userUid);
     return suggestionKey === ownProps.userUid;
   })[0];
 
-  var returnObj = {
+  const returnObj = {
     suggestions: key ? state.suggestionReducer[key] : [],
     otherProps: ownProps,
-    what: what++
+    what: what + 1,
   };
 
-  debug("ReturnObject (props for Suggestions):", returnObj);
+  debug('ReturnObject (props for Suggestions):', returnObj);
   return returnObj;
 };
 
+/*eslint-disable */
 const createGuid = function() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-  var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-  return v.toString(16);
+    const r = Math.random()* 16 | 0, v = c == 'x' ? r : (r&0x3|0x8);
+    return v.toString(16);
   });
 };
+/*eslint-enable */
+
 
 const mapDispatchToProps = (dispatch, ownProps) => (
   {
-    onAddSuggestion: (suggestion => {
-      debug("Adding suggestion", suggestion, user.getUserEmail(), ownProps.userUid);
+    onAddSuggestion: ((suggestion) => {
+      debug('Adding suggestion', suggestion, user.getUserEmail(), ownProps.userUid);
       dispatch(addSuggestion(suggestion, user.getUserEmail(), ownProps.userUid, createGuid()));
       suggestionsFirebase.saveSuggestions(store.getState().suggestionReducer);
-    })
+    }),
   }
-)
+);
 
-var Suggestions = React.createClass({
+class Suggestions extends React.PureComponent {
 
-    render() {
-        debug("Render: this.props: ", this.props);
-        if(this.props.suggestions) {
-          var suggestionList = this.props.suggestions.map(suggestion => {
-            debug("Suggestion: ", suggestion);
-            return (<Suggestion key={suggestion.id} suggestion={suggestion} userUid={this.props.userUid} />);
-          });
-        }
-
-        return (
-            <div>
-            <h2>Dette er forslag til hva {this.props.username} ønsker seg</h2>
-              {suggestionList}
-              <AddSuggestion onClick={suggestion => this.props.onAddSuggestion(suggestion)} />
-            </div>
-      )
+  render() {
+    debug('Render: this.props: ', this.props);
+    let suggestionList = '';
+    if (this.props.suggestions) {
+      suggestionList = this.props.suggestions.map((suggestion) => {
+        debug('Suggestion: ', suggestion);
+        return (<Suggestion key={suggestion.id} suggestion={suggestion} userUid={this.props.userUid} />);
+      });
     }
-});
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Suggestions)
+    return (
+      <div>
+        <h2>Dette er forslag til hva {this.props.username} ønsker seg</h2>
+        {suggestionList}
+        <AddSuggestion onClick={suggestion => this.props.onAddSuggestion(suggestion)} />
+      </div>
+    );
+  }
+}
+
+Suggestions.propTypes = {
+  suggestions: React.PropTypes.array,
+  userUid: React.PropTypes.string,
+  username: React.PropTypes.username,
+  onAddSuggestion: React.PropTypes.func,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Suggestions);

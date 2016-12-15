@@ -1,34 +1,33 @@
-export const addSuggestion = (wishSuggestion,suggestedBy, suggestedTo, id) => {
-  return {
+export const addSuggestion = (wishSuggestion, suggestedBy, suggestedTo, id) => (
+  {
     type: 'ADD_SUGGESTION',
     wishSuggestion,
     suggestedBy,
     suggestedTo,
-    id
+    id,
   }
-}
+);
 
-export const checkSuggestion = (suggestedTo, id, checkedBy) => {
-  return {
+export const checkSuggestion = (suggestedTo, id, checkedBy) => (
+  {
     type: 'CHECK_SUGGESTION',
     suggestedTo,
     id,
-    checkedBy
+    checkedBy,
   }
-}
+);
 
-export const setSuggestions = (suggestions) => {
-  return {
+export const setSuggestions = suggestions => (
+  {
     type: 'SET_SUGGESTIONS',
-    suggestions
+    suggestions,
   }
-}
+);
 
-
-export const deleteSuggestion = (userid, idToBeDeleted) => {
-  return {
+export const deleteSuggestion = (userid, idToBeDeleted) => (
+  {
     type: 'DELETE_SUGGESTION',
     userid,
-    idToBeDeleted
+    idToBeDeleted,
   }
-}
+);

@@ -1,21 +1,25 @@
 // @flow
-import onskDegApp from './reducers'
-import { compose, createStore } from 'redux'
-import persistState from 'redux-localstorage'
+import { compose, createStore } from 'redux';
+import persistState from 'redux-localstorage';
 
-function myCustomSlicer (paths) {
+import onskDegApp from './reducers';
+
+
+function myCustomSlicer(paths) {
   return (state) => {
-    let subset = state;
-    return subset
-  }
+    const subset = state;
+    return subset;
+  };
 }
 
-const enhancer = compose(
+/* const enhancer = compose(
   persistState('/', {
-    slicer: myCustomSlicer
+    slicer: myCustomSlicer,
   }),
-)
+); */
 
-let store = createStore(onskDegApp, enhancer);
+const enhancer = undefined;
+
+const store = createStore(onskDegApp, enhancer);
 
 module.exports = store;

@@ -1,13 +1,13 @@
 // @flow
-export const setUser = (user : Object) => {
-  return {
+export const setUser = user /* : Object */ => (
+  {
     type: 'SET_USER',
-    user
+    user,
   }
-}
+);
 
-export const logout = () => {
-  return {
-    type: 'LOG_OUT'
+export const logout = () => (
+  {
+    type: 'LOG_OUT',
   }
-}
+);

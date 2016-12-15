@@ -1,22 +1,27 @@
 
-let initialState = {};
-let debug = require('debug')('userReducer');
+const initialState = {};
+const debug = require('debug')('userReducer');
 
 const userReducer = (state = initialState, action) => {
-  debug("Input: state: ", state, ". Action: ", action);
+  let returnThis;
+  debug('Input: state: ', state, '. Action: ', action);
 
   switch (action.type) {
-    case 'SET_USER':
-      var newuser = Object.assign({});
-      newuser.uid = action.user.uid;
-      newuser.email = action.user.email;
-      debug("Output state: ", newuser);
-      return newuser;
-      case 'LOG_OUT':
-        return initialState;
+    case 'SET_USER': {
+      returnThis = Object.assign({});
+      returnThis.uid = action.user.uid;
+      returnThis.email = action.user.email;
+      debug('Output state: ', returnThis);
+      break;
+    }
+    case 'LOG_OUT': {
+      returnThis = initialState;
+      break;
+    }
     default:
-      return state
+      returnThis = state;
   }
-}
+  return returnThis;
+};
 
-export default userReducer
+export default userReducer;

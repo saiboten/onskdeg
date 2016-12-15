@@ -1,167 +1,159 @@
 // @flow
-let debug = require('debug')('OthersWishListSelection')
-let DragDropContext = require('react-dnd').DragDropContext;
 
-import React from 'react'
+import React from 'react';
+import HTML5Backend from 'react-dnd-html5-backend';
+import { TouchBackend } from 'react-dnd-touch-backend';
+import { Link } from 'react-router';
+
+import AddedUserLink from './addeduserlink/AddedUserLink';
+import DeleteUserDropTarget from './DeleteUserDropTarget';
+import store from '../store';
+import userlistFirebase from '../users/userlistFirebase';
 import Container from '../common/container/Container';
 import firebase from '../firebase/firebase';
 import user from '../common/User';
 import AddableUsers from './addableusers/AddableUsers';
-import HTML5Backend from 'react-dnd-html5-backend';
-import { default as TouchBackend } from 'react-dnd-touch-backend';
-import AddedUserLink from './addeduserlink/AddedUserLink';
-import {Link} from 'react-router';
-import DeleteUserDropTarget from './DeleteUserDropTarget';
-import store from '../store';
-import userlistFirebase from '../users/userlistFirebase';
+
+const debug = require('debug')('OthersWishListSelection');
+const DragDropContext = require('react-dnd').DragDropContext;
 
 require('./otherswishlistselection.css');
 
-var OthersWishListSelection = React.createClass({
+class OthersWishListSelection extends React.Component {
 
-    getInitialState() {
-      debug("getInitialState");
-        return {
-          users: [],
-          newUser: "",
-          feedback: ""
-        }
-    },
+  static componentDidUnmount() {
+    debug('componentDidUnmount');
 
-    componentDidMount() {
-      debug("componentDidMount");
+    userlistFirebase.unsubscribe();
+  }
 
-        debug('this.state.users', this.state.users);
-        this.getUsers();
-        userlistFirebase.subscribe();
-    },
+  getInitialState() {
+    debug('getInitialState');
+    return {
+      users: [],
+      newUser: '',
+      feedback: '',
+    };
+  }
 
-    componentDidUnmount() {
-      debug("componentDidUnmount");
+  componentDidMount() {
+    debug('componentDidMount');
 
-        userlistFirebase.unsubscribe();
-    },
+    debug('this.state.users', this.state.users);
+    this.getUsers();
+    userlistFirebase.subscribe();
+  }
 
-    getUsers() {
-      debug("getUsers");
+  getUsers() {
+    debug('getUsers');
 
-        var ref = firebase.database().ref('users/' + user.getUserUid());
-        ref.on('value', (snapshot) => {
-            if (snapshot.val() != null) {
-                var list = snapshot.val().users;
-                debug("data :", list);
+    const ref = firebase.database().ref(`users/${user.getUserUid()}`);
+    ref.on('value', (snapshot) => {
+      if (snapshot.val() != null) {
+        const list = snapshot.val().users;
+        debug('data :', list);
 
-                this.setState({users: list})
-            }
-        });
-    },
-
-    updateUserState(e) {
-      debug("updateUserState");
-
-        this.setState({newUser: e.target.value})
-    },
-
-    addUserLinkClick(uid) {
-      debug("addUserLinkClick", uid);
-
-      var userfromdb = store.getState().allUserReducer.filter((userdb) => {
-          return userdb.uid === uid;
-      })[0];
-      this.addUser(userfromdb.email);
-    },
-
-    addUserClickEvent(e) {
-      debug("addUserClickEvent", e);
-
-      e.preventDefault();
-      this.addUser(this.state.newUser);
-    },
-
-    addUser(newUserMail) {
-      debug("addUserClickEvent", newUserMail);
-
-        let users = store.getState().allUserReducer;
-
-        let userfromdb = users.filter((userdb) => {
-            if (userdb.email === newUserMail) {
-                return true;
-            } else {
-                return false;
-            }
-        })[0];
-
-        debug("User from db : ", userfromdb);
-
-        if (userfromdb) {
-            if (this.state.users.filter(user => { return user.email === newUserMail }).length === 1) {
-                this.setState({feedback: "Brukeren er lagt til fra før"})
-            } else if (newUserMail == user.getUserEmail()) {
-                this.setState({feedback: "Du har ikke lov å legge til deg selv"});
-            } else {
-                var newList = this.state.users.concat([userfromdb]);
-
-                debug('New list: ', newList);
-                firebase.database().ref('users/' + user.getUserUid()).set({users: newList});
-                this.setState({newUser: ""})
-            }
-        } else {
-            this.setState({feedback: "Denne brukeren finnes ikke"});
-        }
-    },
-
-    deleteUser(email) {
-      debug("deleteUser", email);
-
-      var userList = this.state.users.slice();
-      var newUserList = userList.filter(user=> {
-        return user.email !== email
-      });
-
-      firebase.database().ref('users/' + user.getUserUid()).set({users: newUserList});
-      if(newUserList.length == 0) {
-        this.setState({
-          users: []
-        });
+        this.setState({ users: list });
       }
+    });
+  }
 
-    },
+  updateUserState(e) {
+    debug('updateUserState');
 
-    render() {
+    this.setState({ newUser: e.target.value });
+  }
 
-        var users = this.state.users.map(el => {
-            return (
-              <AddedUserLink el={el} />
-            )
-        });
+  addUserLinkClick(uid) {
+    debug('addUserLinkClick', uid);
 
-        /* This is removed until further notice
-        <form onSubmit={this.addUserClickEvent}>
-            <p>Legg til</p>
-            <input value={this.state.newUser} onChange={this.updateUserState}></input>
-            <input type="submit"/>
-        </form>*/
+    const userfromdb = store.getState().allUserReducer.filter(userdb =>
+        userdb.uid === uid)[0];
+    this.addUser(userfromdb.email);
+  }
 
-        return <Container>
+  addUserClickEvent(e) {
+    debug('addUserClickEvent', e);
 
-          <div className="flex-row space-between">
-                <h1>Andres ønskeliste</h1>
-                  <Link className="shrink button-navigation smallspace" to="/choosepath">Tilbake</Link>
-              </div>
-              <hr />
+    e.preventDefault();
+    this.addUser(this.state.newUser);
+  }
 
-            <h2>Se ønskeliste til</h2>
-            <div className="wishlist-selection__added-users-container">
-                {users}
-            </div>
+  addUser(newUserMail) {
+    debug('addUserClickEvent', newUserMail);
 
-            <DeleteUserDropTarget delete={this.deleteUser} />
-            <AddableUsers addUser={this.addUserLinkClick}/>
+    const users = store.getState().allUserReducer;
 
-            <p>{this.state.feedback}</p>
+    const userfromdb = users.filter((userdb) => {
+      if (userdb.email === newUserMail) {
+        return true;
+      }
+      return false;
+    })[0];
 
-        </Container>
+    debug('User from db : ', userfromdb);
+
+    if (userfromdb) {
+      if (this.state.users.filter(stateUser => stateUser.email === newUserMail).length === 1) {
+        this.setState({ feedback: 'Brukeren er lagt til fra før' });
+      } else if (newUserMail === user.getUserEmail()) {
+        this.setState({ feedback: 'Du har ikke lov å legge til deg selv' });
+      } else {
+        const newList = this.state.users.concat([userfromdb]);
+
+        debug('New list: ', newList);
+        firebase.database().ref(`users/${user.getUserUid()}`).set({ users: newList });
+        this.setState({ newUser: '' });
+      }
+    } else {
+      this.setState({ feedback: 'Denne brukeren finnes ikke' });
     }
-})
+  }
 
-module.exports = DragDropContext(TouchBackend)(OthersWishListSelection);
+  deleteUser(email) {
+    debug('deleteUser', email);
+
+    const userList = this.state.users.slice();
+    const newUserList = userList.filter(stateUser => stateUser.email !== email);
+
+    firebase.database().ref(`users/${user.getUserUid()}`).set({ users: newUserList });
+    if (newUserList.length === 0) {
+      this.setState({
+        users: [],
+      });
+    }
+  }
+
+  render() {
+    const users = this.state.users.map(el => (<AddedUserLink el={el} />));
+
+    /* This is removed until further notice
+    <form onSubmit={this.addUserClickEvent}>
+        <p>Legg til</p>
+        <input value={this.state.newUser} onChange={this.updateUserState}></input>
+        <input type="submit"/>
+    </form>*/
+
+    return (<Container>
+
+      <div className="flex-row space-between">
+        <h1>Andres ønskeliste</h1>
+        <Link className="shrink button-navigation smallspace" to="/choosepath">Tilbake</Link>
+      </div>
+      <hr />
+
+      <h2>Se ønskeliste til</h2>
+      <div className="wishlist-selection__added-users-container">
+        {users}
+      </div>
+
+      <DeleteUserDropTarget delete={this.deleteUser} />
+      <AddableUsers addUser={this.addUserLinkClick} />
+
+      <p>{this.state.feedback}</p>
+
+    </Container>);
+  }
+}
+
+module.exports = DragDropContext(HTML5Backend)(OthersWishListSelection);

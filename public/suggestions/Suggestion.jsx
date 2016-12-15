@@ -1,73 +1,81 @@
 // @flow
-var debug = require('debug')('Suggestion');
 
 import React from 'react';
-import {checkSuggestion} from './suggestionActions';
-import {deleteSuggestion} from './suggestionActions';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
+
+import { checkSuggestion, deleteSuggestion } from './suggestionActions';
+
 import OtherWish from '../others/OtherWish';
-import user from '../common/User'
+import user from '../common/User';
 import suggestionsFirebase from './suggestionsFirebase';
 import store from '../store';
 
-let counter = 0;
+const debug = require('debug')('Suggestion');
+
+const counter = 0;
 
 const mapStateToProps = (state, ownProps) => {
-
-  var keys = Object.keys(state.suggestionReducer);
-  var theRightKey = keys.filter(userid => {
-    return userid === ownProps.userUid;
-  });
+  const keys = Object.keys(state.suggestionReducer);
+  const theRightKey = keys.filter(userid => (
+    userid === ownProps.userUid
+  ));
 
   return {
-    suggestion: state.suggestionReducer[theRightKey].filter(suggestion => {
-      return suggestion.id === ownProps.suggestion.id;
-    })[0],
-    counter: counter++
-  }
+    suggestion: state.suggestionReducer[theRightKey].filter(suggestion => (
+      suggestion.id === ownProps.suggestion.id
+    ))[0],
+    counter: counter + 1,
+  };
 };
 
-const mapDispatchToProps = function(dispatch, ownProps) {
+const mapDispatchToProps = function (dispatch, ownProps) {
   return {
     onCheckSuggestion() {
-      debug('onCheckSuggestion')
+      debug('onCheckSuggestion');
 
       dispatch(checkSuggestion(ownProps.userUid, ownProps.suggestion.id, user.getUserEmail()));
       suggestionsFirebase.saveSuggestions(store.getState().suggestionReducer);
     },
     onDeleteSuggestion() {
-      debug('onDeleteSuggestion')
+      debug('onDeleteSuggestion');
 
       dispatch(deleteSuggestion(ownProps.userUid, ownProps.suggestion.id));
       suggestionsFirebase.saveSuggestions(store.getState().suggestionReducer);
-    }
-  }
+    },
+  };
 };
 
-var Suggestion = React.createClass({
+class Suggestion extends React.PureComponent {
   render() {
-
-    var wishInfo = {
+    const wishInfo = {
       checked: this.props.suggestion.checked,
       name: this.props.suggestion.wishSuggestion,
       id: this.props.suggestion.id,
-      checkedby: this.props.suggestion.checkedBy
+      checkedby: this.props.suggestion.checkedBy,
     };
 
-    var deleteMe = user.getUserEmail() === this.props.suggestion.suggestedBy ? (<input className="button smallspace" type="button" onClick={this.props.onDeleteSuggestion} value="Slett"></input>) : "";
+    const deleteMe = user.getUserEmail() === this.props.suggestion.suggestedBy ?
+    (<input className="button smallspace" type="button" onClick={this.props.onDeleteSuggestion} value="Slett" />) : '';
 
     return (
       <div className="flex-column">
-
-          <OtherWish wishInfo={wishInfo} onClick={this.props.onCheckSuggestion} suggestedBy={this.props.suggestion.suggestedBy} />
-          <div className="flex-row space-between">
-            {deleteMe}
-         </div>
+        <OtherWish
+          wishInfo={wishInfo}
+          onClick={this.props.onCheckSuggestion}
+          suggestedBy={this.props.suggestion.suggestedBy}
+        />
+        <div className="flex-row space-between">
+          {deleteMe}
+        </div>
       </div>
     );
   }
-});
+}
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps)(Suggestion)
+Suggestion.propTypes = {
+  suggestion: React.PropTypes.object,
+  onCheckSuggestion: React.PropTypes.func,
+  onDeleteSuggestion: React.PropTypes.func,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Suggestion);
