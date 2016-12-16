@@ -35,6 +35,11 @@ class OthersWishListSelection extends React.Component {
       newUser: '',
       feedback: '',
     };
+    this.updateUserState = this.updateUserState.bind(this);
+    this.getUsers = this.getUsers.bind(this);
+    this.addUserClickEvent = this.addUserClickEvent.bind(this);
+    this.deleteUser = this.deleteUser.bind(this);
+    this.addUser = this.addUser.bind(this);
   }
 
   componentDidMount() {
@@ -126,14 +131,7 @@ class OthersWishListSelection extends React.Component {
   }
 
   render() {
-    const users = this.state.users.map(el => (<AddedUserLink el={el} />));
-
-    /* This is removed until further notice
-    <form onSubmit={this.addUserClickEvent}>
-        <p>Legg til</p>
-        <input value={this.state.newUser} onChange={this.updateUserState}></input>
-        <input type="submit"/>
-    </form>*/
+    const users = this.state.users.map(el => (<AddedUserLink deleteMe={this.deleteUser} el={el} />));
 
     return (<Container>
 
@@ -148,8 +146,11 @@ class OthersWishListSelection extends React.Component {
         {users}
       </div>
 
-      <DeleteUserDropTarget delete={this.deleteUser} />
-      <AddableUsers addUser={this.addUserLinkClick} />
+      <form onSubmit={this.addUserClickEvent}>
+        <p>Legg til (legg inn epost)</p>
+        <input value={this.state.newUser} onChange={this.updateUserState} />
+        <input type="submit" />
+      </form>
 
       <p>{this.state.feedback}</p>
 

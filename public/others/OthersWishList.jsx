@@ -30,6 +30,9 @@ class OthersWishList extends React.Component {
     this.state = {
       wishes: [], hideSelected: true, user: '', feedback: '',
     };
+    this.check = this.check.bind(this);
+    this.updateWishState = this.updateWishState.bind(this);
+    this.toggleShowSelected = this.toggleShowSelected.bind(this);
   }
 
   componentDidMount() {

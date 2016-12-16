@@ -44,7 +44,7 @@ class AddableUsers extends React.Component {
         const filteredUserList = userlist.filter((dbuser) => {
           if (dbuser.uid === user.getUserUid()) {
             return false;
-          } else if (this.userInList(dbuser.uid, addedUsers)) {
+          } else if (AddableUsers.userInList(dbuser.uid, addedUsers)) {
             return false;
           }
           return true;

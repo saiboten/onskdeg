@@ -1,7 +1,7 @@
 // @flow
 
 import store from '../store';
-import { setUserlist } from './userlistactions';
+import setUserlist from './userlistactions';
 import firebase from '../firebase/firebase';
 
 const debug = require('debug')('userlistFirebase');
