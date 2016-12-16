@@ -19,6 +19,8 @@ class Comments extends React.Component {
       comments: [],
       feedback: '',
     };
+    this.updateCommentState = this.updateCommentState.bind(this);
+    this.addComment = this.addComment.bind(this);
   }
 
   componentDidMount() {

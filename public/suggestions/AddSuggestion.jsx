@@ -13,6 +13,9 @@ class AddSuggestion extends React.Component {
       suggestion: '',
       feedback: '',
     };
+
+    this.onClick = this.onClick.bind(this);
+    this.changeSuggestion = this.changeSuggestion.bind(this);
   }
 
   onClick(e /* : Event */) {

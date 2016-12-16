@@ -28,7 +28,7 @@ class OthersWishList extends React.Component {
     super();
     debug('constructor');
     this.state = {
-      wishes: [], hideSelected: true, user: '', feedback: '',
+      wishes: [], hideSelected: true, userState: '', feedback: '',
     };
     this.check = this.check.bind(this);
     this.updateWishState = this.updateWishState.bind(this);
@@ -44,7 +44,7 @@ class OthersWishList extends React.Component {
     userlist.forEach((userInUserList) => {
       if (userInUserList.uid === this.props.params.name) {
         debug('Found it! ', userInUserList);
-        this.setState({ userInUserList: user.name });
+        this.setState({ userState: userInUserList.name });
       }
     });
   }
@@ -101,18 +101,18 @@ class OthersWishList extends React.Component {
       <Container>
 
         <div className="flex-row space-between">
-          <h1 className="shrink overflow-hidden">Ønskelisten til {this.state.user}</h1>
+          <h1 className="shrink overflow-hidden">Ønskelisten til {this.state.userState}</h1>
           <Link className="grow button-navigation smallspace" to="/others">Tilbake</Link>
         </div>
         <hr />
 
-        <h2>Dette ønsker {this.state.user} seg</h2>
+        <h2>Dette ønsker {this.state.userState} seg</h2>
         <p>{this.state.feedback}</p>
         <ul>
           {wishes}
         </ul>
 
-        <Suggestions username={this.state.user} userUid={this.props.params.name} />
+        <Suggestions username={this.state.userState} userUid={this.props.params.name} />
         <hr />
         <Comments params={this.props.params} />
         <div className="flex-row space-between">

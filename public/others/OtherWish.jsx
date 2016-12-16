@@ -15,7 +15,6 @@ class OtherWish extends React.Component {
       if (!this.props.suggestedBy) {
         return false;
       }
-      debug('user.email and suggested by ', user.email, this.props.suggestedBy);
       return user.email === this.props.suggestedBy;
     })[0];
     const suggestedByUser = suggestedBy

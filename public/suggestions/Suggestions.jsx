@@ -18,10 +18,9 @@ const what = 0; // This is used to force rerender from the mapstatetoprops funct
 const mapStateToProps = function (state, ownProps) {
   debug('mapStateToProps: ', state, ownProps);
 
-  const key = Object.keys(state.suggestionReducer).filter((suggestionKey) => {
-    debug('suggestionkey', suggestionKey, ownProps.userUid);
-    return suggestionKey === ownProps.userUid;
-  })[0];
+  const key = Object.keys(state.suggestionReducer).filter(suggestionKey => (
+    suggestionKey === ownProps.userUid
+  ))[0];
 
   const returnObj = {
     suggestions: key ? state.suggestionReducer[key] : [],
