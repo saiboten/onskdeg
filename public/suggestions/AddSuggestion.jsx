@@ -5,10 +5,11 @@ const debug = require('debug')('AddSuggestion');
 
 class AddSuggestion extends React.Component {
 
-  getInitialState() {
-    debug('getInitialState');
+  constructor(props) {
+    super();
+    debug('constructor');
 
-    return {
+    this.state = {
       suggestion: '',
       feedback: '',
     };

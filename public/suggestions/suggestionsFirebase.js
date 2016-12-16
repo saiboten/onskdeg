@@ -4,7 +4,7 @@ import store from '../store';
 import { setSuggestions } from './suggestionActions';
 import firebase from '../firebase/firebase';
 
-const debug = require('debug')('userlistListener');
+const debug = require('debug')('suggestionsFirebase');
 
 
 const obj = {

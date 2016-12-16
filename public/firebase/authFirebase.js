@@ -4,7 +4,7 @@ import firebase from '../firebase/firebase';
 import { setUser } from '../user/useractions';
 import store from '../store';
 
-const debug = require('debug')('authListener');
+const debug = require('debug')('authFirebase');
 
 const obj = {
   authChangeListener() {

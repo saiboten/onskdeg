@@ -30,11 +30,17 @@ const mapDispatchToProps = function (dispatch, ownProps) {
 
 class YourWishList extends React.Component {
 
-  getInitialState() {
-    return {
+  constructor(props) {
+    super();
+    this.state = {
       newWish: '',
       feedback: '',
     };
+
+    this.addWish = this.addWish.bind(this);
+    this.updateWishState = this.updateWishState.bind(this);
+    this.update = this.update.bind(this);
+    this.deleteThis = this.deleteThis.bind(this);
   }
 
   componentDidMount() {
@@ -98,7 +104,7 @@ class YourWishList extends React.Component {
     firebase.database().ref(`wishes/${user.getUserUid()}`).set({ wishes: newWishList });
   }
 
-  delete(deleteId) {
+  deleteThis(deleteId) {
     debug('Delete id: ', deleteId);
     const newWishList = Object.assign([], this.props.wishes);
 
@@ -116,7 +122,7 @@ class YourWishList extends React.Component {
     debug('This.props. ', this.props);
     const wishes = this.props.wishes.map((el) => {
       debug('Creating wish based on this el: ', el);
-      return (<Wish update={this.update} delete={this.delete} wishlist={this.props.wishes} wish={el} />);
+      return (<Wish update={this.update} delete={this.deleteThis} wishlist={this.props.wishes} wish={el} />);
     });
 
     debug('Wishes: ', wishes);

@@ -27,9 +27,10 @@ class OthersWishListSelection extends React.Component {
     userlistFirebase.unsubscribe();
   }
 
-  getInitialState() {
-    debug('getInitialState');
-    return {
+  constructor(props) {
+    super();
+    debug('constructor');
+    this.state = {
       users: [],
       newUser: '',
       feedback: '',

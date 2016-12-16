@@ -11,9 +11,10 @@ require('./comments.css');
 
 class Comments extends React.Component {
 
-  getInitialState() {
-    debug('getInitialState');
-    return {
+  constructor() {
+    super();
+    debug('constructor');
+    this.state = {
       comment: '',
       comments: [],
       feedback: '',

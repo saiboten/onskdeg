@@ -24,9 +24,12 @@ const mapDispatchToProps = (dispatch, ownProps) => ({});
 
 class OthersWishList extends React.Component {
 
-  getInitialState() {
-    debug('getInitialState');
-    return { wishes: [], hideSelected: true, user: '', feedback: '' };
+  constructor() {
+    super();
+    debug('constructor');
+    this.state = {
+      wishes: [], hideSelected: true, user: '', feedback: '',
+    };
   }
 
   componentDidMount() {

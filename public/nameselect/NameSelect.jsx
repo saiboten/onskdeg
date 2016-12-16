@@ -16,9 +16,11 @@ require('./nameselect.css');
 
 class NameSelect extends React.Component {
 
-  getInitialState() {
-    debug('getInitialState');
-    return {
+  constructor() {
+    super();
+    debug('constructor');
+
+    this.state = {
       name: '',
       confirmedName: '',
     };

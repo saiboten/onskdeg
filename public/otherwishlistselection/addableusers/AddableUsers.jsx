@@ -21,9 +21,13 @@ class AddableUsers extends React.Component {
     )).length === 1;
   }
 
-  getInitialState() {
-    debug('getInitialState');
-    return { userlist: [], open: false };
+  constructor() {
+    super();
+    debug('constructor');
+    this.state = { userlist: [], open: false };
+
+    this.clearList = this.clearList.bind(this);
+    this.toggleOpen = this.toggleOpen.bind(this);
   }
 
   componentDidMount() {

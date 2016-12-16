@@ -9,12 +9,19 @@ require('./wish.css');
 
 class Wish extends React.Component {
 
-  getInitialState() {
-    return {
+  constructor(props) {
+    super();
+    this.state = {
       edit: false,
-      text: this.props.wish.name,
+      text: props.wish.name,
       confirm: false,
     };
+    this.click = this.click.bind(this);
+    this.focusLost = this.focusLost.bind(this);
+    this.updateText = this.updateText.bind(this);
+    this.deleteItem = this.deleteItem.bind(this);
+    this.cancel = this.cancel.bind(this);
+    this.deleteConfirmed = this.deleteConfirmed.bind(this);
   }
 
   componentWillReceiveProps(nextProps /* : any */) {
@@ -28,7 +35,6 @@ class Wish extends React.Component {
       this.input.focus();
     }
   }
-
 
   click() {
     this.setState({
@@ -52,7 +58,7 @@ class Wish extends React.Component {
     });
   }
 
-  delete(e /* : Event */) {
+  deleteItem(e /* : Event */) {
     this.setState({
       confirm: true,
     });
@@ -74,7 +80,7 @@ class Wish extends React.Component {
       <div className="flex-row space-between right">
         <button className="button" onClick={this.cancel}>Avbryt</button>
         <button className="button wish__confirm-delete-button" onClick={this.deleteConfirmed}>Slett</button>
-      </div>) : (<button className="wish__delete-button button" onClick={this.delete}>Slett</button>);
+      </div>) : (<button className="wish__delete-button button" onClick={this.deleteItem}>Slett</button>);
 
     const html = this.state.edit ?
     (<textarea

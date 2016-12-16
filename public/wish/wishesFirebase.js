@@ -4,7 +4,7 @@ import store from '../store';
 import { setAllWishes } from './wishactions';
 import firebase from '../firebase/firebase';
 
-const debug = require('debug')('userlistListener');
+const debug = require('debug')('wishesFirebase');
 
 
 const obj = {

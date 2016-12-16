@@ -8,12 +8,15 @@ module.exports = {
     path: __dirname,
     filename: 'public/dist.js',
   },
+  /* eslint: {
+    configFile: '.eslintrc',
+  }, */
   module: {
     loaders: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loaders: ['babel-loader', 'eslint-loader'],
+        loaders: ['babel-loader'],
       },
       {
         test: /.jsx?$/,

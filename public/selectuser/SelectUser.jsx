@@ -35,10 +35,10 @@ class SelectUser extends React.Component {
     firebase.auth().signInWithRedirect(facebook);
   }
 
-  getInitialState() {
-    debug('getInitialState');
-
-    return {
+  constructor(props) {
+    super();
+    debug('constructor');
+    this.state = {
       user: '',
       password: '',
       feedback: '',
