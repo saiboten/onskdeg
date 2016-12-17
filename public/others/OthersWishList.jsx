@@ -11,6 +11,7 @@ import Comments from './Comments';
 import Suggestions from '../suggestions/Suggestions';
 import OtherWish from './OtherWish';
 
+const moment = require('moment');
 const debug = require('debug')('OthersWishList');
 
 require('./otherwishlist.css');
@@ -73,6 +74,7 @@ class OthersWishList extends React.Component {
           checked: !e.checked,
           id: e.id,
           checkedby: user.getUserEmail(),
+          checkedTime: new Date(),
         };
       }
 

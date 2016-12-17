@@ -28,12 +28,7 @@ const mapDispatchToProps = (dispatch, ownProps) => (
 
 class SelectUser extends React.Component {
 
-  static loginFacebook(e) {
-    debug('loginFacebook', e);
 
-    e.preventDefault();
-    firebase.auth().signInWithRedirect(facebook);
-  }
 
   constructor(props) {
     super();
@@ -65,6 +60,15 @@ class SelectUser extends React.Component {
         });
       }
     });
+  }
+  /* eslint-disable */
+  loginFacebook(e) {
+  /* eslint-enable */
+    debug('loginFacebook', e);
+
+    e.preventDefault();
+    e.stopPropagation();
+    firebase.auth().signInWithRedirect(facebook);
   }
 
   updateUserState(e) {

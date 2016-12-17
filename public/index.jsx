@@ -12,6 +12,7 @@ import OthersWishList from './others/OthersWishList';
 import ChoosePath from './choosepath/ChoosePath';
 import SelectUser from './selectuser/SelectUser';
 import NameSelect from './nameselect/NameSelect';
+import Gifts from './gifts/Gifts';
 
 import store from './store';
 
@@ -38,6 +39,7 @@ render((
       <Route path="/nameselect" component={NameSelect} />
       <Route path="/yours" component={YourWishList} />
       <Route path="/others" component={OthersWishListSelection} />
+      <Route path="/gifts" component={Gifts} />
       <Route path="/other/:name" component={OthersWishList} />
     </Router>
   </Provider>
