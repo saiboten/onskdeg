@@ -43,6 +43,10 @@ class SelectUser extends React.Component {
       password: '',
       feedback: '',
     };
+    this.updateUserState = this.updateUserState.bind(this);
+    this.updatePasswordState = this.updatePasswordState.bind(this);
+    this.logIn = this.logIn.bind(this);
+    this.logOut = this.logOut.bind(this);
   }
 
   componentDidMount() {
@@ -138,7 +142,7 @@ class SelectUser extends React.Component {
     const loginForm = this.props.userReducer.uid ? '' : (
       <form className="select-user__form" onSubmit={this.logIn} >
         <div className="smallspace">Brukernavn</div>
-        <div className="smallspace" value={this.state.user} onChange={this.updateUserState} />
+        <input className="smallspace" value={this.state.user} onChange={this.updateUserState} />
         <div className="smallspace">Passord</div>
         <input
           type="password"

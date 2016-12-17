@@ -27,6 +27,7 @@ class Wish extends React.Component {
   componentWillReceiveProps(nextProps /* : any */) {
     this.setState({
       text: nextProps.wish.name,
+      confirm: nextProps.wish.confirm,
     });
   }
 

@@ -1,6 +1,7 @@
 // @flow
-import { compose, createStore } from 'redux';
+import { compose, createStore, applyMiddleware } from 'redux';
 import persistState from 'redux-localstorage';
+import logger from 'redux-logger';
 
 import onskDegApp from './reducers';
 
@@ -20,6 +21,7 @@ function myCustomSlicer(paths) {
 
 const enhancer = undefined;
 
-const store = createStore(onskDegApp, enhancer);
+const store = createStore(onskDegApp,
+  enhancer);
 
 module.exports = store;
