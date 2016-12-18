@@ -92,7 +92,7 @@ class Wish extends React.Component {
       value={this.state.text}
     />
     ) :
-    (<button onClick={this.click} className="wish__wish-text">{this.state.text}</button>);
+    (<div onClick={this.click} className="wish__wish-text">{this.state.text}</div>);
     return (
       <div className="wish__wish-listelement flex-row space-between">{html} {deleteWish}</div>
     );
