@@ -8,16 +8,27 @@
 
 .wish__wish-input {
   display: inline;
-  width: 170px;
-  height: 70px;
+  width: 100%;
+  height: 100px;
 }
 
 .wish__wish-text {
   line-height: 20px;
-  width: 70%;
   word-wrap: break-word;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 5px;
 }
 
 a.wish__confirm-delete-button {
   background-color: #d64f4f;
+}
+
+.wish__wish-dropzone {
+  width: 70px;
+  heigth: 70px;
+}
+
+.wish__image {
+  width: 250px;
 }

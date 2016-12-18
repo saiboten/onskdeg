@@ -10,7 +10,6 @@ import Wish from '../wish/Wish';
 import firebase from '../firebase/firebase';
 import store from '../store';
 
-
 const debug = require('debug')('YourWishList');
 
 require('./yourwishlist.css');
@@ -41,6 +40,7 @@ class YourWishList extends React.Component {
     this.updateWishState = this.updateWishState.bind(this);
     this.update = this.update.bind(this);
     this.deleteThis = this.deleteThis.bind(this);
+    this.addImage = this.addImage.bind(this);
   }
 
   componentDidMount() {
@@ -94,9 +94,28 @@ class YourWishList extends React.Component {
     const newWishList = this.props.wishes.map((e) => {
       if (e.id === wish.id) {
         return {
-          name: wish.newWish,
-          checked: e.checked,
-          id: e.id,
+          name: wish.name,
+          checked: wish.checked,
+          checkedby: wish.checkedby ? wish.checkedby : '',
+          id: wish.id,
+          image: wish.image ? wish.image : '',
+        };
+      }
+      return e;
+    });
+    firebase.database().ref(`wishes/${user.getUserUid()}`).set({ wishes: newWishList });
+  }
+
+  addImage(wish, image) {
+    debug('Adding image to wish: ', wish, image);
+    const newWishList = this.props.wishes.map((e) => {
+      if (e.id === wish.id) {
+        return {
+          name: wish.name,
+          checked: wish.checked,
+          checkedby: wish.checkedby ? wish.checkedby : '',
+          id: wish.id,
+          image,
         };
       }
       return e;
@@ -122,7 +141,14 @@ class YourWishList extends React.Component {
     debug('This.props. ', this.props);
     const wishes = this.props.wishes.map((el) => {
       debug('Creating wish based on this el: ', el);
-      return (<Wish update={this.update} delete={this.deleteThis} wishlist={this.props.wishes} wish={el} />);
+      return (
+        <Wish
+          update={this.update}
+          delete={this.deleteThis}
+          addImage={this.addImage}
+          wishlist={this.props.wishes}
+          wish={el}
+        />);
     });
 
     debug('Wishes: ', wishes);
@@ -133,12 +159,6 @@ class YourWishList extends React.Component {
         <h1>Din ønskeliste</h1>
         <Link className="shrink button-navigation smallspace" to="/choosepath">Tilbake</Link>
       </div>
-      <hr />
-
-      <div className="your-wishlist__wishlist">
-        {wishes}
-      </div>
-
       <hr />
 
       <form onSubmit={this.addWish} >
@@ -153,6 +173,12 @@ class YourWishList extends React.Component {
           <div>{this.state.feedback}</div>
         </div>
       </form>
+
+      <div className="your-wishlist__wishlist">
+        {wishes}
+      </div>
+
+      <hr />
 
     </Container>);
   }

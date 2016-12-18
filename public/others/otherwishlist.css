@@ -12,3 +12,7 @@
 .other-wish__linkify {
   word-break: break-all;
 }
+
+.other-wish__image {
+  width: 250px;
+}

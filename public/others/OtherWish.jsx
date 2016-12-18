@@ -2,12 +2,35 @@
 import React from 'react';
 import Linkify from 'react-linkify';
 import store from '../store';
+import firebase from '../firebase/firebase';
+
+const storageRef = firebase.storage().ref();
 
 const debug = require('debug')('OtherWish');
 
 class OtherWish extends React.Component {
 
+  constructor(props) {
+    super();
+
+    this.state = {
+      image: '',
+    };
+
+    if (props.wishInfo.image) {
+      storageRef.child(props.wishInfo.image).getDownloadURL().then((url) => {
+        debug('url: ', url);
+        this.setState({
+          image: url,
+        });
+      });
+    }
+  }
+
   render() {
+    const image = this.props.wishInfo.image ?
+    (<img className="other-wish__image" alt={'Awesome'} src={this.state.image} />) : '';
+
     const checkedBy = store.getState().allUserReducer.filter(user =>
       user.email === this.props.wishInfo.checkedby)[0];
 
@@ -43,6 +66,8 @@ class OtherWish extends React.Component {
     return (
       <div className="flex-column border">
         <div className="smallspace">{linkifyed}</div>
+        <div className="smallspace">{image}</div>
+
         <div className="smallspace flex-row space-between">
           <input
             className="button"

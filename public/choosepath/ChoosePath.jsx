@@ -34,14 +34,16 @@ class ChoosePath extends React.Component {
 
     return (
       <Container>
-        <h1>Velg</h1>
+        <div className="flex-row space-between">
+          <h1>Hva vil du gjøre?</h1>
+          <Link className="shrink button-navigation smallspace" to="/">Bytt bruker</Link>
+        </div>
+        <hr />
+
         <div className="ChoosePath__list">
           <Link className="smallspace button" to="/yours">Din ønskeliste</Link>
           <Link className="smallspace button" to="/others">Andres ønskelister</Link>
-          <Link className="smallspace button" to="/">Bytt bruker</Link>
           <Link className="smallspace button" to="/gifts">Dine gaver</Link>
-
-
         </div>
       </Container>
     );
