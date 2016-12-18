@@ -11,8 +11,8 @@ let fbdb;
 const obj = {
   subscribe() {
     debug('subscribe');
-    fbdb = firebase.database();
-    fbdb.ref('userlist').on('value', (userlistdb) => {
+    const db = firebase.database();
+    fbdb = db.ref('userlist').on('value', (userlistdb) => {
       store.dispatch(setUserlist(userlistdb.val()));
     });
   },
@@ -20,6 +20,7 @@ const obj = {
     debug('unsubscribe');
 
     if (fbdb) {
+      debug('fbdb', fbdb);
       fbdb.off();
     }
   },

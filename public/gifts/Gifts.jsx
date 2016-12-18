@@ -5,6 +5,8 @@ import Container from '../common/container/Container';
 import store from '../store';
 import me from '../common/User';
 import userlistFirebase from '../users/userlistFirebase';
+import firebase from '../firebase/firebase';
+import GiftedUser from './GiftedUser';
 
 const debug = require('debug')('Gifts');
 
@@ -13,31 +15,54 @@ class Gifts extends React.Component {
   constructor() {
     super();
     this.state = {
-      wishes: [],
+      giftedUsers: [],
     };
-    this.handleChange = this.handleChange.bind(this);
+    this.storeSubscription = undefined;
+    this.updateWishes = this.updateWishes.bind(this);
+    this.updateWishBasedOnUserList = this.updateWishBasedOnUserList.bind(this);
   }
 
   componentDidMount() {
     userlistFirebase.subscribe();
-    store.subscribe(this.handleChange);
+    this.storeSubscription = store.subscribe(this.updateWishes);
+    this.updateWishes();
   }
 
-  componentDidUnmount() {
-    userlistFirebase.unsubscribe();
+  componentWillUnmount() {
+    debug('Unsubscribing');
+    // userlistFirebase.unsubscribe();
+    this.storeSubscription();
   }
 
-  handleChange() {
-    const wishes = Object.keys(store.getState().wishReducer).reduce((prev, curr) => {
+  updateWishes() {
+    debug('All users: ', store.getState().allUserReducer);
+
+    const ref = firebase.database().ref(`users/${me.getUserUid()}`);
+    ref.once('value', (snapshot) => {
+      if (snapshot.val() != null) {
+        const list = snapshot.val().users;
+        debug('data :', list);
+        this.updateWishBasedOnUserList(list);
+      }
+    });
+  }
+
+  updateWishBasedOnUserList(userlist) {
+    const giftedUsers = userlist.map((giftedUser) => {
+      debug('Gifted user: ', giftedUser);
+      return (<GiftedUser user={giftedUser} wishes={store.getState().wishReducer[giftedUser.uid]} />);
+    });
+
+    /* const wishes = Object.keys(store.getState().wishReducer).reduce((prev, curr) => {
       const value = store.getState().wishReducer[curr];
       return prev.concat(
         value.wishes
         .filter(el => (el.checked && el.checkedby === me.getUserEmail()))
         .map(el => ({ wish: el, user: curr })));
-    }, []).map(el => (<li className="smallspace">Gave til: {this.userFromUid(el.user)} - {el.wish.name}</li>));
+    }, []).map(el => (<li className="smallspace">Gave til: {this.userFromUid(el.user)} - {el.wish.name}</li>)); */
 
     this.setState({
-      wishes,
+      giftedUsers,
     });
   }
 
@@ -59,7 +84,7 @@ class Gifts extends React.Component {
         </div>
         <hr />
 
-        <ul>{this.state.wishes}</ul>
+        <ul>{this.state.giftedUsers}</ul>
 
       </Container>);
   }
