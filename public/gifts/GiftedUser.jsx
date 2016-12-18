@@ -17,7 +17,7 @@ class GiftedUser extends React.Component {
   render() {
     let gifts;
     if (this.props.wishes) {
-      gifts = this.props.wishes.wishes.filter(el => (
+      gifts = this.props.wishes.filter(el => (
         // debug('email, checkedby:', this.props.user.email, el.checkedby);
         me.getUserEmail() === el.checkedby && el.checked
       ))

@@ -33,7 +33,7 @@ class OtherWish extends React.Component {
     );
     const checkedByElem = this.props.wishInfo.checked
         ? (
-          <div className="smallspace">Tatt av + {checkedBy.name}</div>
+          <div className="smallspace">Tatt av {checkedBy.name}</div>
         )
         : '';
     const checkedText = this.props.wishInfo.checked

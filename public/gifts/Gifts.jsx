@@ -12,6 +12,20 @@ const debug = require('debug')('Gifts');
 
 class Gifts extends React.Component {
 
+  static mapSuggestionToWish(uid) {
+    const suggestions = store.getState().suggestionReducer[uid];
+    if (suggestions) {
+      return suggestions.map(suggestion => (
+        {
+          checked: suggestion.checked,
+          checkedby: suggestion.checkedBy,
+          name: suggestion.wishSuggestion,
+        }
+      ));
+    }
+    return [];
+  }
+
   constructor() {
     super();
     this.state = {
@@ -50,7 +64,22 @@ class Gifts extends React.Component {
   updateWishBasedOnUserList(userlist) {
     const giftedUsers = userlist.map((giftedUser) => {
       debug('Gifted user: ', giftedUser);
-      return (<GiftedUser user={giftedUser} wishes={store.getState().wishReducer[giftedUser.uid]} />);
+
+      const suggestions = Gifts.mapSuggestionToWish(giftedUser.uid);
+
+
+      let wishes;
+      if (store.getState().wishReducer[giftedUser.uid]) {
+        wishes = store.getState().wishReducer[giftedUser.uid].wishes;
+      }
+
+      if (!wishes) {
+        wishes = [];
+      }
+
+      debug('suggestions: ', suggestions, '. Wishes: ', wishes);
+
+      return (<GiftedUser user={giftedUser} wishes={wishes.concat(suggestions)} />);
     });
 
     /* const wishes = Object.keys(store.getState().wishReducer).reduce((prev, curr) => {
