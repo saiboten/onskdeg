@@ -75,7 +75,7 @@ class YourWishList extends React.Component {
 
     debug('Adding wish');
     const newWishList = Object.assign([], this.props.wishes);
-    newWishList.push({
+    newWishList.unshift({
       name: this.state.newWish,
       checked: false,
       id: this.createGuid(),
@@ -177,8 +177,6 @@ class YourWishList extends React.Component {
       <div className="your-wishlist__wishlist">
         {wishes}
       </div>
-
-      <hr />
 
     </Container>);
   }

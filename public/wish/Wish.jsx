@@ -123,7 +123,7 @@ class Wish extends React.Component {
     const deleteWish = this.state.confirm ?
     (
       <div className="flex-row space-between right">
-        <button className="button" onClick={this.cancel}>Avbryt</button>
+        <button className="button wish__confirm-delete-button" onClick={this.cancel}>Avbryt</button>
         <button className="button wish__confirm-delete-button" onClick={this.deleteConfirmed}>Slett</button>
       </div>)
       :
@@ -155,9 +155,7 @@ class Wish extends React.Component {
         <div className="wish__wish-listelement flex-row space-between">{deleteWish}
         </div>
 
-        <div className="flex-row space-between">
-          {image}
-        </div>
+        {image}
         <hr />
       </div>
     );

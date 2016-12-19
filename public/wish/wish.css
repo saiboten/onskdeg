@@ -1,5 +1,6 @@
 .wish__delete-button {
   float: right;
+  margin: 5px;
 }
 
 .wish__wish-listelement {
@@ -24,9 +25,14 @@ a.wish__confirm-delete-button {
   background-color: #d64f4f;
 }
 
+.wish__confirm-delete-button {
+  margin: 5px;
+}
+
 .wish__wish-dropzone {
   width: 70px;
   heigth: 70px;
+  margin: 5px;
 }
 
 .wish__image {

@@ -10,9 +10,14 @@
 }
 
 .other-wish__linkify {
-  word-break: break-all;
+  word-break: break-word;
 }
 
 .other-wish__image {
-  width: 250px;
+  width: auto;
+  height: auto;
+}
+
+.other-wish__button_buy-or-sell {
+  width: 100%;
 }

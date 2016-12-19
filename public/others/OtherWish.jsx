@@ -70,7 +70,7 @@ class OtherWish extends React.Component {
 
         <div className="smallspace flex-row space-between">
           <input
-            className="button"
+            className="button other-wish__button_buy-or-sell"
             onClick={e => this.props.onClick(this.props.wishInfo.id)}
             value={checkedText}
           />
