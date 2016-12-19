@@ -54,19 +54,15 @@ class Suggestion extends React.PureComponent {
       checkedby: this.props.suggestion.checkedBy,
     };
 
-    const deleteMe = user.getUserEmail() === this.props.suggestion.suggestedBy ?
-    (<input className="button smallspace" type="button" onClick={this.props.onDeleteSuggestion} value="Slett" />) : '';
-
     return (
       <div className="flex-column">
         <OtherWish
           wishInfo={wishInfo}
           onClick={this.props.onCheckSuggestion}
           suggestedBy={this.props.suggestion.suggestedBy}
+          deleteSuggestion={this.props.onDeleteSuggestion}
+          canDelete={user.getUserEmail() === this.props.suggestion.suggestedBy}
         />
-        <div className="flex-row space-between">
-          {deleteMe}
-        </div>
       </div>
     );
   }

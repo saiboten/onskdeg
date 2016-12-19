@@ -110,9 +110,8 @@ class OthersWishList extends React.Component {
 
         <h2>Dette ønsker {this.state.userState} seg</h2>
         <p>{this.state.feedback}</p>
-        <ul>
-          {wishes}
-        </ul>
+
+        {wishes}
 
         <Suggestions username={this.state.userState} userUid={this.props.params.name} />
         <hr />

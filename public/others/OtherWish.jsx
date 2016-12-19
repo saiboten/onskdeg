@@ -63,20 +63,31 @@ class OtherWish extends React.Component {
         ? 'Selg'
         : 'Kjøp';
 
+    const deleteThis = this.props.canDelete ?
+    (<input
+      className="button other-wish__button_delete-suggestion"
+      type="button"
+      onClick={this.props.deleteSuggestion}
+      value="Slett"
+    />) : '';
+
     return (
       <div className="flex-column border">
-        <div className="smallspace">{linkifyed}</div>
-        <div className="smallspace">{image}</div>
+        <div className="smallspace other-wish__wish-text">{linkifyed}<br /> {image}
+          <hr className="other-wish__hr" />
+        </div>
 
-        <div className="smallspace flex-row space-between">
+        {suggestedByUser}
+        {checkedByElem}
+
+        <div className="flex-row space-between other-wish__buy-or-sell-wrapper">
           <input
             className="button other-wish__button_buy-or-sell"
             onClick={e => this.props.onClick(this.props.wishInfo.id)}
             value={checkedText}
           />
+          {deleteThis}
         </div>
-        {suggestedByUser}
-        {checkedByElem}
       </div>
     );
   }
@@ -86,6 +97,8 @@ OtherWish.propTypes = {
   wishInfo: React.PropTypes.object,
   suggestedBy: React.PropTypes.string,
   onClick: React.PropTypes.func,
+  deleteSuggestion: React.PropTypes.func,
+  canDelete: React.PropTypes.bool,
 };
 
 export default OtherWish;
