@@ -73,21 +73,23 @@ class OtherWish extends React.Component {
 
     return (
       <div className="flex-column border">
-        <div className="smallspace other-wish__wish-text">{linkifyed}<br /> {image}
-          <hr className="other-wish__hr" />
+        <div className="flex-row other-wish__upper-half">
+          <div className="flex-column smallspace other-wish__wish-text">{linkifyed}{image}
+          </div>
+          <div className="flex-column other-wish__buy-or-sell-wrapper">
+            <input
+              className="button other-wish__button_buy-or-sell"
+              onClick={e => this.props.onClick(this.props.wishInfo.id)}
+              value={checkedText}
+            />
+            {deleteThis}
+          </div>
+        </div>
+        <div className="flex-column">
+          {suggestedByUser}
+          {checkedByElem}
         </div>
 
-        {suggestedByUser}
-        {checkedByElem}
-
-        <div className="flex-row space-between other-wish__buy-or-sell-wrapper">
-          <input
-            className="button other-wish__button_buy-or-sell"
-            onClick={e => this.props.onClick(this.props.wishInfo.id)}
-            value={checkedText}
-          />
-          {deleteThis}
-        </div>
       </div>
     );
   }
