@@ -12,7 +12,7 @@ const obj = {
     firebase.database().ref('wishes').on('value', (wishes) => {
       store.dispatch(setAllWishes(wishes.val()));
     });
-  },
+  }
 };
 
 export default obj;

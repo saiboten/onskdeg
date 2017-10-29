@@ -4,7 +4,6 @@ import React from 'react';
 import { any } from 'prop-types';
 import { Link, withRouter } from 'react-router';
 import Container from '../common/container/Container';
-import user from '../common/User';
 import store from '../store';
 
 const debug = require('debug')('ChoosePath');
@@ -17,8 +16,7 @@ class ChoosePath extends React.Component {
     debug('componentDidMount');
 
     const username = '';
-    const users = store.getState().allUserReducer;
-
+    const { users, user } = this.props;
     debug('Users: ', users);
 
     users.forEach((dbuser) => {
@@ -53,6 +51,8 @@ class ChoosePath extends React.Component {
 
 ChoosePath.propTypes = {
   router: any,
+  users: [],
+  user: any
 };
 
 export default ChoosePath;

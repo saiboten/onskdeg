@@ -4,15 +4,14 @@ import React from 'react';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { TouchBackend } from 'react-dnd-touch-backend';
 import { Link } from 'react-router';
-
+import { any, array } from 'prop-types';
 import AddedUserLink from './addeduserlink/AddedUserLink';
 import DeleteUserDropTarget from './DeleteUserDropTarget';
 import store from '../store';
 import userlistFirebase from '../users/userlistFirebase';
 import Container from '../common/container/Container';
 import firebase from '../firebase/firebase';
-import user from '../common/User';
-import AddableUsers from './addableusers/AddableUsers';
+import AddableUsers from './addableusers/AddableUsersWrapper';
 
 const debug = require('debug')('OthersWishListSelection');
 const DragDropContext = require('react-dnd').DragDropContext;
@@ -33,7 +32,7 @@ class OthersWishListSelection extends React.Component {
     this.state = {
       users: [],
       newUser: '',
-      feedback: '',
+      feedback: ''
     };
     this.updateUserState = this.updateUserState.bind(this);
     this.getUsers = this.getUsers.bind(this);
@@ -52,6 +51,7 @@ class OthersWishListSelection extends React.Component {
 
   getUsers() {
     debug('getUsers');
+    const { user } = this.props;
 
     const ref = firebase.database().ref(`users/${user.getUserUid()}`);
     ref.on('value', (snapshot) => {
@@ -88,7 +88,7 @@ class OthersWishListSelection extends React.Component {
   addUser(newUserMail) {
     debug('addUserClickEvent', newUserMail);
 
-    const users = store.getState().allUserReducer;
+    const { users, user } = this.props;
 
     const userfromdb = users.filter((userdb) => {
       if (userdb.email === newUserMail) {
@@ -118,6 +118,7 @@ class OthersWishListSelection extends React.Component {
 
   deleteUser(email) {
     debug('deleteUser', email);
+    const { user } = this.props;
 
     const userList = this.state.users.slice();
     const newUserList = userList.filter(stateUser => stateUser.email !== email);
@@ -125,7 +126,7 @@ class OthersWishListSelection extends React.Component {
     firebase.database().ref(`users/${user.getUserUid()}`).set({ users: newUserList });
     if (newUserList.length === 0) {
       this.setState({
-        users: [],
+        users: []
       });
     }
   }
@@ -157,5 +158,15 @@ class OthersWishListSelection extends React.Component {
     </Container>);
   }
 }
+
+OthersWishListSelection.propTypes = {
+  user: any,
+  users: array
+};
+
+OthersWishListSelection.defaultProps = {
+  user: {},
+  users: []
+};
 
 export default DragDropContext(HTML5Backend)(OthersWishListSelection);

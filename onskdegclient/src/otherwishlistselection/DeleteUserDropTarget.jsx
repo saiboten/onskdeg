@@ -27,7 +27,7 @@ const deleteTarget = {
 
     debug('Dropped! Deleting user: ', item.email);
     props.delete(item.email);
-  },
+  }
 };
 
 /**
@@ -44,7 +44,7 @@ function collect(connect, monitor) {
     isOver: monitor.isOver(),
     isOverCurrent: monitor.isOver({ shallow: true }),
     canDrop: monitor.canDrop(),
-    itemType: monitor.getItemType(),
+    itemType: monitor.getItemType()
   };
 }
 
@@ -84,7 +84,7 @@ DeleteUserDropTarget.propTypes = {
   isOver: bool,
   canDrop: bool,
   isOverCurrent: bool,
-  connectDropTarget: any,
+  connectDropTarget: any
 };
 
 export default DropTarget('deleteUser', deleteTarget, collect)(DeleteUserDropTarget);

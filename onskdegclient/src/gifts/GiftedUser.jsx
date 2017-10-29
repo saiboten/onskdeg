@@ -2,7 +2,6 @@ import React from 'react';
 import { any, array } from 'prop-types';
 
 import Gift from './Gift';
-import me from '../common/User';
 
 const debug = require('debug')('GiftedUser');
 
@@ -10,17 +9,18 @@ class GiftedUser extends React.Component {
   constructor(props) {
     super();
     this.setState = {
-      gifts: [],
+      gifts: []
     };
     debug('wishes', props.wishes);
   }
 
   render() {
+    const { user } = this.props;
     let gifts;
     if (this.props.wishes) {
       gifts = this.props.wishes.filter(el => (
         // debug('email, checkedby:', this.props.user.email, el.checkedby);
-        me.getUserEmail() === el.checkedby && el.checked
+        user.getUserEmail() === el.checkedby && el.checked
       ))
       .map(el => (
         (<Gift info={el} />)
@@ -42,7 +42,7 @@ class GiftedUser extends React.Component {
 
 GiftedUser.propTypes = {
   user: any,
-  wishes: array,
+  wishes: array
 };
 
 export default GiftedUser;

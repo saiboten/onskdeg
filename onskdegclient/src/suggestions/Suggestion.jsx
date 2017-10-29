@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 import { checkSuggestion, deleteSuggestion } from './suggestionActions';
 
 import OtherWish from '../others/OtherWish';
-import user from '../common/User';
 import suggestionsFirebase from './suggestionsFirebase';
 import store from '../store';
 
@@ -26,23 +25,27 @@ const mapStateToProps = (state, ownProps) => {
       suggestion.id === ownProps.suggestion.id
     ))[0],
     counter: counter + 1,
+    user: state.user
   };
+};
+
+const checkSuggestionThunk = ownProps => (dispatch, getState) => {
+  dispatch(checkSuggestion(ownProps.userUid, ownProps.suggestion.id, getState().user.getUserEmail()));
+  suggestionsFirebase.saveSuggestions(store.getState().suggestionReducer);
 };
 
 const mapDispatchToProps = function (dispatch, ownProps) {
   return {
     onCheckSuggestion() {
       debug('onCheckSuggestion');
-
-      dispatch(checkSuggestion(ownProps.userUid, ownProps.suggestion.id, user.getUserEmail()));
-      suggestionsFirebase.saveSuggestions(store.getState().suggestionReducer);
+      dispatch(checkSuggestionThunk(ownProps));
     },
     onDeleteSuggestion() {
       debug('onDeleteSuggestion');
 
       dispatch(deleteSuggestion(ownProps.userUid, ownProps.suggestion.id));
       suggestionsFirebase.saveSuggestions(store.getState().suggestionReducer);
-    },
+    }
   };
 };
 
@@ -52,8 +55,10 @@ class Suggestion extends React.PureComponent {
       checked: this.props.suggestion.checked,
       name: this.props.suggestion.wishSuggestion,
       id: this.props.suggestion.id,
-      checkedby: this.props.suggestion.checkedBy,
+      checkedby: this.props.suggestion.checkedBy
     };
+
+    const { user } = this.props;
 
     return (
       <div className="flex-column">
@@ -73,6 +78,7 @@ Suggestion.propTypes = {
   suggestion: any,
   onCheckSuggestion: func,
   onDeleteSuggestion: func,
+  user: any
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Suggestion);

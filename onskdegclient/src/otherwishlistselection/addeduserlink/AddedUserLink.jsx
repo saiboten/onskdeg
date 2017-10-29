@@ -26,7 +26,7 @@ class AddedUserLink extends React.PureComponent {
 
 AddedUserLink.propTypes = {
   el: any,
-  deleteMe: func,
+  deleteMe: func
 };
 
 export default AddedUserLink;

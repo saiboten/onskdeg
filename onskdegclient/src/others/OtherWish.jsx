@@ -15,14 +15,14 @@ class OtherWish extends React.Component {
     super();
 
     this.state = {
-      image: '',
+      image: ''
     };
 
     if (props.wishInfo.image) {
       storageRef.child(props.wishInfo.image).getDownloadURL().then((url) => {
         debug('url: ', url);
         this.setState({
-          image: url,
+          image: url
         });
       });
     }
@@ -101,7 +101,7 @@ OtherWish.propTypes = {
   suggestedBy: string,
   onClick: func,
   deleteSuggestion: func,
-  canDelete: bool,
+  canDelete: bool
 };
 
 export default OtherWish;

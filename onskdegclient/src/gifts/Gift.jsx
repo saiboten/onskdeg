@@ -19,7 +19,7 @@ class Gift extends React.PureComponent {
 }
 
 Gift.propTypes = {
-  info: any,
+  info: any
 };
 
 export default Gift;

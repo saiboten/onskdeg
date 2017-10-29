@@ -2,12 +2,12 @@
 export const setUser = user /* : Object */ => (
   {
     type: 'SET_USER',
-    user,
+    user
   }
 );
 
 export const logout = () => (
   {
-    type: 'LOG_OUT',
+    type: 'LOG_OUT'
   }
 );

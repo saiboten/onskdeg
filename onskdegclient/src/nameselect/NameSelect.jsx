@@ -1,11 +1,10 @@
 // @flow
 
 import React from 'react';
-import { array } from 'prop-types';
+import { array, any } from 'prop-types';
 import { Link } from 'react-router';
 
 import Container from '../common/container/Container';
-import user from '../common/User';
 import { setUserlist } from '../users/userlistactions';
 import firebase from '../firebase/firebase';
 import store from '../store';
@@ -23,12 +22,17 @@ class NameSelect extends React.Component {
 
     this.state = {
       name: '',
-      confirmedName: '',
+      confirmedName: ''
     };
+
+    this.nameSelected = this.nameSelected.bind(this);
+    this.updateNameState = this.updateNameState.bind(this);
   }
 
   componentDidMount() {
     debug('componentDidMount');
+
+    const { user } = this.props;
 
     if (user.getUserUid() === undefined) {
       this.props.router.push('/');
@@ -37,12 +41,13 @@ class NameSelect extends React.Component {
 
   nameSelected(e/* : Event*/) {
     debug('nameSelected', e);
+    const { user } = this.props;
 
     e.preventDefault();
     debug('Name selected: ', this.state.name);
 
     this.setState({
-      confirmedName: this.state.name,
+      confirmedName: this.state.name
     });
 
     const users = store.getState().allUserReducer;
@@ -64,7 +69,7 @@ class NameSelect extends React.Component {
   updateNameState(e/* : Event*/) {
     debug('updateNameState', e);
     this.setState({
-      name: e.target.value,
+      name: e.target.value
     });
   }
 
@@ -101,6 +106,7 @@ class NameSelect extends React.Component {
 
 NameSelect.propTypes = {
   router: array,
+  user: any
 };
 
 export default NameSelect;

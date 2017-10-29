@@ -7,7 +7,6 @@ import { Link } from 'react-router';
 
 import Container from '../common/container/Container';
 import firebase from '../firebase/firebase';
-import user from '../common/User';
 import Comments from './Comments';
 import Suggestions from '../suggestions/Suggestions';
 import OtherWish from './OtherWish';
@@ -37,7 +36,7 @@ class OthersWishList extends React.Component {
     super();
     debug('constructor');
     this.state = {
-      wishes: [], hideSelected: true, userState: '', feedback: '',
+      wishes: [], hideSelected: true, userState: '', feedback: ''
     };
     this.check = this.check.bind(this);
     this.updateWishState = this.updateWishState.bind(this);
@@ -75,6 +74,7 @@ class OthersWishList extends React.Component {
 
   check(id) {
     debug('check', id);
+    const { user } = this.props;
     const newWishList = this.state.wishes.map((e) => {
       if (id === e.id) {
         return {
@@ -82,7 +82,7 @@ class OthersWishList extends React.Component {
           checked: !e.checked,
           id: e.id,
           checkedby: user.getUserEmail(),
-          checkedTime: new Date(),
+          checkedTime: new Date()
         };
       }
 
@@ -96,7 +96,7 @@ class OthersWishList extends React.Component {
     debug('toggleShowSelected', e);
     e.preventDefault();
     this.setState({
-      hideSelected: !this.state.hideSelected,
+      hideSelected: !this.state.hideSelected
     });
   }
 
@@ -138,6 +138,7 @@ class OthersWishList extends React.Component {
 OthersWishList.propTypes = {
   params: any,
   userlist: array,
+  user: any
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(OthersWishList);

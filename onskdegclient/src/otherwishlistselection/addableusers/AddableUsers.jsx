@@ -1,9 +1,8 @@
 // @flow
 
 import React from 'react';
-import { func } from 'prop-types';
+import { func, any } from 'prop-types';
 import firebase from '../../firebase/firebase';
-import user from '../../common/User';
 
 const debug = require('debug')('AddableUser');
 
@@ -33,6 +32,7 @@ class AddableUsers extends React.Component {
 
   componentDidMount() {
     debug('componentDidMount');
+    const { user } = this.props;
 
     firebase.database().ref('userlist').on('value', (data) => {
       debug('Data returned: ', data.val());
@@ -72,7 +72,7 @@ class AddableUsers extends React.Component {
     debug('toggleOpen');
 
     this.setState({
-      open: !this.state.open,
+      open: !this.state.open
     });
   }
 
@@ -109,6 +109,7 @@ class AddableUsers extends React.Component {
 
 AddableUsers.propTypes = {
   addUser: func,
+  user: any
 };
 
 export default AddableUsers;

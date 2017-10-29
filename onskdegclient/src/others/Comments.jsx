@@ -4,7 +4,6 @@ import React from 'react';
 import { any } from 'prop-types';
 import moment from 'moment';
 import firebase from '../firebase/firebase';
-import user from '../common/User';
 
 const debug = require('debug')('Comments');
 
@@ -18,7 +17,7 @@ class Comments extends React.Component {
     this.state = {
       comment: '',
       comments: [],
-      feedback: '',
+      feedback: ''
     };
     this.updateCommentState = this.updateCommentState.bind(this);
     this.addComment = this.addComment.bind(this);
@@ -33,7 +32,7 @@ class Comments extends React.Component {
         const list = snapshot.val();
         debug('Comments list :', list);
         this.setState({
-          comments: list,
+          comments: list
         });
       }
     });
@@ -42,18 +41,19 @@ class Comments extends React.Component {
   updateCommentState(e /* : Event*/) {
     debug('updateCommentState', e);
     this.setState({
-      comment: e.target.value,
+      comment: e.target.value
     });
   }
 
   addComment(e /* : Event*/) {
     debug('addComment', e);
+    const { user } = this.props;
 
     e.preventDefault();
 
     if (this.state.comment === '') {
       this.setState({
-        feedback: 'Kommentaren kan ikke være tom',
+        feedback: 'Kommentaren kan ikke være tom'
       });
       return;
     }
@@ -64,7 +64,7 @@ class Comments extends React.Component {
     comments.push({
       user: user.getUserEmail(),
       comment: this.state.comment,
-      time: moment().format(),
+      time: moment().format()
     });
 
     debug('New comment list: ', comments);
@@ -72,7 +72,7 @@ class Comments extends React.Component {
     this.setState({
       comments,
       comment: '',
-      feedback: '',
+      feedback: ''
     });
   }
 
@@ -113,6 +113,7 @@ class Comments extends React.Component {
 
 Comments.propTypes = {
   params: any,
+  user: any
 };
 
 export default Comments;

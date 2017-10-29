@@ -19,7 +19,7 @@ const suggestionReducer = (state = initialState, action) => {
         wishSuggestion: action.wishSuggestion,
         suggestedBy: action.suggestedBy,
         checked: false,
-        checkedBy: '',
+        checkedBy: ''
       });
       debug('Old state: ', state, '. New state: ', newState);
       break;

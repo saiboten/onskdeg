@@ -7,11 +7,11 @@ import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 
 import YourWishList from './yours/YourWishList';
-import OthersWishListSelection from './otherwishlistselection/OthersWishListSelection';
+import OthersWishListSelection from './otherwishlistselection/OthersWishListSelectionWrapper';
 import OthersWishList from './others/OthersWishList';
-import ChoosePath from './choosepath/ChoosePath';
+import ChoosePath from './choosepath/ChoosePathWrapper';
 import SelectUser from './selectuser/SelectUser';
-import NameSelect from './nameselect/NameSelect';
+import NameSelect from './nameselect/NameSelectWrapper';
 import Gifts from './gifts/Gifts';
 
 import store from './store';

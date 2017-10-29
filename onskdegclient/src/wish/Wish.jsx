@@ -20,7 +20,7 @@ class Wish extends React.Component {
       edit: false,
       text: props.wish.name,
       confirm: false,
-      image: '',
+      image: ''
     };
     this.click = this.click.bind(this);
     this.focusLost = this.focusLost.bind(this);
@@ -35,7 +35,7 @@ class Wish extends React.Component {
       storageRef.child(props.wish.image).getDownloadURL().then((url) => {
         debug('url: ', url);
         this.setState({
-          image: url,
+          image: url
         });
       });
     }
@@ -44,7 +44,7 @@ class Wish extends React.Component {
   componentWillReceiveProps(nextProps /* : any */) {
     this.setState({
       text: nextProps.wish.name,
-      confirm: nextProps.wish.confirm,
+      confirm: nextProps.wish.confirm
     });
   }
 
@@ -70,7 +70,7 @@ class Wish extends React.Component {
       storageRef.child(imageName).getDownloadURL().then((url) => {
         debug('url: ', url);
         this.setState({
-          image: url,
+          image: url
         });
       });
       this.props.addImage(this.props.wish, imageName);
@@ -79,19 +79,19 @@ class Wish extends React.Component {
 
   updateText(e /* : Event */) {
     this.setState({
-      text: e.target.value,
+      text: e.target.value
     });
   }
 
   deleteItem(e /* : Event */) {
     this.setState({
-      confirm: true,
+      confirm: true
     });
   }
 
   cancel(e /* : Event */) {
     this.setState({
-      confirm: false,
+      confirm: false
     });
   }
 
@@ -101,20 +101,20 @@ class Wish extends React.Component {
 
   focusLost() {
     this.setState({
-      edit: false,
+      edit: false
     });
     this.props.update({
       name: this.state.text,
       id: this.props.wish.id,
       checkedby: this.props.wish.checkedby,
       checked: this.props.wish.checked,
-      image: this.props.wish.image,
+      image: this.props.wish.image
     });
   }
 
   click() {
     this.setState({
-      edit: true,
+      edit: true
     });
   }
 
@@ -167,7 +167,7 @@ Wish.propTypes = {
   delete: func,
   wish: any,
   update: func,
-  addImage: func,
+  addImage: func
 };
 
 export default Wish;

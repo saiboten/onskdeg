@@ -2,7 +2,7 @@
 export const setAllWishes = wishes => (
   {
     type: 'SET_ALL_WISHES',
-    wishes,
+    wishes
   }
 );
 
@@ -10,7 +10,7 @@ export const setWishes = (user, wishes) => (
   {
     type: 'SET_WISHES_SINGLE_USER',
     wishes,
-    user,
+    user
   }
 );
 
@@ -18,7 +18,7 @@ export const deleteWish = (user, wishId) => (
   {
     type: 'DELETE_WISH',
     wishId,
-    user,
+    user
   }
 );
 
@@ -26,7 +26,7 @@ export const addWish = (user, wish) => (
   {
     type: 'ADD_WISH',
     wish,
-    user,
+    user
   }
 );
 
@@ -34,6 +34,6 @@ export const checkWish = (user, wish) => (
   {
     type: 'CHECK_WISH',
     wish,
-    user,
+    user
   }
 );

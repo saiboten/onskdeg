@@ -1,15 +1,15 @@
 // @flow
 import { combineReducers } from 'redux';
-import userReducer from '../user/userReducer';
-import allUserReducer from '../users/allUserReducer';
-import suggestionReducer from '../suggestions/suggestionReducer';
-import wishReducer from '../wish/wishReducer';
+import user from '../user/userReducer';
+import users from '../users/allUserReducer';
+import suggestion from '../suggestions/suggestionReducer';
+import wish from '../wish/wishReducer';
 
 const onskdegReducers = combineReducers({
-  userReducer,
-  allUserReducer,
-  suggestionReducer,
-  wishReducer,
+  user,
+  users,
+  suggestion,
+  wish
 });
 
 export default onskdegReducers;

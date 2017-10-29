@@ -12,7 +12,7 @@ class AddSuggestion extends React.Component {
 
     this.state = {
       suggestion: '',
-      feedback: '',
+      feedback: ''
     };
 
     this.onClick = this.onClick.bind(this);
@@ -27,7 +27,7 @@ class AddSuggestion extends React.Component {
       this.props.onClick(this.state.suggestion);
     } else {
       this.setState({
-        feedback: 'Forslag kan ikke være tomt',
+        feedback: 'Forslag kan ikke være tomt'
       });
     }
   }
@@ -36,7 +36,7 @@ class AddSuggestion extends React.Component {
     debug('changeSuggestion');
 
     this.setState({
-      suggestion: e.target.value,
+      suggestion: e.target.value
     });
   }
 
@@ -64,7 +64,7 @@ class AddSuggestion extends React.Component {
 }
 
 AddSuggestion.propTypes = {
-  onClick: func,
+  onClick: func
 };
 
 export default AddSuggestion;

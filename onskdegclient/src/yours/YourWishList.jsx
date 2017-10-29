@@ -1,12 +1,11 @@
 // @flow
 
 import React from 'react';
-import { array } from 'prop-types';
+import { array, any } from 'prop-types';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
 import Container from '../common/container/Container';
-import user from '../common/User';
 import Wish from '../wish/Wish';
 import firebase from '../firebase/firebase';
 import store from '../store';
@@ -15,10 +14,10 @@ const debug = require('debug')('YourWishList');
 
 require('./yourwishlist.css');
 
-const mapStateToProps = function (state, ownProps) {
-  debug('User wishes', state.wishReducer[user.getUserUid()]);
+const mapStateToProps = function ({ wish, user }, ownProps) {
+  debug('User wishes', wish[user.getUserUid()]);
   return {
-    wishes: state.wishReducer[user.getUserUid()] ? state.wishReducer[user.getUserUid()].wishes : [],
+    wishes: wish[user.getUserUid()] ? wish[user.getUserUid()].wishes : []
   };
 };
 
@@ -34,7 +33,7 @@ class YourWishList extends React.Component {
     super();
     this.state = {
       newWish: '',
-      feedback: '',
+      feedback: ''
     };
 
     this.addWish = this.addWish.bind(this);
@@ -60,16 +59,18 @@ class YourWishList extends React.Component {
 
   updateWishState(e) {
     this.setState({
-      newWish: e.target.value,
+      newWish: e.target.value
     });
   }
 
   addWish(e) {
+    const { user } = this.props;
+
     e.preventDefault();
 
     if (this.state.newWish === '') {
       this.setState({
-        feedback: 'Ønsket kan ikke være tomt',
+        feedback: 'Ønsket kan ikke være tomt'
       });
       return;
     }
@@ -79,19 +80,21 @@ class YourWishList extends React.Component {
     newWishList.unshift({
       name: this.state.newWish,
       checked: false,
-      id: this.createGuid(),
+      id: this.createGuid()
     });
 
     firebase.database().ref(`wishes/${user.getUserUid()}`).set({ wishes: newWishList });
 
     this.setState({
       newWish: '',
-      feedback: '',
+      feedback: ''
     });
   }
 
   update(wish) {
     debug('Saving wishlist: ', wish);
+    const { user } = this.props;
+
     const newWishList = this.props.wishes.map((e) => {
       if (e.id === wish.id) {
         return {
@@ -99,7 +102,7 @@ class YourWishList extends React.Component {
           checked: wish.checked,
           checkedby: wish.checkedby ? wish.checkedby : '',
           id: wish.id,
-          image: wish.image ? wish.image : '',
+          image: wish.image ? wish.image : ''
         };
       }
       return e;
@@ -109,6 +112,7 @@ class YourWishList extends React.Component {
 
   addImage(wish, image) {
     debug('Adding image to wish: ', wish, image);
+    const { user } = this.props;
     const newWishList = this.props.wishes.map((e) => {
       if (e.id === wish.id) {
         return {
@@ -116,7 +120,7 @@ class YourWishList extends React.Component {
           checked: wish.checked,
           checkedby: wish.checkedby ? wish.checkedby : '',
           id: wish.id,
-          image,
+          image
         };
       }
       return e;
@@ -126,6 +130,7 @@ class YourWishList extends React.Component {
 
   deleteThis(deleteId) {
     debug('Delete id: ', deleteId);
+    const { user } = this.props;
     const newWishList = Object.assign([], this.props.wishes);
 
     const filteredNewWishList = newWishList.filter((e) => {
@@ -185,6 +190,7 @@ class YourWishList extends React.Component {
 
 YourWishList.propTypes = {
   wishes: array,
+  user: any
 };
 
 export default connect(

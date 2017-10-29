@@ -23,7 +23,7 @@ const obj = {
       debug('fbdb', fbdb);
       fbdb.off();
     }
-  },
+  }
 };
 
 export default obj;

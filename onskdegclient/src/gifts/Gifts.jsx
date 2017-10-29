@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router';
+import { any, array } from 'prop-types';
 
 import Container from '../common/container/Container';
 import store from '../store';
-import me from '../common/User';
 import userlistFirebase from '../users/userlistFirebase';
 import firebase from '../firebase/firebase';
 import GiftedUser from './GiftedUser';
@@ -19,7 +19,7 @@ class Gifts extends React.Component {
         {
           checked: suggestion.checked,
           checkedby: suggestion.checkedBy,
-          name: suggestion.wishSuggestion,
+          name: suggestion.wishSuggestion
         }
       ));
     }
@@ -29,7 +29,7 @@ class Gifts extends React.Component {
   constructor() {
     super();
     this.state = {
-      giftedUsers: [],
+      giftedUsers: []
     };
     this.storeSubscription = undefined;
     this.updateWishes = this.updateWishes.bind(this);
@@ -50,8 +50,9 @@ class Gifts extends React.Component {
 
   updateWishes() {
     debug('All users: ', store.getState().allUserReducer);
+    const { user } = this.props;
 
-    const ref = firebase.database().ref(`users/${me.getUserUid()}`);
+    const ref = firebase.database().ref(`users/${user.getUserUid()}`);
     ref.once('value', (snapshot) => {
       if (snapshot.val() != null) {
         const list = snapshot.val().users;
@@ -91,13 +92,14 @@ class Gifts extends React.Component {
     }, []).map(el => (<li className="smallspace">Gave til: {this.userFromUid(el.user)} - {el.wish.name}</li>)); */
 
     this.setState({
-      giftedUsers,
+      giftedUsers
     });
   }
 
   userFromUid(uid) {
-    debug('All users: ', store.getState().allUserReducer);
-    return store.getState().allUserReducer.reduce((prev, curr) => (
+    const { users } = this.props;
+    debug('All users: ', users);
+    return users.reduce((prev, curr) => (
       uid === curr.uid ? curr.name : prev
     ), '');
   }
@@ -119,5 +121,16 @@ class Gifts extends React.Component {
   }
 
 }
+
+Gifts.propTypes = {
+  user: any,
+  users: array
+};
+
+Gifts.defaultProps = {
+  user: {},
+  users: []
+};
+
 
 export default Gifts;
