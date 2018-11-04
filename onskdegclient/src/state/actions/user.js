@@ -1,12 +1,6 @@
-export const userLoaded = () => (
+export const userLoaded = user => (
   {
     type: 'USER_LOADED',
-  }
-);
-
-export const setUser = user => (
-  {
-    type: 'SET_USER',
     user,
   }
 );

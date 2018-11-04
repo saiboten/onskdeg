@@ -1,7 +1,7 @@
 // @flow
 
 import firebase from './firebase';
-import { setUser, userLoaded } from '../../state/actions/user';
+import { userLoaded } from '../../state/actions/user';
 import store from '../../store';
 
 const debug = require('debug')('authFirebase');
@@ -12,8 +12,7 @@ const obj = {
       debug('onAuthStateChanged. User logged in: ', user, something);
 
       if (user) {
-        store.dispatch(userLoaded());
-        store.dispatch(setUser(user));
+        store.dispatch(userLoaded(user));
 
         firebase.database().ref('/userlist').once('value').then((snapshot) => {
           let users = snapshot.val();

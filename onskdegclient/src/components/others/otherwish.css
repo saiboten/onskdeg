@@ -24,7 +24,7 @@
 }
 
 .other-wish__wish-text {
-  flex: 1 0 11em;
+  flex: 1 0 65%;
 }
 
 .other-wish__hr {
@@ -32,7 +32,7 @@
 }
 
 .other-wish__buy-or-sell-wrapper {
-  flex: 0 1 2em;
+  flex: 0 0 20%;
 }
 
 .other-wish__upper-half {

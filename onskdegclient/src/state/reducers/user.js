@@ -8,15 +8,16 @@ const userReducer = (state = initialState, action) => {
   debug('Input: state: ', state, '. Action: ', action);
 
   switch (action.type) {
-    case 'SET_USER': {
-      const { uid, email } = action.user;
-      return {
-        ...state,
-        uid,
-        email,
-      };
-    }
     case 'USER_LOADED': {
+      if (action.user) {
+        const { uid, email } = action.user;
+        return {
+          ...state,
+          uid,
+          email,
+          loaded: true,
+        };
+      }
       return {
         ...state,
         loaded: true,

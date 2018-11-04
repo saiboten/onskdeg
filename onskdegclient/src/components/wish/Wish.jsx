@@ -132,14 +132,14 @@ class Wish extends React.Component {
     const deleteWish = confirm
       ? (
         <div className="flex-row space-between right">
-          <button type="button" className="button wish__confirm-delete-button" onClick={this.cancel}>Avbryt</button>
-          <button type="button" className="button wish__confirm-delete-button" onClick={this.deleteConfirmed}>Slett</button>
+          <button type="button" className="button button--square wish__confirm-delete-button" onClick={this.cancel}>Avbryt</button>
+          <button type="button" className="button button--square wish__confirm-delete-button" onClick={this.deleteConfirmed}>Slett</button>
         </div>)
       : (
         <div className="flex-row space-between right">
-          <button type="button" className="wish__delete-button button" onClick={this.deleteItem}>Slett</button>
+          <button type="button" className="wish__delete-button button button--square" onClick={this.deleteItem}>Slett</button>
           <Dropzone className="wish__wish-dropzone" onDrop={this.onDrop}>
-            <button type="button" className="button">Bilde</button>
+            <button type="button" className="button button--square">Bilde</button>
           </Dropzone>
         </div>
       );

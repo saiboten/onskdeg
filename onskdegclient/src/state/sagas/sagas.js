@@ -8,7 +8,6 @@ function myPromise(currentUser) {
   return new Promise(((resolve) => {
     firebase.database().ref(`users/${currentUser.uid}/users`).on('value', (snapshot) => {
       const resolveVal = snapshot.val();
-      console.log('Value to be resolved:', resolveVal, currentUser);
       resolve(resolveVal);
     });
   }));
@@ -17,7 +16,6 @@ function myPromise(currentUser) {
 function* loadUserList() {
   const currentUser = yield select(getCurrentUser);
   const data = yield call(myPromise, currentUser);
-  console.log('data: ', data);
   yield put({ type: 'FRIENDS_LOADED', data });
 }
 

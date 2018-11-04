@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 import {
   any, func, string, bool,
@@ -6,6 +5,7 @@ import {
 import Linkify from 'react-linkify';
 import store from '../../store';
 import firebase from '../firebase/firebase';
+import './otherwish.css';
 
 const storageRef = firebase.storage().ref();
 

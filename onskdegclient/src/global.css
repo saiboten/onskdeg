@@ -42,7 +42,7 @@ html {
     -ms-user-select: none;
     white-space: nowrap;
     overflow: hidden;
-    padding: 0 18px;
+    padding: 0;
     border: 0 none;
     border-radius: 3px;
     display: inline-block;
@@ -50,6 +50,14 @@ html {
     height: 60px;
     line-height: 60px;
     text-decoration: none;
+}
+
+.button--padded {
+  padding: 0 16px;
+}
+
+.button--square {
+  width: 60px;
 }
 
 .flex-row {

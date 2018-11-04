@@ -3,7 +3,7 @@
 
 const initialState = {};
 
-const userReducer = (state = initialState/* : Object*/, action/* : Object*/) => {
+const userReducer = (state = initialState, action) => {
   let returnThis;
   switch (action.type) {
     case 'SET_ALL_WISHES': {

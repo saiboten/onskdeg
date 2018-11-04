@@ -138,7 +138,7 @@ class SelectUser extends React.Component {
       ? (<button type="button" className="button-navigation" onClick={this.logOut}>Logg ut</button>) : '';
 
     const nextPage = user.uid
-      ? (<Link className="button" to="/choosepath">Gå videre</Link>) : '';
+      ? (<Link className="button button--padded" to="/choosepath">Gå videre</Link>) : '';
 
     const loginForm = user.uid ? '' : (
       <form className="select-user__form" onSubmit={this.logIn}>

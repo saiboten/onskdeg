@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { string } from 'prop-types';
+import { any } from 'prop-types';
 
 require('./container.css');
 
@@ -17,7 +17,7 @@ class Container extends React.PureComponent {
 }
 
 Container.propTypes = {
-  children: string.isRequired,
+  children: any.isRequired,
 };
 
 export default Container;

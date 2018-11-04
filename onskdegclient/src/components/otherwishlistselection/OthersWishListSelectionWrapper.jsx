@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { any, array, func } from 'prop-types';
+import { any, array } from 'prop-types';
 import AddedUserLink from './addeduserlink/AddedUserLink';
 import store from '../../store';
 import Container from '../common/container/Container';
@@ -101,11 +101,10 @@ class OthersWishListSelection extends React.Component {
 
   render() {
     const { users, newUser, feedback } = this.state;
-    const usersLinks = users.map(el => (<AddedUserLink deleteMe={this.deleteUser} el={el} />));
+    const usersLinks = users.map(el => (<AddedUserLink key={el.uid} deleteMe={this.deleteUser} el={el} />));
 
     return (
       <Container>
-
         <div className="flex-row space-between">
           <h1>Andres ønskeliste</h1>
           <Link className="shrink button-navigation smallspace" to="/choosepath">Tilbake</Link>
@@ -124,7 +123,6 @@ class OthersWishListSelection extends React.Component {
         </form>
 
         <p>{feedback}</p>
-
       </Container>
     );
   }
@@ -134,7 +132,6 @@ OthersWishListSelection.propTypes = {
   user: any,
   users: array,
   friends: array,
-  load: func.isRequired,
 };
 
 OthersWishListSelection.defaultProps = {

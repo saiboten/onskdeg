@@ -52,7 +52,7 @@ class AddSuggestion extends React.Component {
           <input className="smallspace shrink" onChange={this.changeSuggestion} placeholder="Legg til forslag her" />
           <div>
             <input
-              className="smallspace button grow"
+              className="smallspace button button--padded grow"
               type="submit"
               onClick={this.onClick}
               value="Lagre forslag"

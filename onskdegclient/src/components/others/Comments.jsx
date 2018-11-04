@@ -101,7 +101,7 @@ class Comments extends React.Component {
             placeholder="Kommenter"
           />
           <div className="flex-row space-between">
-            <button type="button" className="smallspace button" href="#" onClick={this.addComment}>Lagre kommentar</button>
+            <button type="button" className="smallspace button button--padded" href="#" onClick={this.addComment}>Lagre kommentar</button>
             <div>{feedback}</div>
           </div>
         </div>
