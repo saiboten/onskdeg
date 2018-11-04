@@ -1,12 +1,13 @@
-// @flow
-
+import { connect } from 'react-redux';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { any, array } from 'prop-types';
+import { any, array, func } from 'prop-types';
 import AddedUserLink from './addeduserlink/AddedUserLink';
 import store from '../../store';
 import Container from '../common/container/Container';
 import firebase from '../firebase/firebase';
+import { loadFriends } from '../../state/actions/friends';
+import spinnerWhileLoading from '../common/spinnerWhileLoading';
 
 const debug = require('debug')('OthersWishListSelection');
 
@@ -15,9 +16,8 @@ require('./otherswishlistselection.css');
 class OthersWishListSelection extends React.Component {
   constructor(props) {
     super(props);
-    debug('constructor');
-    const { suggestion } = props;
-    const initialUsers = suggestion ? Object.values(suggestion) : [];
+    const { friends } = props;
+    const initialUsers = friends || [];
 
     this.state = {
       users: initialUsers,
@@ -133,12 +133,34 @@ class OthersWishListSelection extends React.Component {
 OthersWishListSelection.propTypes = {
   user: any,
   users: array,
-  suggestion: any,
+  friends: array,
+  load: func.isRequired,
 };
 
 OthersWishListSelection.defaultProps = {
   user: {},
   users: [],
+  friends: null,
 };
 
-export default OthersWishListSelection;
+const WithSpinner = spinnerWhileLoading(({ loaded, loading, load }) => {
+  if (!loaded && !loading) {
+    load();
+  }
+  return !loaded;
+})(OthersWishListSelection);
+
+export default connect(
+  ({ user, friends: { friends, loaded, loading }, users }) => (
+    {
+      user,
+      friends,
+      loaded,
+      loading,
+      users,
+    }
+  ),
+  dispatch => ({
+    load: () => dispatch(loadFriends()),
+  }),
+)(WithSpinner);

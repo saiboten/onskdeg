@@ -38,8 +38,8 @@ class OthersWishList extends React.Component {
   }
 
   componentDidMount() {
-    debug('componentDidMount');
-    const { userlist, params: { name } } = this.props;
+    debug('componentDidMount', this.props);
+    const { userlist, match: { params: { name } } } = this.props;
 
     userlistFirebase.subscribe();
     this.updateWishState();
@@ -54,7 +54,7 @@ class OthersWishList extends React.Component {
 
   updateWishState() {
     debug('updateWishState');
-    const { params: { name } } = this.props;
+    const { match: { params: { name } } } = this.props;
 
     const wishesRef = firebase.database().ref(`wishes/${name}`);
     wishesRef.on('value', (snapshot) => {
@@ -104,7 +104,7 @@ class OthersWishList extends React.Component {
     const {
       wishes, hideSelected, userState, feedback,
     } = this.state;
-    const { params } = this.props;
+    const { match: { params } } = this.props;
 
     const filteredWishes = wishes.filter((el) => {
       debug('Wish to be filtered: ', el);
@@ -152,7 +152,7 @@ seg
 }
 
 OthersWishList.propTypes = {
-  params: any,
+  match: any,
   userlist: array,
   user: any,
 };

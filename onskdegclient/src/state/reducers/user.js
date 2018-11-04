@@ -1,27 +1,33 @@
 
-const initialState = {};
+const initialState = {
+  loaded: false,
+};
 const debug = require('debug')('userReducer');
 
 const userReducer = (state = initialState, action) => {
-  let returnThis;
   debug('Input: state: ', state, '. Action: ', action);
 
   switch (action.type) {
     case 'SET_USER': {
-      returnThis = Object.assign({});
-      returnThis.uid = action.user.uid;
-      returnThis.email = action.user.email;
-      debug('Output state: ', returnThis);
-      break;
+      const { uid, email } = action.user;
+      return {
+        ...state,
+        uid,
+        email,
+      };
+    }
+    case 'USER_LOADED': {
+      return {
+        ...state,
+        loaded: true,
+      };
     }
     case 'LOG_OUT': {
-      returnThis = initialState;
-      break;
+      return initialState;
     }
     default:
-      returnThis = state;
+      return { ...state };
   }
-  return returnThis;
 };
 
 export default userReducer;

@@ -1,5 +1,10 @@
-// @flow
-export const setUser = user /* : Object */ => (
+export const userLoaded = () => (
+  {
+    type: 'USER_LOADED',
+  }
+);
+
+export const setUser = user => (
   {
     type: 'SET_USER',
     user,

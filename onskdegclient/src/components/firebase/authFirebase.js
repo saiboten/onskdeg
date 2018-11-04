@@ -1,17 +1,18 @@
 // @flow
 
 import firebase from './firebase';
-import { setUser } from '../../state/actions/user';
+import { setUser, userLoaded } from '../../state/actions/user';
 import store from '../../store';
 
 const debug = require('debug')('authFirebase');
 
 const obj = {
-  authChangeListener(callback) {
-    firebase.auth().onAuthStateChanged((user) => {
-      debug('onAuthStateChanged. User logged in: ', user);
+  authChangeListener() {
+    firebase.auth().onAuthStateChanged((user, something) => {
+      debug('onAuthStateChanged. User logged in: ', user, something);
 
       if (user) {
+        store.dispatch(userLoaded());
         store.dispatch(setUser(user));
 
         firebase.database().ref('/userlist').once('value').then((snapshot) => {
@@ -39,10 +40,8 @@ const obj = {
           }
         });
       } else {
-        store.dispatch(setUser({}));
+        store.dispatch(userLoaded());
       }
-
-      callback();
     });
   },
 };

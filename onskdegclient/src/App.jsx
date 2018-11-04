@@ -2,7 +2,8 @@ import React from 'react';
 import {
   BrowserRouter, Route, Switch,
 } from 'react-router-dom';
-import { Provider } from 'react-redux';
+import { Provider, connect } from 'react-redux';
+import { bool } from 'prop-types';
 
 import YourWishList from './components/yours/YourWishList';
 import OthersWishListSelection from './components/otherwishlistselection/OthersWishListSelectionWrapper';
@@ -19,14 +20,14 @@ import suggestionsFirebase from './components/suggestions/suggestionsFirebase';
 import wishesFirebase from './components/wish/wishesFirebase';
 import usersFirebase from './components/users/userlistFirebase';
 
-const debug = require('debug')('index');
-
 require('./global.css');
 
-let loggedIn = false;
+const AppComp = ({ loaded }) => {
+  if (!loaded) {
+    return (<div>Laster</div>);
+  }
 
-const StartApp = () => (
-  <Provider store={store}>
+  return (
     <BrowserRouter>
       <Switch>
         <Route path="/" exact component={SelectUser} />
@@ -38,29 +39,29 @@ const StartApp = () => (
         <Route path="/other/:name" component={OthersWishList} />
       </Switch>
     </BrowserRouter>
+  );
+};
+
+AppComp.propTypes = {
+  loaded: bool,
+};
+
+AppComp.defaultProps = {
+  loaded: false,
+};
+
+const AppCompWrapper = connect(({ user: { loaded } }) => ({ loaded }), null)(AppComp);
+
+const App = () => (
+  <Provider store={store}>
+    <AppCompWrapper />
   </Provider>
 );
 
-/* debug('this.context.router.getCurrentPathname();', this.context.router.getCurrentPathname());
-
-if (this.context.router.getCurrentPathname() === '') {
-  startApp();
-} */
-
-authFirebase.authChangeListener(() => {
-  debug('Auth! ');
-  loggedIn = true;
-  StartApp();
-});
-
-setTimeout(() => {
-  if (!loggedIn) {
-    window.location = '/';
-  }
-}, 10000);
+authFirebase.authChangeListener();
 
 suggestionsFirebase.setupSuggestionListener();
 wishesFirebase.setupWishesListener();
 usersFirebase.subscribe();
 
-export default StartApp;
+export default App;
