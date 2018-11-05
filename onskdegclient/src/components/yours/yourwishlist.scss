@@ -5,12 +5,26 @@
 .your-wishlist_add-wish-wrapper {
   display: flex;
   flex-direction: column;
+  margin-bottom: 2rem;
+
+  @media only screen and (min-width: 37.5em) {
+    flex-direction: row;
+  }
 }
 
 .your-wishlist_add-wish-textarea {
   height: 70px;
+  @media only screen and (min-width: 37.5em) {
+    flex: 1 0 70%;
+  }
+
+
 }
 
 .your-wishlist_add-wish-submit {
   margin: 10px;
+}
+
+.your-wishlist_add-wish-submit.button {
+
 }

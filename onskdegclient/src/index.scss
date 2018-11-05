@@ -1,0 +1,56 @@
+// Font
+$default-font-size: 1.6rem;
+$color-grey-dark: #777;
+
+@mixin respond($breakpoint) {
+    @if $breakpoint == phone {
+        @media only screen and (max-width: 37.5em) { @content }; // 600px == 37.5em
+    }
+
+    @if $breakpoint == tab-port {
+        @media only screen and (max-width: 56.25em) { @content }; // 900 px == 56.25em
+    }
+
+    @if $breakpoint == tab-land {
+        @media only screen and (max-width: 75em) { @content }; // 1200 px == 75em
+    }
+
+    @if $breakpoint == big-desktop {
+        @media only screen and (min-width: 112.5em) { @content }; // 1800 px = 112.5em
+    }
+}
+
+html {
+    font-size: 62.5%; // 1 rem == 10px
+
+    @include respond(tab-land) {
+        font-size: 56.25%; // 1 rem == 8px, 9/16 == 56.25%
+    }
+
+    @include respond(tab-port) {
+        font-size: 50%; // 1 rem == 8px, 8/16 == 50%
+    }
+
+    @include respond(phone) {
+        font-size: 30%; // 1 rem == 8px, 8/16 == 50%
+    }
+
+    @include respond(big-desktop) {
+        font-size: 75%; // 1 rem == 12px, 12/16 = 75%
+    }
+}
+
+body {
+    box-sizing: border-box;
+    padding: 3rem;
+
+    font-family: "Lato", sans-serif;
+    font-weight: 400;
+    font-size: $default-font-size;
+    line-height: 1.7;
+    color: $color-grey-dark;
+
+    @include respond(tab-port) {
+        padding: 0;
+    }
+}

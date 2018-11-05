@@ -12,7 +12,7 @@ import facebook from '../firebase/facebooklogin';
 const debug = require('debug')('SelectUser');
 
 
-require('./selectuser.css');
+require('./selectuser.scss');
 
 const mapStateToProps = ({ user }) => (
   {
@@ -41,8 +41,6 @@ class SelectUser extends React.Component {
       debug('Login was apparently successful');
     }).catch((error) => {
       debug('Facebook login failed: ', error);
-      // alert(error.code); - might be handy later
-      // alert(error.message);
 
       if (error) {
         this.setState({
@@ -128,14 +126,15 @@ class SelectUser extends React.Component {
     const { user: userState, password, feedback } = this.state;
 
     const loggedInAs = user.uid
-      ? (
-        <p>
-          {'Du er logget inn som: '}
-          <strong>{user.email}</strong>
-        </p>) : '';
+    && (
+    <p>
+      {'Du er logget inn som: '}
+      <strong>{user.email}</strong>
+    </p>
+    );
 
     const logoutLink = user.uid
-      ? (<button type="button" className="button-navigation" onClick={this.logOut}>Logg ut</button>) : '';
+      ? (<button type="button" className="select-user__logout button-navigation" onClick={this.logOut}>Logg ut</button>) : '';
 
     const nextPage = user.uid
       ? (<Link className="button button--padded" to="/choosepath">Gå videre</Link>) : '';
@@ -175,7 +174,7 @@ class SelectUser extends React.Component {
         {loginForm}
         {feedback}
 
-        <div className="flex-row space-between">
+        <div className="select-user__navigation">
           {logoutLink}
           {nextPage}
         </div>

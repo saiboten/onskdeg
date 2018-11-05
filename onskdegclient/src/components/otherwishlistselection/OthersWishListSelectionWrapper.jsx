@@ -119,7 +119,7 @@ class OthersWishListSelection extends React.Component {
         <form onSubmit={this.addUserClickEvent}>
           <p>Legg til (legg inn epost)</p>
           <input value={newUser} onChange={this.updateUserState} />
-          <input type="submit" value="" />
+          <input type="submit" value="OK" />
         </form>
 
         <p>{feedback}</p>

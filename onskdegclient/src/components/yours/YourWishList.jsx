@@ -11,7 +11,7 @@ import firebase from '../firebase/firebase';
 
 const debug = require('debug')('YourWishList');
 
-require('./yourwishlist.css');
+require('./yourwishlist.scss');
 
 const mapStateToProps = ({ wish, user }) => {
   debug('User wishes', wish[user.uid]);
@@ -163,7 +163,6 @@ class YourWishList extends React.Component {
           <h1>Din ønskeliste</h1>
           <Link className="shrink button-navigation smallspace" to="/choosepath">Tilbake</Link>
         </div>
-        <hr />
 
         <form onSubmit={this.addWish}>
           <div className="your-wishlist_add-wish-wrapper">
@@ -173,7 +172,7 @@ class YourWishList extends React.Component {
               value={newWish}
               onChange={this.updateWishState}
             />
-            <input type="submit" className="your-wishlist_add-wish-submit button" value="Legg til" />
+            <input type="submit" className="button button--padded your-wishlist_add-wish-submit" value="Legg til" />
             <div>{feedback}</div>
           </div>
         </form>

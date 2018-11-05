@@ -9,7 +9,7 @@ class Container extends React.PureComponent {
     const { children } = this.props;
 
     return (
-      <div className="your-or-others-wish-selecting__container">
+      <div className="container">
         {children}
       </div>
     );

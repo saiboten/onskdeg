@@ -71,8 +71,7 @@ class OthersWishList extends React.Component {
 
         <div className="flex-row space-between">
           <h1 className="shrink overflow-hidden">
-Ønskelisten til
-            {' '}
+            {'Ønskelisten til '}
             {userState}
           </h1>
           <Link className="button-navigation smallspace" to="/others">Tilbake</Link>
@@ -80,11 +79,9 @@ class OthersWishList extends React.Component {
         <hr />
 
         <h2>
-Dette ønsker
-          {' '}
+          {'Dette ønsker '}
           {userState}
-          {' '}
-seg
+          {' seg'}
         </h2>
         <p>{feedback}</p>
 

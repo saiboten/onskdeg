@@ -9,7 +9,7 @@ const storageRef = firebase.storage().ref();
 
 const debug = require('debug')('Wish');
 
-require('./wish.css');
+require('./wish.scss');
 
 class Wish extends React.Component {
   constructor(props) {
@@ -153,10 +153,10 @@ class Wish extends React.Component {
         value={text}
       />
       )
-      : (<textbox onClick={this.click} className="wish__wish-text">{text}</textbox>);
+      : (<textarea onClick={this.click} className="wish__wish-text">{text}</textarea>);
     return (
 
-      <div>
+      <div className="wish__one-wish">
         <div className="wish__wish-listelement">
           {html}
         </div>
@@ -166,7 +166,6 @@ class Wish extends React.Component {
         </div>
 
         {image}
-        <hr />
       </div>
     );
   }

@@ -1,5 +1,3 @@
-// @flow
-
 import React from 'react';
 import { any } from 'prop-types';
 import moment from 'moment';
@@ -38,14 +36,14 @@ class Comments extends React.Component {
     });
   }
 
-  updateCommentState(e /* : Event */) {
+  updateCommentState(e) {
     debug('updateCommentState', e);
     this.setState({
       comment: e.target.value,
     });
   }
 
-  addComment(e /* : Event */) {
+  addComment(e) {
     debug('addComment', e);
     const { user, params: { name } } = this.props;
     const { comment, comments } = this.state;
@@ -60,13 +58,14 @@ class Comments extends React.Component {
     }
 
     debug('Adding comment: ', comment);
-    const commentsCopy = comments.slice();
 
-    commentsCopy.push({
+    const newElem = {
       user: user.email,
       comment,
       time: moment().format(),
-    });
+    };
+
+    const commentsCopy = [newElem, ...comments];
 
     debug('New comment list: ', commentsCopy);
     firebase.database().ref(`comments/${name}`).set(commentsCopy);
@@ -81,12 +80,13 @@ class Comments extends React.Component {
     const { comments, comment, feedback } = this.state;
 
     const commentsRevamped = comments.map((oneComment) => {
-      debug('Comment: ', oneComment.comment);
+      debug('Comment: ', oneComment);
       return (
-        <div className="comments__comment-wrapper smallspace">
+        <div key={oneComment.time} className="comments__comment-wrapper smallspace">
           <div className="comments__comment-comment">{oneComment.comment}</div>
           <div className="comments__comment-writtenby">
-            {`Skrevet av ${oneComment.user}` - oneComment.time ? moment(oneComment.time).format('DD.MM.YY, H:mm') : ''}
+            {`Skrevet av ${oneComment.user} - `}
+            {oneComment.time && moment(oneComment.time).format('DD.MM.YY, H:mm')}
           </div>
         </div>);
     });

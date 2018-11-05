@@ -1,0 +1,18 @@
+.ChoosePath {
+
+  &__header {
+    display: flex;
+  }
+
+  &__list {
+    list-style: none;
+    display: flex;
+    align-items: stretch;;
+    flex-direction: column;
+  
+    @media only screen and (min-width: 37.5em) {
+      flex-direction: row;
+      justify-content: center;
+    }
+  }
+}
