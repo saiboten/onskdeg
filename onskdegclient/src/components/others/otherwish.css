@@ -25,14 +25,12 @@
 
 .other-wish__wish-text {
   flex: 1 0 65%;
-}
-
-.other-wish__hr {
-
+  text-align: left;
+  font-size: 1.3rem;
 }
 
 .other-wish__buy-or-sell-wrapper {
-  flex: 0 0 20%;
+  display: inline-block;
 }
 
 .other-wish__upper-half {

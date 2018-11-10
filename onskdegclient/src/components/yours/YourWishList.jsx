@@ -1,25 +1,19 @@
 // @flow
 
 import React from 'react';
-import { array, any } from 'prop-types';
+import { array, any, func } from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Container from '../common/container/Container';
 import Wish from '../wish/Wish';
 import firebase from '../firebase/firebase';
+import Icon from '../common/Icon';
+import { setWishes } from '../../state/actions/wish';
 
 const debug = require('debug')('YourWishList');
 
 require('./yourwishlist.scss');
-
-const mapStateToProps = ({ wish, user }) => {
-  debug('User wishes', wish[user.uid]);
-  return {
-    wishes: wish[user.uid] ? wish[user.uid].wishes : [],
-    user,
-  };
-};
 
 class YourWishList extends React.Component {
   constructor(props) {
@@ -38,6 +32,20 @@ class YourWishList extends React.Component {
 
   componentDidMount() {
     debug('componentDidMount');
+    const { user, update } = this.props;
+
+    // wish[user.uid] ? wish[user.uid].wishes
+
+    this.firebaseRef = firebase.database().ref(`wishes/${user.uid}`);
+
+    this.firebaseRef.on('value', (snapshot) => {
+      // Dispatch action to update wishlist
+      update(snapshot.val());
+    });
+  }
+
+  componentWillUnmount() {
+    this.firebaseRef.off();
   }
 
   /*eslint-disable */
@@ -161,7 +169,7 @@ class YourWishList extends React.Component {
 
         <div className="flex-row space-between">
           <h1>Din ønskeliste</h1>
-          <Link className="shrink button-navigation smallspace" to="/choosepath">Tilbake</Link>
+          <Link className="shrink button-navigation smallspace" to="/choosepath"><Icon type="button" name="arrow-left" /></Link>
         </div>
 
         <form onSubmit={this.addWish}>
@@ -172,7 +180,7 @@ class YourWishList extends React.Component {
               value={newWish}
               onChange={this.updateWishState}
             />
-            <input type="submit" className="button button--padded your-wishlist_add-wish-submit" value="Legg til" />
+            <Icon type="submit" name="check" />
             <div>{feedback}</div>
           </div>
         </form>
@@ -189,9 +197,20 @@ class YourWishList extends React.Component {
 YourWishList.propTypes = {
   wishes: array,
   user: any,
+  update: func.isRequired,
 };
 
 export default connect(
-  mapStateToProps,
-  null,
+  ({ wish, user }) => {
+    debug('User wishes', wish[user.uid]);
+    return {
+      wishes: wish[user.uid] ? wish[user.uid].wishes : [],
+      user,
+    };
+  },
+  dispatch => ({
+    update: (newData) => {
+      dispatch(setWishes(newData));
+    },
+  }),
 )(YourWishList);

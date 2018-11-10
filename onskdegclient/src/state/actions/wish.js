@@ -6,11 +6,10 @@ export const setAllWishes = wishes => (
   }
 );
 
-export const setWishes = (user, wishes) => (
+export const setWishes = wishes => (
   {
     type: 'SET_WISHES_SINGLE_USER',
     wishes,
-    user,
   }
 );
 

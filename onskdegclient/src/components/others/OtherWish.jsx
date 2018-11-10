@@ -77,12 +77,13 @@ Tatt av
 
     const deleteThis = canDelete
       ? (
-        <input
-          className="button other-wish__button_delete-suggestion"
+        <button
           type="button"
+          className="button other-wish__button_delete-suggestion"
           onClick={deleteSuggestion}
-          value="Slett"
-        />
+        >
+          {'Slett'}
+        </button>
       ) : '';
 
     return (
@@ -92,7 +93,7 @@ Tatt av
             {linkifyed}
             {imageTag}
           </div>
-          <div className="flex-column other-wish__buy-or-sell-wrapper">
+          <div className="other-wish__buy-or-sell-wrapper">
             <input
               className="button other-wish__button_buy-or-sell"
               onClick={() => onClick(wishInfo.id)}

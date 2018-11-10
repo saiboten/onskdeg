@@ -16,9 +16,6 @@ import Gifts from './components/gifts/Gifts';
 import store from './store';
 
 import authFirebase from './components/firebase/authFirebase';
-import suggestionsFirebase from './components/suggestions/suggestionsFirebase';
-import wishesFirebase from './components/wish/wishesFirebase';
-import usersFirebase from './components/users/userlistFirebase';
 
 require('./global.css');
 
@@ -59,9 +56,5 @@ const App = () => (
 );
 
 authFirebase.authChangeListener();
-
-suggestionsFirebase.setupSuggestionListener();
-wishesFirebase.setupWishesListener();
-usersFirebase.subscribe();
 
 export default App;

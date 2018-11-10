@@ -4,6 +4,7 @@ import React from 'react';
 import { func, any } from 'prop-types';
 import Dropzone from 'react-dropzone';
 import firebase from '../firebase/firebase';
+import Icon from '../common/Icon';
 
 const storageRef = firebase.storage().ref();
 
@@ -132,21 +133,21 @@ class Wish extends React.Component {
     const deleteWish = confirm
       ? (
         <div className="flex-row space-between right">
-          <button type="button" className="button button--square wish__confirm-delete-button" onClick={this.cancel}>Avbryt</button>
-          <button type="button" className="button button--square wish__confirm-delete-button" onClick={this.deleteConfirmed}>Slett</button>
+          <Icon type="button" name="x2" onClick={this.cancel} />
+          <Icon type="button" name="check" onClick={this.deleteConfirmed} />
         </div>)
       : (
         <div className="flex-row space-between right">
-          <button type="button" className="wish__delete-button button button--square" onClick={this.deleteItem}>Slett</button>
+          <Icon type="button" name="trash-2" onClick={this.deleteItem} />
           <Dropzone className="wish__wish-dropzone" onDrop={this.onDrop}>
-            <button type="button" className="button button--square">Bilde</button>
+            <Icon type="button" name="upload" />
           </Dropzone>
         </div>
       );
 
     const html = edit
       ? (<textarea
-        className="wish__wish-input"
+        className="wish__wish-text wish__wish-text--active"
         ref={(c) => { this.input = c; }}
         onBlur={this.focusLost}
         onChange={this.updateText}
