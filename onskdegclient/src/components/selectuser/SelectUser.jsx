@@ -4,6 +4,7 @@ import React from 'react';
 import { any } from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 
 import Container from '../common/container/Container';
 import firebase from '../firebase/firebase';
@@ -13,6 +14,11 @@ const debug = require('debug')('SelectUser');
 
 
 require('./selectuser.scss');
+
+const StyledParagraph = styled.p`
+  font-size: 3rem;
+  margin: 2rem;
+`;
 
 const mapStateToProps = ({ user }) => (
   {
@@ -127,10 +133,10 @@ class SelectUser extends React.Component {
 
     const loggedInAs = user.uid
     && (
-    <p>
+    <StyledParagraph>
       {'Du er logget inn som: '}
       <strong>{user.email}</strong>
-    </p>
+    </StyledParagraph>
     );
 
     const logoutLink = user.uid
@@ -151,10 +157,10 @@ class SelectUser extends React.Component {
           onChange={this.updatePasswordState}
         />
         <div className="flex-row space-between">
-          <input className="button" type="submit" value="Logg inn" />
+          <input className="button button--padded" type="submit" value="Logg inn" />
           <button
             type="button"
-            className="button select-user__facebook-button"
+            className="button button--padded select-user__facebook-button"
             onClick={this.loginFacebook}
           >
             {'Logg inn'}
@@ -172,7 +178,7 @@ class SelectUser extends React.Component {
         {loggedInAs}
 
         {loginForm}
-        {feedback}
+        <StyledParagraph>{feedback}</StyledParagraph>
 
         <div className="select-user__navigation">
           {logoutLink}
