@@ -94,7 +94,8 @@ class OthersWishList extends React.Component {
     } = this.state;
     const { wishes } = this.props;
 
-    const filteredWishes = wishes.filter(this.shouldDisplayWish).map(wishInfo => (<OtherWish onClick={this.check} wishInfo={wishInfo} />));
+    const filteredWishes = wishes.filter(this.shouldDisplayWish).map(wishInfo => (
+      <OtherWish key={wishInfo.id} onClick={this.check} wishInfo={wishInfo} />));
 
     return (
       <Container>

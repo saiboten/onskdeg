@@ -2,6 +2,8 @@ import { connect } from 'react-redux';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { any, array } from 'prop-types';
+import styled from 'styled-components';
+
 import AddedUserLink from './addeduserlink/AddedUserLink';
 import store from '../../store';
 import Container from '../common/container/Container';
@@ -12,6 +14,14 @@ import spinnerWhileLoading from '../common/spinnerWhileLoading';
 const debug = require('debug')('OthersWishListSelection');
 
 require('./otherswishlistselection.css');
+
+const StyledHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 2rem;
+  border-bottom: 1px solid black;
+`;
 
 class OthersWishListSelection extends React.Component {
   constructor(props) {
@@ -105,13 +115,10 @@ class OthersWishListSelection extends React.Component {
 
     return (
       <Container>
-        <div className="flex-row space-between">
-          <h1>Andres ønskeliste</h1>
+        <StyledHeader>
+          <h1>Se ønskeliste til</h1>
           <Link className="shrink button-navigation smallspace" to="/choosepath">Tilbake</Link>
-        </div>
-        <hr />
-
-        <h2>Se ønskeliste til</h2>
+        </StyledHeader>
         <div className="wishlist-selection__added-users-container">
           {usersLinks}
         </div>
@@ -119,7 +126,7 @@ class OthersWishListSelection extends React.Component {
         <form onSubmit={this.addUserClickEvent}>
           <p>Legg til (legg inn epost)</p>
           <input value={newUser} onChange={this.updateUserState} />
-          <input type="submit" value="OK" />
+          <input className="button button--padded" type="submit" value="OK" />
         </form>
 
         <p>{feedback}</p>

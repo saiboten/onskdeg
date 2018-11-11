@@ -3,6 +3,8 @@
 import React from 'react';
 import { func, any } from 'prop-types';
 import Dropzone from 'react-dropzone';
+import styled from 'styled-components';
+
 import firebase from '../firebase/firebase';
 import Icon from '../common/Icon';
 
@@ -11,6 +13,17 @@ const storageRef = firebase.storage().ref();
 const debug = require('debug')('Wish');
 
 require('./wish.scss');
+
+const StyledActionButtons = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+`;
+
+const StyledWishAndActions = styled.div`
+  display: flex;
+  margin: 1rem;
+`;
 
 class Wish extends React.Component {
   constructor(props) {
@@ -132,17 +145,17 @@ class Wish extends React.Component {
 
     const deleteWish = confirm
       ? (
-        <div className="flex-row space-between right">
-          <Icon type="button" name="x2" onClick={this.cancel} />
+        <StyledActionButtons>
+          <Icon type="button" name="x" onClick={this.cancel} />
           <Icon type="button" name="check" onClick={this.deleteConfirmed} />
-        </div>)
+        </StyledActionButtons>)
       : (
-        <div className="flex-row space-between right">
+        <StyledActionButtons>
           <Icon type="button" name="trash-2" onClick={this.deleteItem} />
           <Dropzone className="wish__wish-dropzone" onDrop={this.onDrop}>
             <Icon type="button" name="upload" />
           </Dropzone>
-        </div>
+        </StyledActionButtons>
       );
 
     const html = edit
@@ -156,16 +169,12 @@ class Wish extends React.Component {
       )
       : (<textarea onClick={this.click} className="wish__wish-text" defaultValue={text} />);
     return (
-
       <div className="wish__one-wish">
-        <div className="wish__wish-listelement">
+
+        <StyledWishAndActions>
           {html}
-        </div>
-
-        <div className="wish__wish-listelement flex-row space-between">
           {deleteWish}
-        </div>
-
+        </StyledWishAndActions>
         {image}
       </div>
     );

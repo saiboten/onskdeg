@@ -71,6 +71,9 @@ html {
 }
 
 .button-navigation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     color: white;
     background-color: #3db2d0;;
     font-weight: 600;
@@ -84,7 +87,6 @@ html {
     padding: 0 18px;
     border: 0 none;
     border-radius: 3px;
-    display: inline-block;
     font-size: 13px;
     height: 60px;
     line-height: 60px;
