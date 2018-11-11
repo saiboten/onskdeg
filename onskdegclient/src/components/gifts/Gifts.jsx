@@ -4,7 +4,6 @@ import { any, array } from 'prop-types';
 
 import Container from '../common/container/Container';
 import store from '../../store';
-import userlistFirebase from '../users/userlistFirebase';
 import firebase from '../firebase/firebase';
 import GiftedUser from './GiftedUser';
 
@@ -36,14 +35,12 @@ class Gifts extends React.Component {
   }
 
   componentDidMount() {
-    userlistFirebase.subscribe();
     this.storeSubscription = store.subscribe(this.updateWishes);
     this.updateWishes();
   }
 
   componentWillUnmount() {
     debug('Unsubscribing');
-    // userlistFirebase.unsubscribe();
     this.storeSubscription();
   }
 

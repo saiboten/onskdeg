@@ -10,9 +10,12 @@ const userReducer = (state = initialState, action) => {
       returnThis = Object.assign({}, action.wishes);
       break;
     }
-    case 'SET_WISHES_SINGLE_USER': {
-      returnThis = Object.assign({}, state);
-      break;
+    case 'SET_USER_WISHES': {
+      const { uid, wishes } = action;
+      return {
+        ...state,
+        [uid]: wishes,
+      };
     }
     default:
       returnThis = state;

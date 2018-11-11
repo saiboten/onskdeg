@@ -154,7 +154,7 @@ class Wish extends React.Component {
         value={text}
       />
       )
-      : (<textarea onClick={this.click} className="wish__wish-text">{text}</textarea>);
+      : (<textarea onClick={this.click} className="wish__wish-text" defaultValue={text} />);
     return (
 
       <div className="wish__one-wish">

@@ -1,13 +1,21 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { any } from 'prop-types';
+import { any, func } from 'prop-types';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 
 import Container from '../common/container/Container';
 import firebase from '../firebase/firebase';
-import Comments from './Comments';
-import Suggestions from '../suggestions/Suggestions';
+// import Comments from './Comments';
+// import Suggestions from '../suggestions/Suggestions';
 import OtherWish from './OtherWish';
+import { setWishesForUser } from '../../state/actions/wish';
+import Icon from '../common/Icon';
+
+const ActionButtonsContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
 
 const debug = require('debug')('OthersWishList');
 
@@ -20,12 +28,28 @@ class OthersWishList extends React.Component {
     };
     this.check = this.check.bind(this);
     this.toggleShowSelected = this.toggleShowSelected.bind(this);
+    this.shouldDisplayWish = this.shouldDisplayWish.bind(this);
+  }
+
+  componentDidMount() {
+    debug('componentDidMount');
+    const { match: { params: { name } }, update } = this.props;
+
+    this.firebaseRef = firebase.database().ref(`wishes/${name}/wishes`);
+
+    this.firebaseRef.on('value', (snapshot) => {
+      update(name, snapshot.val());
+    });
+  }
+
+  componentWillUnmount() {
+    this.firebaseRef.off();
   }
 
   check(id) {
     debug('check', id);
     const { user, match: { params: { name } } } = this.props;
-    const { wishes } = this.props;
+    const { wishes, update } = this.props;
 
     const newWishList = wishes.map((e) => {
       if (id === e.id) {
@@ -40,7 +64,8 @@ class OthersWishList extends React.Component {
 
       return e;
     });
-    firebase.database().ref(`wishes/${name}`).set({ wishes: newWishList });
+    update(name, newWishList);
+    // firebase.database().ref(`wishes/${name}`).set({ wishes: newWishList });
     this.setState({ feedback: 'Du kjøpte eller solgte noe!' });
   }
 
@@ -54,17 +79,22 @@ class OthersWishList extends React.Component {
     });
   }
 
+  shouldDisplayWish(el) {
+    const {
+      hideSelected,
+    } = this.state;
+
+    debug('Wish to be filtered: ', el);
+    return !el.checked || !hideSelected;
+  }
+
   render() {
     const {
       hideSelected, userState, feedback,
     } = this.state;
-    const { wishes, match: { params } } = this.props;
+    const { wishes } = this.props;
 
-    const filteredWishes = wishes.filter((el) => {
-      debug('Wish to be filtered: ', el);
-      return !el.checked || !hideSelected;
-    }, this).map(wishInfo => (<OtherWish onClick={this.check} wishInfo={wishInfo} />),
-      this);
+    const filteredWishes = wishes.filter(this.shouldDisplayWish).map(wishInfo => (<OtherWish onClick={this.check} wishInfo={wishInfo} />));
 
     return (
       <Container>
@@ -76,26 +106,16 @@ class OthersWishList extends React.Component {
           </h1>
           <Link className="button-navigation smallspace" to="/others">Tilbake</Link>
         </div>
-        <hr />
-
-        <h2>
-          {'Dette ønsker '}
-          {userState}
-          {' seg'}
-        </h2>
+        <ActionButtonsContainer>
+          <Icon type="button" name={hideSelected ? 'eye' : 'eye-off'} onClick={this.toggleShowSelected} />
+        </ActionButtonsContainer>
         <p>{feedback}</p>
 
         {filteredWishes}
 
-        <Suggestions username={userState} userUid={params.name} />
+        {/* <Suggestions username={userState} userUid={params.name} />
         <hr />
-        <Comments params={params} />
-        <div className="flex-row space-between">
-          <button type="button" className="other-wishlist__toggle-selected space button button--padded" onClick={this.toggleShowSelected}>
-            {hideSelected
-              ? 'Vis utkrysset' : 'Skjul utkrysset'}
-          </button>
-        </div>
+        <Comments params={params} /> */}
 
       </Container>
     );
@@ -106,17 +126,23 @@ OthersWishList.propTypes = {
   match: any,
   user: any,
   wishes: any,
+  update: func.isRequired,
 };
 
 
 const OthersWishListWrapper = connect(
-  ({ wish }, { match: { params: { name } } }) => (
+  ({ wish, user }, { match: { params: { name } } }) => (
     {
-      wishes: wish[name].wishes,
+      wishes: wish[name] || [],
       name,
+      user,
     }
   ),
-  undefined,
+  dispatch => ({
+    update(uid, newWishList) {
+      dispatch(setWishesForUser({ uid, wishes: newWishList }));
+    },
+  }),
 )(OthersWishList);
 
 export default OthersWishListWrapper;

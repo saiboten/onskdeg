@@ -9,6 +9,7 @@ import Container from '../common/container/Container';
 import Wish from '../wish/Wish';
 import firebase from '../firebase/firebase';
 import Icon from '../common/Icon';
+
 import { setWishes } from '../../state/actions/wish';
 
 const debug = require('debug')('YourWishList');
@@ -34,12 +35,9 @@ class YourWishList extends React.Component {
     debug('componentDidMount');
     const { user, update } = this.props;
 
-    // wish[user.uid] ? wish[user.uid].wishes
-
-    this.firebaseRef = firebase.database().ref(`wishes/${user.uid}`);
+    this.firebaseRef = firebase.database().ref(`wishes/${user.uid}/wishes`);
 
     this.firebaseRef.on('value', (snapshot) => {
-      // Dispatch action to update wishlist
       update(snapshot.val());
     });
   }
@@ -154,6 +152,7 @@ class YourWishList extends React.Component {
       debug('Creating wish based on this el: ', el);
       return (
         <Wish
+          key={el.id}
           update={this.update}
           delete={this.deleteThis}
           addImage={this.addImage}
@@ -204,7 +203,7 @@ export default connect(
   ({ wish, user }) => {
     debug('User wishes', wish[user.uid]);
     return {
-      wishes: wish[user.uid] ? wish[user.uid].wishes : [],
+      wishes: wish[user.uid] ? wish[user.uid] : [],
       user,
     };
   },

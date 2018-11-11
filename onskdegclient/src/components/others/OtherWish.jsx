@@ -1,10 +1,11 @@
 import React from 'react';
 import {
-  any, func, string, bool,
+  any, func, bool,
 } from 'prop-types';
 import Linkify from 'react-linkify';
-import store from '../../store';
 import firebase from '../firebase/firebase';
+import Icon from '../common/Icon';
+
 import './otherwish.css';
 
 const storageRef = firebase.storage().ref();
@@ -31,28 +32,12 @@ class OtherWish extends React.Component {
 
   render() {
     const {
-      wishInfo, suggestedBy, canDelete, deleteSuggestion, onClick,
+      wishInfo, canDelete, deleteSuggestion, onClick,
     } = this.props;
     const { image } = this.state;
 
     const imageTag = wishInfo.image
       ? (<img className="other-wish__image" alt="Awesome" src={image} />) : '';
-
-    const checkedBy = store.getState().users.filter(user => user.email === wishInfo.checkedby)[0];
-
-    const suggestedByTemp = store.getState().users.filter((user) => {
-      if (!suggestedBy) {
-        return false;
-      }
-      return user.email === suggestedBy;
-    })[0];
-    const suggestedByUser = suggestedByTemp
-      ? (
-        <div className="smallspace">
-          {`Foreslått av ${suggestedBy.name}`}
-        </div>
-      )
-      : '';
 
     const item = wishInfo.checked
       ? (
@@ -64,16 +49,7 @@ class OtherWish extends React.Component {
     );
     const checkedByElem = wishInfo.checked
       ? (
-        <div className="smallspace">
-Tatt av
-          {' '}
-          {checkedBy ? checkedBy.name : ''}
-        </div>
-      )
-      : '';
-    const checkedText = wishInfo.checked
-      ? 'Selg'
-      : 'Kjøp';
+        <div className="smallspace">Tatt</div>) : '';
 
     const deleteThis = canDelete
       ? (
@@ -94,16 +70,12 @@ Tatt av
             {imageTag}
           </div>
           <div className="other-wish__buy-or-sell-wrapper">
-            <input
-              className="button other-wish__button_buy-or-sell"
-              onClick={() => onClick(wishInfo.id)}
-              value={checkedText}
-            />
+
+            <Icon type="button" name={wishInfo.checked ? 'shopping-cart' : 'shopping-cart'} onClick={() => onClick(wishInfo.id)} />
             {deleteThis}
           </div>
         </div>
         <div className="flex-column">
-          {suggestedByUser}
           {checkedByElem}
         </div>
 
@@ -114,7 +86,6 @@ Tatt av
 
 OtherWish.propTypes = {
   wishInfo: any,
-  suggestedBy: string,
   onClick: func,
   deleteSuggestion: func,
   canDelete: bool,

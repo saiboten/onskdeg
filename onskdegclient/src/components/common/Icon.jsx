@@ -8,7 +8,7 @@ export default function Icon({ name, type, ...rest }) {
   return (
     <button type={type} className="icon" {...rest}>
       <svg className="icon__icon">
-        <use xlinkHref={`svg/sprite.svg#icon-${name}`} />
+        <use xlinkHref={`/svg/sprite.svg#icon-${name}`} />
       </svg>
     </button>
   );
