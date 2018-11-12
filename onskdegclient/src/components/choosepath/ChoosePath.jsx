@@ -11,6 +11,7 @@ import { logout as logoutAction } from '../../state/actions/user';
 const StyledHeader = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `;
 
 const ActionButtons = styled.div`
@@ -40,14 +41,14 @@ const ChoosePathComponent = ({ uid, logout }) => {
 
   return (
     <Container>
-      <h1>Hva vil du gjøre?</h1>
+      <h1>Hvilken ønskeliste vil du se?</h1>
       <StyledHeader>
         <ActionButtons>
-          <Link className="smallspace button button--padded" to="/yours">Din ønskeliste</Link>
-          <Link className="smallspace button button--padded" to="/others">Andres ønskelister</Link>
+          <Link className="smallspace button button--padded" to="/yours">Din</Link>
+          <Link className="smallspace button button--padded" to="/others">Andres</Link>
         </ActionButtons>
         <StyledBack>
-          <button type="button" className="select-user__logout button-navigation" onClick={() => logOut(setFeedback, logout)}>Logg ut</button>
+          <button type="button" className="select-user__logout button-navigation button--square" onClick={() => logOut(setFeedback, logout)}>Logg ut</button>
           {feedback}
         </StyledBack>
       </StyledHeader>
