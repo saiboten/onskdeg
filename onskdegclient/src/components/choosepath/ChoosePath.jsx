@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { any, func } from 'prop-types';
@@ -36,7 +36,7 @@ const ChoosePathComponent = ({ uid, logout }) => {
   const [feedback, setFeedback] = useState('');
 
   if (!uid) {
-    return null;
+    return <Redirect to="/" />;
   }
 
   return (
