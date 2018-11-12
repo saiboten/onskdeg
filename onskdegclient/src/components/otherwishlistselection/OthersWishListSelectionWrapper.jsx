@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { any, array } from 'prop-types';
 import styled from 'styled-components';
 
@@ -117,7 +116,6 @@ class OthersWishListSelection extends React.Component {
       <Container>
         <StyledHeader>
           <h1>Se ønskeliste til</h1>
-          <Link className="shrink button-navigation smallspace" to="/choosepath">Tilbake</Link>
         </StyledHeader>
         <div className="wishlist-selection__added-users-container">
           {usersLinks}

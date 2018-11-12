@@ -1,25 +1,72 @@
-// @flow
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import { connect } from 'react-redux';
+import { any, func } from 'prop-types';
+
 import Container from '../common/container/Container';
+import firebase from '../firebase/firebase';
+import { logout as logoutAction } from '../../state/actions/user';
 
-require('./choosepath.scss');
+const StyledHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
 
-const ChoosePath = () => (
-  <Container>
-    <div className="ChoosePath__header flex-row space-between">
+const ActionButtons = styled.div`
+
+`;
+
+const StyledBack = styled.div`
+
+`;
+
+function logOut(setFeedback, logout) {
+  firebase.auth().signOut().then(() => {
+    setFeedback('Du er nå logget ut');
+    logout();
+  }, (e) => {
+    console.log(e);
+    setFeedback('Noe gikk galt under utlogging.');
+  });
+}
+
+const ChoosePathComponent = ({ uid, logout }) => {
+  const [feedback, setFeedback] = useState('');
+
+  if (!uid) {
+    return null;
+  }
+
+  return (
+    <Container>
       <h1>Hva vil du gjøre?</h1>
-      <Link className="shrink button-navigation smallspace" to="/">Bytt bruker</Link>
-    </div>
-    <hr />
+      <StyledHeader>
+        <ActionButtons>
+          <Link className="smallspace button button--padded" to="/yours">Din ønskeliste</Link>
+          <Link className="smallspace button button--padded" to="/others">Andres ønskelister</Link>
+        </ActionButtons>
+        <StyledBack>
+          <button type="button" className="select-user__logout button-navigation" onClick={() => logOut(setFeedback, logout)}>Logg ut</button>
+          {feedback}
+        </StyledBack>
+      </StyledHeader>
+    </Container>
+  );
+};
 
-    <div className="ChoosePath__list">
-      <Link className="smallspace button button--padded" to="/yours">Din ønskeliste</Link>
-      <Link className="smallspace button button--padded" to="/others">Andres ønskelister</Link>
-      {/* <Link className="smallspace button button--padded" to="/gifts">Dine gaver</Link> */}
-    </div>
-  </Container>
-);
+ChoosePathComponent.propTypes = {
+  uid: any,
+  logout: func.isRequired,
+};
 
-export default ChoosePath;
+ChoosePathComponent.defaultProps = {
+  uid: undefined,
+};
+
+export default connect(({ user: { uid } }) => ({ uid }),
+  dispatch => ({
+    logout() {
+      dispatch(logoutAction());
+    },
+  }))(ChoosePathComponent);

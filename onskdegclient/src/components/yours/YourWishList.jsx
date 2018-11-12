@@ -1,8 +1,5 @@
-// @flow
-
 import React from 'react';
 import { array, any, func } from 'prop-types';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Container from '../common/container/Container';
@@ -168,7 +165,6 @@ class YourWishList extends React.Component {
 
         <div className="flex-row space-between">
           <h1>Din ønskeliste</h1>
-          <Link className="shrink button-navigation smallspace" to="/choosepath"><Icon type="button" name="arrow-left" /></Link>
         </div>
 
         <form onSubmit={this.addWish}>

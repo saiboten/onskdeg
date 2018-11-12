@@ -26,15 +26,17 @@ const AppComp = ({ loaded }) => {
 
   return (
     <BrowserRouter>
-      <Switch>
-        <Route path="/" exact component={SelectUser} />
-        <Route path="/choosepath" component={ChoosePath} />
-        <Route path="/nameselect" component={NameSelect} />
-        <Route path="/yours" component={YourWishList} />
-        <Route path="/others" component={OthersWishListSelection} />
-        <Route path="/gifts" component={Gifts} />
-        <Route path="/other/:name" component={OthersWishList} />
-      </Switch>
+      <React.Fragment>
+        <ChoosePath />
+        <Switch>
+          <Route path="/" exact component={SelectUser} />
+          <Route path="/nameselect" component={NameSelect} />
+          <Route path="/yours" component={YourWishList} />
+          <Route path="/others" component={OthersWishListSelection} />
+          <Route path="/gifts" component={Gifts} />
+          <Route path="/other/:name" component={OthersWishList} />
+        </Switch>
+      </React.Fragment>
     </BrowserRouter>
   );
 };

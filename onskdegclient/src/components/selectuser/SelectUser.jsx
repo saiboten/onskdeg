@@ -1,9 +1,6 @@
-// @flow
-
 import React from 'react';
 import { any } from 'prop-types';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Container from '../common/container/Container';
@@ -18,6 +15,11 @@ require('./selectuser.scss');
 const StyledParagraph = styled.p`
   font-size: 3rem;
   margin: 2rem;
+`;
+
+const StyledInput = styled.input`
+  margin: 2rem;
+  height: 4rem;
 `;
 
 const mapStateToProps = ({ user }) => (
@@ -37,7 +39,6 @@ class SelectUser extends React.Component {
     this.updateUserState = this.updateUserState.bind(this);
     this.updatePasswordState = this.updatePasswordState.bind(this);
     this.logIn = this.logIn.bind(this);
-    this.logOut = this.logOut.bind(this);
   }
 
   componentDidMount() {
@@ -106,27 +107,6 @@ class SelectUser extends React.Component {
     });
   }
 
-  logOut(e) {
-    debug('logOut', e);
-
-    e.preventDefault();
-
-    this.setState({
-      feedback: '',
-      password: '',
-    });
-
-    firebase.auth().signOut().then(() => {
-      this.setState({
-        feedback: 'Du er nå logget ut',
-      });
-    }, () => {
-      this.setState({
-        feedback: 'Klarte ikke å logge deg ut, beklager det!',
-      });
-    });
-  }
-
   render() {
     const { user } = this.props;
     const { user: userState, password, feedback } = this.state;
@@ -139,20 +119,14 @@ class SelectUser extends React.Component {
     </StyledParagraph>
     );
 
-    const logoutLink = user.uid
-      ? (<button type="button" className="select-user__logout button-navigation" onClick={this.logOut}>Logg ut</button>) : '';
-
-    const nextPage = user.uid
-      ? (<Link className="button button--padded" to="/choosepath">Gå videre</Link>) : '';
-
     const loginForm = user.uid ? '' : (
       <form className="select-user__form" onSubmit={this.logIn}>
-        <div className="smallspace">Brukernavn</div>
-        <input className="smallspace" value={userState} onChange={this.updateUserState} />
-        <div className="smallspace">Passord</div>
-        <input
+        <label htmlFor="username" className="smallspace">Brukernavn</label>
+        <StyledInput id="username" value={userState} onChange={this.updateUserState} />
+        <label htmlFor="password" className="smallspace">Passord</label>
+        <StyledInput
+          id="password"
           type="password"
-          className="smallspace"
           value={password}
           onChange={this.updatePasswordState}
         />
@@ -174,17 +148,9 @@ class SelectUser extends React.Component {
     return (
       <Container>
         <h1>Logg inn</h1>
-
         {loggedInAs}
-
         {loginForm}
         <StyledParagraph>{feedback}</StyledParagraph>
-
-        <div className="select-user__navigation">
-          {logoutLink}
-          {nextPage}
-        </div>
-
       </Container>
     );
   }

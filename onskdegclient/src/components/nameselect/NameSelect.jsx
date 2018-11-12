@@ -75,7 +75,7 @@ class NameSelect extends React.Component {
     const { name, confirmedName } = this.state;
 
     const continueLink = confirmedName === ''
-      ? '' : (<Link className="button" to="/choosepath">Fortsett</Link>);
+      ? '' : (<Link className="button" to="/yours">Fortsett</Link>);
     const input = confirmedName === '' ? (
       <div className="flex-row space-between">
         <input

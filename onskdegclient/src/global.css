@@ -31,7 +31,7 @@ html {
 
 .button {
     color: white;
-    background-color: #666;
+    background-color: #3db2d0;;
     -ms-transition: background-color 0.2s ease-in-out 0s, opacity 0.2s ease-in-out 0s;
     transition: background-color 0.2s ease-in-out 0s, opacity 0.2s ease-in-out 0s;
     font-weight: 600;
@@ -71,11 +71,11 @@ html {
 }
 
 .button-navigation {
+    background-color: #666;
     display: flex;
     justify-content: center;
     align-items: center;
     color: white;
-    background-color: #3db2d0;;
     font-weight: 600;
     font-family: "Open Sans", "Helvetica Neue", Arial, Helvetica, Verdana, sans-serif;
     text-align: center;

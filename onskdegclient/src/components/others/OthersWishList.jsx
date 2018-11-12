@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { any, func } from 'prop-types';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Container from '../common/container/Container';
@@ -105,7 +104,6 @@ class OthersWishList extends React.Component {
             {'Ønskelisten til '}
             {userState}
           </h1>
-          <Link className="button-navigation smallspace" to="/others">Tilbake</Link>
         </div>
         <ActionButtonsContainer>
           <Icon type="button" name={hideSelected ? 'eye' : 'eye-off'} onClick={this.toggleShowSelected} />

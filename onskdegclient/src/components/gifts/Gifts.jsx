@@ -108,7 +108,7 @@ class Gifts extends React.Component {
       <Container>
         <div className="flex-row space-between">
           <h1>Dine gaver</h1>
-          <Link className="shrink button-navigation smallspace" to="/choosepath">Tilbake</Link>
+          <Link className="shrink button-navigation smallspace" to="/yours">Tilbake</Link>
         </div>
         <hr />
 
