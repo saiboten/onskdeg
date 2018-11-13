@@ -1,19 +1,19 @@
-import React from 'react';
+import React, { ReactElement, ReactEventHandler } from 'react';
 import { any } from 'prop-types';
 import moment from 'moment';
 import firebase from '../firebase/firebase';
+import { FirebaseSnapshot } from '../../types/types';
 
 const debug = require('debug')('Comments');
 
 require('./comments.css');
 
 class Comments extends React.Component {
-  constructor() {
-    super();
+  constructor(props: any) {
+    super(props);
     debug('constructor');
     this.state = {
       comment: '',
-      comments: [],
       feedback: '',
     };
     this.updateCommentState = this.updateCommentState.bind(this);
@@ -24,29 +24,30 @@ class Comments extends React.Component {
     debug('componentDidMount');
     const { params: { name } } = this.props;
 
-    const commentsRef = firebase.database().ref(`comments/${name}`);
-    commentsRef.on('value', (snapshot) => {
-      if (snapshot.val() != null) {
-        const list = snapshot.val();
-        debug('Comments list :', list);
-        this.setState({
-          comments: list,
-        });
+    this.commentsRef = firebase.database().ref(`comments/${name}`);
+    this.commentsRef.on('value', (snapshot: FirebaseSnapshot) => {
+      const list = snapshot.val();
+      if (list != null) {
+        // TODO action
       }
     });
   }
 
-  updateCommentState(e) {
+  componentWillUnmount() {
+    this.commentsRef.off();
+  }
+
+  updateCommentState(e: React.ChangeEvent<HTMLTextAreaElement>) {
     debug('updateCommentState', e);
     this.setState({
       comment: e.target.value,
     });
   }
 
-  addComment(e) {
+  addComment(e: React.MouseEvent<HTMLElement>) {
     debug('addComment', e);
     const { user, params: { name } } = this.props;
-    const { comment, comments } = this.state;
+    const { comment } = this.state;
 
     e.preventDefault();
 
