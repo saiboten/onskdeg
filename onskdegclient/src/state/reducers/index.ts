@@ -1,12 +1,19 @@
 import { combineReducers } from 'redux';
 import user from './user';
-import suggestion from './suggestion';
+// import suggestion from './suggestion';
 import wish from './wish';
 import friends from './friends';
+import { UserState, WishState, FriendsState } from './types';
 
-const onskdegReducers = combineReducers({
+export interface ApplicationState {
+  user: UserState,
+  wish: WishState,
+  friends: FriendsState
+} 
+
+const onskdegReducers = combineReducers<ApplicationState>({
   user,
-  suggestion,
+  // suggestion,
   wish,
   friends,
 } as any);

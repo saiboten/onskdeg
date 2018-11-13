@@ -13,6 +13,7 @@ import SelectUser from './components/selectuser/SelectUser';
 import store from './store';
 
 import authFirebase from './components/firebase/authFirebase';
+import { ApplicationState } from './state/reducers';
 
 require('./global.css');
 
@@ -37,8 +38,8 @@ const AppComp = (loaded: boolean) => {
   );
 };
 
-
-const AppCompWrapper = connect(({ user: { loaded } } : { user: { loaded: boolean }} ) => ({ loaded }), null)(AppComp);
+const mapStateToProps = ({ user: { loaded } }: ApplicationState) => ({ loaded });
+const AppCompWrapper = connect(mapStateToProps)(AppComp);
 
 const App = () => (
   <Provider store={store}>

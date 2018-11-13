@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { any, func } from 'prop-types';
+import { Dispatch } from 'redux';
+import { string, func } from 'prop-types';
 
 import Container from '../common/container/Container';
 import firebase from '../firebase/firebase';
 import { logout as logoutAction } from '../../state/actions/user';
-import { RootState } from '../../state/reducers';
+import { ApplicationState } from '../../state/reducers';
 
 const StyledHeader = styled.div`
   display: flex;
@@ -33,7 +34,7 @@ function logOut(setFeedback: (n: string) => void, logout: () => void) {
 }
 
 interface ChoosePathProps {
-  uid: string;
+  uid?: string;
   logout: () => void;
 }
 const ChoosePathComponent = ({ uid, logout } : ChoosePathProps) => {
@@ -60,17 +61,8 @@ const ChoosePathComponent = ({ uid, logout } : ChoosePathProps) => {
   );
 };
 
-ChoosePathComponent.propTypes = {
-  uid: any,
-  logout: func.isRequired,
-};
-
-ChoosePathComponent.defaultProps = {
-  uid: undefined,
-};
-
-const mapStateToProps = ({ user: { uid }} : RootState) => ({ uid });
-const mapDispatchToProps = (dispatch: any) => ({
+const mapStateToProps = ({ user: { uid }}: ApplicationState) => ({ uid });
+const mapDispatchToProps = (dispatch: Dispatch) => ({
   logout() {
     dispatch(logoutAction());
   }

@@ -1,14 +1,11 @@
+import { Reducer } from 'redux';
+import { WishState } from './types';
 
-// const debug = require('debug')('wishReducer');
+const initialState = {
+  uid: undefined
+};
 
-const initialState = {};
-
-interface UserAction {
-  type: string;
-  wishes: {};
-  uid: string;
-}
-const userReducer = (state = initialState, action: UserAction) => {
+const userReducer: Reducer<WishState> = (state = initialState, action) => {
   let returnThis;
   switch (action.type) {
     case 'SET_ALL_WISHES': {

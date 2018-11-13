@@ -1,15 +1,16 @@
 export interface FriendsState {
-  loaded: boolean;
-  loading: boolean;
-  friends: {}[];
+  readonly loaded: boolean;
+  readonly loading: boolean;
+  readonly friends: {}[];
 };
 
 export interface UserState {
-  loaded: boolean;
-  uid?: string;
-  email?: string;
+  readonly loaded: boolean;
+  readonly uid?: string;
+  readonly email?: string;
 }
 
-export interface SuggestionState {
-
+export interface WishState {
+  readonly wishes?: {}[];
+  readonly uid: string;
 }
