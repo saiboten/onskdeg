@@ -1,20 +1,15 @@
-import { AnyAction } from "redux";
+import { Reducer } from "redux";
+import { UserState } from "./types";
 
-const initialState = {
+const initialState: UserState = {
   loaded: false,
+  uid: undefined,
+  email: undefined
 };
 const debug = require('debug')('userReducer');
 
-export interface User {
-  uid: string;
-  email: string;
-}
 
-interface UserAction {
-  type: string;
-  user: User;
-}
-const userReducer = (state = initialState, action: UserAction) => {
+const userReducer: Reducer<UserState> = (state = initialState, action) => {
   debug('Input: state: ', state, '. Action: ', action);
 
   switch (action.type) {

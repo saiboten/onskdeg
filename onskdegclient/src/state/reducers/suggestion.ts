@@ -1,11 +1,13 @@
+import { Reducer } from 'redux';
+import { SuggestionState } from './types';
 
-const initialState = {
+const initialState: SuggestionState = {
 
 };
 
 const debug = require('debug')('suggestion');
 
-const suggestion = (state = initialState, action) => {
+const suggestion: Reducer<SuggestionState> = (state = initialState, action) => {
   let newState;
 
   switch (action.type) {
