@@ -9,7 +9,6 @@ import OthersWishListSelection from './components/otherwishlistselection/OthersW
 import OthersWishList from './components/others/OthersWishList';
 import ChoosePath from './components/choosepath/ChoosePath';
 import SelectUser from './components/selectuser/SelectUser';
-import NameSelect from './components/nameselect/NameSelectWrapper';
 
 import store from './store';
 
@@ -29,7 +28,6 @@ const AppComp = (loaded: boolean) => {
         <ChoosePath />
         <Switch>
           <Route path="/" exact component={SelectUser} />
-          <Route path="/nameselect" component={NameSelect} />
           <Route path="/yours" component={YourWishList} />
           <Route path="/others" component={OthersWishListSelection} />
           <Route path="/other/:name" component={OthersWishList} />
