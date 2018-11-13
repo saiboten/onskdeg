@@ -10,7 +10,6 @@ import OthersWishList from './components/others/OthersWishList';
 import ChoosePath from './components/choosepath/ChoosePath';
 import SelectUser from './components/selectuser/SelectUser';
 import NameSelect from './components/nameselect/NameSelectWrapper';
-import Gifts from './components/gifts/Gifts';
 
 import store from './store';
 
@@ -33,7 +32,6 @@ const AppComp = (loaded: boolean) => {
           <Route path="/nameselect" component={NameSelect} />
           <Route path="/yours" component={YourWishList} />
           <Route path="/others" component={OthersWishListSelection} />
-          <Route path="/gifts" component={Gifts} />
           <Route path="/other/:name" component={OthersWishList} />
         </Switch>
       </React.Fragment>

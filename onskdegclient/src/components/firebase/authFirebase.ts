@@ -3,21 +3,26 @@
 import firebase from './firebase';
 import { userLoaded } from '../../state/actions/user';
 import store from '../../store';
+import { User } from '../../types/types';
 
 const debug = require('debug')('authFirebase');
 
+interface FirebaseSnapshot {
+  val: Function
+}
+
 const obj = {
   authChangeListener() {
-    firebase.auth().onAuthStateChanged((user, something) => {
-      debug('onAuthStateChanged. User logged in: ', user, something);
+    firebase.auth().onAuthStateChanged((user: User) => {
+      debug('onAuthStateChanged. User logged in: ', user);
 
       if (user) {
         store.dispatch(userLoaded(user));
 
-        firebase.database().ref('/userlist').once('value').then((snapshot) => {
+        firebase.database().ref('/userlist').once('value').then((snapshot: FirebaseSnapshot) => {
           let users = snapshot.val();
 
-          const userExists = users.filter(el => el.email === user.email).length === 0;
+          const userExists = users.filter((el: User) => el.email === user.email).length === 0;
 
           if (users === undefined) {
             users = [];
@@ -39,7 +44,7 @@ const obj = {
           }
         });
       } else {
-        store.dispatch(userLoaded());
+        store.dispatch(userLoaded(null));
       }
     });
   },
