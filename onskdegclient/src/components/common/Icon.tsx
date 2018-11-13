@@ -1,10 +1,9 @@
 import React from 'react';
-import { string } from 'prop-types';
 
 import './Icon.scss';
 
 /* eslint-disable react/button-has-type */
-export default function Icon({ name, type, ...rest }) {
+export default function Icon({ name, type, ...rest }: { name: string, type: string}) {
   return (
     <button type={type} className="icon" {...rest}>
       <svg className="icon__icon">
@@ -14,8 +13,3 @@ export default function Icon({ name, type, ...rest }) {
   );
 }
 /* eslint-enable react/button-has-type */
-
-Icon.propTypes = {
-  name: string.isRequired,
-  type: string.isRequired,
-};

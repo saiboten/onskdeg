@@ -7,7 +7,7 @@ import { Provider, connect } from 'react-redux';
 import YourWishList from './components/yours/YourWishList';
 import OthersWishListSelection from './components/otherwishlistselection/OthersWishListSelectionWrapper';
 import OthersWishList from './components/others/OthersWishList';
-import ChoosePath from './components/choosepath/ChoosePathWrapper';
+import ChoosePath from './components/choosepath/ChoosePath';
 import SelectUser from './components/selectuser/SelectUser';
 import NameSelect from './components/nameselect/NameSelectWrapper';
 import Gifts from './components/gifts/Gifts';
