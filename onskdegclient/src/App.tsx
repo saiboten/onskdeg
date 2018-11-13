@@ -18,7 +18,7 @@ import { ApplicationState } from './state/reducers';
 require('./global.css');
 
 
-const AppComp = (loaded: boolean) => {
+const AppComp = ({ loaded } : { loaded: boolean }) => {
   if (!loaded) {
     return (<div>Laster</div>);
   }
