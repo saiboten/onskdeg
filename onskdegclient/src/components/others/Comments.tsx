@@ -46,7 +46,7 @@ class Comments extends React.Component {
 
   addComment(e: React.MouseEvent<HTMLElement>) {
     debug('addComment', e);
-    const { user, params: { name } } = this.props;
+    const { user, comments, params: { name } } = this.props;
     const { comment } = this.state;
 
     e.preventDefault();
@@ -78,7 +78,8 @@ class Comments extends React.Component {
   }
 
   render() {
-    const { comments, comment, feedback } = this.state;
+    const { comment, feedback } = this.state;
+    const { comments } = this.state;
 
     const commentsRevamped = comments.map((oneComment) => {
       debug('Comment: ', oneComment);
@@ -115,9 +116,5 @@ class Comments extends React.Component {
   }
 }
 
-Comments.propTypes = {
-  params: any,
-  user: any,
-};
 
 export default Comments;
