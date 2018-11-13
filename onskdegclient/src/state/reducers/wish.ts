@@ -3,7 +3,12 @@
 
 const initialState = {};
 
-const userReducer = (state = initialState, action) => {
+interface UserAction {
+  type: string;
+  wishes: {};
+  uid: string;
+}
+const userReducer = (state = initialState, action: UserAction) => {
   let returnThis;
   switch (action.type) {
     case 'SET_ALL_WISHES': {

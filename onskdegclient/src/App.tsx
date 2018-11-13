@@ -3,7 +3,6 @@ import {
   BrowserRouter, Route, Switch,
 } from 'react-router-dom';
 import { Provider, connect } from 'react-redux';
-import { bool } from 'prop-types';
 
 import YourWishList from './components/yours/YourWishList';
 import OthersWishListSelection from './components/otherwishlistselection/OthersWishListSelectionWrapper';
@@ -19,7 +18,8 @@ import authFirebase from './components/firebase/authFirebase';
 
 require('./global.css');
 
-const AppComp = ({ loaded }) => {
+
+const AppComp = (loaded: boolean) => {
   if (!loaded) {
     return (<div>Laster</div>);
   }
@@ -41,15 +41,8 @@ const AppComp = ({ loaded }) => {
   );
 };
 
-AppComp.propTypes = {
-  loaded: bool,
-};
 
-AppComp.defaultProps = {
-  loaded: false,
-};
-
-const AppCompWrapper = connect(({ user: { loaded } }) => ({ loaded }), null)(AppComp);
+const AppCompWrapper = connect(({ user: { loaded } } : { user: { loaded: boolean }} ) => ({ loaded }), null)(AppComp);
 
 const App = () => (
   <Provider store={store}>

@@ -7,6 +7,7 @@ import { any, func } from 'prop-types';
 import Container from '../common/container/Container';
 import firebase from '../firebase/firebase';
 import { logout as logoutAction } from '../../state/actions/user';
+import { RootState } from '../../state/reducers';
 
 const StyledHeader = styled.div`
   display: flex;
@@ -21,18 +22,21 @@ const ActionButtons = styled.div`
 const StyledBack = styled.div`
 
 `;
-
-function logOut(setFeedback, logout) {
+function logOut(setFeedback: (n: string) => void, logout: () => void) {
   firebase.auth().signOut().then(() => {
     setFeedback('Du er nå logget ut');
     logout();
-  }, (e) => {
+  }, (e: Event) => {
     console.log(e);
     setFeedback('Noe gikk galt under utlogging.');
   });
 }
 
-const ChoosePathComponent = ({ uid, logout }) => {
+interface ChoosePathProps {
+  uid: string;
+  logout: () => void;
+}
+const ChoosePathComponent = ({ uid, logout } : ChoosePathProps) => {
   const [feedback, setFeedback] = useState('');
 
   if (!uid) {
@@ -65,9 +69,11 @@ ChoosePathComponent.defaultProps = {
   uid: undefined,
 };
 
-export default connect(({ user: { uid } }) => ({ uid }),
-  dispatch => ({
-    logout() {
-      dispatch(logoutAction());
-    },
-  }))(ChoosePathComponent);
+const mapStateToProps = ({ user: { uid }} : RootState) => ({ uid });
+const mapDispatchToProps = (dispatch: any) => ({
+  logout() {
+    dispatch(logoutAction());
+  }
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChoosePathComponent);
