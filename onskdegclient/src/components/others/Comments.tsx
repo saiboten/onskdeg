@@ -79,7 +79,7 @@ class Comments extends React.Component {
 
   render() {
     const { comment, feedback } = this.state;
-    const { comments } = this.state;
+    const { comments } = this.props;
 
     const commentsRevamped = comments.map((oneComment) => {
       debug('Comment: ', oneComment);
