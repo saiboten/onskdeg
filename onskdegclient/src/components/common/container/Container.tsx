@@ -1,23 +1,26 @@
 // @flow
 import React from 'react';
-import { any } from 'prop-types';
+import styled from 'styled-components';
 
-require('./container.css');
+const StyledContainer = styled.div`
+  margin: 10px auto;
+  border: 1px solid black;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: white;
+  max-width: 900px;
+`;
 
 class Container extends React.PureComponent {
   render() {
     const { children } = this.props;
 
     return (
-      <div className="container">
+      <StyledContainer>
         {children}
-      </div>
+      </StyledContainer>
     );
   }
 }
-
-Container.propTypes = {
-  children: any.isRequired,
-};
 
 export default Container;
