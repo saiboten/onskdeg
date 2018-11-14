@@ -4,10 +4,14 @@ import {
 import firebase from '../../components/firebase/firebase';
 import getCurrentUser from '../selectors/getCurrentUser';
 import { setWishesForUser } from '../actions/wish';
+import { User, Wish } from '../../types/types';
 
-function getUserList(currentUser) {
+function getUserList(currentUser: User) {
   return new Promise(((resolve) => {
     firebase.database().ref(`users/${currentUser.uid}/users`).on('value', (snapshot) => {
+      if(snapshot == null) {
+        return;
+      }
       const resolveVal = snapshot.val();
       resolve(resolveVal);
     });
@@ -20,7 +24,7 @@ function* loadUserList() {
   yield put({ type: 'FRIENDS_LOADED', data });
 }
 
-function* setOwnWishes({ wishes }) {
+function* setOwnWishes({ wishes }: { wishes: Array<Wish> }) {
   const { uid } = yield select(getCurrentUser);
 
   yield put(setWishesForUser({ uid, wishes }));

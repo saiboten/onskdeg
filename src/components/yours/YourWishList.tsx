@@ -8,13 +8,27 @@ import firebase from '../firebase/firebase';
 import Icon from '../common/Icon';
 
 import { setWishes } from '../../state/actions/wish';
+import { Wish as WishType, User, FirebaseSnapshot } from '../../types/types';
 
 const debug = require('debug')('YourWishList');
 
 require('./yourwishlist.scss');
 
-class YourWishList extends React.Component {
-  constructor(props) {
+interface P {
+  user: User;
+  update: (newWishes: Array<Wish>) => void;
+  wishes: Array<WishType>
+}
+
+interface S {
+  
+}
+
+class YourWishList extends React.Component<P,S> {
+
+  firebaseRef: any;
+
+  constructor(props: any) {
     super(props);
     this.state = {
       newWish: '',
@@ -34,7 +48,7 @@ class YourWishList extends React.Component {
 
     this.firebaseRef = firebase.database().ref(`wishes/${user.uid}/wishes`);
 
-    this.firebaseRef.on('value', (snapshot) => {
+    this.firebaseRef.on('value', (snapshot: FirebaseSnapshot) => {
       update(snapshot.val());
     });
   }
@@ -53,14 +67,14 @@ class YourWishList extends React.Component {
   /* eslint-enable */
 
 
-  updateWishState(e) {
+  updateWishState(e: React.ChangeEvent<HTMLTextAreaElement>) {
     this.setState({
       newWish: e.target.value,
     });
   }
 
-  addWish(e) {
-    const { user, wishes } = this.props;
+  addWish(e: React.FormEvent<HTMLFormElement>) {
+    const { user, wishes, update } = this.props;
     const { newWish } = this.state;
 
     e.preventDefault();
@@ -80,7 +94,7 @@ class YourWishList extends React.Component {
       id: this.createGuid(),
     });
 
-    firebase.database().ref(`wishes/${user.uid}`).set({ wishes: newWishList });
+    update(newWishList);
 
     this.setState({
       newWish: '',
@@ -88,9 +102,9 @@ class YourWishList extends React.Component {
     });
   }
 
-  update(wish) {
+  update(wish: WishType) {
     debug('Saving wishlist: ', wish);
-    const { user, wishes } = this.props;
+    const { user, wishes, update } = this.props;
 
     const newWishList = wishes.map((e) => {
       if (e.id === wish.id) {
@@ -104,7 +118,7 @@ class YourWishList extends React.Component {
       }
       return e;
     });
-    firebase.database().ref(`wishes/${user.uid}`).set({ wishes: newWishList });
+    update(newWishList);
   }
 
   addImage(wish, image) {
@@ -145,7 +159,7 @@ class YourWishList extends React.Component {
     const { wishes } = this.props;
     const { newWish, feedback } = this.state;
 
-    const wishesNew = wishes.map((el) => {
+    const wishesNew = wishes.map((el: WishType) => {
       debug('Creating wish based on this el: ', el);
       return (
         <Wish
@@ -153,7 +167,6 @@ class YourWishList extends React.Component {
           update={this.update}
           delete={this.deleteThis}
           addImage={this.addImage}
-          wishlist={wishesNew}
           wish={el}
         />);
     });
@@ -175,7 +188,7 @@ class YourWishList extends React.Component {
               value={newWish}
               onChange={this.updateWishState}
             />
-            <Icon type="submit" name="check" />
+            <Icon type="submit" name="check" onClick={() => null} />
             <div>{feedback}</div>
           </div>
         </form>
@@ -188,12 +201,6 @@ class YourWishList extends React.Component {
     );
   }
 }
-
-YourWishList.propTypes = {
-  wishes: array,
-  user: any,
-  update: func.isRequired,
-};
 
 export default connect(
   ({ wish, user }) => {
