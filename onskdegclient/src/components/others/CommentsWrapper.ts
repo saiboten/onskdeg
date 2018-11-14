@@ -1,14 +1,9 @@
 import { connect } from 'react-redux';
 
 import Comments from './Comments';
+import { ApplicationState } from '../../state/reducers';
 
-const CommentsWrapper = connect(
-  ({ user }) => (
-    {
-      user,
-    }
-  ),
-  undefined,
-)(Comments);
+const mapStateToProps = ({ user }: ApplicationState) => ({ user });
+const CommentsWrapper = connect(mapStateToProps)(Comments);
 
 export default CommentsWrapper;

@@ -1,5 +1,4 @@
-// @flow
-const firebase = require('firebase');
+import firebase from 'firebase';
 
 const config = {
   apiKey: 'AIzaSyDRCFzLXgaM36t-0Vnhp2XbbQJrUjDmQAw',

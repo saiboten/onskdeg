@@ -1,14 +1,33 @@
-import React, { ReactElement, ReactEventHandler } from 'react';
-import { any } from 'prop-types';
+import React from 'react';
 import moment from 'moment';
 import firebase from '../firebase/firebase';
-import { FirebaseSnapshot } from '../../types/types';
+import { UserState } from '../../state/reducers/types';
 
 const debug = require('debug')('Comments');
 
 require('./comments.css');
 
-class Comments extends React.Component {
+interface Comment {
+  user?: string;
+  time: string;
+  comment: string;
+}
+
+interface CommentsProps {
+  user: UserState;
+  params: { name: string };
+  comments: Comment[];
+}
+
+interface CommentsState {
+  comment: string;
+  comments?: Comment[];
+  feedback: string;
+}
+
+class Comments extends React.Component<CommentsProps, CommentsState> {
+  commentsRef?: firebase.database.Reference;
+
   constructor(props: any) {
     super(props);
     debug('constructor');
@@ -18,15 +37,18 @@ class Comments extends React.Component {
     };
     this.updateCommentState = this.updateCommentState.bind(this);
     this.addComment = this.addComment.bind(this);
+    this.commentsRef = undefined;
   }
+
+
 
   componentDidMount() {
     debug('componentDidMount');
     const { params: { name } } = this.props;
 
     this.commentsRef = firebase.database().ref(`comments/${name}`);
-    this.commentsRef.on('value', (snapshot: FirebaseSnapshot) => {
-      const list = snapshot.val();
+    this.commentsRef.on('value', snapshot => {
+      const list = snapshot && snapshot.val();
       if (list != null) {
         // TODO action
       }
@@ -34,7 +56,7 @@ class Comments extends React.Component {
   }
 
   componentWillUnmount() {
-    this.commentsRef.off();
+    this.commentsRef && this.commentsRef.off();
   }
 
   updateCommentState(e: React.ChangeEvent<HTMLTextAreaElement>) {
@@ -103,7 +125,7 @@ class Comments extends React.Component {
             placeholder="Kommenter"
           />
           <div className="flex-row space-between">
-            <button type="button" className="smallspace button button--padded" href="#" onClick={this.addComment}>Lagre kommentar</button>
+            <button type="button" className="smallspace button button--padded" onClick={this.addComment}>Lagre kommentar</button>
             <div>{feedback}</div>
           </div>
         </div>

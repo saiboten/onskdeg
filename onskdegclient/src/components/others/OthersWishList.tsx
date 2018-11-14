@@ -18,8 +18,19 @@ const ActionButtonsContainer = styled.div`
 
 const debug = require('debug')('OthersWishList');
 
-class OthersWishList extends React.Component {
-  constructor(props) {
+interface P {
+  match: { params: { name: string }};
+  update: (name: string, callback: () => any) => void;
+}
+interface S {
+  hideSelected: boolean;
+  userState: string;
+  feedback: string;
+}
+class OthersWishList extends React.Component<P, S> {
+  firebaseRef?: firebase.database.Reference;
+
+  constructor(props: any) {
     super(props);
     debug('constructor');
     this.state = {
@@ -37,15 +48,15 @@ class OthersWishList extends React.Component {
     this.firebaseRef = firebase.database().ref(`wishes/${name}/wishes`);
 
     this.firebaseRef.on('value', (snapshot) => {
-      update(name, snapshot.val());
+      update(name, snapshot && snapshot.val());
     });
   }
 
   componentWillUnmount() {
-    this.firebaseRef.off();
+    this.firebaseRef && this.firebaseRef.off();
   }
 
-  check(id) {
+  check(id: string) {
     debug('check', id);
     const { user, match: { params: { name } } } = this.props;
     const { wishes, update } = this.props;

@@ -3,7 +3,6 @@ import { Link, Redirect } from 'react-router-dom';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { string, func } from 'prop-types';
 
 import Container from '../common/container/Container';
 import firebase from '../firebase/firebase';
@@ -27,7 +26,7 @@ function logOut(setFeedback: (n: string) => void, logout: () => void) {
   firebase.auth().signOut().then(() => {
     setFeedback('Du er nå logget ut');
     logout();
-  }, (e: Event) => {
+  }, (e) => {
     console.log(e);
     setFeedback('Noe gikk galt under utlogging.');
   });
