@@ -3,9 +3,9 @@ import React from 'react';
 import './Icon.scss';
 
 /* eslint-disable react/button-has-type */
-export default function Icon({ name, type, ...rest }: { name: string, type: string}) {
+export default function Icon({ name, type, onClick, ...rest }: { name: string, type: string, onClick: any}) {
   return (
-    <button type={type} className="icon" {...rest}>
+    <button type={type} className="icon" onClick={onClick} {...rest}>
       <svg className="icon__icon">
         <use xlinkHref={`/svg/sprite.svg#icon-${name}`} />
       </svg>

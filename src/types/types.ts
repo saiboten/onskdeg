@@ -8,6 +8,7 @@ export interface Wish {
   checked: boolean;
   id: string;
   name: string;
+  image: string;
 }
 
 export interface FirebaseSnapshot {

@@ -7,14 +7,24 @@ import firebase from '../firebase/firebase';
 import Icon from '../common/Icon';
 
 import './otherwish.css';
+import { Wish } from '../../types/types';
 
 const storageRef = firebase.storage().ref();
 
 const debug = require('debug')('OtherWish');
 
-class OtherWish extends React.Component {
+interface P {
+  wishInfo: Wish;
+  canDelete: boolean;
+};
+
+interface S {
+  image: string;
+}
+
+class OtherWish extends React.Component<P,S> {
   constructor(props) {
-    super();
+    super(props);
 
     this.state = {
       image: '',
@@ -83,12 +93,5 @@ class OtherWish extends React.Component {
     );
   }
 }
-
-OtherWish.propTypes = {
-  wishInfo: any,
-  onClick: func,
-  deleteSuggestion: func,
-  canDelete: bool,
-};
 
 export default OtherWish;
