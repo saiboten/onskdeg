@@ -39,6 +39,9 @@ interface S {
 }
 
 class Wish extends React.Component<P,S> {
+
+  input: any;
+
   constructor(props: any) {
     super(props);
     this.state = {

@@ -5,7 +5,7 @@ const initialState = {
   uid: undefined
 };
 
-const userReducer: Reducer<WishState> = (state = initialState, action) => {
+const userReducer: Reducer<WishState> = (state: any = initialState, action) => {
   let returnThis;
   switch (action.type) {
     case 'SET_ALL_WISHES': {

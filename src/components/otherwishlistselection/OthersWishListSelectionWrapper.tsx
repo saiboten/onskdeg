@@ -9,6 +9,7 @@ import Container from '../common/container/Container';
 import firebase from '../firebase/firebase';
 import { loadFriends } from '../../state/actions/friends';
 import spinnerWhileLoading from '../common/spinnerWhileLoading';
+import { User } from '../../types/types';
 
 const debug = require('debug')('OthersWishListSelection');
 
@@ -22,7 +23,17 @@ const StyledHeader = styled.div`
   border-bottom: 1px solid black;
 `;
 
-class OthersWishListSelection extends React.Component {
+interface P {
+  user: User;
+}
+
+interface S {
+  users: Array<User>;
+  newUser: string;
+  feedback: string;
+}
+
+class OthersWishListSelection extends React.Component<P,S> {
   constructor(props: any) {
     super(props);
     const { friends } = props;
@@ -45,13 +56,6 @@ class OthersWishListSelection extends React.Component {
     this.setState({ newUser: e.target.value });
   }
 
-  addUserLinkClick(uid: string) {
-    debug('addUserLinkClick', uid);
-
-    const userfromdb = store.getState().users.filter(userdb => userdb.uid === uid)[0];
-    this.addUser(userfromdb.email);
-  }
-
   addUserClickEvent(e: React.FormEvent<HTMLFormElement>) {
     debug('addUserClickEvent', e);
     const { newUser } = this.state;
@@ -60,36 +64,8 @@ class OthersWishListSelection extends React.Component {
     this.addUser(newUser);
   }
 
-  addUser(newUserMail) {
-    debug('addUserClickEvent', newUserMail);
-
-    const { users, user } = this.props;
-    const { users: stateUsers } = this.state;
-
-    const userfromdb = users.filter((userdb) => {
-      if (userdb.email === newUserMail) {
-        return true;
-      }
-      return false;
-    })[0];
-
-    debug('User from db : ', userfromdb);
-
-    if (userfromdb) {
-      if (stateUsers.filter(stateUser => stateUser.email === newUserMail).length === 1) {
-        this.setState({ feedback: 'Brukeren er lagt til fra før' });
-      } else if (newUserMail === user.email) {
-        this.setState({ feedback: 'Du har ikke lov å legge til deg selv' });
-      } else {
-        const newList = stateUsers.concat([userfromdb]);
-
-        debug('New list: ', newList);
-        firebase.database().ref(`users/${user.uid}`).set({ users: newList });
-        this.setState({ newUser: '' });
-      }
-    } else {
-      this.setState({ feedback: 'Denne brukeren finnes ikke' });
-    }
+  addUser(newUserMail: string) {
+    // FIXME rewrite
   }
 
   deleteUser(email: string) {
@@ -133,7 +109,7 @@ class OthersWishListSelection extends React.Component {
   }
 }
 
-const WithSpinner = spinnerWhileLoading(({ loaded, loading, load }) => {
+const WithSpinner = spinnerWhileLoading(({ loaded, loading, load }}) => {
   if (!loaded && !loading) {
     load();
   }
@@ -141,13 +117,12 @@ const WithSpinner = spinnerWhileLoading(({ loaded, loading, load }) => {
 })(OthersWishListSelection);
 
 export default connect(
-  ({ user, friends: { friends, loaded, loading }, users }) => (
+  ({ user, friends: { friends, loaded, loading } }: { user: User, friends: { friends: Array<User>, loaded: boolean, loading: boolean } }) => (
     {
       user,
       friends,
       loaded,
-      loading,
-      users,
+      loading
     }
   ),
   dispatch => ({

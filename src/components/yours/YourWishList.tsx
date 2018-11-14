@@ -17,11 +17,12 @@ require('./yourwishlist.scss');
 interface P {
   user: User;
   update: (newWishes: Array<Wish>) => void;
-  wishes: Array<WishType>
+  wishes: Array<WishType>;
 }
 
 interface S {
-  
+  newWish: string;
+  feedback: string;
 }
 
 class YourWishList extends React.Component<P,S> {
@@ -91,7 +92,9 @@ class YourWishList extends React.Component<P,S> {
     newWishList.unshift({
       name: newWish,
       checked: false,
+      checkedby: '',
       id: this.createGuid(),
+      image: '',
     });
 
     update(newWishList);
@@ -121,7 +124,7 @@ class YourWishList extends React.Component<P,S> {
     update(newWishList);
   }
 
-  addImage(wish, image) {
+  addImage(wish: WishType, image: string) {
     debug('Adding image to wish: ', wish, image);
     const { user, wishes } = this.props;
     const newWishList = wishes.map((e) => {
@@ -139,12 +142,12 @@ class YourWishList extends React.Component<P,S> {
     firebase.database().ref(`wishes/${user.uid}`).set({ wishes: newWishList });
   }
 
-  deleteThis(deleteId) {
+  deleteThis(deleteId: string) {
     debug('Delete id: ', deleteId);
     const { user, wishes } = this.props;
     const newWishList = Object.assign([], wishes);
 
-    const filteredNewWishList = newWishList.filter((e) => {
+    const filteredNewWishList = newWishList.filter((e: WishType) => {
       debug(e.id);
       return e.id !== deleteId;
     });
@@ -203,7 +206,7 @@ class YourWishList extends React.Component<P,S> {
 }
 
 export default connect(
-  ({ wish, user }) => {
+  ({ wish, user }: { wish: any, user: User}) => {
     debug('User wishes', wish[user.uid]);
     return {
       wishes: wish[user.uid] ? wish[user.uid] : [],
@@ -211,7 +214,7 @@ export default connect(
     };
   },
   dispatch => ({
-    update: (newData) => {
+    update: (newData: Array<WishType>) => {
       dispatch(setWishes(newData));
     },
   }),
