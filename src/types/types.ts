@@ -9,8 +9,17 @@ export interface Wish {
   id: string;
   name: string;
   image: string;
+  checkedby: string;
 }
 
 export interface FirebaseSnapshot {
   val: Function
+}
+
+export interface NameParam {
+  name: ''
+}
+
+export interface Match {
+  params: NameParam
 }

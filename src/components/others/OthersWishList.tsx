@@ -10,7 +10,7 @@ import firebase from '../firebase/firebase';
 import OtherWish from './OtherWish';
 import { setWishesForUser } from '../../state/actions/wish';
 import Icon from '../common/Icon';
-import { User, Wish } from '../../types/types';
+import { User, Wish, Match } from '../../types/types';
 
 const ActionButtonsContainer = styled.div`
   display: flex;
@@ -72,6 +72,7 @@ class OthersWishList extends React.Component<P, S> {
           id: e.id,
           checkedby: user.email,
           checkedTime: new Date(),
+          image: e.image
         };
       }
 
@@ -108,7 +109,7 @@ class OthersWishList extends React.Component<P, S> {
     const { wishes } = this.props;
 
     const filteredWishes = wishes.filter(this.shouldDisplayWish).map(wishInfo => (
-      <OtherWish key={wishInfo.id} onClick={this.check} wishInfo={wishInfo} />));
+      <OtherWish deleteSuggestion={() => null} canDelete={false} key={wishInfo.id} onClick={this.check} wishInfo={wishInfo} />));
 
     return (
       <Container>
@@ -134,17 +135,21 @@ class OthersWishList extends React.Component<P, S> {
     );
   }
 }
-  
+
+interface WishesDict {
+  [key: string]: Wish
+}
+
 const OthersWishListWrapper = connect(
-  ({ wish, user }, { match: { params: { name } } }) => (
+  ({ wishes, user, match: { params: { name } } }: { wishes: WishesDict, user: User, match: Match }) => (
     {
-      wishes: wish[name] || [],
+      wishes: wishes[name] || [],
       name,
       user,
     }
   ),
   dispatch => ({
-    update(uid, newWishList) {
+    update(uid: string, newWishList: Array<Wish>) {
       dispatch(setWishesForUser({ uid, wishes: newWishList }));
     },
   }),

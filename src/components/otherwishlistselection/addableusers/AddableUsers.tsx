@@ -1,15 +1,24 @@
-// @flow
-
 import React from 'react';
 import { func, any } from 'prop-types';
 import firebase from '../../firebase/firebase';
+import { User } from '../../../types/types';
 
 const debug = require('debug')('AddableUser');
 
 require('./addableusers.css');
 
-class AddableUsers extends React.Component {
-  static userInList(uid /* : String */, userlist /* : Array<Object> */) {
+interface P {
+  user: User;
+  addUser: (uid: string) => void;
+}
+
+interface S {
+  open: boolean;
+  userlist: Array<User>;
+}
+
+class AddableUsers extends React.Component<P,S> {
+  static userInList(uid: string, userlist: Array<User>) {
     debug('userInList: ', uid, userlist);
     if (!userlist) {
       return undefined;
@@ -20,8 +29,8 @@ class AddableUsers extends React.Component {
     )).length === 1;
   }
 
-  constructor() {
-    super();
+  constructor(props: any) {
+    super(props);
     debug('constructor');
     this.state = { userlist: [], open: false };
 
@@ -34,14 +43,21 @@ class AddableUsers extends React.Component {
     const { user } = this.props;
 
     firebase.database().ref('userlist').on('value', (data) => {
+      if(!data) {
+        return;
+      }
       debug('Data returned: ', data.val());
       const userlist = data.val();
 
       firebase.database().ref(`users/${user.uid}`).on('value', (snapshot) => {
+        if(!snapshot) {
+          return null;
+        }
+
         const addedUsers = snapshot.val()
           ? snapshot.val().users
           : undefined;
-        const filteredUserList = userlist.filter((dbuser) => {
+        const filteredUserList = userlist.filter((dbuser: User) => {
           if (dbuser.uid === user.uid) {
             return false;
           } if (AddableUsers.userInList(dbuser.uid, addedUsers)) {
@@ -55,7 +71,7 @@ class AddableUsers extends React.Component {
     });
   }
 
-  addUser(e /* : Event */, userUid /* : String */) {
+  addUser(e: React.MouseEvent<HTMLElement>, userUid: string) {
     debug('addUser', e, userUid);
     const { addUser } = this.props;
     e.preventDefault();
@@ -115,10 +131,5 @@ class AddableUsers extends React.Component {
     );
   }
 }
-
-AddableUsers.propTypes = {
-  addUser: func,
-  user: any,
-};
 
 export default AddableUsers;

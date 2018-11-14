@@ -1,83 +1,51 @@
-// @flow
+// import React from 'react';
+// import { any, func } from 'prop-types';
+// import { connect } from 'react-redux';
 
-import React from 'react';
-import { any, func } from 'prop-types';
-import { connect } from 'react-redux';
+// import { checkSuggestion, deleteSuggestion } from '../../state/actions/suggestion';
 
-import { checkSuggestion, deleteSuggestion } from '../../state/actions/suggestion';
+// import OtherWish from '../others/OtherWish';
+// import suggestionsFirebase from './suggestionsFirebase';
+// import store from '../../store';
 
-import OtherWish from '../others/OtherWish';
-import suggestionsFirebase from './suggestionsFirebase';
-import store from '../../store';
+// const debug = require('debug')('Suggestion');
 
-const debug = require('debug')('Suggestion');
+// const counter = 0;
 
-const counter = 0;
+// interface P {
+//   suggestion:  () => 
+//   onCheckSuggestion:
+//   onDeleteSuggestion
+// }
 
-const mapStateToProps = (state, ownProps) => {
-  const keys = Object.keys(state.suggestion);
-  const theRightKey = keys.filter(userid => (
-    userid === ownProps.userUid
-  ));
+// interface S {
 
-  return {
-    suggestion: state.suggestion[theRightKey].filter(suggestion => (
-      suggestion.id === ownProps.suggestion.id
-    ))[0],
-    counter: counter + 1,
-    user: state.user,
-  };
-};
+// }
 
-const checkSuggestionThunk = ownProps => (dispatch, getState) => {
-  dispatch(checkSuggestion(ownProps.userUid, ownProps.suggestion.id, getState().user.email));
-  suggestionsFirebase.saveSuggestions(store.getState().suggestion);
-};
+// class Suggestion extends React.PureComponent<P,S> {
+//   render() {
+//     const { suggestion, onCheckSuggestion, onDeleteSuggestion } = this.props;
+//     const wishInfo = {
+//       checked: suggestion.checked,
+//       name: suggestion.wishSuggestion,
+//       id: suggestion.id,
+//       checkedby: suggestion.checkedBy,
+//     };
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  onCheckSuggestion() {
-    debug('onCheckSuggestion');
-    dispatch(checkSuggestionThunk(ownProps));
-  },
-  onDeleteSuggestion() {
-    debug('onDeleteSuggestion');
+//     const { user } = this.props;
 
-    dispatch(deleteSuggestion(ownProps.userUid, ownProps.suggestion.id));
-    suggestionsFirebase.saveSuggestions(store.getState().suggestion);
-  },
-});
+//     return (
+//       <div className="flex-column">
+//         <OtherWish
+//           wishInfo={wishInfo}
+//           onClick={onCheckSuggestion}
+//           suggestedBy={suggestion.suggestedBy}
+//           deleteSuggestion={onDeleteSuggestion}
+//           canDelete={user.email === suggestion.suggestedBy}
+//         />
+//       </div>
+//     );
+//   }
+// }
 
-class Suggestion extends React.PureComponent {
-  render() {
-    const { suggestion, onCheckSuggestion, onDeleteSuggestion } = this.props;
-    const wishInfo = {
-      checked: suggestion.checked,
-      name: suggestion.wishSuggestion,
-      id: suggestion.id,
-      checkedby: suggestion.checkedBy,
-    };
-
-    const { user } = this.props;
-
-    return (
-      <div className="flex-column">
-        <OtherWish
-          wishInfo={wishInfo}
-          onClick={onCheckSuggestion}
-          suggestedBy={suggestion.suggestedBy}
-          deleteSuggestion={onDeleteSuggestion}
-          canDelete={user.email === suggestion.suggestedBy}
-        />
-      </div>
-    );
-  }
-}
-
-Suggestion.propTypes = {
-  suggestion: any,
-  onCheckSuggestion: func,
-  onDeleteSuggestion: func,
-  user: any,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Suggestion);
+// export default connect(null, null)(Suggestion);

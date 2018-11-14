@@ -1,5 +1,3 @@
-// @flow
-
 import React from 'react';
 import { func, any } from 'prop-types';
 import Dropzone from 'react-dropzone';
@@ -7,6 +5,7 @@ import styled from 'styled-components';
 
 import firebase from '../firebase/firebase';
 import Icon from '../common/Icon';
+import { Wish as WishType } from '../../types/types';
 
 const storageRef = firebase.storage().ref();
 
@@ -25,9 +24,23 @@ const StyledWishAndActions = styled.div`
   margin: 1rem;
 `;
 
-class Wish extends React.Component {
-  constructor(props) {
-    super();
+interface P {
+  wish: WishType
+  addImage: (wish: Wish, imageName: string) => void;
+  delete: (wishId: string) => void;
+  update: (wish: WishType) => void;
+}
+
+interface S {
+  edit: boolean,
+  text: string,
+  confirm: boolean,
+  image: string
+}
+
+class Wish extends React.Component<P,S> {
+  constructor(props: any) {
+    super(props);
     this.state = {
       edit: false,
       text: props.wish.name,
@@ -53,7 +66,7 @@ class Wish extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps /* : any */) {
+  componentWillReceiveProps(nextProps: any) {
     this.setState({
       text: nextProps.wish.name,
       confirm: nextProps.wish.confirm,
@@ -66,7 +79,7 @@ class Wish extends React.Component {
     }
   }
 
-  onDrop(acceptedFiles, rejectedFiles) {
+  onDrop(acceptedFiles: any, rejectedFiles: any) {
     debug('Looks like I dropped something', acceptedFiles, rejectedFiles);
     const { wish, addImage } = this.props;
 
@@ -90,7 +103,7 @@ class Wish extends React.Component {
     });
   }
 
-  updateText(e /* : Event */) {
+  updateText(e: React.ChangeEvent<HTMLTextAreaElement>) {
     this.setState({
       text: e.target.value,
     });
@@ -153,7 +166,7 @@ class Wish extends React.Component {
         <StyledActionButtons>
           <Icon type="button" name="trash-2" onClick={this.deleteItem} />
           <Dropzone className="wish__wish-dropzone" onDrop={this.onDrop}>
-            <Icon type="button" name="upload" />
+            <Icon type="button" name="upload" onClick={() => null} />
           </Dropzone>
         </StyledActionButtons>
       );
@@ -180,12 +193,5 @@ class Wish extends React.Component {
     );
   }
 }
-
-Wish.propTypes = {
-  delete: func,
-  wish: any,
-  update: func,
-  addImage: func,
-};
 
 export default Wish;

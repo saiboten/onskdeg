@@ -1,5 +1,3 @@
-// @flow
-
 import firebase from './firebase';
 import { userLoaded } from '../../state/actions/user';
 import store from '../../store';

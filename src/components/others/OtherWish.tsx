@@ -16,6 +16,8 @@ const debug = require('debug')('OtherWish');
 interface P {
   wishInfo: Wish;
   canDelete: boolean;
+  deleteSuggestion: () => void;
+  onClick: Function;
 };
 
 interface S {
@@ -23,7 +25,7 @@ interface S {
 }
 
 class OtherWish extends React.Component<P,S> {
-  constructor(props) {
+  constructor(props: any) {
     super(props);
 
     this.state = {

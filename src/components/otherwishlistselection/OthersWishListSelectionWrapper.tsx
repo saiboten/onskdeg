@@ -23,7 +23,7 @@ const StyledHeader = styled.div`
 `;
 
 class OthersWishListSelection extends React.Component {
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     const { friends } = props;
     const initialUsers = friends || [];
@@ -39,20 +39,20 @@ class OthersWishListSelection extends React.Component {
     this.addUser = this.addUser.bind(this);
   }
 
-  updateUserState(e) {
+  updateUserState(e: React.ChangeEvent<HTMLInputElement>) {
     debug('updateUserState');
 
     this.setState({ newUser: e.target.value });
   }
 
-  addUserLinkClick(uid) {
+  addUserLinkClick(uid: string) {
     debug('addUserLinkClick', uid);
 
     const userfromdb = store.getState().users.filter(userdb => userdb.uid === uid)[0];
     this.addUser(userfromdb.email);
   }
 
-  addUserClickEvent(e) {
+  addUserClickEvent(e: React.FormEvent<HTMLFormElement>) {
     debug('addUserClickEvent', e);
     const { newUser } = this.state;
 
@@ -92,7 +92,7 @@ class OthersWishListSelection extends React.Component {
     }
   }
 
-  deleteUser(email) {
+  deleteUser(email: string) {
     debug('deleteUser', email);
     const { user } = this.props;
     const { users } = this.state;
@@ -132,18 +132,6 @@ class OthersWishListSelection extends React.Component {
     );
   }
 }
-
-OthersWishListSelection.propTypes = {
-  user: any,
-  users: array,
-  friends: array,
-};
-
-OthersWishListSelection.defaultProps = {
-  user: {},
-  users: [],
-  friends: null,
-};
 
 const WithSpinner = spinnerWhileLoading(({ loaded, loading, load }) => {
   if (!loaded && !loading) {

@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import Container from '../common/container/Container';
 import firebase from '../firebase/firebase';
 import facebook from '../firebase/facebooklogin';
+import { User } from '../../types/types';
 
 const debug = require('debug')('SelectUser');
 
@@ -22,13 +23,23 @@ const StyledInput = styled.input`
   height: 4rem;
 `;
 
-const mapStateToProps = ({ user }) => (
+const mapStateToProps = ({ user }: { user: User }) => (
   {
     user,
   });
 
-class SelectUser extends React.Component {
-  constructor(props) {
+interface P {
+  user: User
+}
+
+interface S {
+  user: string;
+  password: string;
+  feedback: string;
+}
+
+class SelectUser extends React.Component<P,S> {
+  constructor(props: any) {
     super(props);
     debug('constructor');
     this.state = {
@@ -57,7 +68,7 @@ class SelectUser extends React.Component {
     });
   }
   /* eslint-disable */
-  loginFacebook(e) {
+  loginFacebook(e: React.MouseEvent<HTMLButtonElement>) {
   /* eslint-enable */
     debug('loginFacebook', e);
 
@@ -66,7 +77,7 @@ class SelectUser extends React.Component {
     firebase.auth().signInWithRedirect(facebook);
   }
 
-  updateUserState(e) {
+  updateUserState(e: React.ChangeEvent<HTMLInputElement>) {
     debug('updateUserState', e);
 
     this.setState({
@@ -74,7 +85,7 @@ class SelectUser extends React.Component {
     });
   }
 
-  updatePasswordState(e) {
+  updatePasswordState(e: React.ChangeEvent<HTMLInputElement>) {
     debug('updatePasswordState', e);
 
     this.setState({
@@ -82,7 +93,7 @@ class SelectUser extends React.Component {
     });
   }
 
-  logIn(e) {
+  logIn(e: React.ChangeEvent<HTMLInputElement>) {
     debug('logIn', e);
     const { user, password } = this.state;
 
@@ -93,7 +104,7 @@ class SelectUser extends React.Component {
       feedback: '',
     });
 
-    firebase.auth().signInWithEmailAndPassword(user, password).catch((error) => {
+    firebase.auth().signInWithEmailAndPassword(user, password).catch((error: any) => {
       const errorCode = error.code;
       const errorMessage = error.message;
 
@@ -155,10 +166,6 @@ class SelectUser extends React.Component {
     );
   }
 }
-
-SelectUser.propTypes = {
-  user: any,
-};
 
 export default connect(
   mapStateToProps, null,
