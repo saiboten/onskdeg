@@ -1,6 +1,6 @@
 import { User } from "../../types/types";
 
-export const userLoaded = (user: User) => (
+export const userLoaded = (user: User | null) => (
   {
     type: 'USER_LOADED',
     user,

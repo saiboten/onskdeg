@@ -16,7 +16,7 @@ require('./yourwishlist.scss');
 
 interface P {
   user: User;
-  update: (newWishes: Array<Wish>) => void;
+  update: (newWishes: Array<WishType>) => void;
   wishes: Array<WishType>;
 }
 

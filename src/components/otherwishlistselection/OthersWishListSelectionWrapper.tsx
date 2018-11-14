@@ -109,7 +109,7 @@ class OthersWishListSelection extends React.Component<P,S> {
   }
 }
 
-const WithSpinner = spinnerWhileLoading(({ loaded, loading, load }}) => {
+const WithSpinner = spinnerWhileLoading(({ loaded, loading, load }: { loaded: boolean, loading: boolean, load: () => void}) => {
   if (!loaded && !loading) {
     load();
   }

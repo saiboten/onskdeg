@@ -1,4 +1,4 @@
-// import React from 'react';
+import React from 'react';
 // import { func } from 'prop-types';
 
 // const debug = require('debug')('AddSuggestion');

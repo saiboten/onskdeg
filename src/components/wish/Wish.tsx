@@ -26,7 +26,7 @@ const StyledWishAndActions = styled.div`
 
 interface P {
   wish: WishType
-  addImage: (wish: Wish, imageName: string) => void;
+  addImage: (wish: WishType, imageName: string) => void;
   delete: (wishId: string) => void;
   update: (wish: WishType) => void;
 }

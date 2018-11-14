@@ -93,7 +93,7 @@ class SelectUser extends React.Component<P,S> {
     });
   }
 
-  logIn(e: React.ChangeEvent<HTMLInputElement>) {
+  logIn(e: React.FormEvent<HTMLFormElement>) {
     debug('logIn', e);
     const { user, password } = this.state;
 

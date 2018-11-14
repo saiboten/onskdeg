@@ -1,4 +1,4 @@
-// import React from 'react';
+ import React from 'react';
 // import { array, func, string } from 'prop-types';
 // import { connect } from 'react-redux';
 // import AddSuggestion from './AddSuggestion';
