@@ -10,6 +10,7 @@ import firebase from '../firebase/firebase';
 import OtherWish from './OtherWish';
 import { setWishesForUser } from '../../state/actions/wish';
 import Icon from '../common/Icon';
+import { User, Wish } from '../../types/types';
 
 const ActionButtonsContainer = styled.div`
   display: flex;
@@ -20,7 +21,9 @@ const debug = require('debug')('OthersWishList');
 
 interface P {
   match: { params: { name: string }};
-  update: (name: string, callback: () => any) => void;
+  update: (name: string, newWishList: Array<Wish>) => void;
+  user: User;
+  wishes: Array<Wish>;
 }
 interface S {
   hideSelected: boolean;
@@ -79,7 +82,7 @@ class OthersWishList extends React.Component<P, S> {
     this.setState({ feedback: 'Du kjøpte eller solgte noe!' });
   }
 
-  toggleShowSelected(e) {
+  toggleShowSelected(e: React.MouseEvent<HTMLElement>) {
     debug('toggleShowSelected', e);
     const { hideSelected } = this.state;
 
@@ -89,7 +92,7 @@ class OthersWishList extends React.Component<P, S> {
     });
   }
 
-  shouldDisplayWish(el) {
+  shouldDisplayWish(el: Wish) {
     const {
       hideSelected,
     } = this.state;
@@ -131,15 +134,7 @@ class OthersWishList extends React.Component<P, S> {
     );
   }
 }
-
-OthersWishList.propTypes = {
-  match: any,
-  user: any,
-  wishes: any,
-  update: func.isRequired,
-};
-
-
+  
 const OthersWishListWrapper = connect(
   ({ wish, user }, { match: { params: { name } } }) => (
     {
