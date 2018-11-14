@@ -24,7 +24,8 @@ function* loadUserList() {
   yield put({ type: 'FRIENDS_LOADED', data });
 }
 
-function* setOwnWishes({ wishes }: { wishes: Array<Wish> }) {
+function* setOwnWishes(input: any) {
+  const { wishes } = input;
   const { uid } = yield select(getCurrentUser);
 
   yield put(setWishesForUser({ uid, wishes }));
