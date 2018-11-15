@@ -1,28 +1,23 @@
 import { Reducer } from 'redux';
 import { WishState } from './types';
 
-const initialState = {
-  uid: undefined
-};
+const initialState: WishState = {};
 
-const userReducer: Reducer<WishState> = (state: any = initialState, action) => {
-  let returnThis;
+const userReducer: Reducer<WishState> = (state = initialState, action) => {
   switch (action.type) {
     case 'SET_ALL_WISHES': {
-      returnThis = Object.assign({}, action.wishes);
-      break;
+      return Object.assign({}, action.wishes);
     }
     case 'SET_USER_WISHES': {
-      const { uid, wishes } = action;
+      const { uid } = action;
       return {
         ...state,
-        [uid]: wishes,
+        [uid]: action.wishes,
       };
     }
     default:
-      returnThis = state;
+      return state;
   }
-  return returnThis;
 };
 
 export default userReducer;

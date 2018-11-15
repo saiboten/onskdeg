@@ -1,3 +1,5 @@
+import { Wish } from "../../types/types";
+
 export interface FriendsState {
   readonly loaded: boolean;
   readonly loading: boolean;
@@ -10,7 +12,12 @@ export interface UserState {
   readonly email?: string;
 }
 
+
+export interface WishesDict {
+  [key: string]: Wish
+}
 export interface WishState {
-  readonly wishes?: {}[];
-  readonly uid: string;
+  [name: string]: Wish | {
+    readonly uid?: string;
+  }
 }

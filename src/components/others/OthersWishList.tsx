@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { any, func } from 'prop-types';
+import { Dispatch } from 'redux';
 import styled from 'styled-components';
 
 import Container from '../common/container/Container';
@@ -11,6 +11,7 @@ import OtherWish from './OtherWish';
 import { setWishesForUser } from '../../state/actions/wish';
 import Icon from '../common/Icon';
 import { User, Wish, Match } from '../../types/types';
+import { ApplicationState } from '../../state/reducers';
 
 const ActionButtonsContainer = styled.div`
   display: flex;
@@ -19,18 +20,18 @@ const ActionButtonsContainer = styled.div`
 
 const debug = require('debug')('OthersWishList');
 
-interface P {
+interface Props {
   match: { params: { name: string }};
   update: (name: string, newWishList: Array<Wish>) => void;
   user: User;
   wishes: Array<Wish>;
 }
-interface S {
+interface State {
   hideSelected: boolean;
   userState: string;
   feedback: string;
 }
-class OthersWishList extends React.Component<P, S> {
+class OthersWishList extends React.Component<Props, State> {
   firebaseRef?: firebase.database.Reference;
 
   constructor(props: any) {
@@ -133,26 +134,22 @@ class OthersWishList extends React.Component<P, S> {
 
       </Container>
     );
+  } 
+}
+
+const mapStateToProps = ({ wish, user }: ApplicationState, { match: { params: { name } } }: any) => (
+  {
+    wishes: wish[name] || [],
+    name,
+    user,
   }
-}
+);
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  update(uid: string, newWishList: Array<Wish>) {
+    dispatch(setWishesForUser({ uid, wishes: newWishList }));
+  },
+});
 
-interface WishesDict {
-  [key: string]: Wish
-}
-
-const OthersWishListWrapper = connect(
-  ({ wishes, user, match: { params: { name } } }: { wishes: WishesDict, user: User, match: Match }) => (
-    {
-      wishes: wishes[name] || [],
-      name,
-      user,
-    }
-  ),
-  dispatch => ({
-    update(uid: string, newWishList: Array<Wish>) {
-      dispatch(setWishesForUser({ uid, wishes: newWishList }));
-    },
-  }),
-)(OthersWishList);
+const OthersWishListWrapper = connect(mapStateToProps, mapDispatchToProps)(OthersWishList);
 
 export default OthersWishListWrapper;
