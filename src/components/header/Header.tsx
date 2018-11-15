@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
@@ -8,7 +8,6 @@ import Container from '../common/container/Container';
 import firebase from '../firebase/firebase';
 import { logout as logoutAction } from '../../state/actions/user';
 import { ApplicationState } from '../../state/reducers';
-import { User } from '../../types/types';
 import { UserState } from '../../state/reducers/types';
 
 const StyledHeader = styled.div`
@@ -34,17 +33,16 @@ function logOut(setFeedback: (n: string) => void, logout: () => void) {
   });
 }
 
-interface ChoosePathProps {
+interface HeaderProps {
   user?: UserState;
   logout: () => void;
 }
-const ChoosePathComponent = ({ user, logout } : ChoosePathProps) => {
+const HeaderComponent = ({ user, logout } : HeaderProps) => {
   const [feedback, setFeedback] = useState('');
 
-  if (user && !user.uid) {
-    return <Redirect to="/" />;
+  if (!user || !user.uid) {
+    return null;
   }
-
   return (
     <Container>
       <h1>Hvilken ønskeliste vil du se?</h1>
@@ -70,4 +68,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ChoosePathComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(HeaderComponent);

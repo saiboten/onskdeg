@@ -1,35 +1,40 @@
 import React from 'react';
 import {
-  BrowserRouter, Route, Switch,
+  BrowserRouter, Route, Switch, Redirect,
 } from 'react-router-dom';
 import { Provider, connect } from 'react-redux';
 
 import YourWishList from './components/yours/YourWishList';
 import OthersWishListSelection from './components/otherwishlistselection/OthersWishListSelectionWrapper';
 import OthersWishList from './components/others/OthersWishList';
-import ChoosePath from './components/choosepath/ChoosePath';
-import SelectUser from './components/selectuser/SelectUser';
+import Header from './components/header/Header';
+import Login from './components/login/Login';
 
 import store from './store';
 
 import authFirebase from './components/firebase/authFirebase';
 import { ApplicationState } from './state/reducers';
+import { UserState } from './state/reducers/types';
 import Loading from './components/common/Loading';
 
 require('./global.css');
 
-
-const AppComp = ({ loaded } : { loaded: boolean }) => {
-  if (!loaded) {
-    return (<Loading />);
+interface AppProps {
+  user: UserState;
+}
+const AppComp = ({ user } : AppProps) => {
+  if (!user || !user.loaded) {
+    return <Loading />;
   }
-
+  if (!user || !user.uid) {
+    return <Login />;
+  }
   return (
     <BrowserRouter>
       <React.Fragment>
-        <ChoosePath />
+        <Header />
         <Switch>
-          <Route path="/" exact component={SelectUser} />
+          <Route path="/" exact component={YourWishList} />
           <Route path="/others" component={OthersWishListSelection} />
           <Route path="/other/:name" component={OthersWishList} />
         </Switch>
@@ -38,7 +43,7 @@ const AppComp = ({ loaded } : { loaded: boolean }) => {
   );
 };
 
-const mapStateToProps = ({ user: { loaded } }: ApplicationState) => ({ loaded });
+const mapStateToProps = ({ user }: ApplicationState) => ({ user });
 const AppCompWrapper = connect(mapStateToProps)(AppComp);
 
 const App = () => (

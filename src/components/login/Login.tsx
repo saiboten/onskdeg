@@ -7,8 +7,8 @@ import facebook from '../firebase/facebooklogin';
 import { User } from '../../types/types';
 import { ReactComponent as FbIcon } from './facebook-icon.svg';
 import * as colors from '../../styles/colors';
-import YourWishList from '../yours/YourWishList';
 import Spinner from '../common/Spinner';
+import { RouteComponentProps } from 'react-router-dom';
 
 const debug = require('debug')('SelectUser');
 
@@ -59,7 +59,8 @@ const ButtonSpinner = styled(Spinner)`
 `;
 
 interface Props {
-  user: User
+  user: User;
+  history: { push: (path: string) => void };
 }
 
 interface State {
@@ -69,7 +70,7 @@ interface State {
   submitting: boolean;
 }
 
-class SelectUser extends React.Component<Props, State> {
+class Login extends React.Component<Props, State> {
   constructor(props: any) {
     super(props);
     debug('constructor');
@@ -155,10 +156,7 @@ class SelectUser extends React.Component<Props, State> {
   }
 
   render() {
-    const { user } = this.props;
-    if (user.uid) {
-      return <YourWishList />;
-    }
+    const { user, history } = this.props;
     const { feedback, submitting } = this.state;
 
     const H1 = styled.h1`
@@ -195,4 +193,4 @@ const mapStateToProps = ({ user }: { user: User }) => (
 
 export default connect(
   mapStateToProps, null,
-)(SelectUser);
+)(Login);
