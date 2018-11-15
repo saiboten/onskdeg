@@ -7,6 +7,7 @@ import Container from '../common/container/Container';
 import firebase from '../firebase/firebase';
 import facebook from '../firebase/facebooklogin';
 import { User } from '../../types/types';
+import { Redirect } from 'react-router';
 
 const debug = require('debug')('SelectUser');
 
@@ -53,6 +54,7 @@ class SelectUser extends React.Component<P,S> {
   }
 
   componentDidMount() {
+    
     debug('componentDidMount');
 
     firebase.auth().getRedirectResult().then(() => {
@@ -120,17 +122,12 @@ class SelectUser extends React.Component<P,S> {
 
   render() {
     const { user } = this.props;
+    if (user.uid) {
+      return <Redirect to='/yours' />;
+    }
     const { user: userState, password, feedback } = this.state;
 
-    const loggedInAs = user.uid
-    && (
-    <StyledParagraph>
-      {'Du er logget inn som: '}
-      <strong>{user.email}</strong>
-    </StyledParagraph>
-    );
-
-    const loginForm = user.uid ? '' : (
+    const loginForm = (
       <form className="select-user__form" onSubmit={this.logIn}>
         <label htmlFor="username" className="smallspace">Brukernavn</label>
         <StyledInput id="username" value={userState} onChange={this.updateUserState} />
@@ -159,7 +156,6 @@ class SelectUser extends React.Component<P,S> {
     return (
       <Container>
         <h1>Logg inn</h1>
-        {loggedInAs}
         {loginForm}
         <StyledParagraph>{feedback}</StyledParagraph>
       </Container>
