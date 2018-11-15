@@ -1,15 +1,14 @@
 import React from 'react';
-import { any } from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import firebase from '../firebase/firebase';
 import facebook from '../firebase/facebooklogin';
 import { User } from '../../types/types';
-import { Redirect } from 'react-router';
 import { ReactComponent as FbIcon } from './facebook-icon.svg';
 import * as colors from '../../styles/colors';
 import YourWishList from '../yours/YourWishList';
+import Spinner from '../common/Spinner';
 
 const debug = require('debug')('SelectUser');
 
@@ -36,7 +35,8 @@ const BorderButton = styled.button`
   color: white;
   display: flex;
   align-items: center;
-  max-width: 300px;
+  width: 300px;
+  min-height: 48px;
 `;
 
 const iconHeight = '30px';
@@ -51,12 +51,12 @@ const LoginContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: white;
 `;
 
-const mapStateToProps = ({ user }: { user: User }) => (
-  {
-    user,
-  });
+const ButtonSpinner = styled(Spinner)`
+  margin: 0 auto;
+`;
 
 interface Props {
   user: User
@@ -66,6 +66,7 @@ interface State {
   user: string;
   password: string;
   feedback: string;
+  submitting: boolean;
 }
 
 class SelectUser extends React.Component<Props, State> {
@@ -76,10 +77,12 @@ class SelectUser extends React.Component<Props, State> {
       user: '',
       password: '',
       feedback: '',
+      submitting: false,
     };
     this.updateUserState = this.updateUserState.bind(this);
     this.updatePasswordState = this.updatePasswordState.bind(this);
     this.logIn = this.logIn.bind(this);
+    this.loginFacebook = this.loginFacebook.bind(this);
   }
 
   componentDidMount() {
@@ -105,6 +108,7 @@ class SelectUser extends React.Component<Props, State> {
 
     e.preventDefault();
     e.stopPropagation();
+    this.setState({ submitting: true });
     firebase.auth().signInWithRedirect(facebook);
   }
 
@@ -133,6 +137,7 @@ class SelectUser extends React.Component<Props, State> {
 
     this.setState({
       feedback: '',
+      submitting: true
     });
 
     firebase.auth().signInWithEmailAndPassword(user, password).catch((error: any) => {
@@ -154,28 +159,39 @@ class SelectUser extends React.Component<Props, State> {
     if (user.uid) {
       return <YourWishList />;
     }
-    const { user: userState, password, feedback } = this.state;
+    const { feedback, submitting } = this.state;
 
-    const loginForm = (
+    const H1 = styled.h1`
+      color: white;
+    `;
+    return (
+      <>
         <LoginContainer>
+          <H1>ØNSK DEG NOE</H1>
           <BorderButton
             onClick={this.loginFacebook}
           >
-            <FacebookIcon />
-            Logg på med facebook
+            { submitting ?
+              <ButtonSpinner />
+              : <>
+                <FacebookIcon />
+                Logg på med facebook
+              </>
+            }
+            
           </BorderButton>
-        </LoginContainer>
-    );
+          <StyledParagraph>{feedback}</StyledParagraph>
 
-    return (
-      <>
-        <h1>ØNSK DEG NOE</h1>
-        {loginForm}
-        <StyledParagraph>{feedback}</StyledParagraph>
+        </LoginContainer>
       </>
     );
   }
 }
+
+const mapStateToProps = ({ user }: { user: User }) => (
+{
+  user,
+});
 
 export default connect(
   mapStateToProps, null,

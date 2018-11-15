@@ -14,13 +14,14 @@ import store from './store';
 
 import authFirebase from './components/firebase/authFirebase';
 import { ApplicationState } from './state/reducers';
+import Loading from './components/common/Loading';
 
 require('./global.css');
 
 
 const AppComp = ({ loaded } : { loaded: boolean }) => {
   if (!loaded) {
-    return (<div>Laster</div>);
+    return (<Loading />);
   }
 
   return (
