@@ -9,6 +9,7 @@ import { User } from '../../types/types';
 import { Redirect } from 'react-router';
 import { ReactComponent as FbIcon } from './facebook-icon.svg';
 import * as colors from '../../styles/colors';
+import YourWishList from '../yours/YourWishList';
 
 const debug = require('debug')('SelectUser');
 
@@ -151,7 +152,7 @@ class SelectUser extends React.Component<Props, State> {
   render() {
     const { user } = this.props;
     if (user.uid) {
-      return <Redirect to='/yours' />;
+      return <YourWishList />;
     }
     const { user: userState, password, feedback } = this.state;
 

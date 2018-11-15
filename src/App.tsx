@@ -29,7 +29,6 @@ const AppComp = ({ loaded } : { loaded: boolean }) => {
         <ChoosePath />
         <Switch>
           <Route path="/" exact component={SelectUser} />
-          <Route path="/yours" component={YourWishList} />
           <Route path="/others" component={OthersWishListSelection} />
           <Route path="/other/:name" component={OthersWishList} />
         </Switch>
