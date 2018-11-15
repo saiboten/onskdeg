@@ -8,7 +8,7 @@ import firebase from '../firebase/firebase';
 // import Comments from './Comments';
 // import Suggestions from '../suggestions/Suggestions';
 import OtherWish from './OtherWish';
-import { setWishesForUser } from '../../state/actions/wish';
+import { setWishesForUser, storeWishesToFirebase } from '../../state/actions/wish';
 import Icon from '../common/Icon';
 import { User, Wish, Match } from '../../types/types';
 import { ApplicationState } from '../../state/reducers';
@@ -22,7 +22,8 @@ const debug = require('debug')('OthersWishList');
 
 interface Props {
   match: { params: { name: string }};
-  update: (name: string, newWishList: Array<Wish>) => void;
+  setWishes: (name: string, newWishList: Array<Wish>) => void;
+  storeWishes: (name: string, newWishList: Array<Wish>) => void;
   user: User;
   wishes: Array<Wish>;
 }
@@ -47,12 +48,12 @@ class OthersWishList extends React.Component<Props, State> {
 
   componentDidMount() {
     debug('componentDidMount');
-    const { match: { params: { name } }, update } = this.props;
+    const { match: { params: { name } }, setWishes } = this.props;
 
     this.firebaseRef = firebase.database().ref(`wishes/${name}/wishes`);
 
     this.firebaseRef.on('value', (snapshot) => {
-      update(name, snapshot && snapshot.val());
+      setWishes(name, snapshot && snapshot.val());
     });
   }
 
@@ -63,24 +64,25 @@ class OthersWishList extends React.Component<Props, State> {
   check(id: string) {
     debug('check', id);
     const { user, match: { params: { name } } } = this.props;
-    const { wishes, update } = this.props;
+    const { wishes, storeWishes } = this.props;
 
     const newWishList = wishes.map((e) => {
       if (id === e.id) {
+        console.log(e);
         return {
           name: e.name,
           checked: !e.checked,
           id: e.id,
           checkedby: user.email,
           checkedTime: new Date(),
-          image: e.image
+          image: e.image || ''
         };
       }
 
       return e;
     });
-    update(name, newWishList);
-    // firebase.database().ref(`wishes/${name}`).set({ wishes: newWishList });
+    console.log(newWishList);
+    storeWishes(name, newWishList);
     this.setState({ feedback: 'Du kjøpte eller solgte noe!' });
   }
 
@@ -145,8 +147,11 @@ const mapStateToProps = ({ wish, user }: ApplicationState, { match: { params: { 
   }
 );
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  update(uid: string, newWishList: Array<Wish>) {
+  setWishes(uid: string, newWishList: Array<Wish>) {
     dispatch(setWishesForUser({ uid, wishes: newWishList }));
+  },
+  storeWishes(uid: string, newWishList: Array<Wish>) {
+    dispatch(storeWishesToFirebase(uid, newWishList));
   },
 });
 
