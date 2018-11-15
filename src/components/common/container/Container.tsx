@@ -10,16 +10,4 @@ const StyledContainer = styled.div`
   max-width: 900px;
 `;
 
-class Container extends React.PureComponent {
-  render() {
-    const { children } = this.props;
-
-    return (
-      <StyledContainer>
-        {children}
-      </StyledContainer>
-    );
-  }
-}
-
-export default Container;
+export default StyledContainer;
