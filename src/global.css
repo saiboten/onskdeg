@@ -1,5 +1,5 @@
 html {
-    background-color: #465877;
+    background-color: #262626;
 }
 
 .navigation-link {
@@ -141,24 +141,24 @@ h1, h2, h3, h4, h5, .h1, .h2, .h3, .h4, .h5 {
 }
 
 h1, .h1 {
-    font-size: 22px;
-    line-height: 1.6em;
-    margin-bottom: 10px;
-    letter-spacing: -0.029em;
+  font-size: 40px;
+  line-height: 1.6em;
+  margin-bottom: 10px;
+  letter-spacing: -0.029em;
 }
 
 h3, .h3 {
-    font-size: 21px;
-    line-height: 1.14285714em;
-    margin-bottom: 10px;
-    letter-spacing: -0.025em;
-    overflow-wrap: break-word;
+  font-size: 21px;
+  line-height: 1.14285714em;
+  margin-bottom: 10px;
+  letter-spacing: -0.025em;
+  overflow-wrap: break-word;
 }
 
 
 h2, .h2 {
-    font-size: 25px;
-    line-height: 1.44em;
-    margin-bottom: 10px;
-    letter-spacing: -0.024em;
+  font-size: 25px;
+  line-height: 1.44em;
+  margin-bottom: 10px;
+  letter-spacing: -0.024em;
 }

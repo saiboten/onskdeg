@@ -3,14 +3,14 @@ import { any } from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import Container from '../common/container/Container';
 import firebase from '../firebase/firebase';
 import facebook from '../firebase/facebooklogin';
 import { User } from '../../types/types';
 import { Redirect } from 'react-router';
+import { ReactComponent as FbIcon } from './facebook-icon.svg';
+import * as colors from '../../styles/colors';
 
 const debug = require('debug')('SelectUser');
-
 
 require('./selectuser.scss');
 
@@ -24,22 +24,50 @@ const StyledInput = styled.input`
   height: 4rem;
 `;
 
+const BorderButton = styled.button`
+  border: 2px solid ${colors.gold};
+  padding: 7px 14px;
+  background: transparent;
+  border-radius: 8px;
+  outline: none;
+  font-family: "Open Sans", "Helvetica Neue", Arial, Helvetica, Verdana, sans-serif;
+  font-size: 16px;
+  color: white;
+  display: flex;
+  align-items: center;
+  max-width: 300px;
+`;
+
+const iconHeight = '30px';
+const FacebookIcon = styled(FbIcon)`
+  font-size: 1em;
+  height: ${iconHeight};
+  width: ${iconHeight};
+  margin-right: 6px;
+`;
+
+const LoginContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 const mapStateToProps = ({ user }: { user: User }) => (
   {
     user,
   });
 
-interface P {
+interface Props {
   user: User
 }
 
-interface S {
+interface State {
   user: string;
   password: string;
   feedback: string;
 }
 
-class SelectUser extends React.Component<P,S> {
+class SelectUser extends React.Component<Props, State> {
   constructor(props: any) {
     super(props);
     debug('constructor');
@@ -128,37 +156,22 @@ class SelectUser extends React.Component<P,S> {
     const { user: userState, password, feedback } = this.state;
 
     const loginForm = (
-      <form className="select-user__form" onSubmit={this.logIn}>
-        <label htmlFor="username" className="smallspace">Brukernavn</label>
-        <StyledInput id="username" value={userState} onChange={this.updateUserState} />
-        <label htmlFor="password" className="smallspace">Passord</label>
-        <StyledInput
-          id="password"
-          type="password"
-          value={password}
-          onChange={this.updatePasswordState}
-        />
-        <div className="flex-row space-between">
-          <input className="button button--padded" type="submit" value="Logg inn" />
-          <button
-            type="button"
-            className="button button--padded select-user__facebook-button"
+        <LoginContainer>
+          <BorderButton
             onClick={this.loginFacebook}
           >
-            {'Logg inn'}
-            <br />
-            {'Med facebook'}
-          </button>
-        </div>
-      </form>
+            <FacebookIcon />
+            Logg på med facebook
+          </BorderButton>
+        </LoginContainer>
     );
 
     return (
-      <Container>
-        <h1>Logg inn</h1>
+      <>
+        <h1>ØNSK DEG NOE</h1>
         {loginForm}
         <StyledParagraph>{feedback}</StyledParagraph>
-      </Container>
+      </>
     );
   }
 }
