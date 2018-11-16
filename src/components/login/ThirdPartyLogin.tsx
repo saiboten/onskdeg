@@ -8,23 +8,9 @@ import { ReactComponent as FbIcon } from './facebook-icon.svg';
 import * as colors from '../../styles/colors';
 import Spinner from '../common/Spinner';
 import StyledLink from '../common/StyledLink';
+import { BorderButton } from '../common/Button';
 
 const debug = require('debug')('ThirdPartyLogin');
-
-const BorderButton = styled.button`
-  border: 2px solid ${colors.gold};
-  padding: 7px 14px;
-  background: transparent;
-  border-radius: 8px;
-  outline: none;
-  font-size: 16px;
-  color: white;
-  display: flex;
-  align-items: center;
-  width: 300px;
-  min-height: 48px;
-  margin-bottom: 16px;
-`;
 
 const iconHeight = '30px';
 const FacebookIcon = styled(FbIcon)`
@@ -60,9 +46,14 @@ class ThirdPartyLogin extends React.Component<{}, State> {
   }
 
   render() {
+    const SmButton = styled(BorderButton)`
+      display: flex;
+      align-items: center;
+      width: 100%;`;
+    
     return (
       <>
-        <BorderButton
+        <SmButton
           onClick={this.loginFacebook}
         >
           { this.state.submitting ?
@@ -73,7 +64,7 @@ class ThirdPartyLogin extends React.Component<{}, State> {
             </>
           }
           
-        </BorderButton>
+        </SmButton>
         <StyledLink to="/internal">Passord/brukernavn?</StyledLink>
       </>
     );

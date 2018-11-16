@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import StyledLink from '../common/StyledLink';
+import colors from '../../styles/colors';
+import { BorderInput } from '../common/Button';
 
 const debug = require('debug')('InternalLogin');
 
@@ -10,6 +11,19 @@ const StyledInput = styled.input`
   height: 2.5rem;
   outline: none;
   padding: 0 1rem;
+  margin-bottom: 12px;
+  border: 0;
+  -webkit-appearance: none;
+  background: ${colors.goldDark};
+  color: white;
+  width: 100%;
+  &::placeholder {
+    color: grey;
+  }
+`;
+
+const SubmitButton = styled(BorderInput)`
+  width: 100%;
 `;
 
 interface State {
@@ -75,23 +89,18 @@ class InternalLogin extends React.Component<{}, State> {
   render() {
     return (
       <form onSubmit={this.logIn}>
-      <div>
-        <label htmlFor="username" className="screen-reader-only">Brukernavn</label>
-        <StyledInput id="username" value={this.state.user} onChange={this.updateUserState} placeholder="Brukernavn" />
-      </div>
-      <div className="form-group">
-        <label htmlFor="password" className="screen-reader-only">Passord</label>
-          <StyledInput
-            id="password"
-            type="password"
-            placeholder="Passord"
-            value={this.state.password}
-            onChange={this.updatePasswordState}
-          />
-      </div>
-      
-      
-        <input type="submit" value="Logg inn" />
+      <label htmlFor="username" className="screen-reader-only">Brukernavn</label>
+      <StyledInput id="username" value={this.state.user} onChange={this.updateUserState} placeholder="Brukernavn" />
+
+      <label htmlFor="password" className="screen-reader-only">Passord</label>
+      <StyledInput
+        id="password"
+        type="password"
+        placeholder="Passord"
+        value={this.state.password}
+        onChange={this.updatePasswordState}
+      />
+        <SubmitButton type="submit" value="Logg inn" />
         <p>{this.state.errorMessage}</p>
         <StyledLink to="/">Google/Facebook</StyledLink>
       </form>

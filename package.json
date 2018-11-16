@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/color": "^3.0.0",
     "@types/jest": "^23.3.9",
     "@types/node": "^10.12.6",
     "@types/react": "^16.7.4",
@@ -11,6 +12,7 @@
     "@types/react-router-dom": "^4.3.1",
     "@types/recompose": "^0.27.0",
     "@types/styled-components": "^4.1.0",
+    "color": "^3.1.0",
     "debug": "^2.2.0",
     "express": "^4.13.4",
     "firebase": "^3.5.3",
