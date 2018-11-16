@@ -17,8 +17,6 @@ import { ApplicationState } from './state/reducers';
 import { UserState } from './state/reducers/types';
 import Loading from './components/common/Loading';
 
-require('./global.css');
-
 interface AppProps {
   user: UserState;
 }

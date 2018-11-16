@@ -7,8 +7,9 @@ const debug = require('debug')('InternalLogin');
 
 
 const StyledInput = styled.input`
-  margin: 2rem;
-  height: 4rem;
+  height: 2.5rem;
+  outline: none;
+  padding: 0 1rem;
 `;
 
 interface State {
@@ -73,17 +74,24 @@ class InternalLogin extends React.Component<{}, State> {
 
   render() {
     return (
-      <form className="select-user__form" onSubmit={this.logIn}>
-        <label htmlFor="username" className="smallspace">Brukernavn</label>
-        <StyledInput id="username" value={this.state.user} onChange={this.updateUserState} />
-        <label htmlFor="password" className="smallspace">Passord</label>
-        <StyledInput
-          id="password"
-          type="password"
-          value={this.state.password}
-          onChange={this.updatePasswordState}
-        />
-        <input className="button button--padded" type="submit" value="Logg inn" />
+      <form onSubmit={this.logIn}>
+      <div>
+        <label htmlFor="username" className="screen-reader-only">Brukernavn</label>
+        <StyledInput id="username" value={this.state.user} onChange={this.updateUserState} placeholder="Brukernavn" />
+      </div>
+      <div className="form-group">
+        <label htmlFor="password" className="screen-reader-only">Passord</label>
+          <StyledInput
+            id="password"
+            type="password"
+            placeholder="Passord"
+            value={this.state.password}
+            onChange={this.updatePasswordState}
+          />
+      </div>
+      
+      
+        <input type="submit" value="Logg inn" />
         <p>{this.state.errorMessage}</p>
         <StyledLink to="/">Google/Facebook</StyledLink>
       </form>
