@@ -33,7 +33,6 @@ html {
 }
 body {
   box-sizing: border-box;
-  padding: 1rem;
   margin: 0;
   font-family: "Exo 2", sans-serif;
   font-weight: 400;
@@ -45,6 +44,7 @@ body {
   text-align: center;
 }
 
-input {
+input, textarea {
+  font-family: 'Exo 2', sans-serif;
   font-size: 1rem;
 }

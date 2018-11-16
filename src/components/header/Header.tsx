@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
-import Container from '../common/container/Container';
 import firebase from '../firebase/firebase';
 import { logout as logoutAction } from '../../state/actions/user';
 import { ApplicationState } from '../../state/reducers';
 import { UserState } from '../../state/reducers/types';
+import { APP_TITLE } from '../../constants';
+import { NavLink } from '../common/Link';
+import { RouterProps } from 'react-router';
+import { RouteComponentProps } from 'react-router-dom';
 
 const StyledHeader = styled.div`
   display: flex;
@@ -16,13 +18,6 @@ const StyledHeader = styled.div`
   align-items: center;
 `;
 
-const ActionButtons = styled.div`
-
-`;
-
-const StyledBack = styled.div`
-
-`;
 function logOut(setFeedback: (n: string) => void, logout: () => void) {
   firebase.auth().signOut().then(() => {
     setFeedback('Du er nå logget ut');
@@ -33,7 +28,7 @@ function logOut(setFeedback: (n: string) => void, logout: () => void) {
   });
 }
 
-interface HeaderProps {
+export interface HeaderProps {
   user?: UserState;
   logout: () => void;
 }
@@ -43,21 +38,41 @@ const HeaderComponent = ({ user, logout } : HeaderProps) => {
   if (!user || !user.uid) {
     return null;
   }
+
+  const H1 = styled.h1`
+    color: white;
+  `;
+  const UserEmail = styled.span`
+    margin-right: 10px;
+  `;
+  const UserInfo = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: .5rem;
+  `;
+  const ActionButtons = styled.div`
+    display: flex;
+    width: 100%;
+  `;
+  const CustomNavLink = styled(NavLink)`
+    width: 50%;
+  `;
   return (
-    <Container>
-      <h1>Hvilken ønskeliste vil du se?</h1>
+    <>
+      <H1>{APP_TITLE}</H1>
+      <UserInfo>
+        <UserEmail>{user ? user.email : 'Ukjent'}</UserEmail>
+        <button type="button" className="button-navigation button--square" onClick={() => logOut(setFeedback, logout)}>Logg ut</button>
+        {feedback}
+      </UserInfo>
       <StyledHeader>
         <ActionButtons>
-          <Link className="smallspace button button--padded" to="/">Din</Link>
-          <Link className="smallspace button button--padded" to="/others">Andres</Link>
+          <CustomNavLink activeClassName="selected" exact to="">Mine ønsker</CustomNavLink>
+          <CustomNavLink activeClassName="selected" to="/others">Vennelister</CustomNavLink>
         </ActionButtons>
-        <StyledBack>
-          <p>Innlogget som {user ? user.email : 'Ukjent'}</p>
-          <button type="button" className="select-user__logout button-navigation button--square" onClick={() => logOut(setFeedback, logout)}>Logg ut</button>
-          {feedback}
-        </StyledBack>
       </StyledHeader>
-    </Container>
+    </>
   );
 };
 

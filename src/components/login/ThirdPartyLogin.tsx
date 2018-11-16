@@ -5,9 +5,8 @@ import facebook from '../firebase/facebooklogin';
 import firebase from '../firebase/firebase';
 
 import { ReactComponent as FbIcon } from './facebook-icon.svg';
-import * as colors from '../../styles/colors';
 import Spinner from '../common/Spinner';
-import StyledLink from '../common/StyledLink';
+import { Link } from '../common/Link';
 import { BorderButton } from '../common/Button';
 
 const debug = require('debug')('ThirdPartyLogin');
@@ -65,7 +64,7 @@ class ThirdPartyLogin extends React.Component<{}, State> {
           }
           
         </SmButton>
-        <StyledLink to="/internal">Passord/brukernavn?</StyledLink>
+        <Link to="/internal">Passord/brukernavn?</Link>
       </>
     );
   }

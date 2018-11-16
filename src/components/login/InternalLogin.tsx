@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import StyledLink from '../common/StyledLink';
+import { Link } from '../common/Link';
 import colors from '../../styles/colors';
 import { BorderInput } from '../common/Button';
 
@@ -102,7 +102,7 @@ class InternalLogin extends React.Component<{}, State> {
       />
         <SubmitButton type="submit" value="Logg inn" />
         <p>{this.state.errorMessage}</p>
-        <StyledLink to="/">Google/Facebook</StyledLink>
+        <Link to="/">Google/Facebook</Link>
       </form>
     );
   }
