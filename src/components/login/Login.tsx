@@ -84,8 +84,8 @@ class Login extends React.Component<Props, State> {
         <LoginContainer>
             <H1>ØNSK DEG NOE</H1>
             <Switch>
-              <Route path="/" exact component={ThirdPartyLogin} />
               <Route path="/internal" component={InternalLogin} />
+              <Route component={ThirdPartyLogin} />
             </Switch>
             <StyledParagraph>{feedback}</StyledParagraph>
         </LoginContainer>
