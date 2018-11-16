@@ -7,7 +7,7 @@
 }
 
 // Font
-$default-font-size: 1.6rem;
+$default-font-size: 1.1rem;
 $color-grey-dark: #777;
 
 @mixin respond($breakpoint) {
@@ -32,13 +32,9 @@ body {
     box-sizing: border-box;
     padding: 3rem;
 
-    font-family: "Lato", sans-serif;
+    font-family: "Exo 2", sans-serif;
     font-weight: 400;
     font-size: $default-font-size;
     line-height: 1.7;
     color: $color-grey-dark;
-
-    // @include respond(tab-port) {
-    //     padding: 0;
-    // }
 }

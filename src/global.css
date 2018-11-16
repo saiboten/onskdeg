@@ -35,7 +35,7 @@ html {
     -ms-transition: background-color 0.2s ease-in-out 0s, opacity 0.2s ease-in-out 0s;
     transition: background-color 0.2s ease-in-out 0s, opacity 0.2s ease-in-out 0s;
     font-weight: 600;
-    font-family: "Open Sans", "Helvetica Neue", Arial, Helvetica, Verdana, sans-serif;
+    font-family: 'Exo 2' sans-serif;
     text-align: center;
     vertical-align: middle;
     -webkit-user-select: none;
@@ -77,7 +77,7 @@ html {
     align-items: center;
     color: white;
     font-weight: 600;
-    font-family: "Open Sans", "Helvetica Neue", Arial, Helvetica, Verdana, sans-serif;
+    font-family: 'Exo 2', sans-serif;
     text-align: center;
     vertical-align: middle;
     -webkit-user-select: none;
@@ -122,7 +122,7 @@ ul {
 h1, h2, h3, h4, h5, .h1, .h2, .h3, .h4, .h5 {
     font-weight: 600;
     color: #484848;
-    font-family: "Open Sans","Helvetica Neue",Arial,Helvetica,Verdana,sans-serif;
+    font-family: 'Exo 2', sans-serif;
     outline: 0;
 }
 
@@ -141,7 +141,7 @@ h1, h2, h3, h4, h5, .h1, .h2, .h3, .h4, .h5 {
 }
 
 h1, .h1 {
-  font-size: 40px;
+  font-size: 36px;
   line-height: 1.6em;
   margin-bottom: 10px;
   letter-spacing: -0.029em;

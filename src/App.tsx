@@ -26,7 +26,7 @@ const AppComp = ({ user } : AppProps) => {
   if (!user || !user.loaded) {
     return <Loading />;
   }
-  if (!user || !user.uid) {
+  if (!user.uid) {
     return <Login />;
   }
   return (
