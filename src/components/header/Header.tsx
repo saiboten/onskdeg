@@ -28,11 +28,13 @@ function logOut(setFeedback: (n: string) => void, logout: () => void) {
   });
 }
 
+const othersActive = (match: any, location: any) => location.pathname.startsWith("/other");
+
 export interface HeaderProps {
   user?: UserState;
   logout: () => void;
 }
-const HeaderComponent = ({ user, logout } : HeaderProps) => {
+const HeaderComponent = ({ user, logout }: HeaderProps) => {
   const [feedback, setFeedback] = useState('');
 
   if (!user || !user.uid) {
@@ -69,7 +71,7 @@ const HeaderComponent = ({ user, logout } : HeaderProps) => {
       <StyledHeader>
         <ActionButtons>
           <CustomNavLink activeClassName="selected" exact to="">Mine ønsker</CustomNavLink>
-          <CustomNavLink activeClassName="selected" to="/others">Vennelister</CustomNavLink>
+          <CustomNavLink activeClassName="selected" isActive={othersActive} to="/others">Vennelister</CustomNavLink>
         </ActionButtons>
       </StyledHeader>
     </>
