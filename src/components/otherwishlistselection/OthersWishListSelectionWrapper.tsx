@@ -10,7 +10,7 @@ import firebase from '../firebase/firebase';
 import { loadFriends, setFriends } from '../../state/actions/friends';
 import spinnerWhileLoading from '../common/spinnerWhileLoading';
 import { User, FirebaseSnapshot } from '../../types/types';
-import { deleteFriend as deleteFriendAction } from '../../state/actions/friends';
+import { deleteFriend as deleteFriendAction, addFriend as addFriendAction } from '../../state/actions/friends';
 
 const debug = require('debug')('OthersWishListSelection');
 
@@ -27,6 +27,7 @@ const StyledHeader = styled.div`
 interface P {
   user: User;
   friends: Array<User>;
+  addFriend: (newFriendMail: string) => void;
   deleteFriend: (email: string) => void;
   updateFriendStore: (newFriendList: Array<User>) => void;
 }
@@ -84,7 +85,8 @@ class OthersWishListSelection extends React.Component<P,S> {
   }
 
   addUser(newUserMail: string) {
-    // FIXME rewrite
+    const { addFriend } = this.props;
+    addFriend(newUserMail);
   }
 
   deleteUser(email: string) {
@@ -142,6 +144,9 @@ export default connect(
     },
     updateFriendStore(newFriendList: Array<User>) {
       dispatch(setFriends(newFriendList));
+    },
+    addFriend(newFriendMail: string) {
+      dispatch(addFriendAction(newFriendMail));
     }
   }),
 )(WithSpinner);
