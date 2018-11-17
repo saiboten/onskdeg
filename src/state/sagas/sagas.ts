@@ -8,7 +8,7 @@ import { User, Wish } from '../../types/types';
 
 function getUserList(currentUser: User) {
   return new Promise(((resolve) => {
-    firebase.database().ref(`users/${currentUser.uid}/users`).once('value', (snapshot) => {
+    firebase.database().ref(`users/${currentUser.uid}/friends`).once('value', (snapshot) => {
       if(snapshot == null) {
         return;
       }
@@ -50,11 +50,14 @@ function* storeWishesToFirebaseSaga(input: any) {
 
 function getFriendByEmail(mail: string) {
      return new Promise((resolve, reject) => {
-    firebase.database().ref(`userlist`).once('value', (snapshot) => {
+    firebase.database().ref(`users`).once('value', (snapshot) => {
       if(snapshot == null) {
         return;
       }
-      const userlist = snapshot.val();
+      const usersObj = snapshot.val();
+      const userlistKeys = Object.keys(usersObj);
+      const userlist = userlistKeys.map(key => usersObj[key]);
+
       const filteredList: Array<User> = userlist.filter((user: User) => user.email === mail);
       
       if(filteredList.length == 1) {
@@ -75,7 +78,7 @@ function* addFriend(input: any) {
   const newFriend = yield getFriendByEmail(newFriendMail);
   if(newFriend) {
     const newUserList = [newFriend, ...friends];
-    firebase.database().ref(`users/${uid}/users`).set(newUserList);
+    firebase.database().ref(`users/${uid}/friends`).set(newUserList);
     yield put({ type: 'FRIEND_FOUND_AND_ADDED', newFriend});
   }
   else {
@@ -91,7 +94,15 @@ function* deleteFriend(input: any) {
   const { email } = input;
 
   const newUserList = friends.filter((friend: User) => friend.email !== email);
-  firebase.database().ref(`users/${uid}/users`).set(newUserList);
+  firebase.database().ref(`users/${uid}/friends`).set(newUserList);
+}
+
+function* setName(input: any) {
+  const { name } = input;
+
+  const user = yield select(userSelect);
+  user.name = name;
+  // firebase.database().ref(`userlist`).set(newUserList); TODO
 }
 
 function* mySaga() {
@@ -101,6 +112,8 @@ function* mySaga() {
   yield takeEvery('STORE_OWN_WISHES_TO_FIREBASE', storeWishesToFirebaseSaga);
   yield takeEvery('ADD_FRIEND', addFriend);
   yield takeEvery('DELETE_FRIEND', deleteFriend);
+  yield takeEvery('SET_NAME', setName);
+  
 }
 
 export default mySaga;

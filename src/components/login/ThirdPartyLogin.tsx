@@ -8,6 +8,7 @@ import { ReactComponent as FbIcon } from './facebook-icon.svg';
 import Spinner from '../common/Spinner';
 import { Link } from '../common/Link';
 import { BorderButton } from '../common/Button';
+import { User } from '../../types/types';
 
 const debug = require('debug')('ThirdPartyLogin');
 

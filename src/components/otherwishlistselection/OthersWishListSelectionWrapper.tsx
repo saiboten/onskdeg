@@ -62,7 +62,7 @@ class OthersWishListSelection extends React.Component<P,S> {
     const { user, updateFriendStore } = this.props;
     const { uid } = user;
 
-    this.firebaseRef = firebase.database().ref(`users/${uid}/users`);
+    this.firebaseRef = firebase.database().ref(`users/${uid}/friends`);
     this.firebaseRef.on('value', (snapshot: FirebaseSnapshot) => {
       updateFriendStore(snapshot.val());
     });

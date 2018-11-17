@@ -12,6 +12,7 @@ export interface UserState {
   readonly loaded: boolean;
   readonly uid?: string;
   readonly email?: string;
+  readonly name?: string;
 }
 
 

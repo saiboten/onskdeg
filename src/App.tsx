@@ -9,6 +9,7 @@ import OthersWishListSelection from './components/otherwishlistselection/OthersW
 import OthersWishList from './components/others/OthersWishList';
 import Header, { HeaderProps } from './components/header/Header';
 import Login from './components/login/Login';
+import SetName from './components/setname/SetName';
 
 import store from './store';
 
@@ -30,6 +31,11 @@ const AppComp = ({ user } : AppProps) => {
   if (!user.uid) {
     return <Login />;
   }
+
+  if (!user.name) {
+    return <SetName />;
+  }
+
   return (
     <BrowserRouter>
       <React.Fragment>

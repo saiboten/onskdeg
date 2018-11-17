@@ -78,7 +78,6 @@ class Login extends React.Component<Props, State> {
       feedback: '',
       submitting: false,
     };
-    this.loginFacebook = this.loginFacebook.bind(this);
   }
 
   componentDidMount() {
@@ -96,14 +95,6 @@ class Login extends React.Component<Props, State> {
         });
       }
     });
-  }
-  loginFacebook(e: React.MouseEvent<HTMLButtonElement>) {
-    debug('loginFacebook', e);
-
-    e.preventDefault();
-    e.stopPropagation();
-    this.setState({ submitting: true });
-    firebase.auth().signInWithRedirect(facebook);
   }
 
   render() {
