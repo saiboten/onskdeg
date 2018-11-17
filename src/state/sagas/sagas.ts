@@ -61,7 +61,7 @@ function getFriendByEmail(mail: string) {
         resolve(filteredList.reduce((e: User)=>e));
       }
       else {
-        reject();
+        resolve();
       }
     });
   });
