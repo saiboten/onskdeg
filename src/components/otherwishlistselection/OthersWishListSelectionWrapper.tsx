@@ -7,9 +7,10 @@ import AddedUserLink from './addeduserlink/AddedUserLink';
 import store from '../../store';
 import Container from '../common/container/Container';
 import firebase from '../firebase/firebase';
-import { loadFriends } from '../../state/actions/friends';
+import { loadFriends, setFriends } from '../../state/actions/friends';
 import spinnerWhileLoading from '../common/spinnerWhileLoading';
-import { User } from '../../types/types';
+import { User, FirebaseSnapshot } from '../../types/types';
+import { deleteFriend as deleteFriendAction } from '../../state/actions/friends';
 
 const debug = require('debug')('OthersWishListSelection');
 
@@ -25,22 +26,26 @@ const StyledHeader = styled.div`
 
 interface P {
   user: User;
+  friends: Array<User>;
+  deleteFriend: (email: string) => void;
+  updateFriendStore: (newFriendList: Array<User>) => void;
 }
 
 interface S {
-  users: Array<User>;
   newUser: string;
   feedback: string;
 }
 
 class OthersWishListSelection extends React.Component<P,S> {
+
+  firebaseRef: any;
+
   constructor(props: any) {
     super(props);
     const { friends } = props;
     const initialUsers = friends || [];
 
     this.state = {
-      users: initialUsers,
       newUser: '',
       feedback: '',
     };
@@ -48,6 +53,20 @@ class OthersWishListSelection extends React.Component<P,S> {
     this.addUserClickEvent = this.addUserClickEvent.bind(this);
     this.deleteUser = this.deleteUser.bind(this);
     this.addUser = this.addUser.bind(this);
+  }
+
+  componentDidMount() {
+    const { user, updateFriendStore } = this.props;
+    const { uid } = user;
+
+    this.firebaseRef = firebase.database().ref(`users/${uid}/users`);
+    this.firebaseRef.on('value', (snapshot: FirebaseSnapshot) => {
+      updateFriendStore(snapshot.val());
+    });
+  }
+
+  componentWillUnmount() {
+    this.firebaseRef.off();
   }
 
   updateUserState(e: React.ChangeEvent<HTMLInputElement>) {
@@ -69,24 +88,15 @@ class OthersWishListSelection extends React.Component<P,S> {
   }
 
   deleteUser(email: string) {
-    debug('deleteUser', email);
-    const { user } = this.props;
-    const { users } = this.state;
-
-    const userList = users.slice();
-    const newUserList = userList.filter(stateUser => stateUser.email !== email);
-
-    firebase.database().ref(`users/${user.uid}`).set({ users: newUserList });
-    if (newUserList.length === 0) {
-      this.setState({
-        users: [],
-      });
-    }
+    const { deleteFriend } = this.props;
+    deleteFriend(email);
   }
 
   render() {
-    const { users, newUser, feedback } = this.state;
-    const usersLinks = users.map(el => (<AddedUserLink key={el.uid} deleteMe={this.deleteUser} el={el} />));
+    const { newUser, feedback } = this.state;
+    const { friends } = this.props;
+
+    const usersLinks = friends.map(el => (<AddedUserLink key={el.uid} deleteMe={this.deleteUser} el={el} />));
 
     return (
       <Container>
@@ -127,5 +137,11 @@ export default connect(
   ),
   dispatch => ({
     load: () => dispatch(loadFriends()),
+    deleteFriend: (email: string) => {
+      dispatch(deleteFriendAction(email));
+    },
+    updateFriendStore(newFriendList: Array<User>) {
+      dispatch(setFriends(newFriendList));
+    }
   }),
 )(WithSpinner);

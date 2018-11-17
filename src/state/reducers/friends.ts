@@ -15,6 +15,12 @@ const reducer: Reducer<FriendsState> = (state = initialState, action) => {
         loading: true,
       };
     }
+    case 'SET_FRIENDS': {
+      return {
+        ...state,
+        friends: action.newFriendList,
+      };
+    }
     case 'FRIENDS_LOADED': {
       return {
         ...state,

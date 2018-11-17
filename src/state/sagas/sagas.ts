@@ -2,7 +2,7 @@ import {
   put, takeEvery, select, call,
 } from 'redux-saga/effects';
 import firebase from '../../components/firebase/firebase';
-import getCurrentUser from '../selectors/getCurrentUser';
+import { user as userSelect, friends as friendsSelect } from '../selectors/selectors';
 import { setWishesForUser, storeWishesToFirebase } from '../actions/wish';
 import { User, Wish } from '../../types/types';
 
@@ -19,14 +19,14 @@ function getUserList(currentUser: User) {
 }
 
 function* loadUserList() {
-  const currentUser = yield select(getCurrentUser);
+  const currentUser = yield select(userSelect);
   const data = yield call(getUserList, currentUser);
   yield put({ type: 'FRIENDS_LOADED', data });
 }
 
 function* setOwnWishes(input: any) {
   const { wishes } = input;
-  const { uid } = yield select(getCurrentUser);
+  const { uid } = yield select(userSelect);
 
   yield put(setWishesForUser({ uid, wishes }));
 }
@@ -42,10 +42,20 @@ function storeWishes(input: any) {
 }
 
 function* storeWishesToFirebaseSaga(input: any) {
-  const currentUser = yield select(getCurrentUser);
+  const currentUser = yield select(userSelect);
   const { uid } = currentUser;
   const { wishes } = input;
   yield put(storeWishesToFirebase(uid, wishes));
+}
+
+function* deleteFriend(input: any) {
+  const user = yield select(userSelect);
+  const friends = yield select(friendsSelect);
+  const { uid } = user;
+  const { email } = input;
+
+  const newUserList = friends.filter((friend: User) => friend.email !== email);
+  firebase.database().ref(`users/${uid}/users`).set(newUserList);
 }
 
 function* mySaga() {
@@ -53,6 +63,7 @@ function* mySaga() {
   yield takeEvery('SET_OWN_WISHES', setOwnWishes);
   yield takeEvery('STORE_WISHES_TO_FIREBASE', storeWishes);
   yield takeEvery('STORE_OWN_WISHES_TO_FIREBASE', storeWishesToFirebaseSaga);
+  yield takeEvery('DELETE_FRIEND', deleteFriend);
 }
 
 export default mySaga;
