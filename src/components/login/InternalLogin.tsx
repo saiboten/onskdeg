@@ -4,6 +4,7 @@ import { Link } from '../common/Link';
 import colors from '../../styles/colors';
 import { BorderInput } from '../common/Button';
 import firebase from '../firebase/firebase';
+import { string } from 'prop-types';
 
 const debug = require('debug')('InternalLogin');
 

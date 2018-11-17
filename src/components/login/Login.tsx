@@ -8,6 +8,7 @@ import facebook from '../firebase/facebooklogin';
 import { User } from '../../types/types';
 import ThirdPartyLogin from './ThirdPartyLogin';
 import InternalLogin from './InternalLogin';
+import colors from '../../styles/colors';
 
 const debug = require('debug')('SelectUser');
 
@@ -18,11 +19,44 @@ const StyledParagraph = styled.p`
   margin: 2rem;
 `;
 
+const StyledCircleContainer = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+`;
+
+function getRandomInt(min: number, max: number) {
+  var num = Math.floor((Math.random() * Math.floor(max)));
+  if(num < min) {
+    num += min;
+  }
+  return num;
+}
+
+interface StyledCircleProps {
+  size: string;
+  top: string;
+  left: string;
+}
+
+const StyledCircle = styled.div`
+  background-color: ${colors.goldDark};
+  border-radius: 50%;
+  filter: opacity(.5);
+  position: absolute;
+  width: ${(props: StyledCircleProps) => props.size};
+  height: ${props => props.size};
+  top: ${props => props.top};
+  left: ${props => props.left};
+`;
+
 const LoginContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   color: white;
+  height: 100%;
 `;
 
 interface Props {
@@ -48,7 +82,7 @@ class Login extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    
+
     debug('componentDidMount');
 
     firebase.auth().getRedirectResult().then(() => {
@@ -79,15 +113,27 @@ class Login extends React.Component<Props, State> {
       color: white;
       font-weight: 400;
     `;
+
+    const circles = Array(15).fill(0).map(
+      (el, index) =>
+        <StyledCircle
+          key={index}
+          size={`${getRandomInt(50, 500)}px`}
+          top={`${getRandomInt(0, 100)}%`}
+          left={`${getRandomInt(0, 100)}%`} />);
+
     return (
       <BrowserRouter>
         <LoginContainer>
-            <H1>ØNSK DEG NOE</H1>
-            <Switch>
-              <Route path="/internal" component={InternalLogin} />
-              <Route component={ThirdPartyLogin} />
-            </Switch>
-            <StyledParagraph>{feedback}</StyledParagraph>
+          <H1>GAVEØNSKE.NO</H1>
+          <Switch>
+            <Route path="/internal" component={InternalLogin} />
+            <Route component={ThirdPartyLogin} />
+          </Switch>
+          <StyledParagraph>{feedback}</StyledParagraph>
+          <StyledCircleContainer>
+            {circles}
+          </StyledCircleContainer>
         </LoginContainer>
       </BrowserRouter>
     );
@@ -95,9 +141,9 @@ class Login extends React.Component<Props, State> {
 }
 
 const mapStateToProps = ({ user }: { user: User }) => (
-{
-  user,
-});
+  {
+    user,
+  });
 
 export default connect(
   mapStateToProps, null,
