@@ -11,6 +11,7 @@ const obj = {
       debug('onAuthStateChanged. User logged in: ', user);
 
       if (user) {
+        // TODO - check if user exists, if he does, get his name and store it to firebase + the other user info
         store.dispatch(userLoaded(user));
       } else {
         store.dispatch(userLoaded(null));
