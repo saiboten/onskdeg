@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Link } from '../common/Link';
 import colors from '../../styles/colors';
 import { BorderInput } from '../common/Button';
+import firebase from '../firebase/firebase';
 
 const debug = require('debug')('InternalLogin');
 
@@ -95,7 +96,7 @@ class InternalLogin extends React.Component<{}, State> {
       <label htmlFor="password" className="screen-reader-only">Passord</label>
       <StyledInput
         id="password"
-        type="password"
+        type="text"
         placeholder="Passord"
         value={this.state.password}
         onChange={this.updatePasswordState}
