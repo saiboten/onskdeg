@@ -5,6 +5,8 @@ const initialState: FriendsState = {
   loaded: false,
   loading: false,
   friends: [],
+  userNotFound: false,
+  newFriend: undefined
 };
 
 const reducer: Reducer<FriendsState> = (state = initialState, action) => {
@@ -29,6 +31,21 @@ const reducer: Reducer<FriendsState> = (state = initialState, action) => {
         loaded: true,
       };
     }
+    case 'FRIEND_NOT_FOUND': {
+      return {
+        ...state,
+        userNotFound: true
+      };
+    }
+    case 'FRIEND_FOUND_AND_ADDED': {
+      const { newFriend } = action;
+      return {
+        ...state,
+        userNotFound: false,
+        newFriend
+      };
+    }
+    
     default:
       return { ...state };
   }

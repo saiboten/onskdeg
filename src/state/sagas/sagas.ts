@@ -76,6 +76,7 @@ function* addFriend(input: any) {
   if(newFriend) {
     const newUserList = [newFriend, ...friends];
     firebase.database().ref(`users/${uid}/users`).set(newUserList);
+    yield put({ type: 'FRIEND_FOUND_AND_ADDED', newFriend});
   }
   else {
     yield put({ type: 'FRIEND_NOT_FOUND'});

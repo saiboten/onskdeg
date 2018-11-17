@@ -30,6 +30,8 @@ interface P {
   addFriend: (newFriendMail: string) => void;
   deleteFriend: (email: string) => void;
   updateFriendStore: (newFriendList: Array<User>) => void;
+  newFriend: User;
+  userNotFound: boolean;
 }
 
 interface S {
@@ -82,6 +84,9 @@ class OthersWishListSelection extends React.Component<P,S> {
 
     e.preventDefault();
     this.addUser(newUser);
+    this.setState({
+      newUser: ''
+    })
   }
 
   addUser(newUserMail: string) {
@@ -96,7 +101,7 @@ class OthersWishListSelection extends React.Component<P,S> {
 
   render() {
     const { newUser, feedback } = this.state;
-    const { friends } = this.props;
+    const { friends, newFriend, userNotFound } = this.props;
 
     const usersLinks = friends.map(el => (<AddedUserLink key={el.uid} deleteMe={this.deleteUser} el={el} />));
 
@@ -115,6 +120,7 @@ class OthersWishListSelection extends React.Component<P,S> {
           <input className="button button--padded" type="submit" value="OK" />
         </form>
 
+        {userNotFound && <p>Fant ikke bruker</p>}
         <p>{feedback}</p>
       </Container>
     );
@@ -129,8 +135,10 @@ const WithSpinner = spinnerWhileLoading(({ loaded, loading, load }: { loaded: bo
 })(OthersWishListSelection);
 
 export default connect(
-  ({ user, friends: { friends, loaded, loading } }: { user: User, friends: { friends: Array<User>, loaded: boolean, loading: boolean } }) => (
+  ({ user, friends: { friends, loaded, loading, newFriend, userNotFound } }: { user: User, friends: { friends: Array<User>, loaded: boolean, loading: boolean, newFriend: User, userNotFound: boolean } }) => (
     {
+      newFriend,
+      userNotFound,
       user,
       friends,
       loaded,
