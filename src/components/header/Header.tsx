@@ -52,6 +52,7 @@ const HeaderComponent = ({ user, logout }: HeaderProps) => {
     align-items: center;
     justify-content: flex-end;
     margin-bottom: .5rem;
+    padding-right: .5rem;
   `;
   const ActionButtons = styled.div`
     display: flex;
