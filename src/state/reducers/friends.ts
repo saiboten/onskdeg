@@ -37,15 +37,6 @@ const reducer: Reducer<FriendsState> = (state = initialState, action) => {
         userNotFound: true
       };
     }
-    case 'FRIEND_FOUND_AND_ADDED': {
-      const { newFriend } = action;
-      return {
-        ...state,
-        userNotFound: false,
-        newFriend
-      };
-    }
-    
     default:
       return { ...state };
   }
