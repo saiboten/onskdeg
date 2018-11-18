@@ -97,12 +97,21 @@ function* deleteFriend(input: any) {
   firebase.database().ref(`users/${uid}/friends`).set(newUserList);
 }
 
-function* setName(input: any) {
-  const { name } = input;
-
+function* setNameAndEmail(input: any) {
+  const { name, email } = input;
+  
   const user = yield select(userSelect);
-  user.name = name;
-  // firebase.database().ref(`userlist`).set(newUserList); TODO
+  firebase.database().ref(`users/${user.uid}/name`).set(name);
+  if(email) {
+    firebase.database().ref(`users/${user.uid}/email`).set(email);
+  }
+  yield put({
+    type: 'USER_LOADED',
+    user: {
+      ...user,
+      name
+    }
+  });
 }
 
 function* mySaga() {
@@ -112,7 +121,7 @@ function* mySaga() {
   yield takeEvery('STORE_OWN_WISHES_TO_FIREBASE', storeWishesToFirebaseSaga);
   yield takeEvery('ADD_FRIEND', addFriend);
   yield takeEvery('DELETE_FRIEND', deleteFriend);
-  yield takeEvery('SET_NAME', setName);
+  yield takeEvery('SET_NAME_AND_EMAIL', setNameAndEmail);
   
 }
 

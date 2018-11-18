@@ -1,8 +1,9 @@
 import { User } from "../../types/types";
 
-export const setName = (name: string) => ({
-  type: 'SET_NAME',
-  name
+export const setNameAndEmail = (name: string, email?: string) => ({
+  type: 'SET_NAME_AND_EMAIL',
+  name,
+  email
 });
 
 export const userLoaded = (user: User | null) => (
