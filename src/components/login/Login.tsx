@@ -70,6 +70,7 @@ class Login extends React.Component<Props, State> {
     const H1 = styled.h1`
       color: white;
       font-weight: 400;
+      margin: 4rem 0;
     `;
 
     

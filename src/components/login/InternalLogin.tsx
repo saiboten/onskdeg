@@ -5,6 +5,7 @@ import colors from '../../styles/colors';
 import { BorderInput } from '../common/Button';
 import firebase from '../firebase/firebase';
 import { string } from 'prop-types';
+import Icon from '../common/Icon';
 
 const debug = require('debug')('InternalLogin');
 
@@ -28,11 +29,25 @@ const SubmitButton = styled(BorderInput)`
   width: 100%;
 `;
 
+const PasswordContainer = styled.div`
+  position: relative;
+`;
+
+const StyledPeek = styled.button`
+    position: absolute;
+    border: 0;
+    background-color: transparent;
+    right: 15px;
+    top: -8px;
+    color: white;
+`;
+
 interface State {
   user: string;
   password: string;
   submitting: boolean;
   errorMessage: string;
+  peek: boolean;
 }
 class InternalLogin extends React.Component<{}, State> {
   constructor(props: any) {
@@ -41,11 +56,13 @@ class InternalLogin extends React.Component<{}, State> {
       user: '',
       password: '',
       submitting: false,
-      errorMessage: ''
+      errorMessage: '',
+      peek: false
     };
     this.updateUserState = this.updateUserState.bind(this);
     this.updatePasswordState = this.updatePasswordState.bind(this);
     this.logIn = this.logIn.bind(this);
+    this.togglePeek = this.togglePeek.bind(this);
   }
   updateUserState(e: React.ChangeEvent<HTMLInputElement>) {
     debug('updateUserState', e);
@@ -88,20 +105,28 @@ class InternalLogin extends React.Component<{}, State> {
     });
   }
 
+  togglePeek() {
+    this.setState(({ peek }) => ({ peek: !peek }));
+  }
+
   render() {
     return (
       <form onSubmit={this.logIn}>
-      <label htmlFor="username" className="screen-reader-only">Brukernavn</label>
-      <StyledInput id="username" value={this.state.user} onChange={this.updateUserState} placeholder="Brukernavn" />
+        <label htmlFor="username" className="screen-reader-only">Brukernavn</label>
+        <StyledInput id="username" value={this.state.user} onChange={this.updateUserState} placeholder="Brukernavn" />
 
-      <label htmlFor="password" className="screen-reader-only">Passord</label>
-      <StyledInput
-        id="password"
-        type="text"
-        placeholder="Passord"
-        value={this.state.password}
-        onChange={this.updatePasswordState}
-      />
+        <PasswordContainer>
+          <label htmlFor="password" className="screen-reader-only">Passord</label>
+          <StyledInput
+            id="password"
+            type={this.state.peek ? "text" : "password"}
+            placeholder="Passord"
+            value={this.state.password}
+            onChange={this.updatePasswordState}
+          />
+          <StyledPeek type="button" onClick={this.togglePeek}><Icon type="button" name={this.state.peek ? 'eye-off' : 'eye'} onClick={() => null} /></StyledPeek>
+        </PasswordContainer>
+
         <SubmitButton type="submit" value="Logg inn" />
         <p>{this.state.errorMessage}</p>
         <Link to="/">Google/Facebook</Link>

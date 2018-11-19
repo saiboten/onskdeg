@@ -60,7 +60,7 @@ class ThirdPartyLogin extends React.Component<{}, State> {
             <ButtonSpinner />
             : <>
               <FacebookIcon />
-              Logg på med facebook
+              Logg på med Facebook
             </>
           }
           
