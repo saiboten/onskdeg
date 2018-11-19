@@ -58,7 +58,7 @@ class Login extends React.Component<Props, State> {
 
       if (error) {
         this.setState({
-          feedback: 'Klarte ikke å logge deg inn med facebook, beklager det.',
+          feedback: `Klarte ikke å logge deg inn med facebook. Feil: ${error}`,
         });
       }
     });
