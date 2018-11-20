@@ -12,6 +12,8 @@ import { setWishesForUser, storeWishesToFirebase } from '../../state/actions/wis
 import Icon from '../common/Icon';
 import { User, Wish, Match } from '../../types/types';
 import { ApplicationState } from '../../state/reducers';
+import spinnerWhileLoading from '../common/spinnerWhileLoading';
+import { loadFriends } from '../../state/actions/friends';
 
 const ActionButtonsContainer = styled.div`
   display: flex;
@@ -26,10 +28,10 @@ interface Props {
   storeWishes: (name: string, newWishList: Array<Wish>) => void;
   user: User;
   wishes: Array<Wish>;
+  friend: User;
 }
 interface State {
   hideSelected: boolean;
-  userState: string;
   feedback: string;
 }
 class OthersWishList extends React.Component<Props, State> {
@@ -39,7 +41,7 @@ class OthersWishList extends React.Component<Props, State> {
     super(props);
     debug('constructor');
     this.state = {
-      hideSelected: true, userState: '', feedback: '',
+      hideSelected: true, feedback: '',
     };
     this.check = this.check.bind(this);
     this.toggleShowSelected = this.toggleShowSelected.bind(this);
@@ -107,9 +109,9 @@ class OthersWishList extends React.Component<Props, State> {
 
   render() {
     const {
-      hideSelected, userState, feedback,
+      hideSelected, feedback,
     } = this.state;
-    const { wishes } = this.props;
+    const { wishes, friend } = this.props;
 
     const filteredWishes = wishes.filter(this.shouldDisplayWish).map(wishInfo => (
       <OtherWish deleteSuggestion={() => null} canDelete={false} key={wishInfo.id} onClick={this.check} wishInfo={wishInfo} />));
@@ -119,8 +121,7 @@ class OthersWishList extends React.Component<Props, State> {
 
         <div className="flex-row space-between">
           <h1 className="shrink overflow-hidden">
-            {'Ønskelisten til '}
-            {userState}
+            {`Ønskelisten til ${friend.name}`}
           </h1>
         </div>
         <ActionButtonsContainer>
@@ -139,14 +140,19 @@ class OthersWishList extends React.Component<Props, State> {
   } 
 }
 
-const mapStateToProps = ({ wish, user }: ApplicationState, { match: { params: { name } } }: any) => (
-  {
+const mapStateToProps = ({ wish, user, friends: { loading, loaded, friends } }: ApplicationState, { match: { params: { name } } }: any) => {
+  const friendsFiltered = friends.filter(u => u.uid === name);
+
+  return {
     wishes: wish[name] || [],
-    name,
     user,
+    loading,
+    loaded,
+    friend: friendsFiltered.length > 0 ? friendsFiltered.reduce(e => e) : {}
   }
-);
+};
 const mapDispatchToProps = (dispatch: Dispatch) => ({
+  load: () => dispatch(loadFriends()),
   setWishes(uid: string, newWishList: Array<Wish>) {
     dispatch(setWishesForUser({ uid, wishes: newWishList }));
   },
@@ -155,6 +161,13 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   },
 });
 
-const OthersWishListWrapper = connect(mapStateToProps, mapDispatchToProps)(OthersWishList);
+const WithSpinner = spinnerWhileLoading(({ loaded, loading, load }: { loaded: boolean, loading: boolean, load: () => void}) => {
+  if (!loaded && !loading) {
+    load();
+  }
+  return !loaded;
+})(OthersWishList);
+
+const OthersWishListWrapper = connect(mapStateToProps, mapDispatchToProps)(WithSpinner);
 
 export default OthersWishListWrapper;

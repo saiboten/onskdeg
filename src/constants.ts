@@ -1,2 +1,2 @@
-export const APP_TITLE = 'ØNSKDEGNOE';
+export const APP_TITLE = 'GAVEØNSKE.NO';
 

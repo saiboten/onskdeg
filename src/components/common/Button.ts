@@ -12,6 +12,7 @@ const BorderStyles = `
   max-width: 300px;
   min-height: 48px;
   margin-bottom: 16px;
+  cursor: pointer;
 `;
 
 export const BorderButton = styled.button`

@@ -7,7 +7,10 @@ export const Link = styled(RouterLink)`
   text-decoration: none;
   border-bottom: 2px solid ${colors.primary};
   font-weight: 400;
-  &:visited {
+
+
+
+  &:visited, &:link {
     color: white;
   }
   &:hover {

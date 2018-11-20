@@ -15,11 +15,12 @@ const userReducer: Reducer<UserState> = (state = initialState, action) => {
   switch (action.type) {
     case 'USER_LOADED': {
       if (action.user) {
-        const { uid, email } = action.user;
+        const { uid, email, name } = action.user;
         return {
           ...state,
           uid,
           email,
+          name,
           loaded: true,
         };
       }

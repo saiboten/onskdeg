@@ -11,32 +11,11 @@ const obj = {
       debug('onAuthStateChanged. User logged in: ', user);
 
       if (user) {
-        store.dispatch(userLoaded(user));
-
-        firebase.database().ref('/userlist').once('value').then((snapshot: FirebaseSnapshot) => {
-          let users = snapshot.val();
-
-          const userExists = users.filter((el: User) => el.email === user.email).length === 0;
-
-          if (users === undefined) {
-            users = [];
-
-            users.push({
-              email: user.email,
-              uid: user.uid,
-            });
-
-            debug('Users to be stored after new user added', users);
-            firebase.database().ref('/userlist').set(users);
-          } else if (userExists) {
-            users.push({
-              email: user.email,
-              uid: user.uid,
-            });
-            debug('Adding user ', user, 'Users: ', users);
-            firebase.database().ref('/userlist').set(users);
-          }
+        firebase.database().ref(`users/${user.uid}/name`).once('value', (snapshot) => {
+          const name = snapshot.val();
+          store.dispatch(userLoaded({ ...user, name}));
         });
+        
       } else {
         store.dispatch(userLoaded(null));
       }

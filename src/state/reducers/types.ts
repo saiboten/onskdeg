@@ -1,15 +1,18 @@
-import { Wish } from "../../types/types";
+import { Wish, User } from "../../types/types";
 
 export interface FriendsState {
   readonly loaded: boolean;
   readonly loading: boolean;
-  readonly friends: {}[];
+  readonly friends: Array<User>;
+  readonly userNotFound: boolean;
+  readonly newFriend?: User;
 };
 
 export interface UserState {
   readonly loaded: boolean;
   readonly uid?: string;
   readonly email?: string;
+  readonly name?: string;
 }
 
 
