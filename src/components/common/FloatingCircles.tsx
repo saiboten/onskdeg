@@ -40,7 +40,7 @@ const scaleInAndOut = keyframes`
 `;
 
 const StyledCircle = styled.div`
-  background-color: ${colors.goldDark};
+  background-color: ${colors.primaryDark};
   border-radius: 50%;
   filter: opacity(.5);
   position: absolute;
