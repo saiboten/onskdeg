@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import colors from '../../styles/colors';
 
 const BorderStyles = `
-  border: 2px solid ${colors.gold};
+  border: 2px solid ${colors.primary};
   padding: 7px 14px;
   background: transparent;
   border-radius: 8px;

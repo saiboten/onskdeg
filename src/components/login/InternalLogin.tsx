@@ -14,7 +14,7 @@ const StyledInput = styled.input`
   margin-bottom: 12px;
   border: 0;
   -webkit-appearance: none;
-  background: ${colors.goldDark};
+  background: ${colors.primaryDark};
   color: white;
   width: 100%;
   &::placeholder {

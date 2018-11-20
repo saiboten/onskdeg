@@ -5,7 +5,7 @@ import Color from 'color';
 
 export const Link = styled(RouterLink)`
   text-decoration: none;
-  border-bottom: 2px solid ${colors.gold};
+  border-bottom: 2px solid ${colors.primary};
   font-weight: 400;
   &:visited {
     color: white;
@@ -16,13 +16,13 @@ export const Link = styled(RouterLink)`
 `;
 
 export const NavLink = styled(RouterNavLink)`
-  background: ${colors.goldDark};
+  background: ${colors.primaryDark};
   color: ${Color('white').darken(.3).string()};
   text-decoration: none;
   padding: .8rem;
   &.selected {
     color: white;
-    background: ${colors.gold};
+    background: ${colors.primary};
   }
 `;
 

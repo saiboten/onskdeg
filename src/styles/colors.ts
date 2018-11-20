@@ -1,9 +1,9 @@
 import Color from 'color';
 
-export const gold = "#b49b57";
-export const goldDark = Color(gold).fade(.7).string();
+export const primary = "#b49b57";
+export const primaryDark = Color(primary).fade(.7).string();
 
 export default {
-  gold,
-  goldDark,
+  primary,
+  primaryDark,
 }
