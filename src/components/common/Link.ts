@@ -1,14 +1,12 @@
 import styled from 'styled-components';
 import { Link as RouterLink, NavLink as RouterNavLink } from 'react-router-dom';
-import * as colors from '../../styles/colors';
+import colors from '../../styles/colors';
 import Color from 'color';
 
 export const Link = styled(RouterLink)`
   text-decoration: none;
   border-bottom: 2px solid ${colors.primary};
   font-weight: 400;
-
-
 
   &:visited, &:link {
     color: white;

@@ -1,14 +1,13 @@
 import React from 'react';
-import { array, any, func } from 'prop-types';
 import { connect } from 'react-redux';
 
-import Container from '../common/container/Container';
 import Wish from '../wish/Wish';
 import firebase from '../firebase/firebase';
 import Icon from '../common/Icon';
 
 import { setWishes, storeOwnWishesToFirebase } from '../../state/actions/wish';
 import { Wish as WishType, User, FirebaseSnapshot } from '../../types/types';
+import Container from '../common/container/Container';
 
 const debug = require('debug')('YourWishList');
 
@@ -69,7 +68,7 @@ class YourWishList extends React.Component<P,S> {
   /* eslint-enable */
 
 
-  updateWishState(e: React.ChangeEvent<HTMLTextAreaElement>) {
+  updateWishState(e: React.ChangeEvent<HTMLInputElement>) {
     this.setState({
       newWish: e.target.value,
     });
@@ -127,7 +126,7 @@ class YourWishList extends React.Component<P,S> {
 
   addImage(wish: WishType, image: string) {
     debug('Adding image to wish: ', wish, image);
-    const { user, wishes, storeWishesToFirebase } = this.props;
+    const { wishes, storeWishesToFirebase } = this.props;
     const newWishList = wishes.map((e) => {
       if (e.id === wish.id) {
         return {
@@ -163,7 +162,7 @@ class YourWishList extends React.Component<P,S> {
     const { wishes } = this.props;
     const { newWish, feedback } = this.state;
 
-    const wishesNew = wishes.map((el: WishType) => {
+    const wishesEl = wishes.map((el: WishType) => {
       debug('Creating wish based on this el: ', el);
       return (
         <Wish
@@ -175,32 +174,27 @@ class YourWishList extends React.Component<P,S> {
         />);
     });
 
-    debug('Wishes: ', wishesNew);
-
+    debug('Wishes: ', wishesEl);
+    
     return (
       <Container>
-
-        <div className="flex-row space-between">
-          <h1>Din ønskeliste</h1>
-        </div>
-
-        <form onSubmit={this.addWish}>
-          <div className="your-wishlist_add-wish-wrapper">
-            <textarea
+        <form onSubmit={this.addWish}>  
+          <div className="your-wishlist__add-wish-wrapper">
+            <input
+              type="text"
               placeholder="Legg inn nye ønsker her"
-              className="your-wishlist_add-wish-textarea"
+              className="your-wishlist__add-wish-textarea"
               value={newWish}
               onChange={this.updateWishState}
             />
-            <Icon type="submit" name="check" onClick={() => null} />
+            <Icon type="submit" name="check" onClick={() => null} className="your-wishlist__add-wish-submit" />
             <div>{feedback}</div>
           </div>
         </form>
 
         <div className="your-wishlist__wishlist">
-          {wishesNew}
+          {wishesEl}
         </div>
-
       </Container>
     );
   }

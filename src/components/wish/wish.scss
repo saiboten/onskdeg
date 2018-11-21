@@ -1,13 +1,4 @@
 .wish {
-  &__one-wish {
-    border: 1px solid black;
-    border-radius: 5px;
-    box-shadow: 0 1rem 2rem rgba(#000, .2);
-    &:not(:last-child) {
-      margin-bottom: 1rem;
-    }
-  }
-
   &__delete-button {
     float: right;
     margin: 5px;
@@ -21,9 +12,10 @@
   
   &__wish-text {
     line-height: 20px;
+    color: white;
     word-wrap: break-word;
     width: 99%;
-    height: 7rem;
+    height: 44px;
     background-color: #3db2d057;
     border-radius: 0;
     padding: 10px;
@@ -36,11 +28,6 @@
 
     &:focus {
       outline: none;
-      background-image: linear-gradient(
-        to bottom,
-        #fff,
-        #3db2d057
-      );
     }
   }
 }

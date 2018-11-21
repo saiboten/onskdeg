@@ -9,13 +9,13 @@ import { ApplicationState } from '../../state/reducers';
 import { UserState } from '../../state/reducers/types';
 import { APP_TITLE } from '../../constants';
 import { NavLink } from '../common/Link';
-import { RouterProps } from 'react-router';
-import { RouteComponentProps } from 'react-router-dom';
+import Container from '../common/container/Container';
 
 const StyledHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: .8rem;
 `;
 
 function logOut(setFeedback: (n: string) => void, logout: () => void) {
@@ -62,7 +62,7 @@ const HeaderComponent = ({ user, logout }: HeaderProps) => {
     width: 50%;
   `;
   return (
-    <>
+    <Container>
       <H1>{APP_TITLE}</H1>
       <UserInfo>
         <UserEmail>{user ? user.email : 'Ukjent'}</UserEmail>
@@ -75,7 +75,7 @@ const HeaderComponent = ({ user, logout }: HeaderProps) => {
           <CustomNavLink activeClassName="selected" isActive={othersActive} to="/others">Vennelister</CustomNavLink>
         </ActionButtons>
       </StyledHeader>
-    </>
+    </Container>
   );
 };
 

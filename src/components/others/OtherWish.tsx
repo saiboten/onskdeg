@@ -90,7 +90,6 @@ class OtherWish extends React.Component<P,S> {
         <div className="flex-column">
           {checkedByElem}
         </div>
-
       </div>
     );
   }

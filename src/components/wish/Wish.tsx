@@ -1,28 +1,17 @@
 import React from 'react';
-import { func, any } from 'prop-types';
 import Dropzone from 'react-dropzone';
 import styled from 'styled-components';
 
 import firebase from '../firebase/firebase';
 import Icon from '../common/Icon';
 import { Wish as WishType } from '../../types/types';
+import colors from '../../styles/colors';
 
 const storageRef = firebase.storage().ref();
 
 const debug = require('debug')('Wish');
 
 require('./wish.scss');
-
-const StyledActionButtons = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-`;
-
-const StyledWishAndActions = styled.div`
-  display: flex;
-  margin: 1rem;
-`;
 
 interface P {
   wish: WishType
@@ -106,7 +95,7 @@ class Wish extends React.Component<P,S> {
     });
   }
 
-  updateText(e: React.ChangeEvent<HTMLTextAreaElement>) {
+  updateText(e: React.ChangeEvent<HTMLInputElement>) {
     this.setState({
       text: e.target.value,
     });
@@ -159,23 +148,44 @@ class Wish extends React.Component<P,S> {
 
     const image = wish.image ? (<img className="wish__image" alt="Awesome" src={imageState} />) : '';
 
+    const StyledActionButtons = styled.div`
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    `;
+    const IconButton = styled(Icon)`
+      height: 52px;
+      width: 52px;
+      max-height: 52px;
+      max-width: 52px;
+    `;
+    const NegativeIconButton = styled(IconButton)`
+      background: ${colors.negative};
+    `;
+    const NeutralIconButton = styled(IconButton)`
+      background: ${colors.neutral};
+    `;
+    const TrashIconButton = styled(IconButton)`
+      color: ${colors.primaryLight};
+    `;
     const deleteWish = confirm
       ? (
         <StyledActionButtons>
-          <Icon type="button" name="x" onClick={this.cancel} />
-          <Icon type="button" name="check" onClick={this.deleteConfirmed} />
+          <NeutralIconButton type="button" name="x" onClick={this.cancel} />
+          <NegativeIconButton type="button" name="check" onClick={this.deleteConfirmed} />
         </StyledActionButtons>)
       : (
         <StyledActionButtons>
-          <Icon type="button" name="trash-2" onClick={this.deleteItem} />
-          <Dropzone className="wish__wish-dropzone" onDrop={this.onDrop}>
+          <TrashIconButton type="button" name="trash-2" onClick={this.deleteItem} />
+          {/* <Dropzone className="wish__wish-dropzone" onDrop={this.onDrop}>
             <Icon type="button" name="upload" onClick={() => null} />
-          </Dropzone>
+          </Dropzone> */}
         </StyledActionButtons>
       );
 
     const html = edit
-      ? (<textarea
+      ? (<input
+        type="text"
         className="wish__wish-text wish__wish-text--active"
         ref={(c) => { this.input = c; }}
         onBlur={this.focusLost}
@@ -183,16 +193,38 @@ class Wish extends React.Component<P,S> {
         value={text}
       />
       )
-      : (<textarea onClick={this.click} className="wish__wish-text" defaultValue={text} />);
-    return (
-      <div className="wish__one-wish">
+      : (<input type="text" onClick={this.click} className="wish__wish-text" defaultValue={text} />);
 
-        <StyledWishAndActions>
-          {html}
-          {deleteWish}
-        </StyledWishAndActions>
-        {image}
-      </div>
+    const StyledWishAndActions = styled.div`
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      background: ${colors.primaryDark};
+      color: white;
+      padding-left: 50px;
+      margin-bottom: 2px;
+      height: 52px;
+    `;
+    const ImageWrapper = styled.div`
+      max-width: 36px;
+      max-height: 36px;
+      overflow: hidden;
+      position: absolute;
+      left: 8px;
+      top: 8px;
+    `;
+    const LeftSection = styled.div`
+      display: flex;
+      align-items: center;
+    `;
+    return (
+      <StyledWishAndActions>
+        <LeftSection>
+          <ImageWrapper>{image}</ImageWrapper>
+          {text}
+        </LeftSection>
+        {deleteWish}
+      </StyledWishAndActions>
     );
   }
 }

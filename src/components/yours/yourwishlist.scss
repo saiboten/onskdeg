@@ -2,27 +2,32 @@
   display: flex;
   flex-direction: column;
 }
-.your-wishlist_add-wish-wrapper {
-  display: flex;
-  margin-bottom: 2rem;
-  align-items: center;
+.your-wishlist__add-wish-wrapper {
+  position: relative;
+  margin-bottom: .8rem;
 }
 
-.your-wishlist_add-wish-textarea {
-  height: 70px;
-  padding: 10px;
-  width: 100%;
+.your-wishlist__add-wish-textarea {
+  height: 48px;
+  padding: 0 10px;
+  padding-left: 40px;
+  width: calc(100% - 1.6rem);
+  margin: 0 .8rem;
+  border-radius: 10px;
+  border: none;
   @media only screen and (min-width: 37.5em) {
     flex: 1 0 70%;
   }
 }
 
-.your-wishlist_add-wish-submit {
-  margin: 10px;
+.your-wishlist__add-wish-submit {
+  position: absolute;
+  color: black;
+  top: 4px;
+  left: 19px;
+  height: 100%;
   background-color: transparent;
-  border: 2px solid #3db2d0;
-  border-radius: 5px;
-  padding: 2px;
+  border: none;
   float: right;
   cursor: pointer;
 }

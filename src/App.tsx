@@ -3,11 +3,12 @@ import {
   BrowserRouter, Route, Switch, withRouter,
 } from 'react-router-dom';
 import { Provider, connect } from 'react-redux';
+import styled from 'styled-components';
 
 import YourWishList from './components/yours/YourWishList';
 import OthersWishListSelection from './components/otherwishlistselection/OthersWishListSelectionWrapper';
 import OthersWishList from './components/others/OthersWishList';
-import Header, { HeaderProps } from './components/header/Header';
+import Header from './components/header/Header';
 import Login from './components/login/Login';
 import SetName from './components/setname/SetName';
 
@@ -35,17 +36,20 @@ const AppComp = ({ user } : AppProps) => {
   if (!user.name) {
     return <SetName />;
   }
-
+  const MainWrapper = styled.div`
+    max-width: 870px;
+    margin: 0 auto;
+  `;
   return (
     <BrowserRouter>
-      <React.Fragment>
+      <>
         <HeaderWithRouter />
         <Switch>
           <Route path="/" exact component={YourWishList} />
           <Route path="/others" component={OthersWishListSelection} />
           <Route path="/other/:name" component={OthersWishList} />
         </Switch>
-      </React.Fragment>
+      </>
     </BrowserRouter>
   );
 };
