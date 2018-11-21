@@ -1,6 +1,8 @@
 import React from 'react';
-import { any, func } from 'prop-types';
+import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import ListRow from '../../common/ListRow';
+import { GoldIconButton } from '../../common/IconButton';
 
 require('./addeduserlink.css');
 
@@ -10,16 +12,33 @@ interface NewUser {
   uid: string;
 }
 
-const AddedUserLink = ({ el, deleteMe }: { el: NewUser, deleteMe: (email: string) => void }) => (
-  <div className="added-user-link__wrapper flex-row space-between">
-    <Link className="added-user-link__link button smallspace" to={`/other/${el.uid}`}>
-      {el.name}
-    </Link>
-    <button
+const NameLink = styled(Link)`
+  text-decoration: none;
+  color: white;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  &:visited {
+    color: white;
+  }
+`;
+
+interface Props {
+  el: NewUser;
+  deleteMe: (email: string) => void;
+}
+const AddedUserLink = ({ el, deleteMe }: Props) => (
+  <ListRow>
+    <NameLink to={`/other/${el.uid}`}>{el.name}</NameLink>
+    <GoldIconButton
       type="button"
+      name="trash-2"
       className="added-user-link__delete smallspace button"
       onClick={() => deleteMe(el.email)}
-    >{'Slett'}</button>
-  </div>);
+    >
+      {'Slett'}
+    </GoldIconButton>
+  </ListRow>
+  );
 
 export default AddedUserLink;

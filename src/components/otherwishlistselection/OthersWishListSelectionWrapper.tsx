@@ -101,15 +101,12 @@ class OthersWishListSelection extends React.Component<P,S> {
 
   render() {
     const { newUser, feedback } = this.state;
-    const { friends, newFriend, userNotFound } = this.props;
+    const { friends, userNotFound } = this.props;
 
-    const usersLinks = friends.map(el => (<AddedUserLink key={el.uid} deleteMe={this.deleteUser} el={el} />));
+    const usersLinks = friends != null ? friends.map(el => (<AddedUserLink key={el.uid} deleteMe={this.deleteUser} el={el} />)) : null;
 
     return (
       <Container>
-        <StyledHeader>
-          <h1>Se ønskeliste til</h1>
-        </StyledHeader>
         <div className="wishlist-selection__added-users-container">
           {usersLinks}
         </div>

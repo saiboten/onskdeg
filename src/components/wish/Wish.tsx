@@ -6,6 +6,8 @@ import firebase from '../firebase/firebase';
 import Icon from '../common/Icon';
 import { Wish as WishType } from '../../types/types';
 import colors from '../../styles/colors';
+import ListRow from '../common/ListRow';
+import { NeutralIconButton, NegativeIconButton, GoldIconButton } from '../common/IconButton';
 
 const storageRef = firebase.storage().ref();
 
@@ -153,21 +155,6 @@ class Wish extends React.Component<P,S> {
       justify-content: flex-start;
       align-items: center;
     `;
-    const IconButton = styled(Icon)`
-      height: 52px;
-      width: 52px;
-      max-height: 52px;
-      max-width: 52px;
-    `;
-    const NegativeIconButton = styled(IconButton)`
-      background: ${colors.negative};
-    `;
-    const NeutralIconButton = styled(IconButton)`
-      background: ${colors.neutral};
-    `;
-    const TrashIconButton = styled(IconButton)`
-      color: ${colors.primaryLight};
-    `;
     const deleteWish = confirm
       ? (
         <StyledActionButtons>
@@ -176,7 +163,7 @@ class Wish extends React.Component<P,S> {
         </StyledActionButtons>)
       : (
         <StyledActionButtons>
-          <TrashIconButton type="button" name="trash-2" onClick={this.deleteItem} />
+          <GoldIconButton type="button" name="trash-2" onClick={this.deleteItem} />
           {/* <Dropzone className="wish__wish-dropzone" onDrop={this.onDrop}>
             <Icon type="button" name="upload" onClick={() => null} />
           </Dropzone> */}
@@ -195,16 +182,6 @@ class Wish extends React.Component<P,S> {
       )
       : (<input type="text" onClick={this.click} className="wish__wish-text" defaultValue={text} />);
 
-    const StyledWishAndActions = styled.div`
-      position: relative;
-      display: flex;
-      justify-content: space-between;
-      background: ${colors.primaryDark};
-      color: white;
-      padding-left: 50px;
-      margin-bottom: 2px;
-      height: 52px;
-    `;
     const ImageWrapper = styled.div`
       max-width: 36px;
       max-height: 36px;
@@ -218,13 +195,13 @@ class Wish extends React.Component<P,S> {
       align-items: center;
     `;
     return (
-      <StyledWishAndActions>
+      <ListRow>
         <LeftSection>
           <ImageWrapper>{image}</ImageWrapper>
           {text}
         </LeftSection>
         {deleteWish}
-      </StyledWishAndActions>
+      </ListRow>
     );
   }
 }
