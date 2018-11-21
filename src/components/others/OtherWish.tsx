@@ -1,7 +1,4 @@
 import React from 'react';
-import {
-  any, func, bool,
-} from 'prop-types';
 import Linkify from 'react-linkify';
 import firebase from '../firebase/firebase';
 import Icon from '../common/Icon';

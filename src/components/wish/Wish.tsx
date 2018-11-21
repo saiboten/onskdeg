@@ -6,6 +6,8 @@ import firebase from '../firebase/firebase';
 import Icon from '../common/Icon';
 import { Wish as WishType } from '../../types/types';
 import colors from '../../styles/colors';
+import ListRow from '../common/ListRow';
+import { NeutralIconButton, NegativeIconButton, GoldIconButton } from '../common/IconButton';
 
 const storageRef = firebase.storage().ref();
 
@@ -148,6 +150,12 @@ class Wish extends React.Component<P, S> {
 
     const image = wish.image ? (<img className="wish__image" alt="Awesome" src={imageState} />) : '';
 
+    const StyledActionButtons = styled.div`
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    `;
+
     const moveIn = keyframes`
       from {
         transform: translateX(100%);
@@ -158,30 +166,8 @@ class Wish extends React.Component<P, S> {
       }
     `;
 
-    const StyledActionButtons = styled.div`
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-    `;
-
     const StyledActionButtonsAnimated = styled(StyledActionButtons)`
       animation: ${moveIn} .2s ease-in;
-    `;
-
-    const IconButton = styled(Icon)`
-      height: 52px;
-      width: 52px;
-      max-height: 52px;
-      max-width: 52px;
-    `;
-    const NegativeIconButton = styled(IconButton)`
-      background: ${colors.negative};
-    `;
-    const NeutralIconButton = styled(IconButton)`
-      background: ${colors.neutral};
-    `;
-    const TrashIconButton = styled(IconButton)`
-      color: ${colors.primaryLight};
     `;
 
     const deleteWish = confirm
@@ -192,10 +178,7 @@ class Wish extends React.Component<P, S> {
         </StyledActionButtonsAnimated>)
       : (
         <StyledActionButtons>
-          <TrashIconButton type="button" name="trash-2" onClick={this.deleteItem} />
-          {/* <Dropzone className="wish__wish-dropzone" onDrop={this.onDrop}>
-            <Icon type="button" name="upload" onClick={() => null} />
-          </Dropzone> */}
+          <GoldIconButton type="button" name="trash-2" onClick={this.deleteItem} />
         </StyledActionButtons>
       );
 
@@ -211,16 +194,6 @@ class Wish extends React.Component<P, S> {
       )
       : (<input type="text" onClick={this.click} className="wish__wish-text" defaultValue={text} />);
 
-    const StyledWishAndActions = styled.div`
-      position: relative;
-      display: flex;
-      justify-content: space-between;
-      background: ${colors.primaryDark};
-      color: white;
-      padding-left: 50px;
-      margin-bottom: 2px;
-      height: 52px;
-    `;
     const ImageWrapper = styled.div`
       max-width: 36px;
       max-height: 36px;
@@ -234,13 +207,13 @@ class Wish extends React.Component<P, S> {
       align-items: center;
     `;
     return (
-      <StyledWishAndActions>
+      <ListRow>
         <LeftSection>
           <ImageWrapper>{image}</ImageWrapper>
           {text}
         </LeftSection>
         {deleteWish}
-      </StyledWishAndActions>
+      </ListRow>
     );
   }
 }

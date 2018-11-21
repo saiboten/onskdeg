@@ -20,13 +20,13 @@ const reducer: Reducer<FriendsState> = (state = initialState, action) => {
     case 'SET_FRIENDS': {
       return {
         ...state,
-        friends: action.newFriendList,
+        friends: action.newFriendList != null ? action.newFriendList : [],
       };
     }
     case 'FRIENDS_LOADED': {
       return {
         ...state,
-        friends: action && action.data && action.data.filter((el:any) => el),
+        friends: action.data != null ? action.data : [],
         loading: false,
         loaded: true,
       };

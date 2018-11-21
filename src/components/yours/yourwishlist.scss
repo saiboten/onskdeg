@@ -1,6 +1,7 @@
 .your-wishlist__wishlist {
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 .your-wishlist__add-wish-wrapper {
   position: relative;
