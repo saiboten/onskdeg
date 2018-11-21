@@ -1,6 +1,6 @@
 import React from 'react';
 import Dropzone from 'react-dropzone';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 import firebase from '../firebase/firebase';
 import Icon from '../common/Icon';
@@ -27,7 +27,7 @@ interface S {
   image: string
 }
 
-class Wish extends React.Component<P,S> {
+class Wish extends React.Component<P, S> {
 
   input: any;
 
@@ -148,11 +148,26 @@ class Wish extends React.Component<P,S> {
 
     const image = wish.image ? (<img className="wish__image" alt="Awesome" src={imageState} />) : '';
 
+    const moveIn = keyframes`
+      from {
+        transform: translateX(100%);
+      }
+
+      to {
+        transform: translateX(0);
+      }
+    `;
+
     const StyledActionButtons = styled.div`
       display: flex;
       justify-content: flex-start;
       align-items: center;
     `;
+
+    const StyledActionButtonsAnimated = styled(StyledActionButtons)`
+      animation: ${moveIn} .2s ease-in;
+    `;
+
     const IconButton = styled(Icon)`
       height: 52px;
       width: 52px;
@@ -168,12 +183,13 @@ class Wish extends React.Component<P,S> {
     const TrashIconButton = styled(IconButton)`
       color: ${colors.primaryLight};
     `;
+
     const deleteWish = confirm
       ? (
-        <StyledActionButtons>
+        <StyledActionButtonsAnimated>
           <NeutralIconButton type="button" name="x" onClick={this.cancel} />
           <NegativeIconButton type="button" name="check" onClick={this.deleteConfirmed} />
-        </StyledActionButtons>)
+        </StyledActionButtonsAnimated>)
       : (
         <StyledActionButtons>
           <TrashIconButton type="button" name="trash-2" onClick={this.deleteItem} />
