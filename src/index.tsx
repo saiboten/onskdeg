@@ -4,10 +4,16 @@ import './global.scss';
 import './index.scss';
 import App from './App';
 
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/service-worker.js');
-    });
-  }
+/** Lets try this for now - disables service workers */
+navigator.serviceWorker.getRegistrations().then(function(registrations) {
+  for(let registration of registrations) {
+   registration.unregister()
+ } })
+
+// if ('serviceWorker' in navigator) {
+//     window.addEventListener('load', function() {
+//       navigator.serviceWorker.register('/service-worker.js');
+//     });
+//   }
 
 ReactDOM.render(<App />, document.getElementById('root'));

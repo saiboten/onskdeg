@@ -148,12 +148,13 @@ class Wish extends React.Component<P, S> {
       confirm, image: imageState, edit, text,
     } = this.state;
 
-    const image = wish.image ? (<img className="wish__image" alt="Awesome" src={imageState} />) : '';
+    const image = wish.image ? (<img className="wish__image wish__image--thumbnail" alt="Awesome" src={imageState} />) : '';
 
     const StyledActionButtons = styled.div`
       display: flex;
       justify-content: flex-start;
       align-items: center;
+      flex-shrink: 0;
     `;
 
     const moveIn = keyframes`
@@ -205,6 +206,8 @@ class Wish extends React.Component<P, S> {
     const LeftSection = styled.div`
       display: flex;
       align-items: center;
+      flex-shrink: 1;
+      overflow: hidden;
     `;
     return (
       <ListRow>

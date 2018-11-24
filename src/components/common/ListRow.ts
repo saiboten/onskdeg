@@ -11,6 +11,7 @@ export const ListRowStyles = `
   padding-left: 50px;
   margin-bottom: 2px;
   height: 52px;
+  white-space: nowrap;
 `;
 export const ListRow = styled.div`
   ${ListRowStyles}
