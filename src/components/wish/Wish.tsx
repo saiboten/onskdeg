@@ -8,12 +8,24 @@ import { Wish as WishType } from '../../types/types';
 import colors from '../../styles/colors';
 import ListRow from '../common/ListRow';
 import { NeutralIconButton, NegativeIconButton, GoldIconButton } from '../common/IconButton';
+import { Link as RouterLink } from 'react-router-dom';
 
 const storageRef = firebase.storage().ref();
 
 const debug = require('debug')('Wish');
 
 require('./wish.scss');
+
+export const Link = styled(RouterLink)`
+  text-decoration: none;
+
+  &:visited, &:link {
+    color: white;
+  }
+  &:hover {
+    color: grey;
+  }
+`;
 
 interface P {
   wish: WishType
@@ -213,7 +225,7 @@ class Wish extends React.Component<P, S> {
       <ListRow>
         <LeftSection>
           <ImageWrapper>{image}</ImageWrapper>
-          {text}
+          <Link to={`/wish/${wish.id}`}>{text}</Link>
         </LeftSection>
         {deleteWish}
       </ListRow>

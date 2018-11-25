@@ -6,6 +6,8 @@ import { Provider, connect } from 'react-redux';
 import styled from 'styled-components';
 
 import YourWishList from './components/yours/YourWishList';
+import YourWishDetails from './components/yours/YourWishDetails';
+
 import OthersWishListSelection from './components/otherwishlistselection/OthersWishListSelectionWrapper';
 import OthersWishList from './components/others/OthersWishList';
 import Header from './components/header/Header';
@@ -46,6 +48,7 @@ const AppComp = ({ user } : AppProps) => {
         <HeaderWithRouter />
         <Switch>
           <Route path="/" exact component={YourWishList} />
+          <Route path="/wish/:wishid" exact component={YourWishDetails} />
           <Route path="/others" component={OthersWishListSelection} />
           <Route path="/other/:name" component={OthersWishList} />
         </Switch>

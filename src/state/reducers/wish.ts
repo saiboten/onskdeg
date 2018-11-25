@@ -1,10 +1,18 @@
 import { Reducer } from 'redux';
 import { WishState } from './types';
 
-const initialState: WishState = {};
+const initialState: WishState = {
+  
+};
 
 const userReducer: Reducer<WishState> = (state = initialState, action) => {
   switch (action.type) {
+    case 'LOADING_STARTED': {
+      return {
+        ...state,
+        loading: true
+      }
+    }
     case 'SET_ALL_WISHES': {
       return Object.assign({}, action.wishes);
     }
