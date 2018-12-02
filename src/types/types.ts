@@ -11,10 +11,22 @@ export interface User {
 }
 
 export interface Wish {
-  checked: boolean;
   id: string;
   name: string;
   image: string;
+  description: string;
+  link: string;
+  deleted: boolean;
+  accomplished: boolean;
+  accompllishedby: string; // The simplest approach, but not that flexible
+}
+
+export interface Purchases {
+  [el: string]: Purchase
+}
+
+export interface Purchase {
+  checked: boolean;
   checkedby: string;
 }
 

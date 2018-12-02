@@ -3,12 +3,14 @@ import user from './user';
 // import suggestion from './suggestion';
 import wish from './wish';
 import friends from './friends';
-import { UserState, WishState, FriendsState } from './types';
+import purchase from './purchase';
+import { UserState, WishState, FriendsState, PurchaseState } from './types';
 
 export interface ApplicationState {
   user: UserState,
   wish: WishState,
-  friends: FriendsState
+  friends: FriendsState,
+  purchase: PurchaseState
 } 
 
 const onskdegReducers = combineReducers<ApplicationState>({
@@ -16,6 +18,7 @@ const onskdegReducers = combineReducers<ApplicationState>({
   // suggestion,
   wish,
   friends,
+  purchase
 } as any);
 
 export default onskdegReducers;

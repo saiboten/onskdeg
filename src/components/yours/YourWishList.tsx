@@ -91,10 +91,13 @@ class YourWishList extends React.Component<P,S> {
     const newWishList = Object.assign([], wishes);
     newWishList.unshift({
       name: newWish,
-      checked: false,
-      checkedby: '',
       id: this.createGuid(),
       image: '',
+      accomplished: false,
+      accompllishedby: '',
+      deleted: false,
+      description: '',
+      link: ''
     });
 
     storeWishesToFirebase(newWishList);
@@ -113,10 +116,9 @@ class YourWishList extends React.Component<P,S> {
       if (e.id === wish.id) {
         return {
           name: wish.name,
-          checked: wish.checked,
-          checkedby: wish.checkedby ? wish.checkedby : '',
           id: wish.id,
           image: wish.image ? wish.image : '',
+          ...wish
         };
       }
       return e;
@@ -131,10 +133,9 @@ class YourWishList extends React.Component<P,S> {
       if (e.id === wish.id) {
         return {
           name: wish.name,
-          checked: wish.checked,
-          checkedby: wish.checkedby ? wish.checkedby : '',
           id: wish.id,
           image,
+          ...wish
         };
       }
       return e;
@@ -201,10 +202,10 @@ class YourWishList extends React.Component<P,S> {
 }
 
 export default connect(
-  ({ wish, user }: { wish: any, user: User}) => {
-    debug('User wishes', wish[user.uid]);
+  ({ wish: { wishes }, user }: { wish: any, user: User}) => {
+    debug('User wishes', wishes[user.uid]);
     return {
-      wishes: wish[user.uid] ? wish[user.uid] : [],
+      wishes: wishes[user.uid] ? wishes[user.uid] : [],
       user,
     };
   },

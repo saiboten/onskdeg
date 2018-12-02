@@ -2,7 +2,10 @@ import { Reducer } from 'redux';
 import { WishState } from './types';
 
 const initialState: WishState = {
-  
+  loading: false,
+  wishes: {
+
+  }
 };
 
 const userReducer: Reducer<WishState> = (state = initialState, action) => {
@@ -13,14 +16,13 @@ const userReducer: Reducer<WishState> = (state = initialState, action) => {
         loading: true
       }
     }
-    case 'SET_ALL_WISHES': {
-      return Object.assign({}, action.wishes);
-    }
     case 'SET_USER_WISHES': {
-      const { uid } = action;
+      const { uid, wishes } = action;
       return {
         ...state,
-        [uid]: action.wishes,
+        wishes: {
+          [uid]: action.wishes,
+        }
       };
     }
     default:

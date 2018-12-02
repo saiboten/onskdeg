@@ -9,8 +9,9 @@ import firebase from '../firebase/firebase';
 // import Suggestions from '../suggestions/Suggestions';
 import OtherWish from './OtherWish';
 import { setWishesForUser, storeWishesToFirebase } from '../../state/actions/wish';
+import { setPurchasesForUser, purchaseItem as purchaseItemAction, sellItem as sellItemAction } from '../../state/actions/purchase';
 import Icon from '../common/Icon';
-import { User, Wish, Match } from '../../types/types';
+import { User, Wish, Purchases } from '../../types/types';
 import { ApplicationState } from '../../state/reducers';
 import spinnerWhileLoading from '../common/spinnerWhileLoading';
 import { loadFriends } from '../../state/actions/friends';
@@ -25,17 +26,22 @@ const debug = require('debug')('OthersWishList');
 interface Props {
   match: { params: { name: string }};
   setWishes: (name: string, newWishList: Array<Wish>) => void;
+  setPurchases: (name: string, purchasesForUser: Purchases) => void;
   storeWishes: (name: string, newWishList: Array<Wish>) => void;
+  purchaseItem: (uid: string, itemid: string) => void;
+  sellItem: (uid: string, itemid: string) => void;
   user: User;
   wishes: Array<Wish>;
   friend: User;
+  purchases: Purchases;
 }
 interface State {
   hideSelected: boolean;
   feedback: string;
 }
 class OthersWishList extends React.Component<Props, State> {
-  firebaseRef?: firebase.database.Reference;
+  wishRef?: firebase.database.Reference;
+  purchaseRef?: firebase.database.Reference;
 
   constructor(props: any) {
     super(props);
@@ -50,42 +56,37 @@ class OthersWishList extends React.Component<Props, State> {
 
   componentDidMount() {
     debug('componentDidMount');
-    const { match: { params: { name } }, setWishes } = this.props;
+    const { match: { params: { name } }, setWishes, setPurchases } = this.props;
 
-    this.firebaseRef = firebase.database().ref(`wishes/${name}/wishes`);
+    this.wishRef = firebase.database().ref(`wishes/${name}/wishes`);
+    this.purchaseRef = firebase.database().ref(`purchases/${name}`);
 
-    this.firebaseRef.on('value', (snapshot) => {
+    this.wishRef.on('value', (snapshot) => {
       setWishes(name, snapshot && snapshot.val());
     });
+
+    this.purchaseRef.on('value', (snapshot) => {
+      setPurchases(name, snapshot && snapshot.val());
+    });
+
   }
 
   componentWillUnmount() {
-    this.firebaseRef && this.firebaseRef.off();
+    this.wishRef && this.wishRef.off();
   }
 
   check(id: string) {
-    debug('check', id);
-    const { user, match: { params: { name } } } = this.props;
-    const { wishes, storeWishes } = this.props;
-
-    const newWishList = wishes.map((e) => {
-      if (id === e.id) {
-        console.log(e);
-        return {
-          name: e.name,
-          checked: !e.checked,
-          id: e.id,
-          checkedby: user.email,
-          checkedTime: new Date(),
-          image: e.image || ''
-        };
-      }
-
-      return e;
-    });
-    console.log(newWishList);
-    storeWishes(name, newWishList);
-    this.setState({ feedback: 'Du kjøpte eller solgte noe!' });
+    const { purchases, purchaseItem, sellItem, match: { params: { name } } } = this.props;
+    if(purchases[id].checked) {
+      sellItem(name, id);
+      this.setState({ feedback: 'Solgt!' });
+    }
+    else {
+      purchaseItem(name, id);
+      this.setState({ feedback: 'Kjøpt!' });
+    }
+    
+    
   }
 
   toggleShowSelected(e: React.MouseEvent<HTMLElement>) {
@@ -98,23 +99,23 @@ class OthersWishList extends React.Component<Props, State> {
     });
   }
 
-  shouldDisplayWish(el: Wish) {
+  shouldDisplayWish(el: Wish, purchases: Purchases) {
     const {
       hideSelected,
     } = this.state;
 
     debug('Wish to be filtered: ', el);
-    return !el.checked || !hideSelected;
+    return !(purchases[el.id] && purchases[el.id].checked) || !hideSelected;
   }
 
   render() {
     const {
       hideSelected, feedback,
     } = this.state;
-    const { wishes, friend } = this.props;
+    const { wishes, friend, purchases } = this.props;
 
-    const filteredWishes = wishes.filter(this.shouldDisplayWish).map(wishInfo => (
-      <OtherWish deleteSuggestion={() => null} canDelete={false} key={wishInfo.id} onClick={this.check} wishInfo={wishInfo} />));
+    const filteredWishes = wishes.filter((el) => this.shouldDisplayWish(el, purchases)).map(wishInfo => (
+      <OtherWish deleteSuggestion={() => null} canDelete={false} key={wishInfo.id} onClick={this.check} wishInfo={wishInfo} purchase={purchases[wishInfo.id] ? purchases[wishInfo.id] : { checked: false, checkedby: '' }} />));
 
     return (
       <Container>
@@ -140,25 +141,36 @@ class OthersWishList extends React.Component<Props, State> {
   } 
 }
 
-const mapStateToProps = ({ wish, user, friends: { loading, loaded, friends } }: ApplicationState, { match: { params: { name } } }: any) => {
+const mapStateToProps = ({ purchase, wish, user, friends: { loading, loaded, friends } }: ApplicationState, { match: { params: { name } } }: any) => {
   const friendsFiltered = friends.filter(u => u.uid === name);
 
   return {
-    wishes: wish[name] || [],
+    wishes: wish.wishes[name] || [],
+    purchases: purchase.purchases[name] || {},
     user,
     loading,
     loaded,
     friend: friendsFiltered.length > 0 ? friendsFiltered.reduce(e => e) : {}
   }
 };
+
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   load: () => dispatch(loadFriends()),
   setWishes(uid: string, newWishList: Array<Wish>) {
     dispatch(setWishesForUser({ uid, wishes: newWishList }));
   },
+  setPurchases(uid: string, purchases: Purchases) {
+    dispatch(setPurchasesForUser({uid, purchases}))
+  },
   storeWishes(uid: string, newWishList: Array<Wish>) {
     dispatch(storeWishesToFirebase(uid, newWishList));
   },
+  purchaseItem(uid: string, itemid: string) {
+    dispatch(purchaseItemAction(uid, itemid));
+  },
+  sellItem(uid: string, itemid: string) {
+    dispatch(sellItemAction(uid, itemid));
+  }
 });
 
 const WithSpinner = spinnerWhileLoading(({ loaded, loading, load }: { loaded: boolean, loading: boolean, load: () => void}) => {

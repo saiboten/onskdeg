@@ -142,9 +142,12 @@ class Wish extends React.Component<P, S> {
     update({
       name: text,
       id: wish.id,
-      checkedby: wish.checkedby,
-      checked: wish.checked,
       image: wish.image,
+      description: wish.description,
+      accomplished: wish.accomplished,
+      accompllishedby: wish.accompllishedby,
+      deleted: wish.deleted,
+      link: wish.link
     });
   }
 

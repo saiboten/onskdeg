@@ -1,4 +1,11 @@
-import { Wish, User } from "../../types/types";
+import { Wish, User, Purchases } from "../../types/types";
+
+export interface PurchaseState {
+  readonly loading: boolean;
+  readonly purchases: {
+    [key: string]: Purchases;
+  }
+}
 
 export interface FriendsState {
   readonly loaded: boolean;
@@ -15,12 +22,15 @@ export interface UserState {
   readonly name?: string;
 }
 
-
 export interface WishesDict {
   [key: string]: Wish
 }
 export interface WishState {
-  [name: string]: Wish | {
-    readonly uid?: string;
+  loading: boolean;
+  wishes: {
+    [name: string]: Wish | {
+      readonly uid?: string;
+    }
   }
+  
 }

@@ -4,13 +4,14 @@ import firebase from '../firebase/firebase';
 import Icon from '../common/Icon';
 
 import './otherwish.css';
-import { Wish } from '../../types/types';
+import { Wish, Purchase } from '../../types/types';
 
 const storageRef = firebase.storage().ref();
 
 const debug = require('debug')('OtherWish');
 
 interface P {
+  purchase: Purchase;
   wishInfo: Wish;
   canDelete: boolean;
   deleteSuggestion: () => void;
@@ -41,14 +42,14 @@ class OtherWish extends React.Component<P,S> {
 
   render() {
     const {
-      wishInfo, canDelete, deleteSuggestion, onClick,
+      wishInfo, canDelete, deleteSuggestion, onClick, purchase
     } = this.props;
     const { image } = this.state;
 
     const imageTag = wishInfo.image
       ? (<img className="other-wish__image" alt="Awesome" src={image} />) : '';
 
-    const item = wishInfo.checked
+    const item = purchase.checked
       ? (
         <del>{wishInfo.name}</del>
       )
@@ -56,7 +57,7 @@ class OtherWish extends React.Component<P,S> {
     const linkifyed = (
       <Linkify className="other-wish__linkify">{item}</Linkify>
     );
-    const checkedByElem = wishInfo.checked
+    const checkedByElem = purchase.checked
       ? (
         <div className="smallspace">Tatt</div>) : '';
 
@@ -80,7 +81,7 @@ class OtherWish extends React.Component<P,S> {
           </div>
           <div className="other-wish__buy-or-sell-wrapper">
 
-            <Icon type="button" name={wishInfo.checked ? 'shopping-cart' : 'shopping-cart'} onClick={() => onClick(wishInfo.id)} />
+            <Icon type="button" name={purchase.checked ? 'shopping-cart' : 'shopping-cart'} onClick={() => onClick(wishInfo.id)} />
             {deleteThis}
           </div>
         </div>
