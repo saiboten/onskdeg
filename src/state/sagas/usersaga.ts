@@ -5,6 +5,18 @@ import firebase from '../../components/firebase/firebase';
 import { user as userSelect, friends as friendsSelect } from '../selectors/selectors';
 import { User } from '../../types/types';
 
+function getUser(uid: string) {
+    return new Promise(((resolve) => {
+        firebase.database().ref(`users/${uid}`).once('value', (snapshot) => {
+            if (snapshot == null) {
+                return;
+            }
+            const resolveVal = snapshot.val();
+            resolve(resolveVal);
+        });
+    }));
+}
+
 function getUserList(currentUser: User) {
     return new Promise(((resolve) => {
         firebase.database().ref(`users/${currentUser.uid}/friends`).once('value', (snapshot) => {
@@ -12,7 +24,39 @@ function getUserList(currentUser: User) {
                 return;
             }
             const resolveVal = snapshot.val();
-            resolve(resolveVal);
+
+            if(resolveVal instanceof Array) {
+
+                // Remove empty users - this should not happen - but it has?
+                const userList = resolveVal.filter((el: User) => el.uid).map((el: User) => el.uid);
+
+                // List of promises to resolve
+                const promiseList = userList.map(getUser);
+                Promise.all(promiseList).then((values: any) => {
+
+                    // FriendDetails is a map with info from the promises
+                    const friendDetails = values.filter((el: User) => el).reduce((sum: any, next: User) => ({
+                        ...sum,
+                        [next.uid]: next
+                    }), {});
+
+                    // Merge the uid and the friend details
+                    const result = userList.map(el => {
+                        if(!friendDetails[el]) {
+                            return null;
+                        }
+
+                        return {
+                            uid: el,
+                            email: friendDetails[el].email,
+                            name: friendDetails[el].name
+                        }
+                    }).filter(el => el);
+                    resolve(result);
+                });
+            }
+
+            
         });
     }));
 }
@@ -84,7 +128,8 @@ function* setNameAndEmail(input: any) {
         type: 'USER_LOADED',
         user: {
             ...user,
-            name
+            name,
+            uid: user.uid
         }
     });
 }
