@@ -46,7 +46,6 @@ const AppComp = ({ user }: AppProps) => {
   return (
       <BrowserRouter>
         <>
-          <GlobalStyle />
           <HeaderWithRouter />
           <Switch>
             <Route path="/" exact component={YourWishList} />
@@ -64,7 +63,10 @@ const AppCompWrapper = connect(mapStateToProps)(AppComp);
 
 const App = () => (
   <Provider store={store}>
+    <>
+    <GlobalStyle />
     <AppCompWrapper />
+    </>
   </Provider>
 );
 
