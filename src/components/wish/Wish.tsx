@@ -6,8 +6,9 @@ import firebase from '../firebase/firebase';
 import Icon from '../common/Icon';
 import { Wish as WishType } from '../../types/types';
 import colors from '../../styles/colors';
-import ListRow from '../common/ListRow';
-import { NeutralIconButton, NegativeIconButton, GoldIconButton } from '../common/IconButton';
+import ListRow, { LeftSection } from '../common/ListRow';
+import { ImageWrapper } from '../common/Image';
+import { NeutralIconButton, NegativeIconButton, GoldIconButton, StyledActionButtons, StyledActionButtonsAnimated } from '../common/IconButton';
 import { Link as RouterLink } from 'react-router-dom';
 
 const storageRef = firebase.storage().ref();
@@ -165,27 +166,6 @@ class Wish extends React.Component<P, S> {
 
     const image = wish.image ? (<img className="wish__image wish__image--thumbnail" alt="Awesome" src={imageState} />) : '';
 
-    const StyledActionButtons = styled.div`
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      flex-shrink: 0;
-    `;
-
-    const moveIn = keyframes`
-      from {
-        transform: translateX(100%);
-      }
-
-      to {
-        transform: translateX(0);
-      }
-    `;
-
-    const StyledActionButtonsAnimated = styled(StyledActionButtons)`
-      animation: ${moveIn} .2s ease-in;
-    `;
-
     const deleteWish = confirm
       ? (
         <StyledActionButtonsAnimated>
@@ -198,32 +178,6 @@ class Wish extends React.Component<P, S> {
         </StyledActionButtons>
       );
 
-    const html = edit
-      ? (<input
-        type="text"
-        className="wish__wish-text wish__wish-text--active"
-        ref={(c) => { this.input = c; }}
-        onBlur={this.focusLost}
-        onChange={this.updateText}
-        value={text}
-      />
-      )
-      : (<input type="text" onClick={this.click} className="wish__wish-text" defaultValue={text} />);
-
-    const ImageWrapper = styled.div`
-      max-width: 36px;
-      max-height: 36px;
-      overflow: hidden;
-      position: absolute;
-      left: 8px;
-      top: 8px;
-    `;
-    const LeftSection = styled.div`
-      display: flex;
-      align-items: center;
-      flex-shrink: 1;
-      overflow: hidden;
-    `;
     return (
       <ListRow>
         <LeftSection>

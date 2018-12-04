@@ -105,17 +105,22 @@ class OthersWishListSelection extends React.Component<P,S> {
 
     const usersLinks = friends != null ? friends.map(el => (<AddedUserLink key={el.uid} deleteMe={this.deleteUser} el={el} />)) : null;
 
+    const StyledForm = styled.form`
+      display: flex;
+      align-items: center;
+    `;
+
     return (
       <Container>
         <div className="wishlist-selection__added-users-container">
           {usersLinks}
         </div>
 
-        <form onSubmit={this.addUserClickEvent}>
+        <StyledForm onSubmit={this.addUserClickEvent}>
           <p>Legg til (legg inn epost)</p>
           <input value={newUser} onChange={this.updateUserState} />
           <input className="button button--padded" type="submit" value="OK" />
-        </form>
+        </StyledForm>
 
         {userNotFound && <p>Fant ikke bruker</p>}
         <p>{feedback}</p>

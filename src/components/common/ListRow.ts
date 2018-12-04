@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import colors from '../../styles/colors';
 
 export const ListRowStyles = `
@@ -16,5 +16,12 @@ export const ListRowStyles = `
 export const ListRow = styled.div`
   ${ListRowStyles}
 `;
+
+export const LeftSection = styled.div`
+      display: flex;
+      align-items: center;
+      flex-shrink: 1;
+      overflow: hidden;
+    `;
 
 export default ListRow;

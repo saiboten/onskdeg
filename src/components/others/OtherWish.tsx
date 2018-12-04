@@ -2,9 +2,13 @@ import React from 'react';
 import Linkify from 'react-linkify';
 import firebase from '../firebase/firebase';
 import Icon from '../common/Icon';
+import ListRow, { LeftSection } from '../common/ListRow';
+import styled from 'styled-components';
 
 import './otherwish.css';
 import { Wish, Purchase } from '../../types/types';
+import { ImageWrapper } from '../common/Image';
+import { StyledActionButtonsAnimated, StyledActionButtons } from '../common/IconButton';
 
 const storageRef = firebase.storage().ref();
 
@@ -22,7 +26,7 @@ interface S {
   image: string;
 }
 
-class OtherWish extends React.Component<P,S> {
+class OtherWish extends React.Component<P, S> {
   constructor(props: any) {
     super(props);
 
@@ -42,7 +46,7 @@ class OtherWish extends React.Component<P,S> {
 
   render() {
     const {
-      wishInfo, canDelete, deleteSuggestion, onClick, purchase
+      wishInfo, onClick, purchase
     } = this.props;
     const { image } = this.state;
 
@@ -61,34 +65,22 @@ class OtherWish extends React.Component<P,S> {
       ? (
         <div className="smallspace">Tatt</div>) : '';
 
-    const deleteThis = canDelete
-      ? (
-        <button
-          type="button"
-          className="button other-wish__button_delete-suggestion"
-          onClick={deleteSuggestion}
-        >
-          {'Slett'}
-        </button>
-      ) : '';
+    const ActionButtonsContainer = styled.div`
+      display: flex;
+      justify-content: flex-end;
+    `;
 
     return (
-      <div className="flex-column border">
-        <div className="flex-row other-wish__upper-half">
-          <div className="flex-column smallspace other-wish__wish-text">
-            {linkifyed}
-            {imageTag}
-          </div>
-          <div className="other-wish__buy-or-sell-wrapper">
-
-            <Icon type="button" name={purchase.checked ? 'shopping-cart' : 'shopping-cart'} onClick={() => onClick(wishInfo.id)} />
-            {deleteThis}
-          </div>
-        </div>
-        <div className="flex-column">
+      <ListRow>
+        <LeftSection>
+          <ImageWrapper>{imageTag}</ImageWrapper>
+          {linkifyed}
+        </LeftSection>
+        <StyledActionButtons>
           {checkedByElem}
-        </div>
-      </div>
+          <Icon type="button" name={purchase.checked ? 'shopping-cart' : 'shopping-cart'} onClick={() => onClick(wishInfo.id)} />
+        </StyledActionButtons>
+      </ListRow>
     );
   }
 }

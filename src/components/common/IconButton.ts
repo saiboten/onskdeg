@@ -1,5 +1,5 @@
 import Icon from "./Icon";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import colors from "../../styles/colors";
 
 export const IconButton = styled(Icon)`
@@ -16,4 +16,25 @@ export const NeutralIconButton = styled(IconButton)`
 `;
 export const GoldIconButton = styled(IconButton)`
   color: ${colors.primaryLight};
+`;
+
+export const StyledActionButtons = styled.div`
+display: flex;
+justify-content: flex-start;
+align-items: center;
+flex-shrink: 0;
+`;
+
+const moveIn = keyframes`
+from {
+  transform: translateX(100%);
+}
+
+to {
+  transform: translateX(0);
+}
+`;
+
+export const StyledActionButtonsAnimated = styled(StyledActionButtons)`
+animation: ${moveIn} .2s ease-in;
 `;

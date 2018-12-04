@@ -7,13 +7,10 @@
     border: none;
     cursor: pointer;
 
-    max-height: 40px;
-    max-width: 40px;
+    height: 40px;
+    width: 40px;
 
     &__icon {
-        height: 4rem;
-        width: 4rem;
-        
         max-height: 30px;
         max-width: 30px;
     }

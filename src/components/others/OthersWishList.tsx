@@ -129,13 +129,7 @@ class OthersWishList extends React.Component<Props, State> {
           <Icon type="button" name={hideSelected ? 'eye' : 'eye-off'} onClick={this.toggleShowSelected} />
         </ActionButtonsContainer>
         <p>{feedback}</p>
-
         {filteredWishes}
-
-        {/* <Suggestions username={userState} userUid={params.name} />
-        <hr />
-        <Comments params={params} /> */}
-
       </Container>
     );
   } 
