@@ -1,6 +1,23 @@
 import React from 'react';
+import styled from 'styled-components';
 
-import './Icon.scss';
+const StyledIconButton = styled.button`
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   color: white;
+   background-color: transparent;
+   border: none;
+   cursor: pointer;
+
+   height: 40px;
+   width: 40px;
+`;
+
+const StyledSvg = styled.svg`
+  max-height: 30px;
+  max-width: 30px;
+`;
 
 interface IconProps {
   name: string;
@@ -10,13 +27,12 @@ interface IconProps {
 }
 /* eslint-disable react/button-has-type */
 export default function Icon({ name, type, onClick, className: classFromProps, ...rest }: IconProps) {
-  const classes = classFromProps ? `${classFromProps} icon` : 'icon';
   return (
-    <button type={type} className={classes} onClick={onClick} {...rest}>
-      <svg className="icon__icon" fill="currentColor">
+    <StyledIconButton type={type} className={classFromProps} onClick={onClick} {...rest}>
+      <StyledSvg fill="currentColor">
         <use xlinkHref={`/svg/sprite.svg#icon-${name}`} />
-      </svg>
-    </button>
+      </StyledSvg>
+    </StyledIconButton>
   );
 }
 /* eslint-enable react/button-has-type */

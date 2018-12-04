@@ -15,7 +15,10 @@ const storageRef = firebase.storage().ref();
 
 const debug = require('debug')('Wish');
 
-require('./wish.scss');
+const StyledThumbnailImage = styled.img`
+  width: 36px;
+  height: 36px;
+`;
 
 export const Link = styled(RouterLink)`
   text-decoration: none;
@@ -164,7 +167,7 @@ class Wish extends React.Component<P, S> {
       confirm, image: imageState, edit, text,
     } = this.state;
 
-    const image = wish.image ? (<img className="wish__image wish__image--thumbnail" alt="Awesome" src={imageState} />) : '';
+    const image = wish.image ? (<StyledThumbnailImage alt="Wish Image" src={imageState} />) : '';
 
     const deleteWish = confirm
       ? (

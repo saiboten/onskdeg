@@ -10,6 +10,7 @@ import { UserState } from '../../state/reducers/types';
 import { APP_TITLE } from '../../constants';
 import { NavLink } from '../common/Link';
 import Container from '../common/container/Container';
+import { ButtonNavigation } from '../common/Button';
 
 const StyledHeader = styled.div`
   display: flex;
@@ -66,7 +67,7 @@ const HeaderComponent = ({ user, logout }: HeaderProps) => {
       <H1>{APP_TITLE}</H1>
       <UserInfo>
         <UserEmail>{user ? user.email : 'Ukjent'}</UserEmail>
-        <button type="button" className="button-navigation button--square" onClick={() => logOut(setFeedback, logout)}>Logg ut</button>
+        <ButtonNavigation type="ButtonNavigation" onClick={() => logOut(setFeedback, logout)}>Logg ut</ButtonNavigation>
         {feedback}
       </UserInfo>
       <StyledHeader>

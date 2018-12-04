@@ -16,8 +16,6 @@ font-size: 3rem;
 margin: 2rem;
 `;
 
-require('./selectuser.scss');
-
 const LoginContainer = styled.div`
   display: flex;
   flex-direction: column;

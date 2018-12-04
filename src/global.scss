@@ -1,169 +1,169 @@
-html {
-  background-color: #262626;
-}
+// html {
+//   background-color: #262626;
+// }
 
-.navigation-link {
-    padding: 10px;
-}
+// .navigation-link {
+//     padding: 10px;
+// }
 
-.space {
-  padding: 10px;
-  margin: 10px;
-}
+// .space {
+//   padding: 10px;
+//   margin: 10px;
+// }
 
-.smallspace {
-  padding: 5px;
-  margin: 5px;
-}
+// .smallspace {
+//   padding: 5px;
+//   margin: 5px;
+// }
 
-.flex-column {
-    display: flex;
-    flex-direction: column;
-}
+// .flex-column {
+//     display: flex;
+//     flex-direction: column;
+// }
 
-.overflow-hidden {
-  overflow: hidden;
-}
+// .overflow-hidden {
+//   overflow: hidden;
+// }
 
-.border {
-  border: 1px solid;
-}
+// .border {
+//   border: 1px solid;
+// }
 
-.screen-reader-only {
-  position:absolute;
-  left:-10000px;
-  top:auto;
-  width:1px;
-  height:1px;
-  overflow:hidden;
-}
+// .screen-reader-only {
+//   position:absolute;
+//   left:-10000px;
+//   top:auto;
+//   width:1px;
+//   height:1px;
+//   overflow:hidden;
+// }
 
-.button {
-    color: white;
-    background-color: #b49b57;;
-    -ms-transition: background-color 0.2s ease-in-out 0s, opacity 0.2s ease-in-out 0s;
-    transition: background-color 0.2s ease-in-out 0s, opacity 0.2s ease-in-out 0s;
-    font-weight: 600;
-    font-family: 'Exo 2' sans-serif;
-    text-align: center;
-    vertical-align: middle;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    white-space: nowrap;
-    overflow: hidden;
-    padding: 0;
-    border: 0 none;
-    border-radius: 3px;
-    display: inline-block;
-    font-size: 13px;
-    height: 23px;
-    text-decoration: none;
-    cursor: pointer;
-}
+// .button {
+//     color: white;
+//     background-color: #b49b57;;
+//     -ms-transition: background-color 0.2s ease-in-out 0s, opacity 0.2s ease-in-out 0s;
+//     transition: background-color 0.2s ease-in-out 0s, opacity 0.2s ease-in-out 0s;
+//     font-weight: 600;
+//     font-family: 'Exo 2' sans-serif;
+//     text-align: center;
+//     vertical-align: middle;
+//     -webkit-user-select: none;
+//     -ms-user-select: none;
+//     white-space: nowrap;
+//     overflow: hidden;
+//     padding: 0;
+//     border: 0 none;
+//     border-radius: 3px;
+//     display: inline-block;
+//     font-size: 13px;
+//     height: 23px;
+//     text-decoration: none;
+//     cursor: pointer;
+// }
 
-.button--padded {
-  padding: 0 16px;
-}
+// .button--padded {
+//   padding: 0 16px;
+// }
 
-.flex-row {
-  display: flex;
-  flex-direction: row;
-}
+// .flex-row {
+//   display: flex;
+//   flex-direction: row;
+// }
 
-.space-between {
-  justify-content: space-between;
-}
+// .space-between {
+//   justify-content: space-between;
+// }
 
-.button-navigation {
-    background-color: #666;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    font-weight: 600;
-    font-family: 'Exo 2', sans-serif;
-    text-align: center;
-    vertical-align: middle;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    white-space: nowrap;
-    overflow: hidden;
-    padding: 0 18px;
-    border: 0 none;
-    border-radius: 3px;
-    font-size: 13px;
-    height: 40px;
-    line-height: 40px;
-    text-decoration: none;
-    cursor: pointer;
-}
+// .button-navigation {
+//     background-color: #666;
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     color: white;
+//     font-weight: 600;
+//     font-family: 'Exo 2', sans-serif;
+//     text-align: center;
+//     vertical-align: middle;
+//     -webkit-user-select: none;
+//     -ms-user-select: none;
+//     white-space: nowrap;
+//     overflow: hidden;
+//     padding: 0 18px;
+//     border: 0 none;
+//     border-radius: 3px;
+//     font-size: 13px;
+//     height: 40px;
+//     line-height: 40px;
+//     text-decoration: none;
+//     cursor: pointer;
+// }
 
-.right {
-  float: right;
-}
+// .right {
+//   float: right;
+// }
 
-ul, ol {
-    font-size: 20px;
-    line-height: 24px;
-    outline: 0;
-}
+// ul, ol {
+//     font-size: 20px;
+//     line-height: 24px;
+//     outline: 0;
+// }
 
-ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
+// ul {
+//     list-style: none;
+//     padding: 0;
+//     margin: 0;
+// }
 
-.regular {
-    padding: 12px;
-    border-radius: 5px;
-    margin-bottom: 6px;
-    color: #484848;
-    display: block;
-    line-height: 1em;
-    word-wrap: break-word;
-}
+// .regular {
+//     padding: 12px;
+//     border-radius: 5px;
+//     margin-bottom: 6px;
+//     color: #484848;
+//     display: block;
+//     line-height: 1em;
+//     word-wrap: break-word;
+// }
 
-h1, h2, h3, h4, h5, .h1, .h2, .h3, .h4, .h5 {
-    font-weight: 600;
-    color: white;
-    font-family: 'Exo 2', sans-serif;
-    outline: 0;
-}
+// h1, h2, h3, h4, h5, .h1, .h2, .h3, .h4, .h5 {
+//     font-weight: 600;
+//     color: white;
+//     font-family: 'Exo 2', sans-serif;
+//     outline: 0;
+// }
 
-.grow {
-  flex-grow: 1;
-  flex-shrink: 0;
-}
+// .grow {
+//   flex-grow: 1;
+//   flex-shrink: 0;
+// }
 
-.shrink {
-  flex-grow: 0;
-  flex-shrink: 1;
-}
+// .shrink {
+//   flex-grow: 0;
+//   flex-shrink: 1;
+// }
 
-.header-align-center {
-    align-items: center;
-}
+// .header-align-center {
+//     align-items: center;
+// }
 
-h1, .h1 {
-  font-size: 36px;
-  line-height: 1.6em;
-  margin-bottom: 10px;
-  letter-spacing: -0.029em;
-}
+// h1, .h1 {
+//   font-size: 36px;
+//   line-height: 1.6em;
+//   margin-bottom: 10px;
+//   letter-spacing: -0.029em;
+// }
 
-h3, .h3 {
-  font-size: 21px;
-  line-height: 1.14285714em;
-  margin-bottom: 10px;
-  letter-spacing: -0.025em;
-  overflow-wrap: break-word;
-}
+// h3, .h3 {
+//   font-size: 21px;
+//   line-height: 1.14285714em;
+//   margin-bottom: 10px;
+//   letter-spacing: -0.025em;
+//   overflow-wrap: break-word;
+// }
 
 
-h2, .h2 {
-  font-size: 25px;
-  line-height: 1.44em;
-  margin-bottom: 10px;
-  letter-spacing: -0.024em;
-}
+// h2, .h2 {
+//   font-size: 25px;
+//   line-height: 1.44em;
+//   margin-bottom: 10px;
+//   letter-spacing: -0.024em;
+// }

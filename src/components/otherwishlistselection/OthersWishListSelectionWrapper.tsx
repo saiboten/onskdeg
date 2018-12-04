@@ -24,6 +24,11 @@ const StyledHeader = styled.div`
   border-bottom: 1px solid black;
 `;
 
+const StyledForm = styled.form`
+display: flex;
+align-items: center;
+`;
+
 interface P {
   user: User;
   friends: Array<User>;
@@ -105,11 +110,6 @@ class OthersWishListSelection extends React.Component<P,S> {
 
     const usersLinks = friends != null ? friends.map(el => (<AddedUserLink key={el.uid} deleteMe={this.deleteUser} el={el} />)) : null;
 
-    const StyledForm = styled.form`
-      display: flex;
-      align-items: center;
-    `;
-
     return (
       <Container>
         <div className="wishlist-selection__added-users-container">
@@ -119,7 +119,7 @@ class OthersWishListSelection extends React.Component<P,S> {
         <StyledForm onSubmit={this.addUserClickEvent}>
           <p>Legg til (legg inn epost)</p>
           <input value={newUser} onChange={this.updateUserState} />
-          <input className="button button--padded" type="submit" value="OK" />
+          <input type="submit" value="OK" />
         </StyledForm>
 
         {userNotFound && <p>Fant ikke bruker</p>}

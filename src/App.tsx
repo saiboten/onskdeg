@@ -20,6 +20,7 @@ import authFirebase from './components/firebase/authFirebase';
 import { ApplicationState } from './state/reducers';
 import { UserState } from './state/reducers/types';
 import Loading from './components/common/Loading';
+import { GlobalStyle } from './GlobalStyles';
 
 interface AppProps {
   user: UserState;
@@ -27,7 +28,7 @@ interface AppProps {
 
 // To prevent route update blockin
 const HeaderWithRouter = withRouter<any>(Header);
-const AppComp = ({ user } : AppProps) => {
+const AppComp = ({ user }: AppProps) => {
   if (!user || !user.loaded) {
     return <Loading />;
   }
@@ -43,17 +44,18 @@ const AppComp = ({ user } : AppProps) => {
     margin: 0 auto;
   `;
   return (
-    <BrowserRouter>
-      <>
-        <HeaderWithRouter />
-        <Switch>
-          <Route path="/" exact component={YourWishList} />
-          <Route path="/wish/:wishid" exact component={YourWishDetails} />
-          <Route path="/others" component={OthersWishListSelection} />
-          <Route path="/other/:name" component={OthersWishList} />
-        </Switch>
-      </>
-    </BrowserRouter>
+      <BrowserRouter>
+        <>
+          <GlobalStyle />
+          <HeaderWithRouter />
+          <Switch>
+            <Route path="/" exact component={YourWishList} />
+            <Route path="/wish/:wishid" exact component={YourWishDetails} />
+            <Route path="/others" component={OthersWishListSelection} />
+            <Route path="/other/:name" component={OthersWishList} />
+          </Switch>
+        </>
+      </BrowserRouter>
   );
 };
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-
+import styled from 'styled-components';
 import Wish from '../wish/Wish';
 import firebase from '../firebase/firebase';
 import Icon from '../common/Icon';
@@ -11,7 +11,7 @@ import Container from '../common/container/Container';
 
 const debug = require('debug')('YourWishList');
 
-require('./yourwishlist.scss');
+import './yourwishlist.scss';
 
 interface P {
   user: User;
@@ -24,6 +24,36 @@ interface S {
   newWish: string;
   feedback: string;
 }
+
+const StyledWrapper = styled.form`
+  position: relative;
+  margin-bottom: .8rem;
+`;
+
+const StyledInput = styled.input`
+  height: 48px;
+  padding: 0 10px;
+  padding-left: 40px;
+  width: calc(100% - 1.6rem);
+  margin: 0 .8rem;
+  border-radius: 10px;
+  border: none;
+  @media only screen and (min-width: 37.5em) {
+    flex: 1 0 70%;
+  }
+`;
+
+const StyledSubmitButton = styled.input`
+position: absolute;
+  color: black;
+  top: 4px;
+  left: 19px;
+  height: 100%;
+  background-color: transparent;
+  border: none;
+  float: right;
+  cursor: pointer;
+`;
 
 class YourWishList extends React.Component<P,S> {
 
@@ -179,19 +209,16 @@ class YourWishList extends React.Component<P,S> {
     
     return (
       <Container>
-        <form onSubmit={this.addWish}>  
-          <div className="your-wishlist__add-wish-wrapper">
-            <input
+        <StyledWrapper onSubmit={this.addWish}>  
+            <StyledInput
               type="text"
               placeholder="Legg inn nye ønsker her"
-              className="your-wishlist__add-wish-textarea"
               value={newWish}
               onChange={this.updateWishState}
             />
             <Icon type="submit" name="check" onClick={() => null} className="your-wishlist__add-wish-submit" />
             <div>{feedback}</div>
-          </div>
-        </form>
+        </StyledWrapper>
 
         <div className="your-wishlist__wishlist">
           {wishesEl}
