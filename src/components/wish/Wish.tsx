@@ -149,7 +149,7 @@ class Wish extends React.Component<P, S> {
       image: wish.image,
       description: wish.description,
       accomplished: wish.accomplished,
-      accompllishedby: wish.accompllishedby,
+      accomplishedby: wish.accomplishedby,
       deleted: wish.deleted,
       link: wish.link
     });

@@ -124,7 +124,7 @@ class YourWishList extends React.Component<P,S> {
       id: this.createGuid(),
       image: '',
       accomplished: false,
-      accompllishedby: '',
+      accomplishedby: '',
       deleted: false,
       description: '',
       link: ''

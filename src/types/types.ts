@@ -18,7 +18,7 @@ export interface Wish {
   link: string;
   deleted: boolean;
   accomplished: boolean;
-  accompllishedby: string; // The simplest approach, but not that flexible
+  accomplishedby: string; // The simplest approach, but not that flexible
 }
 
 export interface Purchases {
