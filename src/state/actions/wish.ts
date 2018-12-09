@@ -28,3 +28,10 @@ export const setWishesForUser = (data: any) => (
     ...data,
   }
 );
+
+export const storeWishDescription = (data: any) => (
+  {
+    type: 'STORE_DESCRIPTION_TO_FIREBASE',
+    ...data,
+  }
+);

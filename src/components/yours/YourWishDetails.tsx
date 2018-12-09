@@ -2,14 +2,11 @@ import React, { useEffect, useState } from 'react';
 import Container from '../common/container/Container';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import { ApplicationState } from '../../state/reducers';
-import spinnerWhileLoading from '../common/spinnerWhileLoading';
 import { User, Wish } from '../../types/types';
 import styled from 'styled-components';
-import { setWishes } from '../../state/actions/wish';
+import { setWishes, storeWishDescription as storeWishDescriptionAction } from '../../state/actions/wish';
 import Loading from '../common/Loading';
 import firebase from '../firebase/firebase';
-import { WishState } from '../../state/reducers/types';
 
 const StyledWrapper = styled.div`
     text-align: left;
@@ -30,10 +27,7 @@ const StyledWishComplete = styled.div`
 
 `;
 
-function YourWishDetails({ wish, user, updateWishStore }: { wish: Wish, user: User, updateWishStore: Function }) {
-
-    const [description, setDescription] = useState(wish.description);
-    const [editDescription, setToggleEditDescription] = useState(false);
+function YourWishDetails({ wish, user, updateWishStore, storeWishDescription }: { wish: Wish, user: User, updateWishStore: Function, storeWishDescription: (description: string) => void }) {
 
     useEffect(() => {
         const firebaseRef = firebase.database().ref(`wishes/${user.uid}/wishes`);
@@ -51,21 +45,31 @@ function YourWishDetails({ wish, user, updateWishStore }: { wish: Wish, user: Us
         return <Loading />
     }
 
+    const { name, description: wishDescription, image, link } = wish;
+    
+    const [description, setDescription] = useState(wishDescription);
+    const [editDescription, setToggleEditDescription] = useState(false);
+
+    const storeDescription = () => {
+        storeWishDescription(description);
+        setToggleEditDescription(false);
+    };
+
     return (
         <Container>
             <StyledWrapper>
-                <StyledTitle>{wish.image}{wish.name}</StyledTitle>
+                <StyledTitle>{image}{name}</StyledTitle>
                 <StyledDescription>
                     <div>Beskrivelse</div>
                     {editDescription ?
                     <div>
-                        <input value={description} onBlur={() => setToggleEditDescription(false)} onChange={e => setDescription(e.target.value)} />
+                        <input value={description} onBlur={storeDescription} onChange={e => setDescription(e.target.value)} />
                     </div>
                     :
-                    <div onClick={() => setToggleEditDescription(true)}>{wish.description ? wish.description : 'Legg til beskrivelse'}</div>
+                    <div onClick={() => setToggleEditDescription(true)}>{description ? description : 'Legg til beskrivelse'}</div>
                 }
                 </StyledDescription>
-                <StyledLink>{wish.link}</StyledLink>
+                <StyledLink>{link}</StyledLink>
                 <StyledWishComplete>
                     <button type="text">Jeg har oppfylt ønsket</button>
                 </StyledWishComplete>
@@ -77,13 +81,17 @@ const OthersWishListWrapper = connect(
     ({ wish, user }: { wish: any, user: User }, ownProps: any) => {
         console.log(wish.wishes[user.uid]);
         return {
-            wish: wish.wishes[user.uid] ? wish.wishes[user.uid].filter((w: Wish) => w.id === ownProps.match.params.wishid).reduce((w: Wish) => w) : [],
+            wish: wish.wishes[user.uid] ? wish.wishes[user.uid].filter((w: Wish) => w.id === ownProps.match.params.wishid).reduce((w: Wish) => w) : undefined,
             user,
         };
     },
     (dispatch: Dispatch, ownProps: any) => ({
         updateWishStore: (newData: Array<Wish>) => {
             dispatch(setWishes(newData));
+        },
+        storeWishDescription: (description: string) => {
+            const { match: { params: { wishid }} } = ownProps;
+            dispatch(storeWishDescriptionAction({wishid, description}));
         },
     }))(YourWishDetails);
 
