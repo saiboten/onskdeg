@@ -77,7 +77,7 @@ class OthersWishList extends React.Component<Props, State> {
 
   check(id: string) {
     const { purchases, purchaseItem, sellItem, match: { params: { name } } } = this.props;
-    if(purchases[id].checked) {
+    if(purchases[id] && purchases[id].checked) {
       sellItem(name, id);
       this.setState({ feedback: 'Solgt!' });
     }
