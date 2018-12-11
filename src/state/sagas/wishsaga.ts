@@ -28,7 +28,7 @@ function* storeWishesToFirebaseSaga(input: any) {
 function* storeDescriptionToFirebase(input: any) {
   const currentUser = yield select(userSelect);
   const { uid } = currentUser;
-  const { description, wishid } = input;
+  const { wishid, updatedWish } = input;
   firebase.database().ref(`wishes/${uid}/wishes`).once('value', (snapshot: any) => {
     const wishList = snapshot.val();
     const newWishList = wishList.map((el: any) => {
@@ -38,10 +38,7 @@ function* storeDescriptionToFirebase(input: any) {
         return rest;
       }
 
-      return {
-        ...rest,
-        description
-      }
+      return updatedWish;
     })
     firebase.database().ref(`wishes/${uid}/wishes`).set(newWishList);
   });
@@ -53,5 +50,5 @@ export function* wishSaga() {
   yield takeEvery('SET_OWN_WISHES', setOwnWishes);
   yield takeEvery('STORE_WISHES_TO_FIREBASE', storeWishes);
   yield takeEvery('STORE_OWN_WISHES_TO_FIREBASE', storeWishesToFirebaseSaga);
-  yield takeLatest('STORE_DESCRIPTION_TO_FIREBASE', storeDescriptionToFirebase);
+  yield takeLatest('STORE_WISH_DETAILS_TO_FIREBASE', storeDescriptionToFirebase);
 }

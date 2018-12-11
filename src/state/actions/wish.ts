@@ -29,9 +29,9 @@ export const setWishesForUser = (data: any) => (
   }
 );
 
-export const storeWishDescription = (data: any) => (
+export const storeWishDetails = (data: any) => (
   {
-    type: 'STORE_DESCRIPTION_TO_FIREBASE',
+    type: 'STORE_WISH_DETAILS_TO_FIREBASE',
     ...data,
   }
 );
