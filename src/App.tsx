@@ -10,6 +10,7 @@ import YourWishDetails from './components/yours/YourWishDetails';
 
 import OthersWishListSelection from './components/otherwishlistselection/OthersWishListSelectionWrapper';
 import OthersWishList from './components/others/OthersWishList';
+import OtherWishDetail from './components/others/OtherWishDetail';
 import Header from './components/header/Header';
 import Login from './components/login/Login';
 import SetName from './components/setname/SetName';
@@ -39,10 +40,7 @@ const AppComp = ({ user }: AppProps) => {
   if (!user.name) {
     return <SetName />;
   }
-  const MainWrapper = styled.div`
-    max-width: 870px;
-    margin: 0 auto;
-  `;
+  
   return (
       <BrowserRouter>
         <>
@@ -51,6 +49,7 @@ const AppComp = ({ user }: AppProps) => {
             <Route path="/" exact component={YourWishList} />
             <Route path="/wish/:wishid" exact component={YourWishDetails} />
             <Route path="/others" component={OthersWishListSelection} />
+            <Route path="/other/:user/:wishid" component={OtherWishDetail} />
             <Route path="/other/:name" component={OthersWishList} />
           </Switch>
         </>

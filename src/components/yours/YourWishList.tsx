@@ -13,6 +13,18 @@ const debug = require('debug')('YourWishList');
 
 import './yourwishlist.scss';
 
+const StyledCheckIcon = styled(Icon)`
+   position: absolute;
+   color: black;
+   top: 0;
+   left: 15px;
+   height: 100%;
+   background-color: transparent;
+   border: none;
+   float: right;
+   cursor: pointer;
+`;
+
 interface P {
   user: User;
   updateWishStore: (newWishes: Array<WishType>) => void;
@@ -41,18 +53,6 @@ const StyledInput = styled.input`
   @media only screen and (min-width: 37.5em) {
     flex: 1 0 70%;
   }
-`;
-
-const StyledSubmitButton = styled.input`
-position: absolute;
-  color: black;
-  top: 4px;
-  left: 19px;
-  height: 100%;
-  background-color: transparent;
-  border: none;
-  float: right;
-  cursor: pointer;
 `;
 
 class YourWishList extends React.Component<P,S> {
@@ -216,8 +216,8 @@ class YourWishList extends React.Component<P,S> {
               value={newWish}
               onChange={this.updateWishState}
             />
-            <Icon type="submit" name="check" onClick={() => null} className="your-wishlist__add-wish-submit" />
-            <div>{feedback}</div>
+            <StyledCheckIcon type="submit" name="check" onClick={() => null} />
+            {feedback && <div>{feedback}</div>}
         </StyledWrapper>
 
         <div className="your-wishlist__wishlist">

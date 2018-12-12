@@ -34,6 +34,7 @@ interface Props {
   wishes: Array<Wish>;
   friend: User;
   purchases: Purchases;
+  name: string;
 }
 interface State {
   hideSelected: boolean;
@@ -112,10 +113,10 @@ class OthersWishList extends React.Component<Props, State> {
     const {
       hideSelected, feedback,
     } = this.state;
-    const { wishes, friend, purchases } = this.props;
+    const { wishes, friend, purchases, name } = this.props;
 
     const filteredWishes = wishes.filter((el) => this.shouldDisplayWish(el, purchases)).map(wishInfo => (
-      <OtherWish deleteSuggestion={() => null} canDelete={false} key={wishInfo.id} onClick={this.check} wishInfo={wishInfo} purchase={purchases[wishInfo.id] ? purchases[wishInfo.id] : { checked: false, checkedby: '' }} />));
+      <OtherWish deleteSuggestion={() => null} user={name} canDelete={false} key={wishInfo.id} onClick={this.check} wishInfo={wishInfo} purchase={purchases[wishInfo.id] ? purchases[wishInfo.id] : { checked: false, checkedby: '' }} />));
 
     return (
       <Container>
@@ -141,6 +142,7 @@ const mapStateToProps = ({ purchase, wish, user, friends: { loading, loaded, fri
   return {
     wishes: wish.wishes[name] || [],
     purchases: purchase.purchases[name] || {},
+    name,
     user,
     loading,
     loaded,

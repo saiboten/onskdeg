@@ -8,7 +8,7 @@ import { logout as logoutAction } from '../../state/actions/user';
 import { ApplicationState } from '../../state/reducers';
 import { UserState } from '../../state/reducers/types';
 import { APP_TITLE } from '../../constants';
-import { NavLink } from '../common/Link';
+import { NavLink, Link } from '../common/Link';
 import Container from '../common/container/Container';
 import { ButtonNavigation } from '../common/Button';
 
@@ -30,6 +30,8 @@ function logOut(setFeedback: (n: string) => void, logout: () => void) {
 }
 
 const othersActive = (match: any, location: any) => location.pathname.startsWith("/other");
+
+const yoursActive = (match: any, location: any) => location.pathname === '/' || location.pathname.startsWith("/wish");
 
 export interface HeaderProps {
   user?: UserState;
@@ -64,7 +66,7 @@ const HeaderComponent = ({ user, logout }: HeaderProps) => {
   `;
   return (
     <Container>
-      <H1>{APP_TITLE}</H1>
+      <H1><Link to="/">{APP_TITLE}</Link></H1>
       <UserInfo>
         <UserEmail>{user ? user.email : 'Ukjent'}</UserEmail>
         <ButtonNavigation type="ButtonNavigation" onClick={() => logOut(setFeedback, logout)}>Logg ut</ButtonNavigation>
@@ -72,7 +74,7 @@ const HeaderComponent = ({ user, logout }: HeaderProps) => {
       </UserInfo>
       <StyledHeader>
         <ActionButtons>
-          <CustomNavLink activeClassName="selected" exact to="">Mine ønsker</CustomNavLink>
+          <CustomNavLink activeClassName="selected" isActive={yoursActive} exact to="">Mine ønsker</CustomNavLink>
           <CustomNavLink activeClassName="selected" isActive={othersActive} to="/others">Vennelister</CustomNavLink>
         </ActionButtons>
       </StyledHeader>

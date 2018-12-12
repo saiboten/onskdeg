@@ -16,6 +16,18 @@ export const Link = styled(RouterLink)`
   }
 `;
 
+export const UnstyledLink = styled(RouterLink)`
+  text-decoration: none;
+  font-weight: 400;
+
+  &:visited, &:link {
+    color: white;
+  }
+  &:hover {
+    color: grey;
+  }
+`;
+
 export const NavLink = styled(RouterNavLink)`
   background: ${colors.primaryDark};
   color: ${Color('white').darken(.3).string()};

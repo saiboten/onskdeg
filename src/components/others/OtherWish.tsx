@@ -1,5 +1,4 @@
 import React from 'react';
-import Linkify from 'react-linkify';
 import firebase from '../firebase/firebase';
 import Icon from '../common/Icon';
 import ListRow, { LeftSection } from '../common/ListRow';
@@ -9,6 +8,8 @@ import './otherwish.css';
 import { Wish, Purchase } from '../../types/types';
 import { ImageWrapper } from '../common/Image';
 import { StyledActionButtonsAnimated, StyledActionButtons } from '../common/IconButton';
+import { Link } from 'react-router-dom';
+import { UnstyledLink } from '../common/Link';
 
 const storageRef = firebase.storage().ref();
 
@@ -20,6 +21,7 @@ interface P {
   canDelete: boolean;
   deleteSuggestion: () => void;
   onClick: Function;
+  user: string;
 };
 
 interface S {
@@ -46,7 +48,7 @@ class OtherWish extends React.Component<P, S> {
 
   render() {
     const {
-      wishInfo, onClick, purchase
+      wishInfo, onClick, purchase, user
     } = this.props;
     const { image } = this.state;
 
@@ -58,9 +60,6 @@ class OtherWish extends React.Component<P, S> {
         <del>{wishInfo.name}</del>
       )
       : wishInfo.name;
-    const linkifyed = (
-      <Linkify className="other-wish__linkify">{item}</Linkify>
-    );
     const checkedByElem = purchase.checked
       ? (
         <div className="smallspace">Tatt</div>) : '';
@@ -72,9 +71,10 @@ class OtherWish extends React.Component<P, S> {
 
     return (
       <ListRow>
-        <LeftSection>
+        <LeftSection >
           <ImageWrapper>{imageTag}</ImageWrapper>
-          {linkifyed}
+          <UnstyledLink to={`/other/${user}/${wishInfo.id}`}>{item}</UnstyledLink>
+          
         </LeftSection>
         <StyledActionButtons>
           {checkedByElem}
