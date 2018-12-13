@@ -13,8 +13,6 @@ import { UnstyledLink } from '../common/Link';
 
 const storageRef = firebase.storage().ref();
 
-const debug = require('debug')('OtherWish');
-
 interface P {
   purchase: Purchase;
   wishInfo: Wish;
@@ -38,7 +36,6 @@ class OtherWish extends React.Component<P, S> {
 
     if (props.wishInfo.image) {
       storageRef.child(props.wishInfo.image).getDownloadURL().then((url) => {
-        debug('url: ', url);
         this.setState({
           image: url,
         });

@@ -3,8 +3,6 @@ import moment from 'moment';
 import firebase from '../firebase/firebase';
 import { UserState } from '../../state/reducers/types';
 
-const debug = require('debug')('Comments');
-
 require('./comments.css');
 
 interface Comment {
@@ -30,7 +28,6 @@ class Comments extends React.Component<CommentsProps, CommentsState> {
 
   constructor(props: any) {
     super(props);
-    debug('constructor');
     this.state = {
       comment: '',
       feedback: '',
@@ -43,7 +40,6 @@ class Comments extends React.Component<CommentsProps, CommentsState> {
 
 
   componentDidMount() {
-    debug('componentDidMount');
     const { params: { name } } = this.props;
 
     this.commentsRef = firebase.database().ref(`comments/${name}`);
@@ -60,14 +56,12 @@ class Comments extends React.Component<CommentsProps, CommentsState> {
   }
 
   updateCommentState(e: React.ChangeEvent<HTMLTextAreaElement>) {
-    debug('updateCommentState', e);
     this.setState({
       comment: e.target.value,
     });
   }
 
   addComment(e: React.MouseEvent<HTMLElement>) {
-    debug('addComment', e);
     const { user, comments, params: { name } } = this.props;
     const { comment } = this.state;
 
@@ -80,8 +74,6 @@ class Comments extends React.Component<CommentsProps, CommentsState> {
       return;
     }
 
-    debug('Adding comment: ', comment);
-
     const newElem = {
       user: user.email,
       comment,
@@ -90,7 +82,6 @@ class Comments extends React.Component<CommentsProps, CommentsState> {
 
     const commentsCopy = [newElem, ...comments];
 
-    debug('New comment list: ', commentsCopy);
     firebase.database().ref(`comments/${name}`).set(commentsCopy);
     this.setState({
       comments: commentsCopy,
@@ -104,7 +95,6 @@ class Comments extends React.Component<CommentsProps, CommentsState> {
     const { comments } = this.props;
 
     const commentsRevamped = comments.map((oneComment) => {
-      debug('Comment: ', oneComment);
       return (
         <div key={oneComment.time} className="comments__comment-wrapper smallspace">
           <div className="comments__comment-comment">{oneComment.comment}</div>

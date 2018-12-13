@@ -9,10 +9,6 @@ import { setWishes, storeOwnWishesToFirebase } from '../../state/actions/wish';
 import { Wish as WishType, User, FirebaseSnapshot } from '../../types/types';
 import Container from '../common/container/Container';
 
-const debug = require('debug')('YourWishList');
-
-import './yourwishlist.scss';
-
 const StyledCheckIcon = styled(Icon)`
    position: absolute;
    color: black;
@@ -74,7 +70,6 @@ class YourWishList extends React.Component<P,S> {
   }
 
   componentDidMount() {
-    debug('componentDidMount');
     const { user, updateWishStore } = this.props;
 
     this.firebaseRef = firebase.database().ref(`wishes/${user.uid}/wishes`);
@@ -117,7 +112,6 @@ class YourWishList extends React.Component<P,S> {
       return;
     }
 
-    debug('Adding wish');
     const newWishList = Object.assign([], wishes);
     newWishList.unshift({
       name: newWish,
@@ -139,7 +133,6 @@ class YourWishList extends React.Component<P,S> {
   }
 
   update(wish: WishType) {
-    debug('Saving wishlist: ', wish);
     const { user, wishes, storeWishesToFirebase } = this.props;
 
     const newWishList = wishes.map((e) => {
@@ -157,7 +150,6 @@ class YourWishList extends React.Component<P,S> {
   }
 
   addImage(wish: WishType, image: string) {
-    debug('Adding image to wish: ', wish, image);
     const { wishes, storeWishesToFirebase } = this.props;
     const newWishList = wishes.map((e) => {
       if (e.id === wish.id) {
@@ -174,27 +166,21 @@ class YourWishList extends React.Component<P,S> {
   }
 
   deleteThis(deleteId: string) {
-    debug('Delete id: ', deleteId);
     const { user, wishes, storeWishesToFirebase } = this.props;
     const newWishList = Object.assign([], wishes);
 
     const filteredNewWishList = newWishList.filter((e: WishType) => {
-      debug(e.id);
       return e.id !== deleteId;
     });
-
-    debug('Wish list after deletion: ', newWishList);
 
     storeWishesToFirebase(filteredNewWishList);
   }
 
   render() {
-    debug('This.props. ', this.props);
     const { wishes } = this.props;
     const { newWish, feedback } = this.state;
 
     const wishesEl = wishes.map((el: WishType) => {
-      debug('Creating wish based on this el: ', el);
       return (
         <Wish
           key={el.id}
@@ -205,8 +191,6 @@ class YourWishList extends React.Component<P,S> {
         />);
     });
 
-    debug('Wishes: ', wishesEl);
-    
     return (
       <Container>
         <StyledWrapper onSubmit={this.addWish}>  
@@ -230,7 +214,6 @@ class YourWishList extends React.Component<P,S> {
 
 export default connect(
   ({ wish: { wishes }, user }: { wish: any, user: User}) => {
-    debug('User wishes', wishes[user.uid]);
     return {
       wishes: wishes[user.uid] ? wishes[user.uid] : [],
       user,

@@ -10,8 +10,6 @@ import { Link } from '../common/Link';
 import { BorderButton } from '../common/Button';
 import { User } from '../../types/types';
 
-const debug = require('debug')('ThirdPartyLogin');
-
 const iconHeight = '30px';
 const FacebookIcon = styled(FbIcon)`
   font-size: 1em;
@@ -37,8 +35,6 @@ class ThirdPartyLogin extends React.Component<{}, State> {
   }
 
   loginFacebook(e: React.MouseEvent<HTMLButtonElement>) {
-    debug('loginFacebook', e);
-
     e.preventDefault();
     e.stopPropagation();
     this.setState({ submitting: true });

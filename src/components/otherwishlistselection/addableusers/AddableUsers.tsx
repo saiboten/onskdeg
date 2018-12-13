@@ -3,8 +3,6 @@ import { func, any } from 'prop-types';
 import firebase from '../../firebase/firebase';
 import { User } from '../../../types/types';
 
-const debug = require('debug')('AddableUser');
-
 require('./addableusers.css');
 
 interface P {
@@ -19,7 +17,6 @@ interface S {
 
 class AddableUsers extends React.Component<P,S> {
   static userInList(uid: string, userlist: Array<User>) {
-    debug('userInList: ', uid, userlist);
     if (!userlist) {
       return undefined;
     }
@@ -31,7 +28,6 @@ class AddableUsers extends React.Component<P,S> {
 
   constructor(props: any) {
     super(props);
-    debug('constructor');
     this.state = { userlist: [], open: false };
 
     this.clearList = this.clearList.bind(this);
@@ -39,14 +35,12 @@ class AddableUsers extends React.Component<P,S> {
   }
 
   componentDidMount() {
-    debug('componentDidMount');
     const { user } = this.props;
 
     firebase.database().ref('userlist').on('value', (data) => {
       if(!data) {
         return;
       }
-      debug('Data returned: ', data.val());
       const userlist = data.val();
 
       firebase.database().ref(`users/${user.uid}`).on('value', (snapshot) => {
@@ -72,20 +66,16 @@ class AddableUsers extends React.Component<P,S> {
   }
 
   addUser(e: React.MouseEvent<HTMLElement>, userUid: string) {
-    debug('addUser', e, userUid);
     const { addUser } = this.props;
     e.preventDefault();
     addUser(userUid);
   }
 
   clearList() {
-    debug('clearList');
-
     this.setState({ userlist: [] });
   }
 
   toggleOpen() {
-    debug('toggleOpen');
     const { open } = this.state;
 
     this.setState({

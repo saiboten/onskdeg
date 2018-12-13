@@ -12,8 +12,6 @@ import spinnerWhileLoading from '../common/spinnerWhileLoading';
 import { User, FirebaseSnapshot } from '../../types/types';
 import { deleteFriend as deleteFriendAction, addFriend as addFriendAction } from '../../state/actions/friends';
 
-const debug = require('debug')('OthersWishListSelection');
-
 require('./otherswishlistselection.css');
 
 const StyledHeader = styled.div`
@@ -78,13 +76,10 @@ class OthersWishListSelection extends React.Component<P,S> {
   }
 
   updateUserState(e: React.ChangeEvent<HTMLInputElement>) {
-    debug('updateUserState');
-
     this.setState({ newUser: e.target.value });
   }
 
   addUserClickEvent(e: React.FormEvent<HTMLFormElement>) {
-    debug('addUserClickEvent', e);
     const { newUser } = this.state;
 
     e.preventDefault();

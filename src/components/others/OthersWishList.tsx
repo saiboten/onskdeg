@@ -5,8 +5,6 @@ import styled from 'styled-components';
 
 import Container from '../common/container/Container';
 import firebase from '../firebase/firebase';
-// import Comments from './Comments';
-// import Suggestions from '../suggestions/Suggestions';
 import OtherWish from './OtherWish';
 import { setWishesForUser, storeWishesToFirebase } from '../../state/actions/wish';
 import { setPurchasesForUser, purchaseItem as purchaseItemAction, sellItem as sellItemAction } from '../../state/actions/purchase';
@@ -20,8 +18,6 @@ const ActionButtonsContainer = styled.div`
   display: flex;
   justify-content: flex-end;
 `;
-
-const debug = require('debug')('OthersWishList');
 
 interface Props {
   match: { params: { name: string }};
@@ -46,7 +42,6 @@ class OthersWishList extends React.Component<Props, State> {
 
   constructor(props: any) {
     super(props);
-    debug('constructor');
     this.state = {
       hideSelected: true, feedback: '',
     };
@@ -56,7 +51,6 @@ class OthersWishList extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    debug('componentDidMount');
     const { match: { params: { name } }, setWishes, setPurchases } = this.props;
 
     this.wishRef = firebase.database().ref(`wishes/${name}/wishes`);
@@ -91,7 +85,6 @@ class OthersWishList extends React.Component<Props, State> {
   }
 
   toggleShowSelected(e: React.MouseEvent<HTMLElement>) {
-    debug('toggleShowSelected', e);
     const { hideSelected } = this.state;
 
     e.preventDefault();
@@ -105,7 +98,6 @@ class OthersWishList extends React.Component<Props, State> {
       hideSelected,
     } = this.state;
 
-    debug('Wish to be filtered: ', el);
     return !(purchases[el.id] && purchases[el.id].checked) || !hideSelected;
   }
 

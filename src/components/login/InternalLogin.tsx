@@ -4,11 +4,7 @@ import { Link } from '../common/Link';
 import colors from '../../styles/colors';
 import { BorderInput } from '../common/Button';
 import firebase from '../firebase/firebase';
-import { string } from 'prop-types';
 import Icon from '../common/Icon';
-
-const debug = require('debug')('InternalLogin');
-
 
 const StyledInput = styled.input`
   height: 2.5rem;
@@ -65,26 +61,19 @@ class InternalLogin extends React.Component<{}, State> {
     this.togglePeek = this.togglePeek.bind(this);
   }
   updateUserState(e: React.ChangeEvent<HTMLInputElement>) {
-    debug('updateUserState', e);
-
     this.setState({
       user: e.target.value,
     });
   }
 
   updatePasswordState(e: React.ChangeEvent<HTMLInputElement>) {
-    debug('updatePasswordState', e);
-
     this.setState({
       password: e.target.value,
     });
   }
 
   logIn(e: React.FormEvent<HTMLFormElement>) {
-    debug('logIn', e);
-    const { user, password } = this.state;
-
-    debug('Logging user in with the following credentials: ', user, password);
+    const { user, password } = this.state;-
     e.preventDefault();
 
     this.setState({
@@ -94,8 +83,6 @@ class InternalLogin extends React.Component<{}, State> {
     firebase.auth().signInWithEmailAndPassword(user, password).catch((error: any) => {
       const errorCode = error.code;
       const errorMessage = error.message;
-
-      debug('Errorcode: ', errorCode, 'errorMessage', errorMessage);
 
       if (errorCode) {
         this.setState({

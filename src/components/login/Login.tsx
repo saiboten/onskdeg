@@ -9,8 +9,6 @@ import ThirdPartyLogin from './ThirdPartyLogin';
 import InternalLogin from './InternalLogin';
 import FloatingCircles from '../common/FloatingCircles';
 
-const debug = require('debug')('SelectUser');
-
 const StyledParagraph = styled.p`
 font-size: 3rem;
 margin: 2rem;
@@ -36,7 +34,6 @@ interface State {
 class Login extends React.Component<Props, State> {
   constructor(props: any) {
     super(props);
-    debug('constructor');
     this.state = {
       user: '',
       password: '',
@@ -46,14 +43,8 @@ class Login extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-
-    debug('componentDidMount');
-
     firebase.auth().getRedirectResult().then(() => {
-      debug('Login was apparently successful');
     }).catch((error) => {
-      debug('Facebook login failed: ', error);
-
       if (error) {
         this.setState({
           feedback: `Klarte ikke å logge deg inn med facebook. Feil: ${error}`,

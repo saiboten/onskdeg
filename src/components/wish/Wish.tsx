@@ -13,8 +13,6 @@ import { Link as RouterLink } from 'react-router-dom';
 
 const storageRef = firebase.storage().ref();
 
-const debug = require('debug')('Wish');
-
 const StyledThumbnailImage = styled.img`
   width: 36px;
   height: 36px;
@@ -64,11 +62,9 @@ class Wish extends React.Component<P, S> {
     this.cancel = this.cancel.bind(this);
     this.deleteConfirmed = this.deleteConfirmed.bind(this);
     this.onDrop = this.onDrop.bind(this);
-    debug('props: ', props);
 
     if (props.wish.image) {
       storageRef.child(props.wish.image).getDownloadURL().then((url) => {
-        debug('url: ', url);
         this.setState({
           image: url,
         });
@@ -90,7 +86,6 @@ class Wish extends React.Component<P, S> {
   }
 
   onDrop(acceptedFiles: any, rejectedFiles: any) {
-    debug('Looks like I dropped something', acceptedFiles, rejectedFiles);
     const { wish, addImage } = this.props;
 
     const imageName = `${wish.id}.${acceptedFiles[0].name.split('.')[1]}`;
@@ -100,11 +95,9 @@ class Wish extends React.Component<P, S> {
 
     uploadTask.on('state_changed', () => {
     }, () => {
-      debug('Error. Wups.');
+      console.log('Error. Handle this?');
     }, () => {
-      debug('Success!');
       storageRef.child(imageName).getDownloadURL().then((url) => {
-        debug('url: ', url);
         this.setState({
           image: url,
         });
