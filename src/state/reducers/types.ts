@@ -28,9 +28,7 @@ export interface WishesDict {
 export interface WishState {
   loading: boolean;
   wishes: {
-    [name: string]: Wish[] | {
-      readonly uid?: string;
-    }
+    [name: string]: Wish[]
   }
   
 }
