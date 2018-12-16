@@ -9,76 +9,96 @@ import Loading from '../common/Loading';
 import { setPurchasesForUser } from '../../state/actions/purchase';
 import { setWishesForUser } from '../../state/actions/wish';
 import firebase from '../firebase/firebase';
+import { StyledLabel } from '../common/Label';
+import styled from 'styled-components';
+import Container from '../common/container/Container';
+import { NavLink } from '../common/Link';
 
 interface OtherWishDetailProps {
-    wish: Wish;
-    setWishes: (user: string, wishes: Wish[]) => void;
-    setPurchases: (user: string, purchases: Purchase[]) => void;
-    uid: string;
+  wish: Wish;
+  setWishes: (user: string, wishes: Wish[]) => void;
+  setPurchases: (user: string, purchases: Purchase[]) => void;
+  uid: string;
 }
 
-function OtherWishDetail({ uid, wish, setWishes, setPurchases } : OtherWishDetailProps) {
-    if(wish === undefined) {
-        return <Loading />
+const StyledOtherWishDetail = styled.div`
+  text-align: left;
+`;
+
+function OtherWishDetail({ uid, wish, setWishes, setPurchases }: OtherWishDetailProps) {
+  if (wish === undefined) {
+    return <Loading />
+  }
+
+  useEffect(() => {
+    var wishRef = firebase.database().ref(`wishes/${uid}/wishes`);
+    var purchaseRef = firebase.database().ref(`purchases/${uid}`);
+
+    wishRef.on('value', (snapshot) => {
+      setWishes(uid, snapshot && snapshot.val());
+    });
+
+    purchaseRef.on('value', (snapshot) => {
+      setPurchases(uid, snapshot && snapshot.val());
+    });
+
+    return () => {
+      wishRef.off();
+      purchaseRef.off();
     }
+  }, [])
 
-    useEffect(() => {
-        var wishRef = firebase.database().ref(`wishes/${uid}/wishes`);
-        var purchaseRef = firebase.database().ref(`purchases/${uid}`);
-    
-        wishRef.on('value', (snapshot) => {
-          setWishes(uid, snapshot && snapshot.val());
-        });
-    
-        purchaseRef.on('value', (snapshot) => {
-          setPurchases(uid, snapshot && snapshot.val());
-        });
+  return (<Container>
+    <StyledOtherWishDetail>
 
-        return () => {
-            wishRef.off();
-            purchaseRef.off();
-        }
-    }, [])
+    <NavLink to={`/other/${uid}`}>Tilbake til bruker</NavLink>
 
-    return (<div>
-        <h1>{wish.image} {wish.name}</h1>
-        <div>Beskrivelse</div>
-        <div>{wish.description}</div>
-        <div>Link</div>
-        <div>{wish.link}</div>
-        <div>Har vedkommende allerede fått dette? I så fall av hvem?</div>
-        <div>{wish.accomplished ? wish.accomplishedby : 'Niks. Tror vi.'}</div>
-    </div>);
+    <h1>{wish.image} {wish.name}</h1>
+
+    {wish.description && wish.description !== '' ?
+      <><StyledLabel>Beskrivelse</StyledLabel>
+        <div>{wish.description}</div></>
+      : null}
+
+    {wish.link && wish.link !== '' ?
+      <>
+        <StyledLabel>Link</StyledLabel>
+        <div><a href={wish.link}>Link</a></div>
+      </>
+      : null}
+
+  </StyledOtherWishDetail>
+  </Container>);
 };
 
 const mapStateToProps = ({ purchase, wish, user, friends: { loading, loaded, friends } }: ApplicationState, { match: { params: { user: uid, wishid } } }: any) => {
-    return {
-      wish: wish.wishes[uid] ? wish.wishes[uid].reduce((init: Wish, next: Wish) => next.id === wishid ? next : init) : {},
-      purchasedetail: purchase.purchases[name] ? purchase.purchases[name][wishid] : {},
-      name,
-      uid,
-      loading,
-      loaded,
-    }
-  };
-  
-  const mapDispatchToProps = (dispatch: Dispatch) => ({
-    load: () => dispatch(loadFriends()),
-    setWishes(uid: string, newWishList: Array<Wish>) {
-        dispatch(setWishesForUser({ uid, wishes: newWishList }));
-      },
-      setPurchases(uid: string, purchases: Purchases) {
-        dispatch(setPurchasesForUser({uid, purchases}))
-      }
-  });
-  
-  const WithSpinner = spinnerWhileLoading(({ loaded, loading, load }: { loaded: boolean, loading: boolean, load: () => void}) => {
-    if (!loaded && !loading) {
-      load();
-    }
-    return !loaded;
-  })(OtherWishDetail);
-  
-  const OthersWishListWrapper = connect(mapStateToProps, mapDispatchToProps)(WithSpinner);
-  
-  export default OthersWishListWrapper;
+  return {
+    wish: wish.wishes[uid] ? wish.wishes[uid].reduce((init: Wish, next: Wish) => next.id === wishid ? next : init) : {},
+    purchasedetail: purchase.purchases[name] ? purchase.purchases[name][wishid] : {},
+    name,
+    uid,
+    loading,
+    loaded,
+  }
+};
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  load: () => dispatch(loadFriends()),
+  setWishes(uid: string, newWishList: Array<Wish>) {
+    dispatch(setWishesForUser({ uid, wishes: newWishList }));
+  },
+  setPurchases(uid: string, purchases: Purchases) {
+    dispatch(setPurchasesForUser({ uid, purchases }))
+  }
+});
+
+const WithSpinner = spinnerWhileLoading(({ loaded, loading, load }: { loaded: boolean, loading: boolean, load: () => void }) => {
+  if (!loaded && !loading) {
+    load();
+  }
+  return !loaded;
+})(OtherWishDetail);
+
+const OthersWishListWrapper = connect(mapStateToProps, mapDispatchToProps)(WithSpinner);
+
+export default OthersWishListWrapper;

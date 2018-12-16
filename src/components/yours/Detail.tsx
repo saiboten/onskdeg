@@ -14,7 +14,7 @@ export default function Detail({ fieldName, initialValue, storeData }: DetailInp
         <>{edit
             ? (
                 <div>
-                    <input value={value} onBlur={() => storeData(fieldName, value, setEdit)} onChange={e => setValue(e.target.value)} />
+                    <input value={value} autoFocus onBlur={() => storeData(fieldName, value, setEdit)} onChange={e => setValue(e.target.value)} />
                 </div>
             )
             : <div onClick={() => setEdit(true)}>{value ? value : 'Klikk her for å legge til'}</div>

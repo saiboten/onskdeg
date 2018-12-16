@@ -8,6 +8,7 @@ import { setWishes, storeWishDetails as storeWishDetailsAction } from '../../sta
 import Loading from '../common/Loading';
 import firebase from '../firebase/firebase';
 import Detail from './Detail';
+import { StyledLabel } from '../common/Label';
 
 const StyledWrapper = styled.div`
     text-align: left;
@@ -19,9 +20,11 @@ const StyledTitle = styled.div`
 `;
 
 const StyledDescription = styled.div`
+    font-size: 16px;
 `;
 
 const StyledLink = styled.div`
+    font-size: 16px;
 `;
 
 const StyledWishComplete = styled.div`
@@ -66,16 +69,16 @@ function YourWishDetails({ wish, user, updateWishStore, storeWishDetails }: { wi
                     <Detail fieldName="name" storeData={storeData} initialValue={name} />
                 </StyledTitle>
                 <StyledDescription>
-                    <div>Beskrivelse</div>
+                    <StyledLabel>Beskrivelse</StyledLabel>
                     <Detail fieldName="description" storeData={storeData} initialValue={wishDescription} />
                 </StyledDescription>
                 <StyledLink>
-                    <div>Link</div>
+                    <StyledLabel>Link</StyledLabel>
                     <Detail fieldName="link" storeData={storeData} initialValue={link} />
                 </StyledLink>
-                <StyledWishComplete>
+                {/* <StyledWishComplete>
                     <button type="text">Jeg har oppfylt ønsket</button>
-                </StyledWishComplete>
+                </StyledWishComplete> */}
             </StyledWrapper>
         </Container>);
 }
