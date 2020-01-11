@@ -8,6 +8,8 @@ import Icon from '../common/Icon';
 import { setWishes, storeOwnWishesToFirebase } from '../../state/actions/wish';
 import { Wish as WishType, User, FirebaseSnapshot } from '../../types/types';
 import Container from '../common/container/Container';
+import { BorderButton } from '../common/Button';
+import { Link } from '../common/Link';
 
 const StyledCheckIcon = styled(Icon)`
    position: absolute;
@@ -49,6 +51,12 @@ const StyledInput = styled.input`
   @media only screen and (min-width: 37.5em) {
     flex: 1 0 70%;
   }
+`;
+
+const StyledBottomOptions = styled.div`
+    width: 100%;
+    text-align: left;
+    margin-top: 10px;
 `;
 
 class YourWishList extends React.Component<P,S> {
@@ -207,6 +215,9 @@ class YourWishList extends React.Component<P,S> {
         <div className="your-wishlist__wishlist">
           {wishesEl}
         </div>
+        <StyledBottomOptions>
+          <BorderButton><Link to={`/guardians`}>Konfigurer andre</Link></BorderButton>
+        </StyledBottomOptions>
       </Container>
     );
   }

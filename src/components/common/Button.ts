@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import colors from '../../styles/colors';
+import styled from "styled-components";
+import colors from "../../styles/colors";
 
 const BorderStyles = `
   border: 2px solid ${colors.primary};
@@ -30,7 +30,7 @@ export const ButtonNavigation = styled.button`
   align-items: center;
   color: white;
   font-weight: 600;
-  font-family: 'Exo 2', sans-serif;
+  font-family: "Exo 2", sans-serif;
   text-align: center;
   vertical-align: middle;
   -webkit-user-select: none;
@@ -47,7 +47,26 @@ export const ButtonNavigation = styled.button`
   cursor: pointer;
 `;
 
+export const Button = styled.button`
+  background-color: #666;
+  display: inline-block;
+  color: white;
+  font-weight: 600;
+  font-family: "Exo 2", sans-serif;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  padding: 0 18px;
+  border: 0 none;
+  border-radius: 3px;
+  font-size: 13px;
+  height: 2.25rem;
+  line-height: 40px;
+  text-decoration: none;
+  cursor: pointer;
+`;
+
 export default {
   BorderButton,
-  BorderInput,
-}
+  BorderInput
+};

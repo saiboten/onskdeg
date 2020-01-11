@@ -1,4 +1,4 @@
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`
 *,
@@ -11,8 +11,8 @@ export const GlobalStyle = createGlobalStyle`
 
 html {
   background-color: #262626;
-  font-size: 16px;
   min-height:100%;
+  font-size: 62.5%;
 }
 
 body {
