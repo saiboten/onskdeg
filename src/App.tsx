@@ -7,7 +7,7 @@ import YourWishDetails from "./components/yours/YourWishDetails";
 
 import { SelectWishList } from "./components/selectwishlist/SelectWishList";
 import { OthersWishList } from "./components/others/OthersWishList";
-import OtherWishDetail from "./components/others/OtherWishDetail";
+import { OtherWishDetail } from "./components/others/OtherWishDetail";
 import Header from "./components/header/Header";
 import { Login } from "./components/login/Login";
 import SetName from "./components/setname/SetName";

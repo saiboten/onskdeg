@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { connect, useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import { Wish } from "../wish/Wish";
+import { Wish } from "./Wish";
 import firebase from "../firebase/firebase";
 import Icon from "../common/Icon";
 
