@@ -1,17 +1,17 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import styled from 'styled-components';
-import { Switch, Route, BrowserRouter } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import styled from "styled-components";
+import { Switch, Route, BrowserRouter } from "react-router-dom";
 
-import firebase from '../firebase/firebase';
-import { User } from '../../types/types';
-import ThirdPartyLogin from './ThirdPartyLogin';
-import InternalLogin from './InternalLogin';
-import FloatingCircles from '../common/FloatingCircles';
+import firebase from "../firebase/firebase";
+import { User } from "../../types/types";
+import ThirdPartyLogin from "./ThirdPartyLogin";
+import { InternalLogin } from "./InternalLogin";
+import FloatingCircles from "../common/FloatingCircles";
 
 const StyledParagraph = styled.p`
-font-size: 3rem;
-margin: 2rem;
+  font-size: 3rem;
+  margin: 2rem;
 `;
 
 const LoginContainer = styled.div`
@@ -22,69 +22,42 @@ const LoginContainer = styled.div`
   height: 100%;
 `;
 
-interface Props {
-  user: User;
-}
-interface State {
-  user: string;
-  password: string;
-  feedback: string;
-  submitting: boolean;
-}
-class Login extends React.Component<Props, State> {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      user: '',
-      password: '',
-      feedback: '',
-      submitting: false,
-    };
-  }
+export const Login = () => {
+  const [feedback, setFeedback] = useState("");
 
-  componentDidMount() {
-    firebase.auth().getRedirectResult().then(() => {
-    }).catch((error) => {
-      if (error) {
-        this.setState({
-          feedback: `Klarte ikke å logge deg inn med facebook. Feil: ${error}`,
+  useEffect(() => {
+    return () => {
+      firebase
+        .auth()
+        .getRedirectResult()
+        .then(() => {})
+        .catch(error => {
+          if (error) {
+            setFeedback(
+              `Klarte ikke å logge deg inn med facebook. Feil: ${error}`
+            );
+          }
         });
-      }
-    });
-  }
+    };
+  }, []);
 
-  render() {
-    const { feedback } = this.state;
+  const H1 = styled.h1`
+    color: white;
+    font-weight: 400;
+    margin: 4rem 0;
+  `;
 
-    const H1 = styled.h1`
-      color: white;
-      font-weight: 400;
-      margin: 4rem 0;
-    `;
-
-    
-
-    return (
-      <BrowserRouter>
-        <LoginContainer>
-          <H1>GAVEØNSKE.NO</H1>
-          <Switch>
-            <Route path="/internal" component={InternalLogin} />
-            <Route component={ThirdPartyLogin} />
-          </Switch>
-          <StyledParagraph>{feedback}</StyledParagraph>
-          <FloatingCircles />
-        </LoginContainer>
-      </BrowserRouter>
-    );
-  }
-}
-
-const mapStateToProps = ({ user }: { user: User }) => (
-  {
-    user,
-  });
-
-export default connect(
-  mapStateToProps, null,
-)(Login);
+  return (
+    <BrowserRouter>
+      <LoginContainer>
+        <H1>GAVEØNSKE.NO</H1>
+        <Switch>
+          <Route path="/internal" component={InternalLogin} />
+          <Route component={ThirdPartyLogin} />
+        </Switch>
+        <StyledParagraph>{feedback}</StyledParagraph>
+        <FloatingCircles />
+      </LoginContainer>
+    </BrowserRouter>
+  );
+};

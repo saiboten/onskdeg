@@ -2,14 +2,14 @@ import React from "react";
 import { BrowserRouter, Route, Switch, withRouter } from "react-router-dom";
 import { Provider, connect } from "react-redux";
 
-import YourWishList from "./components/yours/YourWishList";
+import { YourWishList } from "./components/yours/YourWishList";
 import YourWishDetails from "./components/yours/YourWishDetails";
 
 import { SelectWishList } from "./components/selectwishlist/SelectWishList";
-import OthersWishList from "./components/others/OthersWishList";
+import { OthersWishList } from "./components/others/OthersWishList";
 import OtherWishDetail from "./components/others/OtherWishDetail";
 import Header from "./components/header/Header";
-import Login from "./components/login/Login";
+import { Login } from "./components/login/Login";
 import SetName from "./components/setname/SetName";
 
 import store from "./store";
@@ -32,7 +32,7 @@ const AppComp = ({ user }: AppProps) => {
     return <Loading />;
   }
   if (!user.uid) {
-    return <Login user={{ email: "", name: "", uid: "" }} />;
+    return <Login />;
   }
 
   if (!user.name) {

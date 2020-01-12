@@ -1,18 +1,23 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
-import styled from 'styled-components';
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import styled from "styled-components";
 
-import Container from '../common/container/Container';
-import firebase from '../firebase/firebase';
-import OtherWish from './OtherWish';
-import { setWishesForUser, storeWishesToFirebase } from '../../state/actions/wish';
-import { setPurchasesForUser, purchaseItem as purchaseItemAction, sellItem as sellItemAction } from '../../state/actions/purchase';
-import Icon from '../common/Icon';
-import { User, Wish, Purchases } from '../../types/types';
-import { ApplicationState } from '../../state/reducers';
-import spinnerWhileLoading from '../common/spinnerWhileLoading';
-import { loadFriends } from '../../state/actions/friends';
+import Container from "../common/container/Container";
+import firebase from "../firebase/firebase";
+import OtherWish from "./OtherWish";
+import {
+  setWishesForUser,
+  storeWishesToFirebase
+} from "../../state/actions/wish";
+import {
+  setPurchasesForUser,
+  purchaseItem as purchaseItemAction,
+  sellItem as sellItemAction
+} from "../../state/actions/purchase";
+import Icon from "../common/Icon";
+import { User, Wish, Purchases } from "../../types/types";
+import { ApplicationState } from "../../state/reducers";
+import { loadFriends } from "../../state/actions/friends";
 
 const ActionButtonsContainer = styled.div`
   display: flex;
@@ -20,7 +25,7 @@ const ActionButtonsContainer = styled.div`
 `;
 
 interface Props {
-  match: { params: { name: string }};
+  match: { params: { name: string } };
   setWishes: (name: string, newWishList: Array<Wish>) => void;
   setPurchases: (name: string, purchasesForUser: Purchases) => void;
   storeWishes: (name: string, newWishList: Array<Wish>) => void;
@@ -36,138 +41,132 @@ interface State {
   hideSelected: boolean;
   feedback: string;
 }
-class OthersWishList extends React.Component<Props, State> {
-  wishRef?: firebase.database.Reference;
-  purchaseRef?: firebase.database.Reference;
+export const OthersWishList = (props: Props) => {
+  let wishRef: firebase.database.Reference;
+  let purchaseRef: firebase.database.Reference;
 
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      hideSelected: true, feedback: '',
-    };
-    this.check = this.check.bind(this);
-    this.toggleShowSelected = this.toggleShowSelected.bind(this);
-    this.shouldDisplayWish = this.shouldDisplayWish.bind(this);
+  const [hideSelected, setHideSelected] = useState(false);
+  const [feedback, setFeedback] = useState("");
+
+  const {
+    match: {
+      params: { name }
+    }
+  } = props;
+
+  const selector = useSelector(
+    ({ purchase, wish, user, friends: { friends } }: ApplicationState) => {
+      const friendsFiltered = friends.filter(u => u.uid === name);
+
+      return {
+        wishes: wish.wishes[name] || [],
+        purchases: purchase.purchases[name] || {},
+        user,
+        friend: friendsFiltered.length > 0 ? friendsFiltered.reduce(e => e) : {}
+      };
+    }
+  );
+
+  const { wishes, friend, purchases } = selector;
+
+  const dispatch = useDispatch();
+
+  function setWishes(uid: string, newWishList: Array<Wish>) {
+    dispatch(setWishesForUser({ uid, wishes: newWishList }));
   }
 
-  componentDidMount() {
-    const { match: { params: { name } }, setWishes, setPurchases } = this.props;
+  function setPurchases(uid: string, purchases: Purchases) {
+    dispatch(setPurchasesForUser({ uid, purchases }));
+  }
 
-    this.wishRef = firebase.database().ref(`wishes/${name}/wishes`);
-    this.purchaseRef = firebase.database().ref(`purchases/${name}`);
+  function storeWishes(uid: string, newWishList: Array<Wish>) {
+    dispatch(storeWishesToFirebase(uid, newWishList));
+  }
 
-    this.wishRef.on('value', (snapshot) => {
+  function purchaseItem(uid: string, itemid: string) {
+    dispatch(purchaseItemAction(uid, itemid));
+  }
+
+  function sellItem(uid: string, itemid: string) {
+    dispatch(sellItemAction(uid, itemid));
+  }
+
+  useEffect(() => {
+    const {
+      match: {
+        params: { name }
+      }
+    } = props;
+
+    wishRef = firebase.database().ref(`wishes/${name}/wishes`);
+    purchaseRef = firebase.database().ref(`purchases/${name}`);
+
+    dispatch(loadFriends());
+
+    wishRef.on("value", snapshot => {
       setWishes(name, snapshot && snapshot.val());
     });
 
-    this.purchaseRef.on('value', (snapshot) => {
+    purchaseRef.on("value", snapshot => {
       setPurchases(name, snapshot && snapshot.val());
     });
 
-  }
+    return () => {
+      wishRef && wishRef.off();
+    };
+  }, [name]);
 
-  componentWillUnmount() {
-    this.wishRef && this.wishRef.off();
-  }
-
-  check(id: string) {
-    const { purchases, purchaseItem, sellItem, match: { params: { name } } } = this.props;
-    if(purchases[id] && purchases[id].checked) {
+  function check(id: string) {
+    if (purchases[id] && purchases[id].checked) {
       sellItem(name, id);
-      this.setState({ feedback: 'Solgt!' });
-    }
-    else {
+      setFeedback("Solgt!");
+    } else {
       purchaseItem(name, id);
-      this.setState({ feedback: 'Kjøpt!' });
+      setFeedback("Kjøpt!");
     }
-    
-    
   }
 
-  toggleShowSelected(e: React.MouseEvent<HTMLElement>) {
-    const { hideSelected } = this.state;
-
+  function toggleShowSelected(e: React.MouseEvent<HTMLElement>) {
     e.preventDefault();
-    this.setState({
-      hideSelected: !hideSelected,
-    });
+    setHideSelected(!hideSelected);
   }
 
-  shouldDisplayWish(el: Wish, purchases: Purchases) {
-    const {
-      hideSelected,
-    } = this.state;
-
+  function shouldDisplayWish(el: Wish, purchases: Purchases) {
     return !(purchases[el.id] && purchases[el.id].checked) || !hideSelected;
   }
 
-  render() {
-    const {
-      hideSelected, feedback,
-    } = this.state;
-    const { wishes, friend, purchases, name } = this.props;
+  const filteredWishes = wishes
+    .filter(el => shouldDisplayWish(el, purchases))
+    .map(wishInfo => (
+      <OtherWish
+        deleteSuggestion={() => null}
+        user={name}
+        canDelete={false}
+        key={wishInfo.id}
+        onClick={check}
+        wishInfo={wishInfo}
+        purchase={
+          purchases[wishInfo.id]
+            ? purchases[wishInfo.id]
+            : { checked: false, checkedby: "" }
+        }
+      />
+    ));
 
-    const filteredWishes = wishes.filter((el) => this.shouldDisplayWish(el, purchases)).map(wishInfo => (
-      <OtherWish deleteSuggestion={() => null} user={name} canDelete={false} key={wishInfo.id} onClick={this.check} wishInfo={wishInfo} purchase={purchases[wishInfo.id] ? purchases[wishInfo.id] : { checked: false, checkedby: '' }} />));
-
-    return (
-      <Container>
-
-        <div className="flex-row space-between">
-          <h1 className="shrink overflow-hidden">
-            {`Ønskelisten til ${friend.name}`}
-          </h1>
-        </div>
-        <ActionButtonsContainer>
-          <Icon type="button" name={hideSelected ? 'eye' : 'eye-off'} onClick={this.toggleShowSelected} />
-        </ActionButtonsContainer>
-        <p>{feedback}</p>
-        {filteredWishes}
-      </Container>
-    );
-  } 
-}
-
-const mapStateToProps = ({ purchase, wish, user, friends: { loading, loaded, friends } }: ApplicationState, { match: { params: { name } } }: any) => {
-  const friendsFiltered = friends.filter(u => u.uid === name);
-
-  return {
-    wishes: wish.wishes[name] || [],
-    purchases: purchase.purchases[name] || {},
-    name,
-    user,
-    loading,
-    loaded,
-    friend: friendsFiltered.length > 0 ? friendsFiltered.reduce(e => e) : {}
-  }
+  return (
+    <Container>
+      <div className="flex-row space-between">
+        <h1 className="shrink overflow-hidden">{`Ønskelisten til TODO`}</h1>
+      </div>
+      <ActionButtonsContainer>
+        <Icon
+          type="button"
+          name={hideSelected ? "eye" : "eye-off"}
+          onClick={toggleShowSelected}
+        />
+      </ActionButtonsContainer>
+      <p>{feedback}</p>
+      {filteredWishes}
+    </Container>
+  );
 };
-
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  load: () => dispatch(loadFriends()),
-  setWishes(uid: string, newWishList: Array<Wish>) {
-    dispatch(setWishesForUser({ uid, wishes: newWishList }));
-  },
-  setPurchases(uid: string, purchases: Purchases) {
-    dispatch(setPurchasesForUser({uid, purchases}))
-  },
-  storeWishes(uid: string, newWishList: Array<Wish>) {
-    dispatch(storeWishesToFirebase(uid, newWishList));
-  },
-  purchaseItem(uid: string, itemid: string) {
-    dispatch(purchaseItemAction(uid, itemid));
-  },
-  sellItem(uid: string, itemid: string) {
-    dispatch(sellItemAction(uid, itemid));
-  }
-});
-
-const WithSpinner = spinnerWhileLoading(({ loaded, loading, load }: { loaded: boolean, loading: boolean, load: () => void}) => {
-  if (!loaded && !loading) {
-    load();
-  }
-  return !loaded;
-})(OthersWishList);
-
-const OthersWishListWrapper = connect(mapStateToProps, mapDispatchToProps)(WithSpinner);
-
-export default OthersWishListWrapper;

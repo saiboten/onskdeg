@@ -1,11 +1,10 @@
-import { connect, useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 
 import AddedUserLink from "./addeduserlink/AddedUserLink";
 import Container from "../common/container/Container";
 import firebase from "../firebase/firebase";
-import { loadFriends, setFriends } from "../../state/actions/friends";
+import { setFriends } from "../../state/actions/friends";
 import { User, FirebaseSnapshot } from "../../types/types";
 import {
   deleteFriend as deleteFriendAction,
@@ -16,28 +15,14 @@ import { Form } from "../common/Form";
 import { Input } from "../common/Input";
 import { Button } from "../common/Button";
 
-const StyledHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-left: 2rem;
-  border-bottom: 1px solid black;
-`;
-
 interface P {}
-
-interface S {
-  newUser: string;
-  feedback: string;
-}
 
 export const SelectWishList = function(props: P) {
   const [newUser, setNewUser] = useState("");
-  const [feedback, setFeedback] = useState("");
 
   const selector = ({
     user,
-    friends: { friends, loaded, loading, newFriend, userNotFound }
+    friends: { friends, newFriend, userNotFound }
   }: {
     user: User;
     friends: {
@@ -74,8 +59,6 @@ export const SelectWishList = function(props: P) {
   }, []);
 
   const dispatch = useDispatch();
-
-  const load = () => dispatch(loadFriends());
 
   const deleteFriend = (email: string) => {
     dispatch(deleteFriendAction(email));
@@ -128,7 +111,6 @@ export const SelectWishList = function(props: P) {
       </Form>
 
       {userNotFound && <p>Fant ikke bruker</p>}
-      <p>{feedback}</p>
     </Container>
   );
 };
