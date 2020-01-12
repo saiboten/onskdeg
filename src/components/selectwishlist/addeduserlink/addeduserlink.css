@@ -1,9 +1,0 @@
-.added-user-link__link {
-  height: 100%;
-  width: 85%;
-  flex: 50% 1 0;
-}
-
-.added-user-link__delete {
-  flex: 30% 0 1;
-}

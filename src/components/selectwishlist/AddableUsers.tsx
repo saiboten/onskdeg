@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { func, any } from "prop-types";
-import firebase from "../../firebase/firebase";
-import { User } from "../../../types/types";
+import firebase from "../firebase/firebase";
+import { User } from "../../types/types";
+import { Button } from "../common/Button";
+import { useSelector } from "react-redux";
 
 interface P {
-  user: User;
   addUser: (uid: string) => void;
 }
 
-interface S {
-  open: boolean;
-  userlist: Array<User>;
-}
-
 const AddableUsers = (props: P) => {
-  const { user, addUser: addUserProp } = props;
+  const { addUser: addUserProp } = props;
   const [userlist, setUserlist] = useState<User[]>([]);
   const [open, setOpen] = useState(false);
+
+  const { user } = useSelector(({ user }: { user: User }) => ({
+    user
+  }));
 
   function userInList(uid: string, userlist: Array<User>) {
     if (!userlist) {
@@ -95,13 +95,9 @@ const AddableUsers = (props: P) => {
 
   return (
     <div>
-      <button
-        type="button"
-        className="button addable-users__expand-button smallspace"
-        onClick={toggleOpen}
-      >
+      <Button type="button" onClick={toggleOpen}>
         {open ? "-" : "+"}
-      </button>
+      </Button>
       {content}
     </div>
   );

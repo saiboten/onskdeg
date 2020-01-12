@@ -7,7 +7,7 @@ import Icon from "../common/Icon";
 
 import { setWishes, storeOwnWishesToFirebase } from "../../state/actions/wish";
 import { Wish as WishType, User, FirebaseSnapshot } from "../../types/types";
-import Container from "../common/container/Container";
+import Container from "../common/Container";
 import { BorderButton } from "../common/Button";
 import { Link } from "../common/Link";
 

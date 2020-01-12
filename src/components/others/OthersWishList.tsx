@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 
-import Container from "../common/container/Container";
+import Container from "../common/Container";
 import firebase from "../firebase/firebase";
 import OtherWish from "./OtherWish";
 import {
@@ -54,7 +54,7 @@ export const OthersWishList = (props: Props) => {
     }
   } = props;
 
-  const selector = useSelector(
+  const { wishes, friend, purchases } = useSelector(
     ({ purchase, wish, user, friends: { friends } }: ApplicationState) => {
       const friendsFiltered = friends.filter(u => u.uid === name);
 
@@ -66,8 +66,6 @@ export const OthersWishList = (props: Props) => {
       };
     }
   );
-
-  const { wishes, friend, purchases } = selector;
 
   const dispatch = useDispatch();
 

@@ -1,8 +1,8 @@
 import { useSelector, useDispatch } from "react-redux";
 import React, { useEffect, useState } from "react";
 
-import AddedUserLink from "./addeduserlink/AddedUserLink";
-import Container from "../common/container/Container";
+import AddedUserLink from "./AddedUserLink";
+import Container from "../common/Container";
 import firebase from "../firebase/firebase";
 import { setFriends } from "../../state/actions/friends";
 import { User, FirebaseSnapshot } from "../../types/types";
@@ -20,28 +20,26 @@ interface P {}
 export const SelectWishList = function(props: P) {
   const [newUser, setNewUser] = useState("");
 
-  const selector = ({
-    user,
-    friends: { friends, newFriend, userNotFound }
-  }: {
-    user: User;
-    friends: {
-      friends: Array<User>;
-      loaded: boolean;
-      loading: boolean;
-      newFriend: User;
-      userNotFound: boolean;
-    };
-  }) => ({
-    newFriend,
-    userNotFound,
-    user,
-    friends
-  });
-
-  const result: any = useSelector(selector);
-
-  const { friends, userNotFound, user } = result;
+  const { friends, userNotFound, user } = useSelector(
+    ({
+      user,
+      friends: { friends, newFriend, userNotFound }
+    }: {
+      user: User;
+      friends: {
+        friends: Array<User>;
+        loaded: boolean;
+        loading: boolean;
+        newFriend: User;
+        userNotFound: boolean;
+      };
+    }) => ({
+      newFriend,
+      userNotFound,
+      user,
+      friends
+    })
+  );
 
   const { uid } = user;
 

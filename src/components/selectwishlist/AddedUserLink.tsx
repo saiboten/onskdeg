@@ -1,10 +1,8 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import ListRow from '../../common/ListRow';
-import { GoldIconButton } from '../../common/IconButton';
-
-require('./addeduserlink.css');
+import React from "react";
+import styled from "styled-components";
+import { Link } from "react-router-dom";
+import ListRow from "../common/ListRow";
+import { GoldIconButton } from "../common/IconButton";
 
 interface NewUser {
   name: string;
@@ -36,9 +34,9 @@ const AddedUserLink = ({ el, deleteMe }: Props) => (
       className="added-user-link__delete smallspace button"
       onClick={() => deleteMe(el.email)}
     >
-      {'Slett'}
+      {"Slett"}
     </GoldIconButton>
   </ListRow>
-  );
+);
 
 export default AddedUserLink;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Container from "../common/container/Container";
+import Container from "../common/Container";
 import { Dispatch } from "redux";
 import { connect } from "react-redux";
 import { User, Wish } from "../../types/types";
