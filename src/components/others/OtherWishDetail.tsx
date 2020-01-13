@@ -94,14 +94,14 @@ export function OtherWishDetail({
           {wish.image} {wish.name}
         </h1>
 
-        {wish.description && wish.description !== "" ? (
+        {wish.description !== "" ? (
           <>
             <StyledLabel>Beskrivelse</StyledLabel>
             <div>{wish.description}</div>
           </>
         ) : null}
 
-        {wish.link && wish.link !== "" ? (
+        {wish.link !== "" ? (
           <>
             <StyledLabel>Link</StyledLabel>
             <div>

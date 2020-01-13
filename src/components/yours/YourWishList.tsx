@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { connect, useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { Wish } from "./Wish";
 import firebase from "../firebase/firebase";
@@ -10,6 +10,7 @@ import { Wish as WishType, User, FirebaseSnapshot } from "../../types/types";
 import Container from "../common/Container";
 import { BorderButton } from "../common/Button";
 import { Link } from "../common/Link";
+import { StyledInput } from "../common/StyledInput";
 
 const StyledCheckIcon = styled(Icon)`
   position: absolute;
@@ -38,19 +39,6 @@ interface S {
 const StyledWrapper = styled.form`
   position: relative;
   margin-bottom: 0.8rem;
-`;
-
-const StyledInput = styled.input`
-  height: 48px;
-  padding: 0 10px;
-  padding-left: 40px;
-  width: calc(100% - 1.6rem);
-  margin: 0 0.8rem;
-  border-radius: 10px;
-  border: none;
-  @media only screen and (min-width: 37.5em) {
-    flex: 1 0 70%;
-  }
 `;
 
 const StyledBottomOptions = styled.div`
@@ -196,7 +184,7 @@ export const YourWishList = () => {
         {feedback && <div>{feedback}</div>}
       </StyledWrapper>
 
-      <div className="your-wishlist__wishlist">{wishesEl}</div>
+      <div>{wishesEl}</div>
       <StyledBottomOptions>
         <BorderButton>
           <Link to={`/guardians`}>Konfigurer andre</Link>

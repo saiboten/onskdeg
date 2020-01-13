@@ -60,7 +60,6 @@ export const Button = styled.button`
   border: 0 none;
   border-radius: 3px;
   font-size: 13px;
-  height: 2.25rem;
   line-height: 40px;
   text-decoration: none;
   cursor: pointer;

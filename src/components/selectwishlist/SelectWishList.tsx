@@ -12,7 +12,7 @@ import {
 } from "../../state/actions/friends";
 import { P } from "../common/P";
 import { Form } from "../common/Form";
-import { Input } from "../common/Input";
+import { StyledInput } from "../common/StyledInput";
 import { Button } from "../common/Button";
 
 interface P {}
@@ -100,7 +100,11 @@ export const SelectWishList = function(props: P) {
 
       <Form onSubmit={addUserClickEvent}>
         <P>Legg til bruker</P>
-        <Input
+
+        <StyledInput
+          style={{
+            marginBottom: "1rem"
+          }}
           placeholder="Legg inn e-post"
           value={newUser}
           onChange={e => setNewUser(e.target.value)}

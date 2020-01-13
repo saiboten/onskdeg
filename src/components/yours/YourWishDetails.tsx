@@ -48,6 +48,7 @@ function YourWishDetails({
 
     firebaseRef.on("value", (snapshot: any) => {
       updateWishStore(snapshot.val());
+      console.log(snapshot.val());
     });
 
     return () => {
@@ -59,10 +60,7 @@ function YourWishDetails({
     return <Loading />;
   }
 
-  const { name: initialName, description: wishDescription, image, link } = wish;
-
-  const [name, setName] = useState(initialName);
-  const [editName, setEditName] = useState(false);
+  const { name, description: wishDescription, image, link } = wish;
 
   const storeData = (
     field: string,
