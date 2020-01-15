@@ -82,7 +82,7 @@ export const HeaderComponent = () => {
       <UserInfo>
         <UserEmail>{user ? user.email : "Ukjent"}</UserEmail>
         <ButtonNavigation
-          type="ButtonNavigation"
+          type="button"
           onClick={() => logOut(setFeedback, logout)}
         >
           Logg ut

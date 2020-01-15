@@ -51,12 +51,9 @@ export function OtherWishDetail({
               next.id === wishid ? next : init
             )
           : { image: "", name: "", description: "", link: "" },
-        purchasedetail: purchase.purchases[name]
-          ? purchase.purchases[name][wishid]
-          : {},
-        name,
-        loading,
-        loaded
+        purchasedetail: purchase.purchases[user.name || ""]
+          ? purchase.purchases[user.name || ""][wishid]
+          : {}
       };
     }
   );

@@ -23,7 +23,7 @@ import { Guardians } from "./components/guardians/Guardians";
 import { AddGroup } from "./components/group/AddGroup";
 
 // To prevent route update blockin
-const HeaderWithRouter = withRouter<any>(HeaderComponent);
+const HeaderWithRouter = withRouter(HeaderComponent);
 const AppComp = () => {
   const { user } = useSelector(({ user }: ApplicationState) => ({ user }));
 

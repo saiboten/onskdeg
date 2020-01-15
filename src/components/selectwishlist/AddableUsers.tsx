@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { func, any } from "prop-types";
 import firebase from "../firebase/firebase";
 import { User } from "../../types/types";
 import { Button } from "../common/Button";
