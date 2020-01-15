@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
 import styled from "styled-components";
 import { Switch, Route, BrowserRouter } from "react-router-dom";
 
 import firebase from "../firebase/firebase";
-import { User } from "../../types/types";
 import ThirdPartyLogin from "./ThirdPartyLogin";
 import { InternalLogin } from "./InternalLogin";
 import FloatingCircles from "../common/FloatingCircles";

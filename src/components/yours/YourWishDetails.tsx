@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Container from "../common/Container";
-import { Dispatch } from "redux";
-import { connect } from "react-redux";
-import { User, Wish } from "../../types/types";
+import { useSelector, useDispatch } from "react-redux";
+import { Wish } from "../../types/types";
 import styled from "styled-components";
 import {
   setWishes,
@@ -12,6 +11,7 @@ import Loading from "../common/Loading";
 import firebase from "../firebase/firebase";
 import Detail from "./Detail";
 import { StyledLabel } from "../common/Label";
+import { ApplicationState } from "../../state/reducers";
 
 const StyledWrapper = styled.div`
   text-align: left;
@@ -32,23 +32,40 @@ const StyledLink = styled.div`
 
 const StyledWishComplete = styled.div``;
 
-function YourWishDetails({
-  wish,
-  user,
-  updateWishStore,
-  storeWishDetails
-}: {
-  wish: Wish;
-  user: User;
-  updateWishStore: Function;
-  storeWishDetails: (updatedWish: Wish) => void;
-}) {
+interface Props {
+  match: any;
+}
+
+export function YourWishDetails(props: Props) {
+  const { wish, user } = useSelector(({ wish, user }: ApplicationState) => ({
+    wish: wish.wishes[user.uid || ""]
+      ? wish.wishes[user.uid || ""]
+          .filter((w: Wish) => w.id === props.match.params.wishid)
+          .reduce((w: Wish) => w)
+      : undefined,
+    user
+  }));
+
+  const dispatch = useDispatch();
+
+  function updateWishStore(newData: Array<Wish>) {
+    dispatch(setWishes(newData));
+  }
+
+  function storeWishDetails(updatedWish: Wish) {
+    const {
+      match: {
+        params: { wishid }
+      }
+    } = props;
+    dispatch(storeWishDetailsAction({ wishid, updatedWish }));
+  }
+
   useEffect(() => {
     const firebaseRef = firebase.database().ref(`wishes/${user.uid}/wishes`);
 
     firebaseRef.on("value", (snapshot: any) => {
       updateWishStore(snapshot.val());
-      console.log(snapshot.val());
     });
 
     return () => {
@@ -100,32 +117,3 @@ function YourWishDetails({
     </Container>
   );
 }
-
-const OthersWishListWrapper = connect(
-  ({ wish, user }: { wish: any; user: User }, ownProps: any) => {
-    console.log(wish.wishes[user.uid]);
-    return {
-      wish: wish.wishes[user.uid]
-        ? wish.wishes[user.uid]
-            .filter((w: Wish) => w.id === ownProps.match.params.wishid)
-            .reduce((w: Wish) => w)
-        : undefined,
-      user
-    };
-  },
-  (dispatch: Dispatch, ownProps: any) => ({
-    updateWishStore: (newData: Array<Wish>) => {
-      dispatch(setWishes(newData));
-    },
-    storeWishDetails: (updatedWish: Wish) => {
-      const {
-        match: {
-          params: { wishid }
-        }
-      } = ownProps;
-      dispatch(storeWishDetailsAction({ wishid, updatedWish }));
-    }
-  })
-)(YourWishDetails);
-
-export default OthersWishListWrapper;

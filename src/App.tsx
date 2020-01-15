@@ -1,16 +1,16 @@
 import React from "react";
 import { BrowserRouter, Route, Switch, withRouter } from "react-router-dom";
-import { Provider, connect } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 
 import { YourWishList } from "./components/yours/YourWishList";
-import YourWishDetails from "./components/yours/YourWishDetails";
+import { YourWishDetails } from "./components/yours/YourWishDetails";
 
 import { SelectWishList } from "./components/selectwishlist/SelectWishList";
 import { OthersWishList } from "./components/others/OthersWishList";
 import { OtherWishDetail } from "./components/others/OtherWishDetail";
-import Header from "./components/header/Header";
+import { HeaderComponent } from "./components/header/Header";
 import { Login } from "./components/login/Login";
-import SetName from "./components/setname/SetName";
+import { SetNameComp } from "./components/setname/SetName";
 
 import store from "./store";
 
@@ -20,14 +20,13 @@ import { UserState } from "./state/reducers/types";
 import Loading from "./components/common/Loading";
 import { GlobalStyle } from "./GlobalStyles";
 import { Guardians } from "./components/guardians/Guardians";
-
-interface AppProps {
-  user: UserState;
-}
+import { AddGroup } from "./components/group/AddGroup";
 
 // To prevent route update blockin
-const HeaderWithRouter = withRouter<any>(Header);
-const AppComp = ({ user }: AppProps) => {
+const HeaderWithRouter = withRouter<any>(HeaderComponent);
+const AppComp = () => {
+  const { user } = useSelector(({ user }: ApplicationState) => ({ user }));
+
   if (!user || !user.loaded) {
     return <Loading />;
   }
@@ -36,7 +35,7 @@ const AppComp = ({ user }: AppProps) => {
   }
 
   if (!user.name) {
-    return <SetName />;
+    return <SetNameComp />;
   }
 
   return (
@@ -50,20 +49,18 @@ const AppComp = ({ user }: AppProps) => {
           <Route path="/other/:user/:wishid" component={OtherWishDetail} />
           <Route path="/other/:name" component={OthersWishList} />
           <Route path="/guardians" component={Guardians} />
+          <Route path="/addgroup" component={AddGroup} />
         </Switch>
       </>
     </BrowserRouter>
   );
 };
 
-const mapStateToProps = ({ user }: ApplicationState) => ({ user });
-const AppCompWrapper = connect(mapStateToProps)(AppComp);
-
 const App = () => (
   <Provider store={store}>
     <>
       <GlobalStyle />
-      <AppCompWrapper />
+      <AppComp />
     </>
   </Provider>
 );

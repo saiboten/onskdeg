@@ -8,6 +8,8 @@ export const StyledInput = styled.input`
   margin: 0 0.8rem;
   border-radius: 10px;
   border: none;
+  font-size: 1.6rem;
+
   @media only screen and (min-width: 37.5em) {
     flex: 1 0 70%;
   }

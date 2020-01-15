@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { connect } from "react-redux";
-import { Dispatch } from "redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import firebase from "../firebase/firebase";
 import { logout as logoutAction } from "../../state/actions/user";
 import { ApplicationState } from "../../state/reducers";
-import { UserState } from "../../state/reducers/types";
 import { APP_TITLE } from "../../constants";
 import { NavLink, Link } from "../common/Link";
 import Container from "../common/Container";
@@ -41,11 +39,15 @@ const othersActive = (match: any, location: any) =>
 const yoursActive = (match: any, location: any) =>
   location.pathname === "/" || location.pathname.startsWith("/wish");
 
-export interface HeaderProps {
-  user?: UserState;
-  logout: () => void;
-}
-const HeaderComponent = ({ user, logout }: HeaderProps) => {
+export const HeaderComponent = () => {
+  const { user } = useSelector(({ user }: ApplicationState) => ({ user }));
+
+  const dispatch = useDispatch();
+
+  function logout() {
+    dispatch(logoutAction());
+  }
+
   const [feedback, setFeedback] = useState("");
 
   if (!user || !user.uid) {
@@ -109,12 +111,3 @@ const HeaderComponent = ({ user, logout }: HeaderProps) => {
     </Container>
   );
 };
-
-const mapStateToProps = ({ user }: ApplicationState) => ({ user });
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  logout() {
-    dispatch(logoutAction());
-  }
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(HeaderComponent);

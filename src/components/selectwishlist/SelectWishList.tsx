@@ -58,7 +58,7 @@ export const SelectWishList = function(props: P) {
 
   const dispatch = useDispatch();
 
-  const deleteFriend = (email: string) => {
+  const deleteFriend = (email: string | null) => {
     dispatch(deleteFriendAction(email));
   };
 
@@ -75,7 +75,7 @@ export const SelectWishList = function(props: P) {
     setNewUser("");
   }
 
-  function deleteUser(email: string) {
+  function deleteUser(email: string | null) {
     deleteFriend(email);
   }
 

@@ -6,7 +6,7 @@ import { GoldIconButton } from "../common/IconButton";
 
 interface NewUser {
   name: string;
-  email: string;
+  email: string | null;
   uid: string;
 }
 
@@ -23,7 +23,7 @@ const NameLink = styled(Link)`
 
 interface Props {
   el: NewUser;
-  deleteMe: (email: string) => void;
+  deleteMe: (email: string | null) => void;
 }
 const AddedUserLink = ({ el, deleteMe }: Props) => (
   <ListRow>
@@ -33,9 +33,7 @@ const AddedUserLink = ({ el, deleteMe }: Props) => (
       name="trash-2"
       className="added-user-link__delete smallspace button"
       onClick={() => deleteMe(el.email)}
-    >
-      {"Slett"}
-    </GoldIconButton>
+    ></GoldIconButton>
   </ListRow>
 );
 

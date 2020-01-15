@@ -1,12 +1,12 @@
 declare global {
   interface Window {
-    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any
+    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any;
   }
 }
 
 export interface User {
   uid: string;
-  email: string;
+  email: string | null;
   name: string;
 }
 
@@ -22,7 +22,7 @@ export interface Wish {
 }
 
 export interface Purchases {
-  [el: string]: Purchase
+  [el: string]: Purchase;
 }
 
 export interface Purchase {
@@ -31,13 +31,13 @@ export interface Purchase {
 }
 
 export interface FirebaseSnapshot {
-  val: Function
+  val: Function;
 }
 
 export interface NameParam {
-  name: ''
+  name: "";
 }
 
 export interface Match {
-  params: NameParam
+  params: NameParam;
 }
