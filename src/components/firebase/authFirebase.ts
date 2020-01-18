@@ -7,20 +7,17 @@ const obj = {
   authChangeListener() {
     firebase.auth().onAuthStateChanged((user: firebase.User | null) => {
       if (user == null) {
+        store.dispatch(userLoaded(null));
         return;
       }
       const { uid, email } = user;
-      if (user) {
-        firebase
-          .database()
-          .ref(`users/${uid}/name`)
-          .once("value", snapshot => {
-            const name = snapshot.val();
-            store.dispatch(userLoaded({ uid, email, name }));
-          });
-      } else {
-        store.dispatch(userLoaded(null));
-      }
+      firebase
+        .database()
+        .ref(`users/${uid}/name`)
+        .once("value", snapshot => {
+          const name = snapshot.val();
+          store.dispatch(userLoaded({ uid, email, name }));
+        });
     });
   }
 };

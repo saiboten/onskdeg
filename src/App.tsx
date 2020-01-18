@@ -16,7 +16,6 @@ import store from "./store";
 
 import authFirebase from "./components/firebase/authFirebase";
 import { ApplicationState } from "./state/reducers";
-import { UserState } from "./state/reducers/types";
 import Loading from "./components/common/Loading";
 import { GlobalStyle } from "./GlobalStyles";
 import { Guardians } from "./components/guardians/Guardians";
