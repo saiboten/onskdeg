@@ -1,11 +1,10 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import Container from "../common/Container";
 import { StyledInput } from "../common/StyledInput";
 import { StyledLabel } from "../common/Label";
 import { Button } from "../common/Button";
-import { useSelector } from "react-redux";
-import { ApplicationState } from "../../state/reducers";
 import firebase from "../firebase/firebase";
+import { useLoggedInUser } from "../../hooks/useLoggedInUser";
 
 interface Invite {
   name: string;
@@ -18,14 +17,14 @@ export const AddGroup: React.FC = () => {
   const [email, setEmail] = useState("");
   const [invites, setInvites] = useState<Invite[]>([]);
 
-  const { user } = useSelector(({ user }: ApplicationState) => ({ user }));
+  const { loggedInUser } = useLoggedInUser();
 
   function handleAddGroup() {
     var db = firebase.firestore();
     db.collection("groups").add({
       invites,
-      admin: user.uid,
-      groupName
+      admin: loggedInUser?.uid,
+      groupName,
     });
   }
 
@@ -35,12 +34,12 @@ export const AddGroup: React.FC = () => {
       <StyledInput
         id="groupName"
         value={groupName}
-        onChange={e => setGroupName(e.target.value)}
+        onChange={(e) => setGroupName(e.target.value)}
       ></StyledInput>
 
       <h1>Legg til bruker</h1>
       <form
-        onSubmit={e => {
+        onSubmit={(e) => {
           e.preventDefault();
           setName("");
           setEmail("");
@@ -51,13 +50,13 @@ export const AddGroup: React.FC = () => {
         <StyledInput
           id="name"
           value={name}
-          onChange={e => setName(e.target.value)}
+          onChange={(e) => setName(e.target.value)}
         ></StyledInput>
         <StyledLabel htmlFor="email">Epost</StyledLabel>
         <StyledInput
           id="email"
           value={email}
-          onChange={e => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
         ></StyledInput>
         <Button type="submit">Legg til</Button>
       </form>

@@ -1,14 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useSelector, useDispatch } from "react-redux";
-
 import firebase from "../firebase/firebase";
-import { logout as logoutAction } from "../../state/actions/user";
-import { ApplicationState } from "../../state/reducers";
 import { APP_TITLE } from "../../constants";
 import { NavLink, Link } from "../common/Link";
 import Container from "../common/Container";
 import { ButtonNavigation } from "../common/Button";
+import { useLoggedInUser } from "../../hooks/useLoggedInUser";
+import { useUser } from "../../hooks/useUser";
 
 const StyledHeader = styled.div`
   display: flex;
@@ -26,7 +24,7 @@ function logOut(setFeedback: (n: string) => void, logout: () => void) {
         setFeedback("Du er nå logget ut");
         logout();
       },
-      e => {
+      (e) => {
         console.log(e);
         setFeedback("Noe gikk galt under utlogging.");
       }
@@ -40,12 +38,11 @@ const yoursActive = (match: any, location: any) =>
   location.pathname === "/" || location.pathname.startsWith("/wish");
 
 export const HeaderComponent = () => {
-  const { user } = useSelector(({ user }: ApplicationState) => ({ user }));
-
-  const dispatch = useDispatch();
+  const { loggedInUser } = useLoggedInUser();
+  const { user } = useUser(loggedInUser?.uid);
 
   function logout() {
-    dispatch(logoutAction());
+    console.log("TODO LOGOUT");
   }
 
   const [feedback, setFeedback] = useState("");

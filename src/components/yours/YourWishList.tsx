@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { Wish } from "./Wish";
 import firebase from "../firebase/firebase";
 import Icon from "../common/Icon";
 
-import { setWishes, storeOwnWishesToFirebase } from "../../state/actions/wish";
 import { Wish as WishType, User, FirebaseSnapshot } from "../../types/types";
 import Container from "../common/Container";
 import { BorderButton } from "../common/Button";
 import { Link } from "../common/Link";
 import { StyledInput } from "../common/StyledInput";
+import { useWish } from "../../hooks/useWish";
+import { useUser } from "../../hooks/useUser";
+import { useLoggedInUser } from "../../hooks/useLoggedInUser";
+import { useWishes } from "../../hooks/useWishes";
 
 const StyledCheckIcon = styled(Icon)`
   position: absolute;
@@ -53,40 +55,22 @@ export const YourWishList = () => {
   const [newWish, setNewWish] = useState("");
   const [feedback, setFeedback] = useState("");
 
-  const selector = useSelector(
-    ({ wish: { wishes }, user }: { wish: any; user: User }) => {
-      return {
-        wishes: wishes[user.uid] ? wishes[user.uid] : [],
-        user
-      };
-    }
-  );
+  const { loggedInUser } = useLoggedInUser();
 
-  const { user, wishes } = selector;
-  const dispatch = useDispatch();
+  const { wishes } = useWishes(loggedInUser?.uid || "");
 
   function updateWishStore(newData: Array<WishType>) {
-    dispatch(setWishes(newData));
+    // update wishes
   }
   function storeWishesToFirebase(newData: Array<WishType>) {
-    dispatch(storeOwnWishesToFirebase(newData));
+    // store wishes?
   }
-
-  useEffect(() => {
-    firebaseRef = firebase.database().ref(`wishes/${user.uid}/wishes`);
-
-    firebaseRef.on("value", (snapshot: FirebaseSnapshot) => {
-      updateWishStore(snapshot.val());
-    });
-
-    return () => {
-      firebaseRef.off();
-    };
-  }, []);
 
   /*eslint-disable */
   function createGuid() {
-    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (
+      c
+    ) {
       var r = (Math.random() * 16) | 0,
         v = c == "x" ? r : (r & 0x3) | 0x8;
       return v.toString(16);
@@ -111,7 +95,7 @@ export const YourWishList = () => {
       accomplishedby: "",
       deleted: false,
       description: "",
-      link: ""
+      link: "",
     });
 
     storeWishesToFirebase(newWishList);
@@ -120,33 +104,11 @@ export const YourWishList = () => {
   }
 
   function update(wish: WishType) {
-    const newWishList = wishes.map((e: WishType) => {
-      if (e.id === wish.id) {
-        return {
-          name: wish.name,
-          id: wish.id,
-          image: wish.image ? wish.image : "",
-          ...wish
-        };
-      }
-      return e;
-    });
-    storeWishesToFirebase(newWishList);
+    // Update wish
   }
 
   function addImage(wish: WishType, image: string) {
-    const newWishList = wishes.map((e: WishType) => {
-      if (e.id === wish.id) {
-        return {
-          name: wish.name,
-          id: wish.id,
-          image,
-          ...wish
-        };
-      }
-      return e;
-    });
-    storeWishesToFirebase(newWishList);
+    // Add image
   }
 
   function deleteThis(deleteId: string) {
@@ -157,6 +119,10 @@ export const YourWishList = () => {
     });
 
     storeWishesToFirebase(filteredNewWishList);
+  }
+
+  if (!wishes) {
+    return <div>Loading</div>;
   }
 
   const wishesEl = wishes.map((el: WishType) => {
@@ -178,7 +144,7 @@ export const YourWishList = () => {
           type="text"
           placeholder="Legg inn nye ønsker her"
           value={newWish}
-          onChange={e => setNewWish(e.target.value)}
+          onChange={(e) => setNewWish(e.target.value)}
         />
         <StyledCheckIcon type="submit" name="check" onClick={() => null} />
         {feedback && <div>{feedback}</div>}

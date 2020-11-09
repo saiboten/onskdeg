@@ -1,17 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Container from "../common/Container";
-import { useSelector, useDispatch } from "react-redux";
 import { Wish } from "../../types/types";
 import styled from "styled-components";
-import {
-  setWishes,
-  storeWishDetails as storeWishDetailsAction
-} from "../../state/actions/wish";
 import Loading from "../common/Loading";
 import firebase from "../firebase/firebase";
 import Detail from "./Detail";
 import { StyledLabel } from "../common/Label";
-import { ApplicationState } from "../../state/reducers";
+import { useWish } from "../../hooks/useWish";
 
 const StyledWrapper = styled.div`
   text-align: left;
@@ -37,41 +32,15 @@ interface Props {
 }
 
 export function YourWishDetails(props: Props) {
-  const { wish, user } = useSelector(({ wish, user }: ApplicationState) => ({
-    wish: wish.wishes[user.uid || ""]
-      ? wish.wishes[user.uid || ""]
-          .filter((w: Wish) => w.id === props.match.params.wishid)
-          .reduce((w: Wish) => w)
-      : undefined,
-    user
-  }));
-
-  const dispatch = useDispatch();
+  const { wish } = useWish(props.match.params.wishid);
 
   function updateWishStore(newData: Array<Wish>) {
-    dispatch(setWishes(newData));
+    // Update?
   }
 
   function storeWishDetails(updatedWish: Wish) {
-    const {
-      match: {
-        params: { wishid }
-      }
-    } = props;
-    dispatch(storeWishDetailsAction({ wishid, updatedWish }));
+    // Store
   }
-
-  useEffect(() => {
-    const firebaseRef = firebase.database().ref(`wishes/${user.uid}/wishes`);
-
-    firebaseRef.on("value", (snapshot: any) => {
-      updateWishStore(snapshot.val());
-    });
-
-    return () => {
-      firebaseRef.off();
-    };
-  }, []);
 
   if (wish == null) {
     return <Loading />;
@@ -86,7 +55,7 @@ export function YourWishDetails(props: Props) {
   ) => {
     storeWishDetails({
       ...wish,
-      [field]: newData
+      [field]: newData,
     });
     toggle(false);
   };

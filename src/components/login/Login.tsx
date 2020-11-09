@@ -24,19 +24,20 @@ export const Login = () => {
   const [feedback, setFeedback] = useState("");
 
   useEffect(() => {
-    return () => {
-      firebase
-        .auth()
-        .getRedirectResult()
-        .then(() => {})
-        .catch(error => {
-          if (error) {
-            setFeedback(
-              `Klarte ikke å logge deg inn med facebook. Feil: ${error}`
-            );
-          }
-        });
-    };
+    firebase
+      .auth()
+      .getRedirectResult()
+      .then(() => {
+        console.log("win?");
+      })
+      .catch((error) => {
+        console.log("error. :-/", error);
+        if (error) {
+          setFeedback(
+            `Klarte ikke å logge deg inn med facebook. Feil: ${error}`
+          );
+        }
+      });
   }, []);
 
   const H1 = styled.h1`

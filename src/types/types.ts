@@ -41,3 +41,14 @@ export interface NameParam {
 export interface Match {
   params: NameParam;
 }
+
+export interface Invites {
+  email: string;
+  name: string;
+}
+
+export interface Kohort {
+  admin: string;
+  users: User[];
+  invites: Invites[];
+}
