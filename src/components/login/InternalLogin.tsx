@@ -75,7 +75,7 @@ export const InternalLogin = () => {
       <StyledInput
         id="username"
         value={user}
-        onChange={e => setUser(e.target.value)}
+        onChange={(e) => setUser(e.target.value)}
         placeholder="Brukernavn"
       />
 
@@ -88,7 +88,7 @@ export const InternalLogin = () => {
           type={peek ? "text" : "password"}
           placeholder="Passord"
           value={password}
-          onChange={e => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
         />
         <StyledPeek type="button" onClick={togglePeek}>
           <Icon

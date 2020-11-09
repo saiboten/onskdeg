@@ -20,13 +20,12 @@ import { useUser } from "./hooks/useUser";
 const HeaderWithRouter = withRouter(HeaderComponent);
 const App = () => {
   const { loggedInUser, isLoading } = useLoggedInUser();
-  const { user, isLoading: userLoading } = useUser(loggedInUser?.uid);
 
-  if (isLoading || userLoading) {
+  if (isLoading) {
     return <Loading />;
   }
 
-  if (!user) {
+  if (!loggedInUser) {
     return (
       <>
         <GlobalStyle />
@@ -40,7 +39,9 @@ const App = () => {
       <GlobalStyle />
       <HeaderWithRouter />
       <Switch>
-        <Route path="/" exact component={YourWishList} />
+        <Route path="/" exact>
+          <YourWishList user={loggedInUser} />
+        </Route>
         <Route path="/wish/:wishid" exact component={YourWishDetails} />
         <Route path="/others" component={SelectWishList} />
         <Route path="/other/:user/:wishid" component={OtherWishDetail} />

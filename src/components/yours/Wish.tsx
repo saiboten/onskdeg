@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
-import Dropzone from "react-dropzone";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 
 import firebase from "../firebase/firebase";
-import Icon from "../common/Icon";
 import { Wish as WishType } from "../../types/types";
-import colors from "../../styles/colors";
 import ListRow, { LeftSection } from "../common/ListRow";
 import { ImageWrapper } from "../common/Image";
 import {
@@ -13,7 +10,7 @@ import {
   NegativeIconButton,
   GoldIconButton,
   StyledActionButtons,
-  StyledActionButtonsAnimated
+  StyledActionButtonsAnimated,
 } from "../common/IconButton";
 import { Link as RouterLink } from "react-router-dom";
 
@@ -56,7 +53,7 @@ export const Wish = (props: P) => {
       storageRef
         .child(props.wish.image)
         .getDownloadURL()
-        .then(url => {
+        .then((url) => {
           setImageLink(url);
         });
     }
@@ -77,7 +74,7 @@ export const Wish = (props: P) => {
         storageRef
           .child(imageName)
           .getDownloadURL()
-          .then(url => {
+          .then((url) => {
             setImageLink(url);
           });
         addImage(wish, imageName);
@@ -107,7 +104,7 @@ export const Wish = (props: P) => {
       accomplished: wish.accomplished,
       accomplishedby: wish.accomplishedby,
       deleted: wish.deleted,
-      link: wish.link
+      link: wish.link,
     });
   }
 

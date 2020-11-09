@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { StyledInput } from "../common/StyledInput";
-import { Button } from "../common/Button";
 import styled from "styled-components";
 import Container from "../common/Container";
 
@@ -25,7 +24,7 @@ const StyledTextInput = styled.button`
 export default function Detail({
   fieldName,
   initialValue,
-  storeData
+  storeData,
 }: DetailInput) {
   const [value, setValue] = useState(initialValue);
   const [edit, setEdit] = useState(false);
@@ -38,7 +37,7 @@ export default function Detail({
             value={value}
             autoFocus
             onBlur={() => storeData(fieldName, value, setEdit)}
-            onChange={e => setValue(e.target.value)}
+            onChange={(e) => setValue(e.target.value)}
           />
         </div>
       ) : (

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Wish } from "./Wish";
 import firebase from "../firebase/firebase";
 import Icon from "../common/Icon";
+import { mutate } from "swr";
 
 import { Wish as WishType, User, FirebaseSnapshot } from "../../types/types";
 import Container from "../common/Container";
@@ -49,21 +50,28 @@ const StyledBottomOptions = styled.div`
   margin-top: 10px;
 `;
 
-export const YourWishList = () => {
-  let firebaseRef: any;
+interface Props {
+  user: User;
+}
 
+export const YourWishList = ({ user }: Props) => {
   const [newWish, setNewWish] = useState("");
   const [feedback, setFeedback] = useState("");
 
-  const { loggedInUser } = useLoggedInUser();
+  const { wishes } = useWishes(user.uid);
 
-  const { wishes } = useWishes(loggedInUser?.uid || "");
-
-  function updateWishStore(newData: Array<WishType>) {
-    // update wishes
-  }
   function storeWishesToFirebase(newData: Array<WishType>) {
-    // store wishes?
+    mutate(["wishes", user.uid], newData, false);
+    firebase
+      .firestore()
+      .collection("wishes")
+      .doc(user.uid)
+      .set({
+        wishes: newData,
+      })
+      .then(() => {
+        mutate(["wishes", user.uid]);
+      });
   }
 
   /*eslint-disable */
@@ -86,17 +94,19 @@ export const YourWishList = () => {
       return;
     }
 
-    const newWishList = Object.assign([], wishes);
-    newWishList.unshift({
-      name: newWish,
-      id: createGuid(),
-      image: "",
-      accomplished: false,
-      accomplishedby: "",
-      deleted: false,
-      description: "",
-      link: "",
-    });
+    const newWishList = [
+      ...(wishes || []),
+      {
+        name: newWish,
+        id: createGuid(),
+        image: "",
+        accomplished: false,
+        accomplishedby: "",
+        deleted: false,
+        description: "",
+        link: "",
+      },
+    ];
 
     storeWishesToFirebase(newWishList);
     setFeedback("");
@@ -121,21 +131,18 @@ export const YourWishList = () => {
     storeWishesToFirebase(filteredNewWishList);
   }
 
-  if (!wishes) {
-    return <div>Loading</div>;
-  }
-
-  const wishesEl = wishes.map((el: WishType) => {
-    return (
-      <Wish
-        key={el.id}
-        update={update}
-        delete={deleteThis}
-        addImage={addImage}
-        wish={el}
-      />
-    );
-  });
+  const wishesEl =
+    wishes?.map((el: WishType) => {
+      return (
+        <Wish
+          key={el.id}
+          update={update}
+          delete={deleteThis}
+          addImage={addImage}
+          wish={el}
+        />
+      );
+    }) || [];
 
   return (
     <Container>

@@ -5,22 +5,32 @@ import { User } from "../types/types";
 const fetcher = async (): Promise<User> => {
   return await new Promise((resolve) => {
     firebase.auth().onAuthStateChanged(function (user) {
-      firebase
+      if (user == null) {
+        resolve();
+        return;
+      }
+
+      const docReference = firebase
         .firestore()
         .collection("user")
-        .doc(user?.uid)
-        .get()
-        .then((doc) => {
-          if (doc.exists) {
-            console.log("user exist. Should resolve promise");
-            resolve({
-              ...doc.data(),
-            } as User);
-          } else {
-            console.log("Resolve without anything??");
-            resolve({} as User);
-          }
-        });
+        .doc(user?.uid);
+
+      docReference.get().then((doc) => {
+        if (doc.exists) {
+          console.log("user exist. Should resolve promise");
+          resolve({
+            ...doc.data(),
+          } as User);
+        } else {
+          // Create user and resolve
+          docReference.set({
+            uid: user.uid,
+          });
+          resolve({
+            uid: user.uid,
+          });
+        }
+      });
     });
   });
 };

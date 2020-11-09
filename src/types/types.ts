@@ -6,8 +6,8 @@ declare global {
 
 export interface User {
   uid: string;
-  email: string | null;
-  name: string;
+  email?: string;
+  name?: string;
 }
 
 export interface Wish {
