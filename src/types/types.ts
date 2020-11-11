@@ -4,10 +4,18 @@ declare global {
   }
 }
 
+export interface Child {
+  parent: string[];
+  name: string;
+  wishes: Wish[];
+  id: string;
+}
+
 export interface User {
   uid: string;
   email?: string;
   name?: string;
+  childs: string[];
 }
 
 export interface Wish {

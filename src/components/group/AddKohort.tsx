@@ -1,29 +1,33 @@
 import React, { useState } from "react";
-import Container from "../common/Container";
+import { Container } from "../common/Container";
 import { StyledInput } from "../common/StyledInput";
 import { StyledLabel } from "../common/Label";
 import { Button } from "../common/Button";
 import firebase from "../firebase/firebase";
-import { useLoggedInUser } from "../../hooks/useLoggedInUser";
+import { useUser } from "../../hooks/userUser";
 
 interface Invite {
   name: string;
   email: string;
 }
 
-export const AddGroup: React.FC = () => {
+interface Props {
+  uid: string;
+}
+
+export const AddKohort: React.FC<Props> = ({ uid }) => {
   const [groupName, setGroupName] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [invites, setInvites] = useState<Invite[]>([]);
 
-  const { loggedInUser } = useLoggedInUser();
+  const { user } = useUser(uid);
 
   function handleAddGroup() {
     var db = firebase.firestore();
     db.collection("groups").add({
       invites,
-      admin: loggedInUser?.uid,
+      admin: user?.uid,
       groupName,
     });
   }

@@ -1,31 +1,12 @@
 import useSWR from "swr";
-import firebase from "../components/firebase/firebase";
-import { Wish } from "../types/types";
+import { useWishes } from "./useWishes";
 
-const fetcher = async (wishId: string): Promise<Wish> => {
-  return await new Promise((resolve) => {
-    firebase
-      .firestore()
-      .collection("wish")
-      .doc(wishId)
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          resolve({
-            ...doc.data(),
-          } as Wish);
-        } else {
-          resolve({} as Wish);
-        }
-      });
-  });
-};
-
-export function useWish(wishId: string) {
-  const { data, error } = useSWR(`/wish/${wishId}`, fetcher);
+export function useWish(user: string, wishId: string) {
+  const { wishes, isError, isLoading } = useWishes(user);
+  const wish = wishes?.find((m) => m.id === wishId);
   return {
-    wish: data,
-    isLoading: !error && !data,
-    isError: error,
+    wish,
+    isLoading,
+    isError,
   };
 }

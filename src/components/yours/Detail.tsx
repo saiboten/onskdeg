@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyledInput } from "../common/StyledInput";
 import styled from "styled-components";
-import Container from "../common/Container";
+import { Container } from "../common/Container";
 
 interface DetailInput {
   fieldName: string;

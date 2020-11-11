@@ -1,5 +1,5 @@
-import React from "react";
-import { BrowserRouter, Route, Switch, withRouter } from "react-router-dom";
+import React, { useEffect, useState, Suspense } from "react";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import { YourWishList } from "./components/yours/YourWishList";
 import { YourWishDetails } from "./components/yours/YourWishDetails";
@@ -12,20 +12,29 @@ import { Login } from "./components/login/Login";
 import Loading from "./components/common/Loading";
 import { GlobalStyle } from "./GlobalStyles";
 import { Guardians } from "./components/guardians/Guardians";
-import { AddGroup } from "./components/group/AddGroup";
-import { useLoggedInUser } from "./hooks/useLoggedInUser";
-import { useUser } from "./hooks/useUser";
+import { AddKohort } from "./components/group/AddKohort";
+import firebase from "./components/firebase/firebase";
 
-// To prevent route update blockin
-const HeaderWithRouter = withRouter(HeaderComponent);
 const App = () => {
-  const { loggedInUser, isLoading } = useLoggedInUser();
+  const [uid, setUid] = useState<string | undefined>();
+  const [uidResolved, setUidResolved] = useState(false);
 
-  if (isLoading) {
+  console.log(uid, uidResolved);
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user != null) {
+        setUid(user.uid);
+      }
+      setUidResolved(true);
+    });
+  }, []);
+
+  if (!uidResolved) {
     return <Loading />;
   }
 
-  if (!loggedInUser) {
+  if (!uid) {
     return (
       <>
         <GlobalStyle />
@@ -36,19 +45,25 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <GlobalStyle />
-      <HeaderWithRouter />
-      <Switch>
-        <Route path="/" exact>
-          <YourWishList user={loggedInUser} />
-        </Route>
-        <Route path="/wish/:wishid" exact component={YourWishDetails} />
-        <Route path="/others" component={SelectWishList} />
-        <Route path="/other/:user/:wishid" component={OtherWishDetail} />
-        <Route path="/other/:name" component={OthersWishList} />
-        <Route path="/guardians" component={Guardians} />
-        <Route path="/addgroup" component={AddGroup} />
-      </Switch>
+      <Suspense fallback={<h1>Loading posts...</h1>}>
+        <GlobalStyle />
+        <HeaderComponent uid={uid} />
+        <Switch>
+          <Route path="/" exact>
+            <YourWishList uid={uid} />
+          </Route>
+          <Route path="/wish/:wishid" exact>
+            <YourWishDetails uid={uid} />
+          </Route>
+          <Route path="/others" component={SelectWishList} />
+          <Route path="/other/:user/:wishid" component={OtherWishDetail} />
+          <Route path="/other/:name" component={OthersWishList} />
+          <Route path="/guardians">
+            <Guardians uid={uid} />
+          </Route>
+          <Route path="/addgroup" component={AddKohort} />
+        </Switch>
+      </Suspense>
     </BrowserRouter>
   );
 };

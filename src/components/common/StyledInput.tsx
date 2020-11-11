@@ -10,10 +10,6 @@ export const StyledInput = styled.input`
   border: none;
   font-size: 1.6rem;
 
-  @media only screen and (min-width: 37.5em) {
-    flex: 1 0 70%;
-  }
-
   &::placeholder {
     font-size: 1.6rem;
   }

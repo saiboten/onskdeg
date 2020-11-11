@@ -19,10 +19,10 @@ export const GoldIconButton = styled(IconButton)`
 `;
 
 export const StyledActionButtons = styled.div`
-display: flex;
-justify-content: flex-start;
-align-items: center;
-flex-shrink: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-shrink: 0;
 `;
 
 const moveIn = keyframes`
@@ -36,5 +36,5 @@ to {
 `;
 
 export const StyledActionButtonsAnimated = styled(StyledActionButtons)`
-animation: ${moveIn} .2s ease-in;
+  animation: ${moveIn} 0.2s ease-in;
 `;

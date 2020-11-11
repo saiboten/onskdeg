@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import AddedUserLink from "./AddedUserLink";
-import Container from "../common/Container";
+import { Container } from "../common/Container";
 import firebase from "../firebase/firebase";
 import { User, FirebaseSnapshot } from "../../types/types";
 import { P } from "../common/P";
@@ -9,9 +9,9 @@ import { Form } from "../common/Form";
 import { StyledInput } from "../common/StyledInput";
 import { Button } from "../common/Button";
 
-interface P {}
+interface Props {}
 
-export const SelectWishList = function (props: P) {
+export const SelectWishList = function (props: Props) {
   // Todo list users
 
   return (

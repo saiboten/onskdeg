@@ -1,12 +1,14 @@
 import React, { useEffect } from "react";
-import Container from "../common/Container";
-import { Wish } from "../../types/types";
+import { Container } from "../common/Container";
+import { User, Wish } from "../../types/types";
 import styled from "styled-components";
 import Loading from "../common/Loading";
 import firebase from "../firebase/firebase";
 import Detail from "./Detail";
 import { StyledLabel } from "../common/Label";
 import { useWish } from "../../hooks/useWish";
+import { useParams } from "react-router";
+import { useUser } from "../../hooks/userUser";
 
 const StyledWrapper = styled.div`
   text-align: left;
@@ -28,14 +30,24 @@ const StyledLink = styled.div`
 const StyledWishComplete = styled.div``;
 
 interface Props {
-  match: any;
+  uid: string;
+}
+
+interface Params {
+  wishid: string;
 }
 
 export function YourWishDetails(props: Props) {
-  const { wish } = useWish(props.match.params.wishid);
+  const { wishid } = useParams<Params>();
+
+  const { uid } = props;
+
+  const { user } = useUser(uid);
+
+  const { wish } = useWish(user?.uid || "?", wishid);
 
   function updateWishStore(newData: Array<Wish>) {
-    // Update?
+    // firebase.firestore().
   }
 
   function storeWishDetails(updatedWish: Wish) {

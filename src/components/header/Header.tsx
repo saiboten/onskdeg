@@ -3,10 +3,9 @@ import styled from "styled-components";
 import firebase from "../firebase/firebase";
 import { APP_TITLE } from "../../constants";
 import { NavLink, Link } from "../common/Link";
-import Container from "../common/Container";
+import { Container } from "../common/Container";
 import { ButtonNavigation } from "../common/Button";
-import { useLoggedInUser } from "../../hooks/useLoggedInUser";
-import { useUser } from "../../hooks/useUser";
+import { useUser } from "../../hooks/userUser";
 
 const StyledHeader = styled.div`
   display: flex;
@@ -31,15 +30,18 @@ function logOut(setFeedback: (n: string) => void, logout: () => void) {
     );
 }
 
-const othersActive = (match: any, location: any) =>
+const othersActive = (_: any, location: any) =>
   location.pathname.startsWith("/other");
 
-const yoursActive = (match: any, location: any) =>
+const yoursActive = (_: any, location: any) =>
   location.pathname === "/" || location.pathname.startsWith("/wish");
 
-export const HeaderComponent = () => {
-  const { loggedInUser } = useLoggedInUser();
-  const { user } = useUser(loggedInUser?.uid);
+interface Props {
+  uid: string;
+}
+
+export const HeaderComponent = ({ uid }: Props) => {
+  const { user } = useUser(uid);
 
   function logout() {
     console.log("TODO LOGOUT");
@@ -47,7 +49,7 @@ export const HeaderComponent = () => {
 
   const [feedback, setFeedback] = useState("");
 
-  if (!user || !user.uid) {
+  if (!user) {
     return null;
   }
 
@@ -68,16 +70,18 @@ export const HeaderComponent = () => {
     display: flex;
     width: 100%;
   `;
+
   const CustomNavLink = styled(NavLink)`
     width: 50%;
   `;
+
   return (
     <Container>
       <H1>
         <Link to="/">{APP_TITLE}</Link>
       </H1>
       <UserInfo>
-        <UserEmail>{user ? user.email : "Ukjent"}</UserEmail>
+        <UserEmail>{user?.email || "Ukjent"}</UserEmail>
         <ButtonNavigation
           type="button"
           onClick={() => logOut(setFeedback, logout)}

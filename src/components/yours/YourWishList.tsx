@@ -6,16 +6,18 @@ import Icon from "../common/Icon";
 import { mutate } from "swr";
 
 import { Wish as WishType, User, FirebaseSnapshot } from "../../types/types";
-import Container from "../common/Container";
+import { Container } from "../common/Container";
 import { BorderButton } from "../common/Button";
 import { Link } from "../common/Link";
 import { StyledInput } from "../common/StyledInput";
 import { useWish } from "../../hooks/useWish";
-import { useUser } from "../../hooks/useUser";
-import { useLoggedInUser } from "../../hooks/useLoggedInUser";
+import { useUser } from "../../hooks/userUser";
 import { useWishes } from "../../hooks/useWishes";
+import { Spacer } from "../common/Spacer";
+import { useChilds } from "../../hooks/useChilds";
+import { YourChild } from "./YourChild";
 
-const StyledCheckIcon = styled(Icon)`
+export const StyledCheckIcon = styled(Icon)`
   position: absolute;
   color: black;
   top: 0;
@@ -39,7 +41,7 @@ interface S {
   feedback: string;
 }
 
-const StyledWrapper = styled.form`
+export const StyledWrapper = styled.form`
   position: relative;
   margin-bottom: 0.8rem;
 `;
@@ -47,30 +49,32 @@ const StyledWrapper = styled.form`
 const StyledBottomOptions = styled.div`
   width: 100%;
   text-align: left;
-  margin-top: 10px;
 `;
 
 interface Props {
-  user: User;
+  uid: string;
 }
 
-export const YourWishList = ({ user }: Props) => {
+export const YourWishList = ({ uid }: Props) => {
   const [newWish, setNewWish] = useState("");
   const [feedback, setFeedback] = useState("");
+  const { user } = useUser(uid);
 
-  const { wishes } = useWishes(user.uid);
+  const { wishes } = useWishes(user?.uid || "?");
+
+  const childs = useChilds(user?.uid || "?");
 
   function storeWishesToFirebase(newData: Array<WishType>) {
-    mutate(["wishes", user.uid], newData, false);
+    mutate(["wishes", user?.uid || "?"], newData, false);
     firebase
       .firestore()
       .collection("wishes")
-      .doc(user.uid)
+      .doc(user?.uid || "?")
       .set({
         wishes: newData,
       })
       .then(() => {
-        mutate(["wishes", user.uid]);
+        mutate(["wishes", user?.uid]);
       });
   }
 
@@ -122,27 +126,26 @@ export const YourWishList = ({ user }: Props) => {
   }
 
   function deleteThis(deleteId: string) {
-    const newWishList = Object.assign([], wishes);
-
-    const filteredNewWishList = newWishList.filter((e: WishType) => {
-      return e.id !== deleteId;
-    });
-
-    storeWishesToFirebase(filteredNewWishList);
+    storeWishesToFirebase(
+      [...(wishes || [])].filter((e: WishType) => {
+        return e.id !== deleteId;
+      })
+    );
   }
 
-  const wishesEl =
-    wishes?.map((el: WishType) => {
-      return (
-        <Wish
-          key={el.id}
-          update={update}
-          delete={deleteThis}
-          addImage={addImage}
-          wish={el}
-        />
-      );
-    }) || [];
+  const wishToElement = (el: WishType) => {
+    return (
+      <Wish
+        key={el.id}
+        update={update}
+        delete={deleteThis}
+        addImage={addImage}
+        wish={el}
+      />
+    );
+  };
+
+  const wishesEl = wishes?.map(wishToElement) || [];
 
   return (
     <Container>
@@ -157,10 +160,16 @@ export const YourWishList = ({ user }: Props) => {
         {feedback && <div>{feedback}</div>}
       </StyledWrapper>
 
+      <h1>Mine ønsker</h1>
       <div>{wishesEl}</div>
+      <Spacer />
+      {childs?.map((child) => {
+        return <YourChild child={child} />;
+      })}
+      <Spacer />
       <StyledBottomOptions>
         <BorderButton>
-          <Link to={`/guardians`}>Konfigurer andre</Link>
+          <Link to={`/guardians`}>Legg til barn</Link>
         </BorderButton>
       </StyledBottomOptions>
     </Container>

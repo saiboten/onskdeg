@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
-import Container from "../common/Container";
+import { Container } from "../common/Container";
 import firebase from "../firebase/firebase";
 import OtherWish from "./OtherWish";
 import Icon from "../common/Icon";
