@@ -3,15 +3,25 @@ import styled from "styled-components";
 import firebase from "../firebase/firebase";
 import { APP_TITLE } from "../../constants";
 import { NavLink, Link } from "../common/Link";
+import { NavLink as RouterNavLink } from "react-router-dom";
 import { Container } from "../common/Container";
 import { ButtonNavigation } from "../common/Button";
 import { useUser } from "../../hooks/userUser";
+
+import { ReactComponent as SettingsIcon } from "./settings.svg";
 
 const StyledHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 0.8rem;
+`;
+
+const StyledSettingsIcon = styled(SettingsIcon)`
+  margin-left: 12px;
+  width: 32px;
+  height: 32px;
+  fill: #fff;
 `;
 
 function logOut(setFeedback: (n: string) => void, logout: () => void) {
@@ -88,6 +98,9 @@ export const HeaderComponent = ({ uid }: Props) => {
         >
           Logg ut
         </ButtonNavigation>
+        <RouterNavLink activeClassName="selected" exact to="/settings">
+          <StyledSettingsIcon />
+        </RouterNavLink>
         {feedback}
       </UserInfo>
       <StyledHeader>

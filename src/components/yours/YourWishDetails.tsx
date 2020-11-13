@@ -27,24 +27,19 @@ const StyledLink = styled.div`
   font-size: 16px;
 `;
 
-const StyledWishComplete = styled.div``;
-
-interface Props {
+interface Params {
+  wishid: string;
   uid: string;
 }
 
-interface Params {
-  wishid: string;
-}
-
-export function YourWishDetails(props: Props) {
-  const { wishid } = useParams<Params>();
-
-  const { uid } = props;
+export function YourWishDetails() {
+  const { wishid, uid } = useParams<Params>();
 
   const { user } = useUser(uid);
 
   const { wish } = useWish(user?.uid || "?", wishid);
+
+  console.log(wishid, uid, user, wish);
 
   function updateWishStore(newData: Array<Wish>) {
     // firebase.firestore().
@@ -76,7 +71,7 @@ export function YourWishDetails(props: Props) {
     <Container>
       <StyledWrapper>
         <StyledTitle>
-          {image}
+          <h2>Ditt ønske</h2>
           <Detail fieldName="name" storeData={storeData} initialValue={name} />
         </StyledTitle>
         <StyledDescription>

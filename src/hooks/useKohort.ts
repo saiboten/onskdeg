@@ -1,13 +1,17 @@
+import { Suspense } from "react";
 import useSWR from "swr";
 import firebase from "../components/firebase/firebase";
 import { User } from "../types/types";
 
-const fetcher = async (userId: string): Promise<User | undefined> => {
+const fetcher = async (
+  collectionId: string,
+  groupId: string
+): Promise<User | undefined> => {
   return await new Promise((resolve) => {
     firebase
       .firestore()
-      .collection("kohort")
-      .doc(userId)
+      .collection("groups")
+      .doc(groupId)
       .get()
       .then((doc) => {
         if (doc.exists) {
@@ -21,8 +25,10 @@ const fetcher = async (userId: string): Promise<User | undefined> => {
   });
 };
 
-export function useKohort(kohortId: string) {
-  const { data, error } = useSWR(`/kohort/${kohortId}`, fetcher);
+export function useKohort(groupId: string) {
+  const { data, error } = useSWR(["groups", groupId], fetcher, {
+    suspense: true,
+  });
   return {
     user: data,
     isLoading: !error && !data,

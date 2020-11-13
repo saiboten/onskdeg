@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Wish } from "./Wish";
 import firebase from "../firebase/firebase";
@@ -16,6 +16,7 @@ import { useWishes } from "../../hooks/useWishes";
 import { Spacer } from "../common/Spacer";
 import { useChilds } from "../../hooks/useChilds";
 import { YourChild } from "./YourChild";
+import { createGuid } from "../../util/guid";
 
 export const StyledCheckIcon = styled(Icon)`
   position: absolute;
@@ -78,18 +79,6 @@ export const YourWishList = ({ uid }: Props) => {
       });
   }
 
-  /*eslint-disable */
-  function createGuid() {
-    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (
-      c
-    ) {
-      var r = (Math.random() * 16) | 0,
-        v = c == "x" ? r : (r & 0x3) | 0x8;
-      return v.toString(16);
-    });
-  }
-  /* eslint-enable */
-
   function addWish(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -117,14 +106,6 @@ export const YourWishList = ({ uid }: Props) => {
     setNewWish("");
   }
 
-  function update(wish: WishType) {
-    // Update wish
-  }
-
-  function addImage(wish: WishType, image: string) {
-    // Add image
-  }
-
   function deleteThis(deleteId: string) {
     storeWishesToFirebase(
       [...(wishes || [])].filter((e: WishType) => {
@@ -134,21 +115,14 @@ export const YourWishList = ({ uid }: Props) => {
   }
 
   const wishToElement = (el: WishType) => {
-    return (
-      <Wish
-        key={el.id}
-        update={update}
-        delete={deleteThis}
-        addImage={addImage}
-        wish={el}
-      />
-    );
+    return <Wish user={uid} key={el.id} delete={deleteThis} wish={el} />;
   };
 
   const wishesEl = wishes?.map(wishToElement) || [];
 
   return (
     <Container>
+      <h1>Mine ønsker</h1>
       <StyledWrapper onSubmit={addWish}>
         <StyledInput
           type="text"
@@ -159,13 +133,13 @@ export const YourWishList = ({ uid }: Props) => {
         <StyledCheckIcon type="submit" name="check" onClick={() => null} />
         {feedback && <div>{feedback}</div>}
       </StyledWrapper>
-
-      <h1>Mine ønsker</h1>
       <div>{wishesEl}</div>
       <Spacer />
-      {childs?.map((child) => {
-        return <YourChild child={child} />;
-      })}
+      <Suspense fallback={<div>Laster barn</div>}>
+        {childs?.map((child) => {
+          return <YourChild child={child} />;
+        })}
+      </Suspense>
       <Spacer />
       <StyledBottomOptions>
         <BorderButton>

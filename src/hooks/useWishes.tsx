@@ -6,24 +6,30 @@ const fetcher = async (
   wishes: "wishes",
   userId: string
 ): Promise<Wish[] | undefined> => {
-  return await new Promise((resolve) => {
-    firebase
-      .firestore()
-      .collection(wishes)
-      .doc(userId)
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          resolve([...doc.data()?.wishes]);
-        } else {
-          resolve();
-        }
+  return await new Promise(async (resolve) => {
+    if (userId === "") {
+      resolve([]);
+      return;
+    }
+
+    const docRef = firebase.firestore().collection(wishes).doc(userId);
+
+    const doc = await docRef.get();
+
+    if (doc.exists) {
+      resolve([...doc.data()?.wishes]);
+    } else {
+      await docRef.set({
+        wishes: [],
       });
+      resolve([]);
+    }
   });
 };
 
 export function useWishes(user: string) {
-  const { data, error } = useSWR(["wishes", user], fetcher);
+  const { data, error } = useSWR(["wishes", user], fetcher, { suspense: true });
+
   return {
     wishes: data,
     isLoading: !error && !data,

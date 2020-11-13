@@ -35,13 +35,15 @@ export function Guardians({ uid }: Props) {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const newChildDoc = firebase.firestore().collection("child").doc();
-    await newChildDoc.set({
+    const newChildDoc = firebase.firestore().collection("user").doc();
+
+    const newChild: Child = {
       name,
-      parent: [user?.uid],
-      id: newChildDoc.id,
-      wishes: [],
-    });
+      parent: [user?.uid || ""],
+      uid: newChildDoc.id,
+    };
+
+    await newChildDoc.set(newChild);
 
     await firebase
       .firestore()

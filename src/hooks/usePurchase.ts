@@ -24,7 +24,9 @@ const fetcher = async (userId: string): Promise<Purchase | undefined> => {
 };
 
 export function usePurchase(purchaseId: string) {
-  const { data, error } = useSWR(`/purchase/${purchaseId}`, fetcher);
+  const { data, error } = useSWR(`/purchase/${purchaseId}`, fetcher, {
+    suspense: true,
+  });
   return {
     user: data,
     isLoading: !error && !data,

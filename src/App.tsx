@@ -14,6 +14,7 @@ import { GlobalStyle } from "./GlobalStyles";
 import { Guardians } from "./components/guardians/Guardians";
 import { AddKohort } from "./components/group/AddKohort";
 import firebase from "./components/firebase/firebase";
+import { Settings } from "./components/Settings";
 
 const App = () => {
   const [uid, setUid] = useState<string | undefined>();
@@ -49,11 +50,8 @@ const App = () => {
         <GlobalStyle />
         <HeaderComponent uid={uid} />
         <Switch>
-          <Route path="/" exact>
-            <YourWishList uid={uid} />
-          </Route>
-          <Route path="/wish/:wishid" exact>
-            <YourWishDetails uid={uid} />
+          <Route path="/wish/:uid/:wishid" exact>
+            <YourWishDetails />
           </Route>
           <Route path="/others" component={SelectWishList} />
           <Route path="/other/:user/:wishid" component={OtherWishDetail} />
@@ -61,7 +59,13 @@ const App = () => {
           <Route path="/guardians">
             <Guardians uid={uid} />
           </Route>
-          <Route path="/addgroup" component={AddKohort} />
+          <Route path="/settings" component={Settings} />
+          <Route path="/addgroup">
+            <AddKohort uid={uid} />
+          </Route>
+          <Route path="/">
+            <YourWishList uid={uid} />
+          </Route>
         </Switch>
       </Suspense>
     </BrowserRouter>

@@ -1,6 +1,7 @@
 import useSWR from "swr";
 import firebase from "../components/firebase/firebase";
 import { User } from "../types/types";
+
 const fetcher = async (collection: "user", userId: string): Promise<User> => {
   return await new Promise((resolve) => {
     firebase

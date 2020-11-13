@@ -28,14 +28,13 @@ export function useChilds(uid: string): Child[] | undefined {
     const getChildData = async (childId: string): Promise<Child> => {
       const child = await firebase
         .firestore()
-        .collection("child")
+        .collection("user")
         .doc(childId)
         .get();
       return {
-        id: "",
+        uid: "",
         name: "Ukjent",
         parent: [],
-        wishes: [],
         ...child.data(),
       };
     };
