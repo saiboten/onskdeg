@@ -8,7 +8,7 @@ import Detail from "./Detail";
 import { StyledLabel } from "../common/Label";
 import { useWish } from "../../hooks/useWish";
 import { useParams } from "react-router";
-import { useUser } from "../../hooks/userUser";
+import { useUser } from "../../hooks/useUser";
 
 const StyledWrapper = styled.div`
   text-align: left;

@@ -67,5 +67,5 @@ export const Button = styled.button`
 
 export default {
   BorderButton,
-  BorderInput
+  BorderInput,
 };

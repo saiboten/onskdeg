@@ -4,7 +4,7 @@ import { StyledInput } from "../common/StyledInput";
 import { StyledLabel } from "../common/Label";
 import { Button } from "../common/Button";
 import firebase from "../firebase/firebase";
-import { useUser } from "../../hooks/userUser";
+import { useUser } from "../../hooks/useUser";
 import styled from "styled-components";
 import { Spacer } from "../common/Spacer";
 import { Redirect } from "react-router";
@@ -35,14 +35,36 @@ export const AddKohort: React.FC<Props> = ({ uid }) => {
   const { user } = useUser(uid);
 
   async function handleAddGroup() {
-    var db = firebase.firestore();
-    var docRef = await db.collection("groups").add({
+    const db = firebase.firestore();
+
+    const docRef = await db.collection("groups").add({
       invites,
       admin: user?.uid,
       groupName,
       members: [user?.uid],
     });
 
+    // Add current user to kohort
+    await db
+      .collection("user")
+      .doc(user?.uid)
+      .update({
+        groups: [...(user?.groups || []), docRef.id],
+      });
+
+    // Add current users children to kohort as default
+    user?.childs?.forEach(async (child) => {
+      const childData = await db.collection("user").doc(child).get();
+
+      await db
+        .collection("user")
+        .doc(child)
+        .update({
+          groups: [...(childData.data()?.groups || []), docRef.id],
+        });
+    });
+
+    // Add all invites to invites collection
     invites.forEach(async (invite) => {
       const doc = db.collection("invites").doc(invite.email);
       var docDetails = await doc.get();
@@ -95,7 +117,7 @@ export const AddKohort: React.FC<Props> = ({ uid }) => {
       {invites.length > 0 ? (
         <StyledUl>
           {invites.map((user: Invite) => {
-            return <li>{user.email}</li>;
+            return <li key={user.email}>{user.email}</li>;
           })}
         </StyledUl>
       ) : (

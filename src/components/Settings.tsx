@@ -1,15 +1,26 @@
 import React from "react";
 import { Container } from "./common/Container";
-import { StyledActionButtons } from "./common/IconButton";
-import { NavLink } from "react-router-dom";
 
-export const Settings = () => {
+import { BorderButton } from "./common/Button";
+import { Link } from "./common/Link";
+import { Spacer } from "./common/Spacer";
+import { useKohort } from "../hooks/useKohort";
+import { useUser } from "../hooks/useUser";
+
+interface Props {
+  uid: string;
+}
+
+export const Settings = ({ uid }: Props) => {
+  const { user } = useUser(uid);
+
   return (
-    <Container>
+    <Container textLeft>
       <h1>Settings</h1>
-      <StyledActionButtons>
-        <NavLink to="/addgroup">Opprett ny kohort</NavLink>
-      </StyledActionButtons>
+      <Spacer />
+      <BorderButton>
+        <Link to={`/addgroup`}>Opprett ny kohort</Link>
+      </BorderButton>
     </Container>
   );
 };

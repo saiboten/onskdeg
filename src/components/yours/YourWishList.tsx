@@ -10,13 +10,14 @@ import { Container } from "../common/Container";
 import { BorderButton } from "../common/Button";
 import { Link } from "../common/Link";
 import { StyledInput } from "../common/StyledInput";
-import { useWish } from "../../hooks/useWish";
-import { useUser } from "../../hooks/userUser";
+import { useUser } from "../../hooks/useUser";
 import { useWishes } from "../../hooks/useWishes";
+import { useInvites } from "../../hooks/useInvites";
 import { Spacer } from "../common/Spacer";
 import { useChilds } from "../../hooks/useChilds";
 import { YourChild } from "./YourChild";
 import { createGuid } from "../../util/guid";
+import { InvitePopup } from "./InvitePopup";
 
 export const StyledCheckIcon = styled(Icon)`
   position: absolute;
@@ -64,6 +65,8 @@ export const YourWishList = ({ uid }: Props) => {
   const { wishes } = useWishes(user?.uid || "?");
 
   const childs = useChilds(user?.uid || "?");
+
+  const { invites } = useInvites(user?.email || "");
 
   function storeWishesToFirebase(newData: Array<WishType>) {
     mutate(["wishes", user?.uid || "?"], newData, false);
@@ -122,6 +125,9 @@ export const YourWishList = ({ uid }: Props) => {
 
   return (
     <Container>
+      {(invites?.myInvites.length || 0) > 0 && (
+        <InvitePopup uid={uid} invites={invites?.myInvites || []} />
+      )}
       <h1>Mine ønsker</h1>
       <StyledWrapper onSubmit={addWish}>
         <StyledInput
@@ -137,13 +143,13 @@ export const YourWishList = ({ uid }: Props) => {
       <Spacer />
       <Suspense fallback={<div>Laster barn</div>}>
         {childs?.map((child) => {
-          return <YourChild child={child} />;
+          return <YourChild key={child.uid} child={child} />;
         })}
       </Suspense>
       <Spacer />
       <StyledBottomOptions>
         <BorderButton>
-          <Link to={`/guardians`}>Legg til barn</Link>
+          <Link to={`/addchild`}>Legg til barn</Link>
         </BorderButton>
       </StyledBottomOptions>
     </Container>

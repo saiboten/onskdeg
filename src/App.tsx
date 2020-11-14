@@ -11,7 +11,7 @@ import { HeaderComponent } from "./components/header/Header";
 import { Login } from "./components/login/Login";
 import Loading from "./components/common/Loading";
 import { GlobalStyle } from "./GlobalStyles";
-import { Guardians } from "./components/guardians/Guardians";
+import { AddChild } from "./components/childs/AddChild";
 import { AddKohort } from "./components/group/AddKohort";
 import firebase from "./components/firebase/firebase";
 import { Settings } from "./components/Settings";
@@ -56,10 +56,12 @@ const App = () => {
           <Route path="/others" component={SelectWishList} />
           <Route path="/other/:user/:wishid" component={OtherWishDetail} />
           <Route path="/other/:name" component={OthersWishList} />
-          <Route path="/guardians">
-            <Guardians uid={uid} />
+          <Route path="/addchild">
+            <AddChild uid={uid} />
           </Route>
-          <Route path="/settings" component={Settings} />
+          <Route path="/settings">
+            <Settings uid={uid} />
+          </Route>
           <Route path="/addgroup">
             <AddKohort uid={uid} />
           </Route>

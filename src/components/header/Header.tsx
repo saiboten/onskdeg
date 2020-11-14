@@ -6,7 +6,7 @@ import { NavLink, Link } from "../common/Link";
 import { NavLink as RouterNavLink } from "react-router-dom";
 import { Container } from "../common/Container";
 import { ButtonNavigation } from "../common/Button";
-import { useUser } from "../../hooks/userUser";
+import { useUser } from "../../hooks/useUser";
 
 import { ReactComponent as SettingsIcon } from "./settings.svg";
 

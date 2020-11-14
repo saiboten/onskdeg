@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import firebase from "../components/firebase/firebase";
 import { Child, Wish } from "../types/types";
-import { useUser } from "./userUser";
+import { useUser } from "./useUser";
 
 const fetcher = async (
   child: "child",
@@ -35,6 +35,8 @@ export function useChilds(uid: string): Child[] | undefined {
         uid: "",
         name: "Ukjent",
         parent: [],
+        groups: [],
+        isChild: true,
         ...child.data(),
       };
     };
@@ -46,7 +48,7 @@ export function useChilds(uid: string): Child[] | undefined {
     getData().then((data) => {
       setChilds(data);
     });
-  }, []);
+  }, [user?.childs?.length]);
 
   return childs;
 }

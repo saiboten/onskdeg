@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router";
 import styled from "styled-components";
-import { useUser } from "../../hooks/userUser";
+import { useUser } from "../../hooks/useUser";
 import { BorderButton } from "../common/Button";
 import { Container } from "../common/Container";
 import { StyledInput } from "../common/StyledInput";
@@ -27,10 +27,12 @@ interface Props {
   uid: string;
 }
 
-export function Guardians({ uid }: Props) {
+export function AddChild({ uid }: Props) {
   const [name, setName] = useState("");
   const [created, setCreated] = useState(false);
   const { user } = useUser(uid);
+
+  console.log(user);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -41,6 +43,8 @@ export function Guardians({ uid }: Props) {
       name,
       parent: [user?.uid || ""],
       uid: newChildDoc.id,
+      isChild: true,
+      groups: [...(user?.groups || [])],
     };
 
     await newChildDoc.set(newChild);
@@ -52,6 +56,22 @@ export function Guardians({ uid }: Props) {
       .update({
         childs: [...(user?.childs || []), newChildDoc.id],
       });
+
+    user?.groups.forEach(async (group) => {
+      const groupData = await firebase
+        .firestore()
+        .collection("groups")
+        .doc(group)
+        .get();
+
+      await firebase
+        .firestore()
+        .collection("groups")
+        .doc(group)
+        .update({
+          members: [...(groupData.data()?.members || []), newChildDoc.id],
+        });
+    });
 
     setCreated(true);
     mutate(["user", uid]);

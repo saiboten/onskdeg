@@ -1,33 +1,39 @@
 import useSWR from "swr";
 import firebase from "../components/firebase/firebase";
-import { User } from "../types/types";
+import { Invites } from "../types/types";
 
-const fetcher = async (collection: "user", userId: string): Promise<User> => {
+const fetcher = async (
+  collection: "invites",
+  email: string
+): Promise<Invites> => {
   return await new Promise((resolve) => {
     firebase
       .firestore()
       .collection(collection)
-      .doc(userId)
+      .doc(email)
       .get()
       .then((doc) => {
         if (doc.exists) {
           const user = {
-            uid: "",
-            childs: [],
+            myInvites: [],
             ...doc.data(),
           };
           resolve(user);
         } else {
-          resolve();
+          resolve({
+            myInvites: [],
+          });
         }
       });
   });
 };
 
-export function useUser(user: string) {
-  const { data, error } = useSWR(["user", user], fetcher, { suspense: true });
+export function useInvites(email: string) {
+  const { data, error } = useSWR(["invites", email], fetcher, {
+    suspense: true,
+  });
   return {
-    user: data,
+    invites: data,
     isLoading: !error && !data,
     isError: error,
   };

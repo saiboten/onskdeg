@@ -13,6 +13,8 @@ export interface User {
   email?: string;
   name?: string;
   childs?: string[];
+  groups: string[];
+  isChild: boolean;
 }
 
 export interface Wish {
@@ -48,12 +50,15 @@ export interface Match {
 }
 
 export interface Invites {
-  email: string;
-  name: string;
+  myInvites: string[];
 }
 
 export interface Kohort {
+  groupName: string;
   admin: string;
   users: User[];
-  invites: Invites[];
+  invites: {
+    email: string;
+    name: string;
+  }[];
 }
