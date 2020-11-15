@@ -135,8 +135,6 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
     return <Wish user={uid} key={el.id} delete={deleteThis} wish={el} />;
   };
 
-  const wishesEl = wishes?.map(wishToElement) || [];
-
   if (!user?.name) {
     return (
       <Suspense fallback={<Loading />}>
@@ -176,7 +174,9 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
         <StyledCheckIcon type="submit" name="check" onClick={() => null} />
         {feedback && <div>{feedback}</div>}
       </StyledWrapper>
-      <div>{wishesEl}</div>
+      <div>
+        {wishes?.filter((el) => !el.isSuggestion).map(wishToElement) || []}
+      </div>
       <Spacer />
       <Suspense fallback={<div>Laster barn</div>}>
         {childs?.map((child) => {
