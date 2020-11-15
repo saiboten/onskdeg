@@ -13,6 +13,7 @@ const fetcher = async (groups: "groups", groupId: string): Promise<Kohort> => {
       .then((doc) => {
         if (doc.exists) {
           resolve({
+            id: "",
             groupName: "",
             admin: "",
             members: [],
@@ -21,6 +22,7 @@ const fetcher = async (groups: "groups", groupId: string): Promise<Kohort> => {
           });
         } else {
           resolve({
+            id: "",
             admin: "",
             members: [],
             invites: [],

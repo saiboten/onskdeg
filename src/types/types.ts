@@ -53,11 +53,9 @@ export interface Invites {
 }
 
 export interface Kohort {
+  id: string;
   groupName: string;
   admin: string;
   members: string[];
-  invites: {
-    email: string;
-    name: string;
-  }[];
+  invites: string[];
 }

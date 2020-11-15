@@ -10,10 +10,6 @@ import { Spacer } from "../common/Spacer";
 import { Redirect } from "react-router";
 import { StyledBigHeader } from "../common/StyledHeading";
 
-interface Invite {
-  email: string;
-}
-
 interface Props {
   uid: string;
 }
@@ -30,7 +26,7 @@ const StyledUl = styled.ul`
 export const AddKohort: React.FC<Props> = ({ uid }) => {
   const [groupName, setGroupName] = useState("");
   const [email, setEmail] = useState("");
-  const [invites, setInvites] = useState<Invite[]>([]);
+  const [invites, setInvites] = useState<string[]>([]);
   const [groupCreated, setGroupCreated] = useState(false);
 
   const { user } = useUser(uid);
@@ -43,6 +39,10 @@ export const AddKohort: React.FC<Props> = ({ uid }) => {
       admin: user?.uid,
       groupName,
       members: [user?.uid, ...(user?.childs || [])],
+    });
+
+    await docRef.set({
+      id: docRef.id,
     });
 
     // Add current user to kohort
@@ -67,7 +67,7 @@ export const AddKohort: React.FC<Props> = ({ uid }) => {
 
     // Add all invites to invites collection
     invites.forEach(async (invite) => {
-      const doc = db.collection("invites").doc(invite.email);
+      const doc = db.collection("invites").doc(invite);
       var docDetails = await doc.get();
 
       doc.set({
@@ -98,7 +98,7 @@ export const AddKohort: React.FC<Props> = ({ uid }) => {
         onSubmit={(e) => {
           e.preventDefault();
           setEmail("");
-          setInvites([...invites, { email }]);
+          setInvites([...invites, email]);
         }}
       >
         <StyledLabel htmlFor="email">Epost</StyledLabel>
@@ -117,8 +117,8 @@ export const AddKohort: React.FC<Props> = ({ uid }) => {
 
       {invites.length > 0 ? (
         <StyledUl>
-          {invites.map((user: Invite) => {
-            return <li key={user.email}>{user.email}</li>;
+          {invites.map((email: string) => {
+            return <li key={email}>{email}</li>;
           })}
         </StyledUl>
       ) : (
