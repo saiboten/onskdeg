@@ -91,7 +91,7 @@ export const HeaderComponent = ({ uid }: Props) => {
         <Link to="/">{APP_TITLE}</Link>
       </H1>
       <UserInfo>
-        <UserEmail>{user?.email || "Ukjent"}</UserEmail>
+        <UserEmail>{user?.name || "Ukjent"}</UserEmail>
         <ButtonNavigation
           type="button"
           onClick={() => logOut(setFeedback, logout)}

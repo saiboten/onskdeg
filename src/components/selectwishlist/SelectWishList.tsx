@@ -69,7 +69,15 @@ export const SelectWishList = function ({ uid }: Props) {
 
   return (
     <Container textLeft>
-      <StyledBigHeader>Velg ønskeliste</StyledBigHeader>
+      <StyledBigHeader>Hvem sin ønskeliste vil du se?</StyledBigHeader>
+
+      {user?.groups.length === 0 && (
+        <div>
+          Du er ikke med i noen kohorter enda. Enten må du få en invitasjon fra
+          administrator i en annen kohort, eller{" "}
+          <Link to="/settings">opprett en kokort her</Link>
+        </div>
+      )}
 
       {user?.groups.map((group) => {
         return <GroupUsers key={group} uid={uid} groupId={group} />;

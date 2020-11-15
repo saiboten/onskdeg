@@ -7,6 +7,13 @@ const fetcher = async (
   email: string
 ): Promise<Invites> => {
   return await new Promise((resolve) => {
+    if (email === "") {
+      resolve({
+        myInvites: [],
+      });
+      return;
+    }
+
     firebase
       .firestore()
       .collection(collection)

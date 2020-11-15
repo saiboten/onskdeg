@@ -9,6 +9,7 @@ export const StyledInput = styled.input`
   border-radius: 10px;
   border: none;
   font-size: 1.6rem;
+  flex: 1;
 
   &::placeholder {
     font-size: 1.6rem;

@@ -25,7 +25,7 @@ const App = () => {
     firebase.auth().onAuthStateChanged(function (user) {
       if (user != null) {
         setUid(user.uid);
-        setFirebaseUser(firebaseUser);
+        setFirebaseUser(user);
       }
       setUidResolved(true);
     });

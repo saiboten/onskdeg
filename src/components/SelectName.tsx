@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "./common/Button";
 import { Container } from "./common/Container";
 import { StyledLabel } from "./common/Label";
@@ -22,6 +22,10 @@ interface Props {
 export const SelectName = ({ firebaseUser, uid }: Props) => {
   const [name, setName] = useState(firebaseUser?.displayName || "");
 
+  useEffect(() => {
+    setName(firebaseUser?.displayName || "");
+  }, [firebaseUser?.displayName]);
+
   async function handleSetName(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     await firebase.firestore().collection("user").doc(uid).update({
@@ -44,7 +48,7 @@ export const SelectName = ({ firebaseUser, uid }: Props) => {
             value={name}
             onChange={(e) => setName(e.target.value)}
           ></StyledInput>
-          <Button type="submit">Legg til</Button>
+          <Button type="submit">Lagre</Button>
         </StyledLabelInput>
       </form>
     </Container>
