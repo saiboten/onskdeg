@@ -106,19 +106,17 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
       return;
     }
 
-    const newWishList = [
-      ...(wishes || []),
-      {
-        name: newWish,
-        id: createGuid(),
-        image: "",
-        accomplished: false,
-        accomplishedby: "",
-        deleted: false,
-        description: "",
-        link: "",
-      },
-    ];
+    const newWishObject: WishType = {
+      name: newWish,
+      id: createGuid(),
+      image: "",
+      deleted: false,
+      description: "",
+      link: "",
+      isSuggestion: false,
+    };
+
+    const newWishList = [...(wishes || []), newWishObject];
 
     storeWishesToFirebase(newWishList);
     setFeedback("");

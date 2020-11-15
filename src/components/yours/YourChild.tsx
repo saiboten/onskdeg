@@ -53,12 +53,11 @@ export const YourChild = ({ child }: Props) => {
 
     const emptyWish: WishType = {
       name: newWish,
-      accomplished: false,
-      accomplishedby: "",
       deleted: false,
       description: "",
       image: "",
       link: "",
+      isSuggestion: false,
       id: createGuid(),
     };
 

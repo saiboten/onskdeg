@@ -1,53 +1,98 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 import { Container } from "../common/Container";
 import OtherWish from "./OtherWish";
-import Icon from "../common/Icon";
 import { useWishes } from "../../hooks/useWishes";
 import { useParams } from "react-router";
 import { useUser } from "../../hooks/useUser";
 import { StyledBigHeader } from "../common/StyledHeading";
-
-const ActionButtonsContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-`;
+import { StyledInput } from "../common/StyledInput";
+import { Spacer } from "../common/Spacer";
+import { StyledCheckIcon } from "../yours/YourWishList";
+import firebase from "../firebase/firebase";
+import { Wish } from "../../types/types";
+import { createGuid } from "../../util/guid";
+import { StyledNotification } from "../common/StyledNotification";
+import { mutate } from "swr";
 
 interface Params {
   uid: string;
 }
 
+export const StyledWrapper = styled.form`
+  position: relative;
+  margin-bottom: 0.8rem;
+`;
+
 export const OthersWishList = ({ myUid }: { myUid: string }) => {
-  const [hideSelected, setHideSelected] = useState(false);
   const [feedback, setFeedback] = useState("");
+  const [suggestion, setSuggestion] = useState("");
 
   const { uid } = useParams<Params>();
   const { user } = useUser(uid);
 
   const { wishes } = useWishes(uid);
 
-  function toggleShowSelected(e: React.MouseEvent<HTMLElement>) {
+  async function handleAddSuggestion(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setHideSelected(!hideSelected);
+
+    const newWish: Wish = {
+      deleted: false,
+      description: "",
+      id: createGuid(),
+      image: "",
+      isSuggestion: true,
+      name: suggestion,
+      link: "",
+      suggestedBy: myUid,
+    };
+
+    const docRef = firebase.firestore().collection("wishes").doc(uid);
+    const existingData = await (await docRef.get()).data()?.wishes;
+
+    docRef.update({
+      wishes: [newWish, ...existingData],
+    });
+
+    setFeedback(`Lag til forslag ${suggestion}`);
+    setSuggestion("");
+    mutate(["wishes", uid]);
+
+    setTimeout(() => {
+      setFeedback("");
+    }, 3000);
   }
+
+  const ownWishes = wishes?.filter((m) => !m.isSuggestion);
+
+  const suggestions = wishes?.filter((m) => m.isSuggestion);
 
   return (
     <Container>
+      <StyledNotification active={feedback !== ""} text={feedback} />
       <StyledBigHeader>{`Ønskelisten til ${user?.name}`}</StyledBigHeader>
-      <ActionButtonsContainer>
-        <Icon
-          type="button"
-          name={hideSelected ? "eye" : "eye-off"}
-          onClick={toggleShowSelected}
+      {ownWishes?.length === 0 && <p>Ingen ønsker enda.</p>}
+      {ownWishes?.map((wish) => (
+        <OtherWish myUid={myUid} key={wish.id} user={uid} wishInfo={wish} />
+      ))}
+      <Spacer />
+      <StyledBigHeader>Forslag for {user?.name}</StyledBigHeader>
+      {suggestions?.map((wish) => (
+        <OtherWish myUid={myUid} key={wish.id} user={uid} wishInfo={wish} />
+      ))}
+      <Spacer />
+      <h3>Legg inn forslag til {user?.name}</h3>
+      <Spacer />
+      <StyledWrapper onSubmit={handleAddSuggestion}>
+        <StyledInput
+          type="text"
+          placeholder="Legg inn forslag her"
+          value={suggestion}
+          onChange={(e) => setSuggestion(e.target.value)}
         />
-      </ActionButtonsContainer>
-      <p>{feedback}</p>
-      {wishes?.map((wish) => {
-        return (
-          <OtherWish myUid={myUid} key={wish.id} user={uid} wishInfo={wish} />
-        );
-      })}
+        <StyledCheckIcon type="submit" name="check" onClick={() => null} />
+      </StyledWrapper>
     </Container>
   );
 };

@@ -10,6 +10,7 @@ const fetcher = async (collection: "user", userId: string): Promise<User> => {
         groups: [],
         isChild: false,
       });
+      return;
     }
 
     const userDoc = firebase.firestore().collection(collection).doc(userId);

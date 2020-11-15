@@ -23,8 +23,8 @@ export interface Wish {
   description: string;
   link: string;
   deleted: boolean;
-  accomplished: boolean;
-  accomplishedby: string; // The simplest approach, but not that flexible
+  isSuggestion: boolean;
+  suggestedBy?: string;
 }
 
 export interface Purchases {
