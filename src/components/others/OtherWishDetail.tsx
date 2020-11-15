@@ -7,6 +7,8 @@ import styled from "styled-components";
 import { Container } from "../common/Container";
 import { NavLink } from "../common/Link";
 import { useWish } from "../../hooks/useWish";
+import { useParams } from "react-router";
+import { useUser } from "../../hooks/useUser";
 
 interface OtherWishDetailProps {
   setWishes: (user: string, wishes: Wish[]) => void;
@@ -19,13 +21,15 @@ const StyledOtherWishDetail = styled.div`
   text-align: left;
 `;
 
-export function OtherWishDetail({
-  match: {
-    params: { wishid },
-  },
-  user,
-}: OtherWishDetailProps) {
-  const { wish } = useWish(user.uid, wishid);
+interface Params {
+  uid: string;
+  wishid: string;
+}
+
+export function OtherWishDetail() {
+  const { uid, wishid } = useParams<Params>();
+  const { user } = useUser(uid);
+  const { wish } = useWish(uid, wishid);
 
   if (!wish) {
     return <div>Loading...</div>;
@@ -34,7 +38,7 @@ export function OtherWishDetail({
   return (
     <Container>
       <StyledOtherWishDetail>
-        <NavLink to={`/other/${user.uid}`}>Tilbake til bruker</NavLink>
+        <NavLink to={`/other/${user?.uid}`}>Tilbake til bruker</NavLink>
 
         <h1>
           {wish.image} {wish.name}

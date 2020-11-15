@@ -14,6 +14,8 @@ import {
 } from "../common/IconButton";
 import { Link as RouterLink } from "react-router-dom";
 
+import { ReactComponent as ArrowRight } from "../images/arrow-right.svg";
+
 export const Link = styled(RouterLink)`
   text-decoration: none;
 
@@ -31,6 +33,14 @@ interface P {
   wish: WishType;
   delete: (wishId: string) => void;
 }
+
+const StyledArrowRight = styled(ArrowRight)`
+  width: 2rem;
+  height: 2rem;
+  fill: #fff;
+  transform: translateY(4px);
+  margin-left: 1rem;
+`;
 
 export const Wish = ({ wish, delete: deleteProp, user }: P) => {
   const [confirm, setConfirm] = useState(false);
@@ -65,7 +75,9 @@ export const Wish = ({ wish, delete: deleteProp, user }: P) => {
   return (
     <ListRow>
       <LeftSection>
-        <Link to={`/wish/${user}/${wish.id}`}>{wish.name}</Link>
+        <Link to={`/wish/${user}/${wish.id}`}>
+          {wish.name} <StyledArrowRight />
+        </Link>
       </LeftSection>
       {deleteWish}
     </ListRow>

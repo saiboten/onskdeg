@@ -15,14 +15,14 @@ const fetcher = async (groups: "groups", groupId: string): Promise<Kohort> => {
           resolve({
             groupName: "",
             admin: "",
-            users: [],
+            members: [],
             invites: [],
             ...doc.data(),
           });
         } else {
           resolve({
             admin: "",
-            users: [],
+            members: [],
             invites: [],
             groupName: "",
           });

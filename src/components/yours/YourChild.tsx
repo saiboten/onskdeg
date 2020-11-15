@@ -8,6 +8,7 @@ import firebase from "../firebase/firebase";
 import { useWishes } from "../../hooks/useWishes";
 import { mutate } from "swr";
 import { createGuid } from "../../util/guid";
+import Loading from "../common/Loading";
 
 const StyledChildren = styled.div`
   margin-bottom: 2.4rem;
@@ -21,15 +22,30 @@ export const YourChild = ({ child }: Props) => {
   const [newWish, setNewWish] = useState("");
   const { wishes, isLoading } = useWishes(child.uid);
 
-  const wishToElement = (el: WishType) => {
-    return (
-      <Wish
-        user={child.uid}
-        key={el.id}
-        delete={() => console.log("updating")}
-        wish={el}
-      />
+  function storeWishesToFirebase(newData: Array<WishType>) {
+    mutate(["wishes", child?.uid || "?"], newData, false);
+    firebase
+      .firestore()
+      .collection("wishes")
+      .doc(child?.uid || "?")
+      .set({
+        wishes: newData,
+      })
+      .then(() => {
+        mutate(["wishes", child?.uid]);
+      });
+  }
+
+  function deleteWish(deleteId: string) {
+    storeWishesToFirebase(
+      [...(wishes || [])].filter((e: WishType) => {
+        return e.id !== deleteId;
+      })
     );
+  }
+
+  const wishToElement = (el: WishType) => {
+    return <Wish user={child.uid} key={el.id} delete={deleteWish} wish={el} />;
   };
 
   const handleSaveWish = (e: React.MouseEvent<HTMLFormElement>) => {
@@ -54,10 +70,11 @@ export const YourChild = ({ child }: Props) => {
         wishes: [...(wishes || []), emptyWish],
       });
     mutate(["wishes", child.uid]);
+    setNewWish("");
   };
 
   if (isLoading) {
-    return <div>Laster ønsker</div>;
+    return <Loading />;
   }
 
   return (
@@ -66,7 +83,7 @@ export const YourChild = ({ child }: Props) => {
       <StyledWrapper onSubmit={handleSaveWish}>
         <StyledInput
           type="text"
-          placeholder={`Legg inn nye ønsker for ${child.name}`}
+          placeholder={`Legg inn ønske for ${child.name}`}
           value={newWish}
           onChange={(e) => setNewWish(e.target.value)}
         />

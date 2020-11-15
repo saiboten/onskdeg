@@ -41,7 +41,7 @@ export const AddKohort: React.FC<Props> = ({ uid }) => {
       invites,
       admin: user?.uid,
       groupName,
-      members: [user?.uid],
+      members: [user?.uid, ...(user?.childs || [])],
     });
 
     // Add current user to kohort

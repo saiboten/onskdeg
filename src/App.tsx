@@ -18,14 +18,14 @@ import { Settings } from "./components/Settings";
 
 const App = () => {
   const [uid, setUid] = useState<string | undefined>();
+  const [firebaseUser, setFirebaseUser] = useState<firebase.User | undefined>();
   const [uidResolved, setUidResolved] = useState(false);
-
-  console.log(uid, uidResolved);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(function (user) {
       if (user != null) {
         setUid(user.uid);
+        setFirebaseUser(firebaseUser);
       }
       setUidResolved(true);
     });
@@ -46,16 +46,22 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <Suspense fallback={<h1>Loading posts...</h1>}>
+      <Suspense fallback={<Loading />}>
         <GlobalStyle />
         <HeaderComponent uid={uid} />
         <Switch>
           <Route path="/wish/:uid/:wishid" exact>
             <YourWishDetails />
           </Route>
-          <Route path="/others" component={SelectWishList} />
-          <Route path="/other/:user/:wishid" component={OtherWishDetail} />
-          <Route path="/other/:name" component={OthersWishList} />
+          <Route path="/others">
+            <SelectWishList uid={uid} />
+          </Route>
+          <Route path="/other/:uid/:wishid">
+            <OtherWishDetail />
+          </Route>
+          <Route path="/other/:uid">
+            <OthersWishList />
+          </Route>
           <Route path="/addchild">
             <AddChild uid={uid} />
           </Route>
@@ -66,7 +72,7 @@ const App = () => {
             <AddKohort uid={uid} />
           </Route>
           <Route path="/">
-            <YourWishList uid={uid} />
+            <YourWishList firebaseUser={firebaseUser} uid={uid} />
           </Route>
         </Switch>
       </Suspense>

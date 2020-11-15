@@ -18,6 +18,8 @@ import { useChilds } from "../../hooks/useChilds";
 import { YourChild } from "./YourChild";
 import { createGuid } from "../../util/guid";
 import { InvitePopup } from "./InvitePopup";
+import Loading from "../common/Loading";
+import { SelectName } from "../SelectName";
 
 export const StyledCheckIcon = styled(Icon)`
   position: absolute;
@@ -36,6 +38,7 @@ interface P {
   updateWishStore: (newWishes: Array<WishType>) => void;
   storeWishesToFirebase: (newWishes: Array<WishType>) => void;
   wishes: Array<WishType>;
+  firebaseUser: firebase.User;
 }
 
 interface S {
@@ -55,9 +58,10 @@ const StyledBottomOptions = styled.div`
 
 interface Props {
   uid: string;
+  firebaseUser?: firebase.User;
 }
 
-export const YourWishList = ({ uid }: Props) => {
+export const YourWishList = ({ uid, firebaseUser }: Props) => {
   const [newWish, setNewWish] = useState("");
   const [feedback, setFeedback] = useState("");
   const { user } = useUser(uid);
@@ -123,6 +127,14 @@ export const YourWishList = ({ uid }: Props) => {
 
   const wishesEl = wishes?.map(wishToElement) || [];
 
+  if (!user?.name) {
+    return (
+      <Suspense fallback={<Loading />}>
+        <SelectName uid={uid} firebaseUser={firebaseUser} />
+      </Suspense>
+    );
+  }
+
   return (
     <Container>
       {(invites?.myInvites.length || 0) > 0 && (
@@ -132,7 +144,7 @@ export const YourWishList = ({ uid }: Props) => {
       <StyledWrapper onSubmit={addWish}>
         <StyledInput
           type="text"
-          placeholder="Legg inn nye ønsker her"
+          placeholder="Legg inn ønske her"
           value={newWish}
           onChange={(e) => setNewWish(e.target.value)}
         />

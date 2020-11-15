@@ -56,7 +56,7 @@ export interface Invites {
 export interface Kohort {
   groupName: string;
   admin: string;
-  users: User[];
+  members: string[];
   invites: {
     email: string;
     name: string;

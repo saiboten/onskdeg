@@ -75,14 +75,39 @@ export const InvitePopup = ({ invites, uid }: Props) => {
         myInvites: invites.filter((m) => m !== firstInvite),
       });
 
-    // Join group
+    // Join group in group collection
     await firebase
       .firestore()
       .collection("groups")
       .doc(firstInvite)
       .update({
-        users: [...(kohort?.users || []), ...(user?.childs || []), uid],
+        members: [...(kohort?.members || []), ...(user?.childs || []), uid],
       });
+
+    // Add group to user
+    await firebase
+      .firestore()
+      .collection("user")
+      .doc(user?.uid)
+      .update({
+        groups: [...(user?.groups || []), firstInvite],
+      });
+
+    user?.childs?.forEach(async (child) => {
+      const childInfo = await firebase
+        .firestore()
+        .collection("user")
+        .doc(child)
+        .get();
+
+      firebase
+        .firestore()
+        .collection("user")
+        .doc(child)
+        .update({
+          groups: [...(childInfo.data()?.groups || []), firstInvite],
+        });
+    });
 
     mutate(["invites", user?.email]);
   }

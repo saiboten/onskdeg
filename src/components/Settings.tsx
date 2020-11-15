@@ -16,7 +16,7 @@ export const Settings = ({ uid }: Props) => {
 
   return (
     <Container textLeft>
-      <h1>Settings</h1>
+      <h1>Innstillinger</h1>
       <Spacer />
       <BorderButton>
         <Link to={`/addgroup`}>Opprett ny kohort</Link>
