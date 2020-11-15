@@ -8,19 +8,17 @@ import { Wish, Purchase } from "../../types/types";
 import { ImageWrapper } from "../common/Image";
 import {
   StyledActionButtonsAnimated,
-  StyledActionButtons
+  StyledActionButtons,
 } from "../common/IconButton";
 import { Link } from "react-router-dom";
 import { UnstyledLink } from "../common/Link";
-
-const storageRef = firebase.storage().ref();
+import { usePurchase } from "../../hooks/usePurchase";
+import { mutate } from "swr";
+import { StyledNotification } from "../common/StyledNotification";
 
 interface P {
-  purchase: Purchase;
+  // purchase: Purchase;
   wishInfo: Wish;
-  canDelete: boolean;
-  deleteSuggestion: () => void;
-  onClick: Function;
   user: string;
 }
 
@@ -28,53 +26,48 @@ interface S {
   image: string;
 }
 
-const OtherWish = (props: P) => {
-  const [image, setImage] = useState("");
+const OtherWish = ({ wishInfo, user }: P) => {
+  const [feedback, setFeedback] = useState("");
+  const { purchase } = usePurchase(wishInfo?.id);
 
-  useEffect(() => {
-    if (props.wishInfo.image) {
-      storageRef
-        .child(props.wishInfo.image)
-        .getDownloadURL()
-        .then(url => {
-          setImage(url);
-        });
+  const item = purchase?.checked ? <del>{wishInfo.name}</del> : wishInfo.name;
+
+  async function handleBuyItem() {
+    const purchaseRef = firebase
+      .firestore()
+      .collection("purchase")
+      .doc(wishInfo.id);
+
+    const purchaseData = await purchaseRef.get();
+
+    const isChecked = purchaseData.exists && purchaseData.data()?.checked;
+
+    await purchaseRef.set({
+      checked: isChecked ? false : true,
+      checkedBy: user,
+    });
+
+    if (isChecked) {
+      setFeedback(`Du solgte ${wishInfo.name}`);
+    } else {
+      setFeedback(`Du kjøpte ${wishInfo.name}`);
     }
-  }, [props.wishInfo.image]);
 
-  const { wishInfo, onClick, purchase, user } = props;
+    setTimeout(() => {
+      setFeedback("");
+    }, 3000);
 
-  const imageTag = wishInfo.image ? (
-    <img className="other-wish__image" alt="Awesome" src={image} />
-  ) : (
-    ""
-  );
-
-  const item = purchase.checked ? <del>{wishInfo.name}</del> : wishInfo.name;
-  const checkedByElem = purchase.checked ? (
-    <div className="smallspace">Tatt</div>
-  ) : (
-    ""
-  );
-
-  const ActionButtonsContainer = styled.div`
-    display: flex;
-    justify-content: flex-end;
-  `;
+    mutate(["purchase", wishInfo.id]);
+  }
 
   return (
     <ListRow>
+      <StyledNotification active={feedback !== ""} text={feedback} />
       <LeftSection>
-        <ImageWrapper>{imageTag}</ImageWrapper>
         <UnstyledLink to={`/other/${user}/${wishInfo.id}`}>{item}</UnstyledLink>
       </LeftSection>
       <StyledActionButtons>
-        {checkedByElem}
-        <Icon
-          type="button"
-          name={purchase.checked ? "shopping-cart" : "shopping-cart"}
-          onClick={() => onClick(wishInfo.id)}
-        />
+        <Icon type="button" name={"shopping-cart"} onClick={handleBuyItem} />
       </StyledActionButtons>
     </ListRow>
   );

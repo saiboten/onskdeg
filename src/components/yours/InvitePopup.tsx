@@ -5,6 +5,7 @@ import { useKohort } from "../../hooks/useKohort";
 import { useUser } from "../../hooks/useUser";
 import { BorderButton } from "../common/Button";
 import { Spacer } from "../common/Spacer";
+import { StyledBigHeader } from "../common/StyledHeading";
 import firebase from "../firebase/firebase";
 
 interface Props {
@@ -128,10 +129,10 @@ export const InvitePopup = ({ invites, uid }: Props) => {
     <StyledBlurredBackground>
       <StyledInnerContent>
         <Spacer />
-        <h1>
+        <StyledBigHeader>
           Du er invitert til en kohort med navn:{" "}
           <strong>{kohort?.groupName}</strong>
-        </h1>
+        </StyledBigHeader>
         <Spacer />
 
         <p>

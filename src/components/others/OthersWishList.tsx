@@ -2,24 +2,30 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 import { Container } from "../common/Container";
-import firebase from "../firebase/firebase";
 import OtherWish from "./OtherWish";
 import Icon from "../common/Icon";
-import { User, Wish, Purchases } from "../../types/types";
+import { useWishes } from "../../hooks/useWishes";
+import { useParams } from "react-router";
+import { useUser } from "../../hooks/useUser";
+import { StyledBigHeader } from "../common/StyledHeading";
 
 const ActionButtonsContainer = styled.div`
   display: flex;
   justify-content: flex-end;
 `;
 
-interface State {
-  hideSelected: boolean;
-  feedback: string;
+interface Params {
+  uid: string;
 }
 
 export const OthersWishList = () => {
   const [hideSelected, setHideSelected] = useState(false);
   const [feedback, setFeedback] = useState("");
+
+  const { uid } = useParams<Params>();
+  const { user } = useUser(uid);
+
+  const { wishes } = useWishes(uid);
 
   function toggleShowSelected(e: React.MouseEvent<HTMLElement>) {
     e.preventDefault();
@@ -28,9 +34,7 @@ export const OthersWishList = () => {
 
   return (
     <Container>
-      <div className="flex-row space-between">
-        <h1 className="shrink overflow-hidden">{`Ønskelisten til TODO`}</h1>
-      </div>
+      <StyledBigHeader>{`Ønskelisten til ${user?.name}`}</StyledBigHeader>
       <ActionButtonsContainer>
         <Icon
           type="button"
@@ -39,7 +43,9 @@ export const OthersWishList = () => {
         />
       </ActionButtonsContainer>
       <p>{feedback}</p>
-      {/* {filteredWishes} */}
+      {wishes?.map((wish) => {
+        return <OtherWish key={wish.id} user={uid} wishInfo={wish} />;
+      })}
     </Container>
   );
 };

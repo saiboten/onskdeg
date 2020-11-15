@@ -1,0 +1,33 @@
+import React from "react";
+import styled from "styled-components";
+
+interface Props {
+  active: boolean;
+}
+
+const StyledNotificationBar = styled.div<Props>`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  border: 1px solid #000;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  background-color: rgba(180, 155, 87);
+  color: #fff;
+
+  transition: all 0.5s;
+  transform: ${(props) =>
+    props.active ? `translateY(0)` : `translateY(-50px)`};
+`;
+
+export const StyledNotification = ({
+  text,
+  active,
+}: {
+  text: string;
+  active: boolean;
+}) => <StyledNotificationBar active={active}>{text}</StyledNotificationBar>;

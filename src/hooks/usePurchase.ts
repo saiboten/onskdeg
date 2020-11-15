@@ -4,31 +4,38 @@ import useSWR from "swr";
 import firebase from "../components/firebase/firebase";
 import { Purchase } from "../types/types";
 
-const fetcher = async (userId: string): Promise<Purchase | undefined> => {
+const fetcher = async (
+  purchase: "purchase",
+  purchaseId: string
+): Promise<Purchase | undefined> => {
   return await new Promise((resolve) => {
     firebase
       .firestore()
       .collection("purchase")
-      .doc(userId)
+      .doc(purchaseId)
       .get()
       .then((doc) => {
         if (doc.exists) {
           resolve({
+            checked: false,
+            checkedBy: undefined,
             ...doc.data(),
-          } as Purchase);
+          });
         } else {
-          resolve();
+          resolve({
+            checked: false,
+          });
         }
       });
   });
 };
 
 export function usePurchase(purchaseId: string) {
-  const { data, error } = useSWR(`/purchase/${purchaseId}`, fetcher, {
+  const { data, error } = useSWR(["purchase", purchaseId], fetcher, {
     suspense: true,
   });
   return {
-    user: data,
+    purchase: data,
     isLoading: !error && !data,
     isError: error,
   };

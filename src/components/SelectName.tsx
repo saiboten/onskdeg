@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { useUser } from "../hooks/useUser";
 import firebase from "./firebase/firebase";
 import { mutate } from "swr";
+import { StyledBigHeader } from "./common/StyledHeading";
 
 const StyledLabelInput = styled.div`
   display: flex;
@@ -31,7 +32,7 @@ export const SelectName = ({ firebaseUser, uid }: Props) => {
 
   return (
     <Container textLeft>
-      <h1>Navn</h1>
+      <StyledBigHeader>Navn</StyledBigHeader>
       <p>Hei, hva heter du?</p>
 
       <form onSubmit={handleSetName}>

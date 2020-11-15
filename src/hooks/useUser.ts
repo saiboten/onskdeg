@@ -4,6 +4,14 @@ import { User } from "../types/types";
 
 const fetcher = async (collection: "user", userId: string): Promise<User> => {
   return await new Promise((resolve) => {
+    if (userId === "") {
+      resolve({
+        uid: "",
+        groups: [],
+        isChild: false,
+      });
+    }
+
     firebase
       .firestore()
       .collection(collection)

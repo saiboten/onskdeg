@@ -9,6 +9,8 @@ import { NavLink } from "../common/Link";
 import { useWish } from "../../hooks/useWish";
 import { useParams } from "react-router";
 import { useUser } from "../../hooks/useUser";
+import { usePurchase } from "../../hooks/usePurchase";
+import { StyledBigHeader } from "../common/StyledHeading";
 
 interface OtherWishDetailProps {
   setWishes: (user: string, wishes: Wish[]) => void;
@@ -16,10 +18,6 @@ interface OtherWishDetailProps {
   user: User;
   match: any;
 }
-
-const StyledOtherWishDetail = styled.div`
-  text-align: left;
-`;
 
 interface Params {
   uid: string;
@@ -30,36 +28,36 @@ export function OtherWishDetail() {
   const { uid, wishid } = useParams<Params>();
   const { user } = useUser(uid);
   const { wish } = useWish(uid, wishid);
+  const { purchase } = usePurchase(wishid);
+
+  const { user: purchaseUser } = useUser(purchase?.checkedBy || "");
 
   if (!wish) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (
-    <Container>
-      <StyledOtherWishDetail>
-        <NavLink to={`/other/${user?.uid}`}>Tilbake til bruker</NavLink>
+    <Container textLeft>
+      <NavLink to={`/other/${user?.uid}`}>Tilbake til bruker</NavLink>
 
-        <h1>
-          {wish.image} {wish.name}
-        </h1>
+      <StyledBigHeader>{wish.name}</StyledBigHeader>
 
-        {wish.description !== "" ? (
-          <>
-            <StyledLabel>Beskrivelse</StyledLabel>
-            <div>{wish.description}</div>
-          </>
-        ) : null}
+      {wish.description !== "" && (
+        <>
+          <StyledLabel>Beskrivelse</StyledLabel>
+          <div>{wish.description}</div>
+        </>
+      )}
 
-        {wish.link !== "" ? (
-          <>
-            <StyledLabel>Link</StyledLabel>
-            <div>
-              <a href={wish.link}>Link</a>
-            </div>
-          </>
-        ) : null}
-      </StyledOtherWishDetail>
+      {wish.link !== "" && (
+        <>
+          <StyledLabel>Link</StyledLabel>
+          <div>
+            <a href={wish.link}>Link</a>
+          </div>
+        </>
+      )}
+      {purchase?.checked && <div>Dette ble kjøpt av {purchaseUser?.name}</div>}
     </Container>
   );
 }

@@ -34,7 +34,7 @@ export interface Purchases {
 
 export interface Purchase {
   checked: boolean;
-  checkedby: string;
+  checkedBy?: string;
 }
 
 export interface FirebaseSnapshot {

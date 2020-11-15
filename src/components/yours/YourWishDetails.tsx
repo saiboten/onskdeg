@@ -9,6 +9,8 @@ import { StyledLabel } from "../common/Label";
 import { useWish } from "../../hooks/useWish";
 import { useParams } from "react-router";
 import { useUser } from "../../hooks/useUser";
+import { mutate } from "swr";
+import { useWishes } from "../../hooks/useWishes";
 
 const StyledWrapper = styled.div`
   text-align: left;
@@ -37,16 +39,35 @@ export function YourWishDetails() {
 
   const { user } = useUser(uid);
 
+  const { wishes } = useWishes(user?.uid || "");
   const { wish } = useWish(user?.uid || "?", wishid);
 
   console.log(wishid, uid, user, wish);
 
-  function updateWishStore(newData: Array<Wish>) {
-    // firebase.firestore().
+  async function updateWishStore(newData: Array<Wish>) {
+    await firebase
+      .firestore()
+      .collection("wishes")
+      .doc(user?.uid || "?")
+      .set({
+        wishes: newData,
+      })
+      .then(() => {
+        mutate(["wishes", user?.uid]);
+      });
   }
 
   function storeWishDetails(updatedWish: Wish) {
-    // Store
+    const newWishList = wishes?.map((wish) => {
+      if (wish.id === updatedWish.id) {
+        return updatedWish;
+      }
+      return wish;
+    });
+
+    if (newWishList) {
+      updateWishStore(newWishList);
+    }
   }
 
   if (wish == null) {

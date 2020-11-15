@@ -20,6 +20,7 @@ import { createGuid } from "../../util/guid";
 import { InvitePopup } from "./InvitePopup";
 import Loading from "../common/Loading";
 import { SelectName } from "../SelectName";
+import { StyledBigHeader } from "../common/StyledHeading";
 
 export const StyledCheckIcon = styled(Icon)`
   position: absolute;
@@ -140,7 +141,7 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
       {(invites?.myInvites.length || 0) > 0 && (
         <InvitePopup uid={uid} invites={invites?.myInvites || []} />
       )}
-      <h1>Mine ønsker</h1>
+      <StyledBigHeader>Mine ønsker</StyledBigHeader>
       <StyledWrapper onSubmit={addWish}>
         <StyledInput
           type="text"

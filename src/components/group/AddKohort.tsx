@@ -8,6 +8,7 @@ import { useUser } from "../../hooks/useUser";
 import styled from "styled-components";
 import { Spacer } from "../common/Spacer";
 import { Redirect } from "react-router";
+import { StyledBigHeader } from "../common/StyledHeading";
 
 interface Invite {
   email: string;
@@ -83,7 +84,7 @@ export const AddKohort: React.FC<Props> = ({ uid }) => {
 
   return (
     <Container textLeft>
-      <h1>Opprett kohort</h1>
+      <StyledBigHeader>Opprett kohort</StyledBigHeader>
       <StyledLabel>Navn på kohort</StyledLabel>
       <StyledInput
         autoComplete="off"

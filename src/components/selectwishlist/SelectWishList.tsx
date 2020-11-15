@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 
 import AddedUserLink from "./AddedUserLink";
 import { Container } from "../common/Container";
@@ -11,27 +12,51 @@ import { Button } from "../common/Button";
 import { useUser } from "../../hooks/useUser";
 import { useKohort } from "../../hooks/useKohort";
 import { Link } from "../common/Link";
+import { StyledBigHeader } from "../common/StyledHeading";
+
+const StyledKohorts = styled.div`
+  border: 1px solid black;
+  border-radius: 0.5rem;
+  border-color: #fff;
+  padding: 1rem;
+`;
+
+const StyledUl = styled.ul`
+  list-style-type: none;
+`;
 
 export const GroupUser = ({ uid }: { uid: string }) => {
   const { user } = useUser(uid);
 
-  console.log(user);
-
   return <Link to={`/other/${user?.uid}`}>{user?.name}</Link>;
 };
 
-export const GroupUsers = ({ groupId }: { groupId: string }) => {
+export const GroupUsers = ({
+  uid,
+  groupId,
+}: {
+  uid: string;
+  groupId: string;
+}) => {
   const { kohort } = useKohort(groupId);
 
-  console.log(kohort);
-
   return (
-    <div>
-      <h1>{kohort?.groupName}</h1>
-      {kohort?.members.map((member) => {
-        return <GroupUser uid={member} />;
-      })}
-    </div>
+    <StyledKohorts>
+      <StyledBigHeader>
+        Kohort: <strong>{kohort?.groupName}</strong>
+      </StyledBigHeader>
+      <StyledUl>
+        {kohort?.members
+          .filter((member) => member !== uid)
+          .map((member) => {
+            return (
+              <li key={member}>
+                <GroupUser uid={member} />
+              </li>
+            );
+          })}
+      </StyledUl>
+    </StyledKohorts>
   );
 };
 
@@ -44,10 +69,10 @@ export const SelectWishList = function ({ uid }: Props) {
 
   return (
     <Container textLeft>
-      <h1>Velg ønskeliste</h1>
+      <StyledBigHeader>Velg ønskeliste</StyledBigHeader>
 
       {user?.groups.map((group) => {
-        return <GroupUsers key={group} groupId={group} />;
+        return <GroupUsers key={group} uid={uid} groupId={group} />;
       })}
     </Container>
   );
