@@ -15,6 +15,7 @@ import { AddChild } from "./components/childs/AddChild";
 import { AddKohort } from "./components/group/AddKohort";
 import firebase from "./components/firebase/firebase";
 import { Settings } from "./components/Settings";
+import { LegacyWishes } from "./components/LegacyWishes";
 
 const App = () => {
   const [uid, setUid] = useState<string | undefined>();
@@ -70,6 +71,9 @@ const App = () => {
           </Route>
           <Route path="/addgroup">
             <AddKohort uid={uid} />
+          </Route>
+          <Route path="/legacy">
+            <LegacyWishes uid={uid} />
           </Route>
           <Route path="/">
             <YourWishList firebaseUser={firebaseUser} uid={uid} />

@@ -57,6 +57,15 @@ const StyledBottomOptions = styled.div`
   text-align: left;
 `;
 
+const StyledWarning = styled.div`
+  border: 5px red solid;
+  border-radius: 5px;
+  background: #fff;
+  color: black;
+  padding: 1rem;
+  margin: 1rem;
+`;
+
 interface Props {
   uid: string;
   firebaseUser?: firebase.User;
@@ -71,7 +80,9 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
 
   const childs = useChilds(user?.uid || "?");
 
-  const { invites } = useInvites(user?.email || "");
+  const { invites } = useInvites(firebaseUser?.email || "");
+
+  console.log(user);
 
   function storeWishesToFirebase(newData: Array<WishType>) {
     mutate(["wishes", user?.uid || "?"], newData, false);
@@ -136,12 +147,27 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
     );
   }
 
+  const showNoEmailDisclaimer = !firebaseUser?.email;
+
   return (
     <Container>
       {(invites?.myInvites.length || 0) > 0 && (
-        <InvitePopup uid={uid} invites={invites?.myInvites || []} />
+        <InvitePopup
+          firebaseUser={firebaseUser}
+          uid={uid}
+          invites={invites?.myInvites || []}
+        />
       )}
       <StyledBigHeader>Mine ønsker</StyledBigHeader>
+
+      {showNoEmailDisclaimer && (
+        <StyledWarning>
+          Vi kunne ikke finne eposten din. Dette betyr at du ikke kan inviteres
+          til kohorter. Send din id til administrator slik at vedkommende kan
+          legge deg inn manuelt. Din id er: {uid}.
+        </StyledWarning>
+      )}
+
       <StyledWrapper onSubmit={addWish}>
         <StyledInput
           type="text"
@@ -163,6 +189,13 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
       <StyledBottomOptions>
         <BorderButton>
           <Link to={`/addchild`}>Legg til barn</Link>
+        </BorderButton>
+        <BorderButton
+          style={{
+            marginLeft: "1rem",
+          }}
+        >
+          <Link to={`/legacy`}>Se tidligere ønsker</Link>
         </BorderButton>
       </StyledBottomOptions>
     </Container>

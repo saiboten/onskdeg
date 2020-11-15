@@ -10,7 +10,6 @@ export interface Child extends User {
 
 export interface User {
   uid: string;
-  email?: string;
   name?: string;
   childs?: string[];
   groups: string[];

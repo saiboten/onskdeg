@@ -11,6 +11,7 @@ import firebase from "../firebase/firebase";
 interface Props {
   invites: string[];
   uid: string;
+  firebaseUser?: firebase.User;
 }
 
 const StyledBlurredBackground = styled.div`
@@ -60,7 +61,7 @@ const StyledButton = styled.div`
   width: 100%;
 `;
 
-export const InvitePopup = ({ invites, uid }: Props) => {
+export const InvitePopup = ({ invites, uid, firebaseUser }: Props) => {
   const firstInvite = invites[0];
 
   const { kohort } = useKohort(firstInvite);
@@ -71,7 +72,7 @@ export const InvitePopup = ({ invites, uid }: Props) => {
     await firebase
       .firestore()
       .collection("invites")
-      .doc(user?.email || "")
+      .doc(firebaseUser?.email || "")
       .update({
         myInvites: invites.filter((m) => m !== firstInvite),
       });
@@ -110,7 +111,7 @@ export const InvitePopup = ({ invites, uid }: Props) => {
         });
     });
 
-    mutate(["invites", user?.email]);
+    mutate(["invites", firebaseUser?.email]);
   }
 
   async function declineGroupInvite() {
@@ -118,11 +119,11 @@ export const InvitePopup = ({ invites, uid }: Props) => {
     await firebase
       .firestore()
       .collection("invites")
-      .doc(user?.email || "")
+      .doc(firebaseUser?.email || "")
       .update({
         myInvites: invites.filter((m) => m !== firstInvite),
       });
-    mutate(["invites", user?.email]);
+    mutate(["invites", firebaseUser?.email]);
   }
 
   return (
