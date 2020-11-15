@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Suspense } from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { HashRouter, Route, Switch } from "react-router-dom";
 
 import { YourWishList } from "./components/yours/YourWishList";
 import { YourWishDetails } from "./components/yours/YourWishDetails";
@@ -47,7 +47,7 @@ const App = () => {
   }
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Suspense fallback={<Loading />}>
         <GlobalStyle />
         <HeaderComponent uid={uid} />
@@ -84,7 +84,7 @@ const App = () => {
           </Route>
         </Switch>
       </Suspense>
-    </BrowserRouter>
+    </HashRouter>
   );
 };
 
