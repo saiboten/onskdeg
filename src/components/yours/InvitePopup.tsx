@@ -4,6 +4,7 @@ import { mutate } from "swr";
 import { useKohort } from "../../hooks/useKohort";
 import { useUser } from "../../hooks/useUser";
 import { BorderButton } from "../common/Button";
+import Loading from "../common/Loading";
 import { Spacer } from "../common/Spacer";
 import { StyledBigHeader } from "../common/StyledHeading";
 import firebase from "../firebase/firebase";
@@ -66,8 +67,10 @@ export const InvitePopup = ({ invites, uid, firebaseUser }: Props) => {
 
   const { kohort } = useKohort(firstInvite);
   const { user } = useUser(uid);
+  const [loading, setLoading] = useState(false);
 
   async function joinGroup() {
+    setLoading(true);
     // Remove invite
     await firebase
       .firestore()
@@ -77,13 +80,21 @@ export const InvitePopup = ({ invites, uid, firebaseUser }: Props) => {
         myInvites: invites.filter((m) => m !== firstInvite),
       });
 
+    const newSet = new Set<string>();
+
+    [...(kohort?.members || []), ...(user?.childs || []), uid];
+
+    kohort?.members.forEach((m) => newSet.add(m));
+    user?.childs?.forEach((m) => newSet.add(m));
+    newSet.add(uid);
+
     // Join group in group collection
     await firebase
       .firestore()
       .collection("groups")
       .doc(firstInvite)
       .update({
-        members: [...(kohort?.members || []), ...(user?.childs || []), uid],
+        members: Array.from(newSet),
       });
 
     // Add group to user
@@ -102,19 +113,26 @@ export const InvitePopup = ({ invites, uid, firebaseUser }: Props) => {
         .doc(child)
         .get();
 
-      firebase
-        .firestore()
-        .collection("user")
-        .doc(child)
-        .update({
-          groups: [...(childInfo.data()?.groups || []), firstInvite],
-        });
+      if (childInfo.data()?.groups.includes(firstInvite)) {
+        // child already in group
+      } else {
+        firebase
+          .firestore()
+          .collection("user")
+          .doc(child)
+          .update({
+            groups: [...(childInfo.data()?.groups || []), firstInvite],
+          });
+      }
+
+      setLoading(false);
     });
 
     mutate(["invites", firebaseUser?.email]);
   }
 
   async function declineGroupInvite() {
+    setLoading(true);
     // todo decline
     await firebase
       .firestore()
@@ -124,6 +142,7 @@ export const InvitePopup = ({ invites, uid, firebaseUser }: Props) => {
         myInvites: invites.filter((m) => m !== firstInvite),
       });
     mutate(["invites", firebaseUser?.email]);
+    setLoading(false);
   }
 
   return (
@@ -145,13 +164,19 @@ export const InvitePopup = ({ invites, uid, firebaseUser }: Props) => {
 
         <p>Vil du være med?</p>
         <StyledButton>
-          <BorderButton
-            style={{ marginRight: "1rem" }}
-            onClick={declineGroupInvite}
-          >
-            Niks
-          </BorderButton>
-          <BorderButton onClick={joinGroup}>OK</BorderButton>
+          {loading ? (
+            <Loading />
+          ) : (
+            <>
+              <BorderButton
+                style={{ marginRight: "1rem" }}
+                onClick={declineGroupInvite}
+              >
+                Niks
+              </BorderButton>
+              <BorderButton onClick={joinGroup}>OK</BorderButton>
+            </>
+          )}
         </StyledButton>
       </StyledInnerContent>
     </StyledBlurredBackground>

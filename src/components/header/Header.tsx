@@ -118,7 +118,7 @@ export const HeaderComponent = ({ uid }: Props) => {
             isActive={othersActive}
             to="/others"
           >
-            Vennelister
+            Kohorter
           </CustomNavLink>
         </ActionButtons>
       </StyledHeader>

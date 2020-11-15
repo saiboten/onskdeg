@@ -18,7 +18,7 @@ interface Params {
   uid: string;
 }
 
-export const OthersWishList = () => {
+export const OthersWishList = ({ myUid }: { myUid: string }) => {
   const [hideSelected, setHideSelected] = useState(false);
   const [feedback, setFeedback] = useState("");
 
@@ -44,7 +44,9 @@ export const OthersWishList = () => {
       </ActionButtonsContainer>
       <p>{feedback}</p>
       {wishes?.map((wish) => {
-        return <OtherWish key={wish.id} user={uid} wishInfo={wish} />;
+        return (
+          <OtherWish myUid={myUid} key={wish.id} user={uid} wishInfo={wish} />
+        );
       })}
     </Container>
   );

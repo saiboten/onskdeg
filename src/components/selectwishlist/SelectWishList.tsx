@@ -69,8 +69,6 @@ export const SelectWishList = function ({ uid }: Props) {
 
   return (
     <Container textLeft>
-      <StyledBigHeader>Hvem sin ønskeliste vil du se?</StyledBigHeader>
-
       {user?.groups.length === 0 && (
         <div>
           Du er ikke med i noen kohorter enda. Enten må du få en invitasjon fra

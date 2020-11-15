@@ -20,13 +20,14 @@ interface P {
   // purchase: Purchase;
   wishInfo: Wish;
   user: string;
+  myUid: string;
 }
 
 interface S {
   image: string;
 }
 
-const OtherWish = ({ wishInfo, user }: P) => {
+const OtherWish = ({ wishInfo, user, myUid }: P) => {
   const [feedback, setFeedback] = useState("");
   const { purchase } = usePurchase(wishInfo?.id);
 
@@ -44,7 +45,7 @@ const OtherWish = ({ wishInfo, user }: P) => {
 
     await purchaseRef.set({
       checked: isChecked ? false : true,
-      checkedBy: user,
+      checkedBy: myUid,
     });
 
     if (isChecked) {

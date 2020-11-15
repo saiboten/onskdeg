@@ -92,7 +92,6 @@ export function YourWishDetails() {
     <Container>
       <StyledWrapper>
         <StyledTitle>
-          <h2>Ditt ønske</h2>
           <Detail fieldName="name" storeData={storeData} initialValue={name} />
         </StyledTitle>
         <StyledDescription>

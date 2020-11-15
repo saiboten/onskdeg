@@ -3,6 +3,7 @@ import { StyledInput } from "../common/StyledInput";
 import styled from "styled-components";
 import { Container } from "../common/Container";
 import { P } from "../common/P";
+import { Button } from "../common/Button";
 
 interface DetailInput {
   fieldName: string;
@@ -16,17 +17,7 @@ interface DetailInput {
 
 const StyledWrapper = styled.div`
   text-align: left;
-`;
-
-const StyledTextInput = styled.button`
-  outline: none;
-  border: 1px solid;
-  border-radius: 1rem;
-  padding: 1rem 2.5rem;
-  background: transparent;
-  color: inherit;
-  font-size: inherit;
-  cursor: pointer;
+  font-size: 1.5rem;
 `;
 
 export default function Detail({
@@ -47,10 +38,21 @@ export default function Detail({
           onChange={(e) => setValue(e.target.value)}
         />
       ) : (
-        <>
-          <P>{value ? value : "Klikk her for å legge til"}</P>
-          <StyledTextInput onClick={() => setEdit(true)}>Endre</StyledTextInput>
-        </>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "baseline",
+          }}
+        >
+          <P
+            style={{
+              marginRight: "1rem",
+            }}
+          >
+            {value ? value : "Klikk her for å legge til"}
+          </P>
+          <Button onClick={() => setEdit(true)}>Endre</Button>
+        </div>
       )}
     </StyledWrapper>
   );

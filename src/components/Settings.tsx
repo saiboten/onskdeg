@@ -1,7 +1,7 @@
 import React from "react";
 import { Container } from "./common/Container";
 
-import { BorderButton } from "./common/Button";
+import { BorderButton, Button } from "./common/Button";
 import { Link } from "./common/Link";
 import { Spacer } from "./common/Spacer";
 import { useKohort } from "../hooks/useKohort";
@@ -11,8 +11,14 @@ const GroupSetting = ({ group: groupId }: { group: string }) => {
   const { kohort } = useKohort(groupId);
 
   return (
-    <div>
-      Du er med i {kohort?.groupName}. <button>Forlate gruppen?</button>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+      }}
+    >
+      Du er med i {kohort?.groupName}. <Button>Forlate gruppen?</Button>
     </div>
   );
 };
@@ -32,7 +38,10 @@ export const Settings = ({ uid }: Props) => {
         <Link to={`/addgroup`}>Opprett ny kohort</Link>
       </BorderButton>
       {user?.groups.map((group) => (
-        <GroupSetting group={group} />
+        <React.Fragment key={group}>
+          <GroupSetting group={group} />
+          <Spacer />
+        </React.Fragment>
       ))}
     </Container>
   );
