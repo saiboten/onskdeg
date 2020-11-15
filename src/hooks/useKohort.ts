@@ -5,6 +5,12 @@ import { Kohort } from "../types/types";
 
 const fetcher = async (groups: "groups", groupId: string): Promise<Kohort> => {
   return await new Promise((resolve) => {
+    console.log(groupId);
+
+    if (groupId === undefined || groupId === "") {
+      return {};
+    }
+
     firebase
       .firestore()
       .collection(groups)

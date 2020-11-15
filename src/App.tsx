@@ -16,6 +16,7 @@ import { AddKohort } from "./components/group/AddKohort";
 import firebase from "./components/firebase/firebase";
 import { Settings } from "./components/Settings";
 import { LegacyWishes } from "./components/LegacyWishes";
+import { GroupAdmin } from "./components/GroupAdmin";
 
 const App = () => {
   const [uid, setUid] = useState<string | undefined>();
@@ -65,6 +66,9 @@ const App = () => {
           </Route>
           <Route path="/addchild">
             <AddChild uid={uid} />
+          </Route>
+          <Route path="/settings/kohort/:kohortId">
+            <GroupAdmin myUid={uid} />
           </Route>
           <Route path="/settings">
             <Settings uid={uid} />
