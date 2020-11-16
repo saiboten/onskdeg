@@ -17,6 +17,9 @@ import firebase from "./components/firebase/firebase";
 import { Settings } from "./components/Settings";
 import { LegacyWishes } from "./components/LegacyWishes";
 import { GroupAdmin } from "./components/GroupAdmin";
+import { PrivacyPolicy } from "./components/PrivacyPolicy";
+import { TermsOfService } from "./components/TermsOfService";
+import { DeleteMe } from "./components/DeleteMe";
 
 const App = () => {
   const [uid, setUid] = useState<string | undefined>();
@@ -75,6 +78,15 @@ const App = () => {
           </Route>
           <Route path="/addgroup">
             <AddKohort uid={uid} />
+          </Route>
+          <Route path="/privacypolicy">
+            <PrivacyPolicy />
+          </Route>
+          <Route path="/tos">
+            <TermsOfService />
+          </Route>
+          <Route path="/deleteme">
+            <DeleteMe />
           </Route>
           <Route path="/legacy">
             <LegacyWishes uid={uid} />
