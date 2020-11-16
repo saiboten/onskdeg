@@ -82,8 +82,6 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
 
   const { invites } = useInvites(firebaseUser?.email || "");
 
-  console.log(user);
-
   function storeWishesToFirebase(newData: Array<WishType>) {
     mutate(["wishes", user?.uid || "?"], newData, false);
     firebase

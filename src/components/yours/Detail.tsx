@@ -4,6 +4,13 @@ import styled from "styled-components";
 import { Container } from "../common/Container";
 import { P } from "../common/P";
 import { Button } from "../common/Button";
+import { ReactComponent as Edit } from "../images/edit.svg";
+
+const StyledEdit = styled(Edit)`
+  height: 2rem;
+  width: 2rem;
+  fill: white;
+`;
 
 interface DetailInput {
   fieldName: string;
@@ -20,11 +27,12 @@ const StyledWrapper = styled.div`
   font-size: 1.5rem;
 `;
 
-export default function Detail({
+export const Detail: React.FC<DetailInput> = ({
+  children,
   fieldName,
   initialValue,
   storeData,
-}: DetailInput) {
+}) => {
   const [value, setValue] = useState(initialValue);
   const [edit, setEdit] = useState(false);
 
@@ -47,13 +55,25 @@ export default function Detail({
           <P
             style={{
               marginRight: "1rem",
+              wordBreak: "break-all",
+              flex: "1",
             }}
           >
-            {value ? value : "Klikk her for å legge til"}
+            {value ? children : "Klikk her for å legge til"}
           </P>
-          <Button onClick={() => setEdit(true)}>Endre</Button>
+          <Button
+            onClick={() => setEdit(true)}
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: "1rem",
+            }}
+          >
+            <StyledEdit />
+          </Button>
         </div>
       )}
     </StyledWrapper>
   );
-}
+};

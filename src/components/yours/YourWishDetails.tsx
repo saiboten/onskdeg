@@ -4,13 +4,14 @@ import { User, Wish } from "../../types/types";
 import styled from "styled-components";
 import Loading from "../common/Loading";
 import firebase from "../firebase/firebase";
-import Detail from "./Detail";
+import { Detail } from "./Detail";
 import { StyledLabel } from "../common/Label";
 import { useWish } from "../../hooks/useWish";
 import { useParams } from "react-router";
 import { useUser } from "../../hooks/useUser";
 import { mutate } from "swr";
 import { useWishes } from "../../hooks/useWishes";
+import { ALink } from "../common/Link";
 
 const StyledWrapper = styled.div`
   text-align: left;
@@ -92,7 +93,9 @@ export function YourWishDetails() {
     <Container>
       <StyledWrapper>
         <StyledTitle>
-          <Detail fieldName="name" storeData={storeData} initialValue={name} />
+          <Detail fieldName="name" storeData={storeData} initialValue={name}>
+            <p>{name}</p>
+          </Detail>
         </StyledTitle>
         <StyledDescription>
           <StyledLabel>Beskrivelse</StyledLabel>
@@ -100,11 +103,15 @@ export function YourWishDetails() {
             fieldName="description"
             storeData={storeData}
             initialValue={wishDescription}
-          />
+          >
+            <p>{wishDescription}</p>
+          </Detail>
         </StyledDescription>
         <StyledLink>
           <StyledLabel>Link</StyledLabel>
-          <Detail fieldName="link" storeData={storeData} initialValue={link} />
+          <Detail fieldName="link" storeData={storeData} initialValue={link}>
+            <ALink href={link}>{link}</ALink>
+          </Detail>
         </StyledLink>
         {/* <StyledWishComplete>
                     <button type="text">Jeg har oppfylt ønsket</button>

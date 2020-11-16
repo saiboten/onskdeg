@@ -41,7 +41,7 @@ export const AddKohort: React.FC<Props> = ({ uid }) => {
       members: [user?.uid, ...(user?.childs || [])],
     });
 
-    await docRef.set({
+    await docRef.update({
       id: docRef.id,
     });
 
