@@ -31,6 +31,9 @@ const App = () => {
       if (user != null) {
         setUid(user.uid);
         setFirebaseUser(user);
+      } else {
+        setUid("");
+        setFirebaseUser(undefined);
       }
       setUidResolved(true);
     });

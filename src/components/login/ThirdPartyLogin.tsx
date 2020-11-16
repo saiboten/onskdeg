@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-import facebook from "../firebase/facebooklogin";
+import { facebookProvider, googleProvider } from "../firebase/loginProviders";
 import firebase from "../firebase/firebase";
 
 import { ReactComponent as FbIcon } from "./facebook-icon.svg";
+import btn_google_signin_dark_normal_web from "../images/btn_google_signin_dark_normal_web.png";
 import Spinner from "../common/Spinner";
 import { Link } from "../common/Link";
 import { BorderButton } from "../common/Button";
@@ -22,31 +23,47 @@ const ButtonSpinner = styled(Spinner)`
 `;
 
 const ThirdPartyLogin = () => {
-  const [submitting, setSubmitting] = useState(false);
+  const [submittingFb, setSubmittingFb] = useState(false);
+  const [submittingGoogle, setSubmittingGoogle] = useState(false);
 
   function loginFacebook(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
     e.stopPropagation();
-    setSubmitting(true);
-    firebase.auth().signInWithRedirect(facebook);
+    setSubmittingFb(true);
+    firebase.auth().signInWithRedirect(facebookProvider);
+  }
+
+  function loginGoogle(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
+    e.stopPropagation();
+    setSubmittingGoogle(true);
+    firebase.auth().signInWithRedirect(googleProvider);
   }
 
   const SmButton = styled(BorderButton)`
     display: flex;
     align-items: center;
     width: 100%;
+    justify-content: center;
   `;
 
   return (
     <>
       <SmButton onClick={loginFacebook}>
-        {submitting ? (
+        {submittingFb ? (
           <ButtonSpinner />
         ) : (
           <>
             <FacebookIcon />
             Logg på med Facebook
           </>
+        )}
+      </SmButton>
+      <SmButton onClick={loginGoogle}>
+        {submittingGoogle ? (
+          <ButtonSpinner />
+        ) : (
+          <img src={btn_google_signin_dark_normal_web} />
         )}
       </SmButton>
       <Link to="/internal">Passord/brukernavn?</Link>
