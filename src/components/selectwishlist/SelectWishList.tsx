@@ -1,18 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components";
-
-import AddedUserLink from "./AddedUserLink";
+import { format } from "date-fns";
 import { Container } from "../common/Container";
-import firebase from "../firebase/firebase";
-import { User, FirebaseSnapshot } from "../../types/types";
-import { P } from "../common/P";
-import { Form } from "../common/Form";
-import { StyledInput } from "../common/StyledInput";
-import { Button } from "../common/Button";
+import { NewsEntryType } from "../../types/types";
 import { useUser } from "../../hooks/useUser";
 import { useKohort } from "../../hooks/useKohort";
 import { Link } from "../common/Link";
-import { StyledBigHeader } from "../common/StyledHeading";
+import { StyledBigHeader, StyledSubHeader } from "../common/StyledHeading";
+import { Spacer } from "../common/Spacer";
 
 const StyledKohorts = styled.div`
   border: 1px solid black;
@@ -31,6 +26,40 @@ export const GroupUser = ({ uid }: { uid: string }) => {
   return <Link to={`/other/${user?.uid}`}>{user?.name}</Link>;
 };
 
+const NewsFeedEntry = ({
+  user: uid,
+  wish,
+  isSuggestion,
+  suggestedBy,
+  date,
+}: NewsEntryType) => {
+  const { user } = useUser(uid);
+  const { user: suggestedByUser } = useUser(suggestedBy || "");
+
+  return (
+    <div>
+      {isSuggestion
+        ? `${format(date.toDate(), "dd-MM-yy 'klokken' HH:mm")}: ${
+            suggestedByUser?.name
+          } foreslo et ønske for ${user?.name}`
+        : `${format(date.toDate(), "dd-MM-yy 'klokken' HH:mm")}: ${
+            user?.name
+          } la inn ${wish} som ønske`}
+    </div>
+  );
+};
+
+const LatestNews = ({ newsFeed }: { newsFeed: NewsEntryType[] }) => {
+  return (
+    <div>
+      {newsFeed?.length === 0 && <div>Intet nytt under solen ...</div>}
+      {newsFeed.map((props) => (
+        <NewsFeedEntry {...props} />
+      ))}
+    </div>
+  );
+};
+
 export const GroupUsers = ({
   uid,
   groupId,
@@ -45,6 +74,11 @@ export const GroupUsers = ({
       <StyledBigHeader>
         Kohort: <strong>{kohort?.groupName}</strong>
       </StyledBigHeader>
+      <Spacer />
+      <StyledSubHeader>Siste nytt!</StyledSubHeader>
+      <LatestNews newsFeed={kohort?.newsFeed || []}></LatestNews>
+      <Spacer />
+      <StyledSubHeader>Brukere</StyledSubHeader>
       <StyledUl>
         {kohort?.members
           .filter((member) => member !== uid)

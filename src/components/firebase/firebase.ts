@@ -7,12 +7,12 @@ require("firebase/firestore");
 
 var firebaseConfig = {
   apiKey: "AIzaSyDRCFzLXgaM36t-0Vnhp2XbbQJrUjDmQAw",
-  authDomain: "onskdeg.firebaseapp.com",
+  authDomain: "auth.auth.xn--gavenske-84a.no",
   databaseURL: "https://onskdeg.firebaseio.com",
   projectId: "onskdeg",
   storageBucket: "onskdeg.appspot.com",
   messagingSenderId: "776764935060",
-  appId: "1:776764935060:web:3b84bf79abfad4c62cdd81"
+  appId: "1:776764935060:web:3b84bf79abfad4c62cdd81",
 };
 firebase.initializeApp(firebaseConfig);
 

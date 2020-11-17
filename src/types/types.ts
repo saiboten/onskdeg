@@ -1,3 +1,5 @@
+import firebase from "../components/firebase/firebase";
+
 declare global {
   interface Window {
     __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any;
@@ -52,10 +54,19 @@ export interface Invites {
   myInvites: string[];
 }
 
+export type NewsEntryType = {
+  user: string;
+  suggestedBy?: string;
+  wish?: string;
+  isSuggestion: boolean;
+  date: firebase.firestore.Timestamp;
+};
+
 export interface Kohort {
   id: string;
   groupName: string;
   admin: string;
   members: string[];
   invites: string[];
+  newsFeed?: NewsEntryType[];
 }

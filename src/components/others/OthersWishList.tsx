@@ -11,7 +11,7 @@ import { StyledInput } from "../common/StyledInput";
 import { Spacer } from "../common/Spacer";
 import { StyledCheckIcon } from "../yours/YourWishList";
 import firebase from "../firebase/firebase";
-import { Wish } from "../../types/types";
+import { NewsEntryType, Wish } from "../../types/types";
 import { createGuid } from "../../util/guid";
 import { StyledNotification } from "../common/StyledNotification";
 import { mutate } from "swr";
@@ -53,6 +53,23 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
 
     docRef.update({
       wishes: [newWish, ...existingData],
+    });
+
+    user?.groups.forEach(async (group) => {
+      const groupRef = firebase.firestore().collection("groups").doc(group);
+      const groupData = await groupRef.get();
+
+      const newsFeed: NewsEntryType[] = groupData.data()?.newsFeed || [];
+      newsFeed.unshift({
+        isSuggestion: true,
+        suggestedBy: myUid,
+        user: uid,
+        date: firebase.firestore.Timestamp.now(),
+      });
+
+      await groupRef.update({
+        newsFeed: newsFeed?.slice(0, 5) || [],
+      });
     });
 
     setFeedback(`Lag til forslag ${suggestion}`);

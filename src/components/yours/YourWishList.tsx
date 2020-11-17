@@ -5,7 +5,13 @@ import firebase from "../firebase/firebase";
 import Icon from "../common/Icon";
 import { mutate } from "swr";
 
-import { Wish as WishType, User, FirebaseSnapshot } from "../../types/types";
+import {
+  Wish as WishType,
+  User,
+  FirebaseSnapshot,
+  Kohort,
+  NewsEntryType,
+} from "../../types/types";
 import { Container } from "../common/Container";
 import { BorderButton } from "../common/Button";
 import { Link } from "../common/Link";
@@ -114,9 +120,27 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
       isSuggestion: false,
     };
 
-    const newWishList = [...(wishes || []), newWishObject];
+    const newWishList = [newWishObject, ...(wishes || [])];
 
     storeWishesToFirebase(newWishList);
+
+    user?.groups.forEach(async (group) => {
+      const groupRef = firebase.firestore().collection("groups").doc(group);
+      const groupData = await groupRef.get();
+
+      const newsFeed: NewsEntryType[] = groupData.data()?.newsFeed || [];
+      newsFeed.unshift({
+        isSuggestion: false,
+        user: user.uid,
+        wish: newWish,
+        date: firebase.firestore.Timestamp.now(),
+      });
+
+      await groupRef.update({
+        newsFeed: newsFeed?.slice(0, 5) || [],
+      });
+    });
+
     setFeedback("");
     setNewWish("");
   }

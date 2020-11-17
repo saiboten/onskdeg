@@ -30,8 +30,6 @@ export function OtherWishDetail() {
   const { wish } = useWish(uid, wishid);
   const { purchase } = usePurchase(wishid);
 
-  console.log(purchase);
-
   const { user: purchaseUser } = useUser(purchase?.checkedBy || "");
 
   if (!wish) {
