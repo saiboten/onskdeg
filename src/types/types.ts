@@ -27,6 +27,7 @@ export interface Wish {
   deleted: boolean;
   isSuggestion: boolean;
   suggestedBy?: string;
+  price?: number;
 }
 
 export interface Purchases {

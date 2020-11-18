@@ -69,7 +69,7 @@ export const YourChild = ({ child, myUid }: Props) => {
       .collection("wishes")
       .doc(child.uid)
       .update({
-        wishes: [...(wishes || []), emptyWish],
+        wishes: [emptyWish, ...(wishes || [])],
       });
 
     user?.groups.forEach(async (group) => {
@@ -79,7 +79,7 @@ export const YourChild = ({ child, myUid }: Props) => {
       const newsFeed: NewsEntryType[] = groupData.data()?.newsFeed || [];
       newsFeed.unshift({
         isSuggestion: false,
-        user: user.uid,
+        user: child.uid,
         wish: newWish,
         date: firebase.firestore.Timestamp.now(),
       });

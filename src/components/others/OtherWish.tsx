@@ -76,7 +76,9 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
     <ListRow>
       <StyledNotification active={feedback !== ""} text={feedback} />
       <LeftSection>
-        <UnstyledLink to={`/other/${user}/${wishInfo.id}`}>{item}</UnstyledLink>
+        <UnstyledLink to={`/other/${user}/${wishInfo.id}`}>
+          {item} {wishInfo.price && `(${wishInfo.price})`}
+        </UnstyledLink>
       </LeftSection>
       <StyledActionButtons>
         {wishInfo.link && (

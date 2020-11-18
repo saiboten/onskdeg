@@ -57,6 +57,12 @@ export function OtherWishDetail() {
           </div>
         </>
       )}
+      {wish.price !== undefined && (
+        <>
+          <StyledLabel>Pris</StyledLabel>
+          <div>{wish.price}</div>
+        </>
+      )}
       {purchase?.checked && <div>Dette ble kjøpt av {purchaseUser?.name}</div>}
     </Container>
   );

@@ -43,8 +43,6 @@ export function YourWishDetails() {
   const { wishes } = useWishes(user?.uid || "");
   const { wish } = useWish(user?.uid || "?", wishid);
 
-  console.log(wishid, uid, user, wish);
-
   async function updateWishStore(newData: Array<Wish>) {
     await firebase
       .firestore()
@@ -75,11 +73,11 @@ export function YourWishDetails() {
     return <Loading />;
   }
 
-  const { name, description: wishDescription, image, link } = wish;
+  const { name, description: wishDescription, link, price } = wish;
 
   const storeData = (
     field: string,
-    newData: string,
+    newData: string | number,
     toggle: (hm: boolean) => void
   ) => {
     storeWishDetails({
@@ -110,12 +108,21 @@ export function YourWishDetails() {
         <StyledLink>
           <StyledLabel>Link</StyledLabel>
           <Detail fieldName="link" storeData={storeData} initialValue={link}>
-            <ALink href={link}>{link}</ALink>
+            <ALink target="_blank" href={link}>
+              {link}
+            </ALink>
           </Detail>
         </StyledLink>
-        {/* <StyledWishComplete>
-                    <button type="text">Jeg har oppfylt ønsket</button>
-                </StyledWishComplete> */}
+        <StyledLink>
+          <StyledLabel>Pris</StyledLabel>
+          <Detail
+            fieldName="price"
+            storeData={storeData}
+            initialValue={price || 0}
+          >
+            <div>{price}</div>
+          </Detail>
+        </StyledLink>
       </StyledWrapper>
     </Container>
   );

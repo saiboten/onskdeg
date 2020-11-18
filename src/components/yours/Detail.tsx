@@ -14,10 +14,10 @@ const StyledEdit = styled(Edit)`
 
 interface DetailInput {
   fieldName: string;
-  initialValue: string;
+  initialValue: string | number;
   storeData: (
     field: string,
-    value: string,
+    value: string | number,
     setEdit: (status: boolean) => void
   ) => void;
 }
@@ -59,7 +59,7 @@ export const Detail: React.FC<DetailInput> = ({
               flex: "1",
             }}
           >
-            {value ? children : "Klikk her for å legge til"}
+            {value && children}
           </P>
           <Button
             onClick={() => setEdit(true)}
