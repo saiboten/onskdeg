@@ -10,8 +10,8 @@ export const ListRowStyles = `
   color: white;
   padding-left: 50px;
   margin-bottom: 2px;
-  height: 52px;
-  white-space: nowrap;
+  min-height: 52px;
+  text-align: left;
 `;
 export const ListRow = styled.div`
   ${ListRowStyles}

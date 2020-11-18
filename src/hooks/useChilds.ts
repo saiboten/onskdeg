@@ -3,21 +3,6 @@ import firebase from "../components/firebase/firebase";
 import { Child, Wish } from "../types/types";
 import { useUser } from "./useUser";
 
-const fetcher = async (
-  child: "child",
-  userId: string
-): Promise<Wish[] | undefined> => {
-  return await new Promise(async (resolve) => {
-    const doc = await firebase.firestore().collection(child).doc(userId).get();
-
-    if (doc.exists) {
-      resolve([...doc.data()?.wishes]);
-    } else {
-      resolve();
-    }
-  });
-};
-
 export function useChilds(uid: string): Child[] | undefined {
   const [childs, setChilds] = useState<Child[]>([]);
   const { user } = useUser(uid);

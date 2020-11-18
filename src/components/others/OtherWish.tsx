@@ -10,11 +10,22 @@ import {
   StyledActionButtonsAnimated,
   StyledActionButtons,
 } from "../common/IconButton";
-import { Link } from "react-router-dom";
+import { ReactComponent as LinkIcon } from "../images/link.svg";
 import { UnstyledLink } from "../common/Link";
 import { usePurchase } from "../../hooks/usePurchase";
 import { mutate } from "swr";
 import { StyledNotification } from "../common/StyledNotification";
+
+const StyledLinkIcon = styled(LinkIcon)`
+  fill: #fff;
+  height: 32px;
+  width: 32px;
+`;
+
+const StyledLink = styled.a`
+  padding: 0 0.5rem;
+  transform: translateY(3px);
+`;
 
 interface P {
   // purchase: Purchase;
@@ -68,6 +79,11 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
         <UnstyledLink to={`/other/${user}/${wishInfo.id}`}>{item}</UnstyledLink>
       </LeftSection>
       <StyledActionButtons>
+        {wishInfo.link && (
+          <StyledLink href={wishInfo.link} target="_blank">
+            <StyledLinkIcon />
+          </StyledLink>
+        )}
         <Icon type="button" name={"shopping-cart"} onClick={handleBuyItem} />
       </StyledActionButtons>
     </ListRow>

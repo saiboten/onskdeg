@@ -20,6 +20,7 @@ import { GroupAdmin } from "./components/GroupAdmin";
 import { PrivacyPolicy } from "./components/PrivacyPolicy";
 import { TermsOfService } from "./components/TermsOfService";
 import { DeleteMe } from "./components/DeleteMe";
+import { ChildAdmin } from "./components/ChildAdmin";
 
 const App = () => {
   const [uid, setUid] = useState<string | undefined>();
@@ -75,6 +76,9 @@ const App = () => {
           </Route>
           <Route path="/settings/kohort/:kohortId">
             <GroupAdmin myUid={uid} />
+          </Route>
+          <Route path="/settings/child/:childId">
+            <ChildAdmin myUid={uid} />
           </Route>
           <Route path="/settings">
             <Settings uid={uid} />

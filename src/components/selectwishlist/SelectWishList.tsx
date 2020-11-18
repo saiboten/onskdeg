@@ -39,10 +39,10 @@ const NewsFeedEntry = ({
   return (
     <div>
       {isSuggestion
-        ? `${format(date.toDate(), "dd-MM-yy 'klokken' HH:mm")}: ${
+        ? `${format(date.toDate(), "dd.MM 'kl' HH:mm")}: ${
             suggestedByUser?.name
           } foreslo et ønske for ${user?.name}`
-        : `${format(date.toDate(), "dd-MM-yy 'klokken' HH:mm")}: ${
+        : `${format(date.toDate(), "dd.MM 'kl' HH:mm")}: ${
             user?.name
           } la inn ${wish} som ønske`}
     </div>

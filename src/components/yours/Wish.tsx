@@ -75,9 +75,7 @@ export const Wish = ({ wish, delete: deleteProp, user }: P) => {
   return (
     <ListRow>
       <LeftSection>
-        <Link to={`/wish/${user}/${wish.id}`}>
-          {wish.name} <StyledArrowRight />
-        </Link>
+        <Link to={`/wish/${user}/${wish.id}`}>{wish.name}</Link>
       </LeftSection>
       {deleteWish}
     </ListRow>

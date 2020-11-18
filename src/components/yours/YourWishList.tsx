@@ -202,13 +202,13 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
       <Spacer />
       <Suspense fallback={<div>Laster barn</div>}>
         {childs?.map((child) => {
-          return <YourChild key={child.uid} child={child} />;
+          return <YourChild key={child.uid} myUid={uid} child={child} />;
         })}
       </Suspense>
       <Spacer />
       <StyledBottomOptions>
         <BorderButton>
-          <Link to={`/addchild`}>Legg til barn</Link>
+          <Link to={`/addchild`}>Legg til ekstra bruker</Link>
         </BorderButton>
         <BorderButton
           style={{

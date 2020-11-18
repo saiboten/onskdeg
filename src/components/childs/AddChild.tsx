@@ -8,6 +8,7 @@ import { StyledInput } from "../common/StyledInput";
 import firebase from "../firebase/firebase";
 import { mutate } from "swr";
 import { Child } from "../../types/types";
+import { Spacer } from "../common/Spacer";
 
 const StyledForm = styled.form`
   display: flex;
@@ -82,13 +83,20 @@ export function AddChild({ uid }: Props) {
   }
 
   return (
-    <Container>
-      <h1>Legg til barn</h1>
+    <Container textLeft>
+      <h1>Legg til ekstra bruker</h1>
+      <Spacer />
+      <p>
+        Har du barn som du ønsker å legge inn ønsker for, eller ønsker en felles
+        ønskeliste for deg og din bedre halvdel? Opprett en ekstra bruker da
+        vel! Du kan dele brukeren etter opprettelse.
+      </p>
+      <Spacer />
       <StyledForm onSubmit={handleSubmit}>
         <StyledRow>
           <StyledInput
             type="text"
-            placeholder="Barnets navn"
+            placeholder="Navn"
             autoComplete={"off"}
             name="name"
             value={name}

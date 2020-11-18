@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Wish as WishType, Child } from "../../types/types";
+import { Wish as WishType, Child, NewsEntryType } from "../../types/types";
 import { StyledInput } from "../common/StyledInput";
 import { Wish } from "./Wish";
 import { StyledWrapper, StyledCheckIcon } from "./YourWishList";
@@ -9,6 +9,7 @@ import { useWishes } from "../../hooks/useWishes";
 import { mutate } from "swr";
 import { createGuid } from "../../util/guid";
 import Loading from "../common/Loading";
+import { useUser } from "../../hooks/useUser";
 
 const StyledChildren = styled.div`
   margin-bottom: 2.4rem;
@@ -16,11 +17,13 @@ const StyledChildren = styled.div`
 
 interface Props {
   child: Child;
+  myUid: string;
 }
 
-export const YourChild = ({ child }: Props) => {
+export const YourChild = ({ child, myUid }: Props) => {
   const [newWish, setNewWish] = useState("");
   const { wishes, isLoading } = useWishes(child.uid);
+  const { user } = useUser(myUid);
 
   function storeWishesToFirebase(newData: Array<WishType>) {
     mutate(["wishes", child?.uid || "?"], newData, false);
@@ -68,6 +71,24 @@ export const YourChild = ({ child }: Props) => {
       .update({
         wishes: [...(wishes || []), emptyWish],
       });
+
+    user?.groups.forEach(async (group) => {
+      const groupRef = firebase.firestore().collection("groups").doc(group);
+      const groupData = await groupRef.get();
+
+      const newsFeed: NewsEntryType[] = groupData.data()?.newsFeed || [];
+      newsFeed.unshift({
+        isSuggestion: false,
+        user: user.uid,
+        wish: newWish,
+        date: firebase.firestore.Timestamp.now(),
+      });
+
+      await groupRef.update({
+        newsFeed: newsFeed?.slice(0, 5) || [],
+      });
+    });
+
     mutate(["wishes", child.uid]);
     setNewWish("");
   };

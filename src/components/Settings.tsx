@@ -6,6 +6,22 @@ import { Link } from "./common/Link";
 import { Spacer } from "./common/Spacer";
 import { useKohort } from "../hooks/useKohort";
 import { useUser } from "../hooks/useUser";
+import { StyledBigHeader, StyledSubHeader } from "./common/StyledHeading";
+
+const ChildSetting = ({ childUid }: { childUid: string }) => {
+  const { user } = useUser(childUid);
+
+  return (
+    <Link
+      style={{
+        marginRight: "1rem",
+      }}
+      to={`/settings/child/${user?.uid || ""}`}
+    >
+      <StyledSubHeader>{user?.name}</StyledSubHeader>
+    </Link>
+  );
+};
 
 const GroupSetting = ({
   myUid,
@@ -25,11 +41,13 @@ const GroupSetting = ({
         justifyContent: "space-between",
       }}
     >
+      <StyledSubHeader>{kohort?.groupName}</StyledSubHeader>
+      <Spacer />
       {kohort?.admin === myUid && (
         <Link to={`/settings/kohort/${kohort.id}`}>Administrer gruppe</Link>
       )}
       <Spacer />
-      Du er med i {kohort?.groupName}. <Button>Forlate gruppen?</Button>
+      <Button>Forlate gruppen?</Button>
     </div>
   );
 };
@@ -48,12 +66,23 @@ export const Settings = ({ uid }: Props) => {
       <BorderButton>
         <Link to={`/addgroup`}>Opprett ny kohort</Link>
       </BorderButton>
+      <StyledBigHeader>Administrer kohorter</StyledBigHeader>
       {user?.groups.map((group) => (
         <React.Fragment key={group}>
           <GroupSetting myUid={uid} group={group} />
           <Spacer />
         </React.Fragment>
       ))}
+      <StyledBigHeader>Administrer brukere</StyledBigHeader>
+      <div
+        style={{
+          display: "flex",
+        }}
+      >
+        {user?.childs?.map((childUid) => (
+          <ChildSetting childUid={childUid} />
+        ))}
+      </div>
     </Container>
   );
 };
