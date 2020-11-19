@@ -54,7 +54,7 @@ const LatestNews = ({ newsFeed }: { newsFeed: NewsEntryType[] }) => {
     <div>
       {newsFeed?.length === 0 && <div>Intet nytt under solen ...</div>}
       {newsFeed.map((props) => (
-        <NewsFeedEntry {...props} />
+        <NewsFeedEntry key={`${props.date}-${props.wish || ""}`} {...props} />
       ))}
     </div>
   );

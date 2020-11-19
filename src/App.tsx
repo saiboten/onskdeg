@@ -21,6 +21,7 @@ import { PrivacyPolicy } from "./components/PrivacyPolicy";
 import { TermsOfService } from "./components/TermsOfService";
 import { DeleteMe } from "./components/DeleteMe";
 import { ChildAdmin } from "./components/ChildAdmin";
+import ScrollToTop from "./components/ScrollToTop";
 
 const App = () => {
   const [uid, setUid] = useState<string | undefined>();
@@ -55,6 +56,7 @@ const App = () => {
 
   return (
     <HashRouter>
+      <ScrollToTop />
       <Suspense fallback={<Loading />}>
         <GlobalStyle />
         <HeaderComponent uid={uid} />
