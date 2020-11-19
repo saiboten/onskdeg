@@ -9,6 +9,8 @@ import firebase from "../firebase/firebase";
 import { mutate } from "swr";
 import { Child } from "../../types/types";
 import { Spacer } from "../common/Spacer";
+import Loading from "../common/Loading";
+import Spinner from "../common/Spinner";
 
 const StyledForm = styled.form`
   display: flex;
@@ -30,13 +32,13 @@ interface Props {
 
 export function AddChild({ uid }: Props) {
   const [name, setName] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const [created, setCreated] = useState(false);
   const { user } = useUser(uid);
 
-  console.log(user);
-
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setSubmitting(true);
 
     const newChildDoc = firebase.firestore().collection("user").doc();
 
@@ -102,7 +104,11 @@ export function AddChild({ uid }: Props) {
             value={name}
             onChange={(event) => setName(event.target.value)}
           />
-          <BorderButton type="submit">OK</BorderButton>
+          {submitting ? (
+            <Spinner />
+          ) : (
+            <BorderButton type="submit">OK</BorderButton>
+          )}
         </StyledRow>
       </StyledForm>
     </Container>

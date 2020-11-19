@@ -98,7 +98,7 @@ export const AddKohort: React.FC<Props> = ({ uid }) => {
         onSubmit={(e) => {
           e.preventDefault();
           setEmail("");
-          setInvites([...invites, email]);
+          setInvites([email.toLowerCase(), ...invites]);
         }}
       >
         <StyledLabel htmlFor="email">Epost</StyledLabel>

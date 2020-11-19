@@ -37,9 +37,7 @@ export function OtherWishDetail() {
   }
 
   return (
-    <Container textLeft>
-      <NavLink to={`/other/${user?.uid}`}>Tilbake til bruker</NavLink>
-
+    <Container>
       <StyledBigHeader>{wish.name}</StyledBigHeader>
 
       {wish.description !== "" && (

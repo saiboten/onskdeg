@@ -9,6 +9,8 @@ import { ImageWrapper } from "../common/Image";
 import {
   StyledActionButtonsAnimated,
   StyledActionButtons,
+  NeutralIconButton,
+  NegativeIconButton,
 } from "../common/IconButton";
 import { ReactComponent as LinkIcon } from "../images/link.svg";
 import { UnstyledLink } from "../common/Link";
@@ -41,6 +43,7 @@ interface S {
 const OtherWish = ({ wishInfo, user, myUid }: P) => {
   const [feedback, setFeedback] = useState("");
   const { purchase } = usePurchase(wishInfo?.id);
+  const [confirm, setConfirm] = useState(false);
 
   const item = purchase?.checked ? <del>{wishInfo.name}</del> : wishInfo.name;
 
@@ -72,11 +75,29 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
     mutate(["purchase", wishInfo.id]);
   }
 
+  async function handleDeleteItem() {
+    const wishRef = firebase.firestore().collection("wishes").doc(user);
+
+    const wishesData = await wishRef.get();
+
+    const existingWishes: Wish[] = wishesData.data()?.wishes;
+
+    wishRef.update({
+      wishes: existingWishes.filter((w) => w.id !== wishInfo.id),
+    });
+
+    mutate(["wishes", user]);
+  }
+
+  const wishSuggestedByMe = wishInfo.suggestedBy === myUid;
+
   return (
     <ListRow>
       <StyledNotification active={feedback !== ""} text={feedback} />
       <LeftSection>
-        <UnstyledLink to={`/other/${user}/${wishInfo.id}`}>
+        <UnstyledLink
+          to={`/${wishSuggestedByMe ? "wish" : "other"}/${user}/${wishInfo.id}`}
+        >
           {item} {wishInfo.price && `(${wishInfo.price})`}
         </UnstyledLink>
       </LeftSection>
@@ -86,6 +107,34 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
             <StyledLinkIcon />
           </StyledLink>
         )}
+
+        {confirm ? (
+          <div style={{ transform: "translateX(8rem)" }}>
+            <StyledActionButtonsAnimated>
+              <NeutralIconButton
+                type="button"
+                name="x"
+                onClick={() => setConfirm(false)}
+              />
+              <NegativeIconButton
+                type="button"
+                name="check"
+                onClick={handleDeleteItem}
+              />
+            </StyledActionButtonsAnimated>
+          </div>
+        ) : (
+          <div></div>
+        )}
+
+        {wishSuggestedByMe && (
+          <Icon
+            type="button"
+            name={"trash-2"}
+            onClick={() => setConfirm(true)}
+          />
+        )}
+
         <Icon type="button" name={"shopping-cart"} onClick={handleBuyItem} />
       </StyledActionButtons>
     </ListRow>
