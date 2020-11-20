@@ -15,6 +15,7 @@ import { NewsEntryType, Wish } from "../../types/types";
 import { createGuid } from "../../util/guid";
 import { StyledNotification } from "../common/StyledNotification";
 import { mutate } from "swr";
+import { getOgData, OgResponseData } from "../../util/getOgData";
 
 interface Params {
   uid: string;
@@ -37,14 +38,20 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
   async function handleAddSuggestion(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
+    let data: OgResponseData | undefined = undefined;
+
+    if (suggestion.startsWith("https")) {
+      data = await getOgData(suggestion);
+    }
+
     const newWish: Wish = {
       deleted: false,
-      description: "",
+      description: data?.description || "",
       id: createGuid(),
-      image: "",
+      image: data?.image || "",
       isSuggestion: true,
-      name: suggestion,
-      link: "",
+      name: data?.title || suggestion,
+      link: data?.url || "",
       suggestedBy: myUid,
     };
 

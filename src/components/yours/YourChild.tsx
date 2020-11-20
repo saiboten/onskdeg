@@ -10,6 +10,7 @@ import { mutate } from "swr";
 import { createGuid } from "../../util/guid";
 import Loading from "../common/Loading";
 import { useUser } from "../../hooks/useUser";
+import { getOgData, OgResponseData } from "../../util/getOgData";
 
 const StyledChildren = styled.div`
   margin-bottom: 2.4rem;
@@ -51,15 +52,21 @@ export const YourChild = ({ child, myUid }: Props) => {
     return <Wish user={child.uid} key={el.id} delete={deleteWish} wish={el} />;
   };
 
-  const handleSaveWish = (e: React.MouseEvent<HTMLFormElement>) => {
+  const handleSaveWish = async (e: React.MouseEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    let data: OgResponseData | undefined = undefined;
+
+    if (newWish.startsWith("https")) {
+      data = await getOgData(newWish);
+    }
+
     const emptyWish: WishType = {
-      name: newWish,
+      name: data?.title || newWish,
       deleted: false,
-      description: "",
-      image: "",
-      link: "",
+      description: data?.description || "",
+      image: data?.image || "",
+      link: data?.url || "",
       isSuggestion: false,
       id: createGuid(),
     };

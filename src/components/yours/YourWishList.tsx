@@ -27,6 +27,7 @@ import { InvitePopup } from "./InvitePopup";
 import Loading from "../common/Loading";
 import { SelectName } from "../SelectName";
 import { StyledBigHeader } from "../common/StyledHeading";
+import { getOgData, OgResponseData } from "../../util/getOgData";
 
 export const StyledCheckIcon = styled(Icon)`
   position: absolute;
@@ -110,21 +111,10 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
       return;
     }
 
-    interface OgResponseData {
-      image?: string;
-      url?: string;
-      description?: string;
-      title?: string;
-    }
-
     let data: OgResponseData | undefined = undefined;
 
     if (newWish.startsWith("https")) {
-      data = await fetch(
-        `https://us-central1-onskdeg.cloudfunctions.net/addMessage?url=${newWish}`
-      ).then((data) => {
-        return data.json();
-      });
+      data = await getOgData(newWish);
     }
 
     const newWishObject: WishType = {
