@@ -20,7 +20,9 @@ const ChildSetting = ({ childUid }: { childUid: string }) => {
       }}
       to={`/settings/child/${user?.uid || ""}`}
     >
-      <StyledSubHeader>{user?.name}</StyledSubHeader>
+      <StyledSubHeader>
+        {user?.name} ({childUid})
+      </StyledSubHeader>
     </Link>
   );
 };
@@ -54,7 +56,9 @@ const GroupSetting = ({
         </Link>
       )}
       <Spacer />
-      <Button>Forlate gruppen?</Button>
+      <Button onClick={() => alert("Funksjon ikke støttet. Enda.")}>
+        Forlate gruppen?
+      </Button>
     </div>
   );
 };

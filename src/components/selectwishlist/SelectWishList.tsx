@@ -37,7 +37,11 @@ const NewsFeedEntry = ({
   const { user: suggestedByUser } = useUser(suggestedBy || "");
 
   return (
-    <div>
+    <div
+      style={{
+        wordBreak: "break-all",
+      }}
+    >
       {isSuggestion
         ? `${format(date.toDate(), "dd.MM 'kl' HH:mm")}: ${
             suggestedByUser?.name

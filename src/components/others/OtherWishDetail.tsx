@@ -11,6 +11,12 @@ import { useParams } from "react-router";
 import { useUser } from "../../hooks/useUser";
 import { usePurchase } from "../../hooks/usePurchase";
 import { StyledBigHeader } from "../common/StyledHeading";
+import { Spacer } from "../common/Spacer";
+
+const StyledImage = styled.img`
+  max-width: 40rem;
+  width: 100%;
+`;
 
 interface OtherWishDetailProps {
   setWishes: (user: string, wishes: Wish[]) => void;
@@ -37,8 +43,20 @@ export function OtherWishDetail() {
   }
 
   return (
-    <Container>
+    <Container textLeft>
       <StyledBigHeader>{wish.name}</StyledBigHeader>
+
+      {wish.image && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <StyledImage src={wish.image} />
+        </div>
+      )}
 
       {wish.description !== "" && (
         <>

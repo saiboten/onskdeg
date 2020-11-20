@@ -21,7 +21,7 @@ export interface User {
 export interface Wish {
   id: string;
   name: string;
-  image: string;
+  image?: string;
   description: string;
   link: string;
   deleted: boolean;

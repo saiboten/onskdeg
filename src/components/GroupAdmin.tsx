@@ -15,26 +15,91 @@ import firebase from "./firebase/firebase";
 import { mutate } from "swr";
 import { useParams } from "react-router";
 import styled from "styled-components";
+import Loading from "./common/Loading";
 
 const StyledRow = styled.div`
   margin-bottom: 1rem;
-  max-width: 40rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
 `;
 
-const KohortMember = ({ myUid, uid }: { myUid: string; uid: string }) => {
+const KohortMember = ({
+  kohort,
+  kohortId,
+  myUid,
+  uid,
+}: {
+  kohort: Kohort;
+  kohortId: string;
+  myUid: string;
+  uid: string;
+}) => {
   const { user } = useUser(uid);
+
+  function handleRemoveUser() {
+    firebase
+      .firestore()
+      .collection("groups")
+      .doc(kohortId)
+      .update({
+        members: kohort?.members.filter((memberId) => memberId !== uid) || [],
+      });
+    mutate(["groups", kohortId]);
+  }
 
   return (
     <StyledRow>
-      {user?.name || "Ukent bruker"}
-
+      {user?.name || "Ukent bruker"} ({uid})
       {myUid !== uid ? (
-        <Button>Fjern bruker fra gruppen</Button>
+        <Button onClick={handleRemoveUser}>Fjern bruker fra gruppen</Button>
       ) : (
         <div>Administrator</div>
+      )}
+    </StyledRow>
+  );
+};
+
+const KohortInvite = ({
+  kohort,
+  kohortId,
+  invite,
+}: {
+  kohort: Kohort;
+  kohortId: string;
+  invite: string;
+}) => {
+  const [removeInviteLoading, setRemoveInviteLoading] = useState(false);
+  async function handleRemoveInvite() {
+    await firebase
+      .firestore()
+      .collection("groups")
+      .doc(kohort?.id)
+      .update({
+        invites: kohort?.invites.filter((m) => m !== invite) || [],
+      });
+
+    setRemoveInviteLoading(true);
+    const docRef = firebase.firestore().collection("invites").doc(invite);
+
+    const inviteData = await docRef.get();
+
+    await docRef.update({
+      myInvites:
+        inviteData.data()?.myInvites.filter((m: string) => m !== kohortId) ||
+        [],
+    });
+    mutate(["groups", kohortId]);
+    setRemoveInviteLoading(false);
+  }
+
+  return (
+    <StyledRow>
+      {invite}
+      {removeInviteLoading ? (
+        <Loading />
+      ) : (
+        <Button onClick={handleRemoveInvite}>Fjern invitasjon</Button>
       )}
     </StyledRow>
   );
@@ -43,6 +108,8 @@ const KohortMember = ({ myUid, uid }: { myUid: string; uid: string }) => {
 export const GroupAdmin = ({ myUid }: { myUid: string }) => {
   const [newInvite, setNewInvite] = useState("");
   const [newUid, setNewUid] = useState("");
+  const [addUidLoading, setAddUidLoading] = useState(false);
+  const [addEmailLoading, setAddEmailLoading] = useState(false);
   const { kohortId } = useParams<{ kohortId: string }>();
   const { kohort } = useKohort(kohortId);
 
@@ -53,6 +120,7 @@ export const GroupAdmin = ({ myUid }: { myUid: string }) => {
   }
 
   async function handleAddUid(e: React.FormEvent<HTMLFormElement>) {
+    setAddUidLoading(true);
     e.preventDefault();
     await firebase
       .firestore()
@@ -63,11 +131,13 @@ export const GroupAdmin = ({ myUid }: { myUid: string }) => {
       });
 
     // TODO notification
-
+    mutate(["groups"], kohortId);
     setNewUid("");
+    setAddUidLoading(false);
   }
 
   async function handleAddEmail(e: React.FormEvent<HTMLFormElement>) {
+    setAddEmailLoading(true);
     e.preventDefault();
     const inviteRef = firebase.firestore().collection("invites").doc(newInvite);
 
@@ -89,6 +159,7 @@ export const GroupAdmin = ({ myUid }: { myUid: string }) => {
 
     setNewInvite("");
     mutate(["groups", kohort?.id]);
+    setAddEmailLoading(false);
   }
 
   return (
@@ -96,28 +167,26 @@ export const GroupAdmin = ({ myUid }: { myUid: string }) => {
       <StyledBigHeader>Administrer kohort {kohort.groupName}</StyledBigHeader>
       <StyledSubHeader>Invitasjoner</StyledSubHeader>
       {kohort.invites.map((invite) => {
-        async function handleRemoveInvite() {
-          firebase
-            .firestore()
-            .collection("groups")
-            .doc(kohort?.id)
-            .update({
-              invites: kohort?.invites.filter((m) => m !== invite) || [],
-            });
-          mutate(["groups", kohortId]);
-        }
-
         return (
-          <StyledRow>
-            {invite}
-            <Button onClick={handleRemoveInvite}>Fjern invitasjon</Button>
-          </StyledRow>
+          <KohortInvite
+            key={invite}
+            kohort={kohort}
+            kohortId={kohortId}
+            invite={invite}
+          />
         );
       })}
       <Spacer />
       <StyledSubHeader>Medlemmer</StyledSubHeader>
       {kohort.members.map((member) => {
-        return <KohortMember myUid={myUid} uid={member} />;
+        return (
+          <KohortMember
+            kohort={kohort}
+            kohortId={kohortId}
+            myUid={myUid}
+            uid={member}
+          />
+        );
       })}
       <Spacer />
       <h3>Legg til ny invitasjon</h3>
@@ -129,9 +198,13 @@ export const GroupAdmin = ({ myUid }: { myUid: string }) => {
             value={newInvite}
             onChange={(e) => setNewInvite(e.target.value)}
           ></StyledInput>
-          <Button disabled={!emailIsValid(newInvite)} type="submit">
-            Legg til
-          </Button>
+          {addEmailLoading ? (
+            <Loading />
+          ) : (
+            <Button disabled={!emailIsValid(newInvite)} type="submit">
+              Legg til
+            </Button>
+          )}
         </StyledLabelInputPair>
       </form>
       <Spacer />
@@ -145,9 +218,13 @@ export const GroupAdmin = ({ myUid }: { myUid: string }) => {
             value={newUid}
             onChange={(e) => setNewUid(e.target.value)}
           ></StyledInput>
-          <Button disabled={newUid === ""} type="submit">
-            Legg til
-          </Button>
+          {addUidLoading ? (
+            <Loading />
+          ) : (
+            <Button disabled={newUid === ""} type="submit">
+              Legg til
+            </Button>
+          )}
         </StyledLabelInputPair>
       </form>
       <Spacer />

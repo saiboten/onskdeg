@@ -13,6 +13,7 @@ import { mutate } from "swr";
 import { useWishes } from "../../hooks/useWishes";
 import { ALink } from "../common/Link";
 import { format } from "date-fns";
+import { StyledBigHeader, StyledSubHeader } from "../common/StyledHeading";
 
 const StyledWrapper = styled.div`
   text-align: left;
@@ -29,6 +30,11 @@ const StyledDescription = styled.div`
 
 const StyledLink = styled.div`
   font-size: 16px;
+`;
+
+const StyledImage = styled.img`
+  max-width: 40rem;
+  width: 100%;
 `;
 
 interface Params {
@@ -93,9 +99,22 @@ export function YourWishDetails() {
       <StyledWrapper>
         <StyledTitle>
           <Detail fieldName="name" storeData={storeData} initialValue={name}>
-            <p>{name}</p>
+            <StyledBigHeader>{name}</StyledBigHeader>
           </Detail>
         </StyledTitle>
+
+        {wish.image && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <StyledImage src={wish.image} />
+          </div>
+        )}
+
         {date && (
           <StyledDescription>
             <StyledLabel>Dato for innleggelse</StyledLabel>
