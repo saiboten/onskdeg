@@ -56,9 +56,11 @@ export const YourChild = ({ child, myUid }: Props) => {
     e.preventDefault();
 
     let data: OgResponseData | undefined = undefined;
+    let link: string | undefined = undefined;
 
     if (newWish.startsWith("https")) {
       data = await getOgData(newWish);
+      link = newWish;
     }
 
     const emptyWish: WishType = {
@@ -66,9 +68,10 @@ export const YourChild = ({ child, myUid }: Props) => {
       deleted: false,
       description: data?.description || "",
       image: data?.image || "",
-      link: data?.url || "",
+      link: link || "",
       isSuggestion: false,
       id: createGuid(),
+      date: firebase.firestore.Timestamp.now(),
     };
 
     firebase
@@ -87,7 +90,7 @@ export const YourChild = ({ child, myUid }: Props) => {
       newsFeed.unshift({
         isSuggestion: false,
         user: child.uid,
-        wish: newWish,
+        wish: data?.title || newWish,
         date: firebase.firestore.Timestamp.now(),
       });
 

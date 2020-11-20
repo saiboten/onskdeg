@@ -64,15 +64,6 @@ const StyledBottomOptions = styled.div`
   text-align: left;
 `;
 
-const StyledWarning = styled.div`
-  border: 5px red solid;
-  border-radius: 5px;
-  background: #fff;
-  color: black;
-  padding: 1rem;
-  margin: 1rem;
-`;
-
 interface Props {
   uid: string;
   firebaseUser?: firebase.User;
@@ -112,9 +103,11 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
     }
 
     let data: OgResponseData | undefined = undefined;
+    let link: string | undefined;
 
     if (newWish.startsWith("https")) {
       data = await getOgData(newWish);
+      link = newWish;
     }
 
     const newWishObject: WishType = {
@@ -123,8 +116,9 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
       image: data?.image || "",
       deleted: false,
       description: data?.description || "",
-      link: data?.url || "",
+      link: link || "",
       isSuggestion: false,
+      date: firebase.firestore.Timestamp.now(),
     };
 
     const newWishList = [newWishObject, ...(wishes || [])];
@@ -139,7 +133,7 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
       newsFeed.unshift({
         isSuggestion: false,
         user: user.uid,
-        wish: newWish,
+        wish: data?.title || newWish,
         date: firebase.firestore.Timestamp.now(),
       });
 
@@ -172,8 +166,6 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
     );
   }
 
-  const showNoEmailDisclaimer = !firebaseUser?.email;
-
   return (
     <Container>
       {(invites?.myInvites.length || 0) > 0 && (
@@ -184,14 +176,6 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
         />
       )}
       <StyledBigHeader>Mine ønsker</StyledBigHeader>
-
-      {showNoEmailDisclaimer && (
-        <StyledWarning>
-          Vi kunne ikke finne eposten din. Dette betyr at du ikke kan inviteres
-          til kohorter. Send din id til administrator slik at vedkommende kan
-          legge deg inn manuelt. Din id er: {uid}.
-        </StyledWarning>
-      )}
 
       <StyledWrapper onSubmit={addWish}>
         <StyledInput

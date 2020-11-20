@@ -7,6 +7,8 @@ import { Spacer } from "./common/Spacer";
 import { useKohort } from "../hooks/useKohort";
 import { useUser } from "../hooks/useUser";
 import { StyledBigHeader, StyledSubHeader } from "./common/StyledHeading";
+import firebase from "./firebase/firebase";
+import styled from "styled-components";
 
 const ChildSetting = ({ childUid }: { childUid: string }) => {
   const { user } = useUser(childUid);
@@ -36,15 +38,20 @@ const GroupSetting = ({
     <div
       style={{
         display: "flex",
-        flexDirection: "column",
         alignItems: "flex-start",
-        justifyContent: "space-between",
+        justifyContent: "flex-start",
       }}
     >
-      <StyledSubHeader>{kohort?.groupName}</StyledSubHeader>
-      <Spacer />
+      <StyledSubHeader style={{ marginRight: "1rem" }}>
+        {kohort?.groupName}
+      </StyledSubHeader>
       {kohort?.admin === myUid && (
-        <Link to={`/settings/kohort/${kohort.id}`}>Administrer gruppe</Link>
+        <Link
+          style={{ marginRight: "1rem" }}
+          to={`/settings/kohort/${kohort.id}`}
+        >
+          Administrer gruppe
+        </Link>
       )}
       <Spacer />
       <Button>Forlate gruppen?</Button>
@@ -52,16 +59,39 @@ const GroupSetting = ({
   );
 };
 
+const StyledWarning = styled.div`
+  border: 5px red solid;
+  border-radius: 5px;
+  background: #fff;
+  color: black;
+  padding: 1rem;
+  margin: 1rem;
+`;
+
 interface Props {
   uid: string;
+  firebaseUser: firebase.User | undefined;
 }
 
-export const Settings = ({ uid }: Props) => {
+export const Settings = ({ uid, firebaseUser }: Props) => {
   const { user } = useUser(uid);
+  const showNoEmailDisclaimer = !firebaseUser?.email;
 
   return (
     <Container textLeft>
       <h1>Innstillinger</h1>
+      <Spacer />
+      <p>Din bruker-id er: {uid}</p>
+      <p>Din epost er: {firebaseUser?.email || "Ukjent"}</p>
+
+      {showNoEmailDisclaimer && (
+        <StyledWarning>
+          Vi kunne ikke finne eposten din. Dette betyr at du ikke kan inviteres
+          til kohorter. Send din id til administrator slik at vedkommende kan
+          legge deg inn manuelt. Din id er: {uid}.
+        </StyledWarning>
+      )}
+
       <Spacer />
       <BorderButton>
         <Link to={`/addgroup`}>Opprett ny kohort</Link>

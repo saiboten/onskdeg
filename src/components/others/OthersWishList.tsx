@@ -39,9 +39,11 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
     e.preventDefault();
 
     let data: OgResponseData | undefined = undefined;
+    let link: string | undefined = undefined;
 
     if (suggestion.startsWith("https")) {
       data = await getOgData(suggestion);
+      link = suggestion;
     }
 
     const newWish: Wish = {
@@ -51,8 +53,9 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
       image: data?.image || "",
       isSuggestion: true,
       name: data?.title || suggestion,
-      link: data?.url || "",
+      link: link || "",
       suggestedBy: myUid,
+      date: firebase.firestore.Timestamp.now(),
     };
 
     const docRef = firebase.firestore().collection("wishes").doc(uid);

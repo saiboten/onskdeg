@@ -17,6 +17,7 @@ import { UnstyledLink } from "../common/Link";
 import { usePurchase } from "../../hooks/usePurchase";
 import { mutate } from "swr";
 import { StyledNotification } from "../common/StyledNotification";
+import { format } from "date-fns";
 
 const StyledLinkIcon = styled(LinkIcon)`
   fill: #fff;
@@ -39,6 +40,13 @@ interface P {
 interface S {
   image: string;
 }
+
+const StyledDate = styled.div`
+  position: absolute;
+  font-size: 1rem;
+  top: 3px;
+  transform: rotate(-45deg) translateY(-2rem) translateX(-4rem);
+`;
 
 const OtherWish = ({ wishInfo, user, myUid }: P) => {
   const [feedback, setFeedback] = useState("");
@@ -95,6 +103,11 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
     <ListRow>
       <StyledNotification active={feedback !== ""} text={feedback} />
       <LeftSection>
+        {wishInfo.date && (
+          <StyledDate>
+            {format(wishInfo.date.toDate(), "dd.MM.yyyy")}
+          </StyledDate>
+        )}
         <UnstyledLink
           to={`/${wishSuggestedByMe ? "wish" : "other"}/${user}/${wishInfo.id}`}
         >

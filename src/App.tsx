@@ -83,7 +83,7 @@ const App = () => {
             <ChildAdmin myUid={uid} />
           </Route>
           <Route path="/settings">
-            <Settings uid={uid} />
+            <Settings firebaseUser={firebaseUser} uid={uid} />
           </Route>
           <Route path="/addgroup">
             <AddKohort uid={uid} />

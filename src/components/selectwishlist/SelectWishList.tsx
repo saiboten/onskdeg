@@ -44,7 +44,7 @@ const NewsFeedEntry = ({
           } foreslo et ønske for ${user?.name}`
         : `${format(date.toDate(), "dd.MM 'kl' HH:mm")}: ${
             user?.name
-          } la inn ${wish} som ønske`}
+          } ønsker seg ${wish}`}
     </div>
   );
 };

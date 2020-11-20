@@ -12,6 +12,7 @@ import { useUser } from "../../hooks/useUser";
 import { mutate } from "swr";
 import { useWishes } from "../../hooks/useWishes";
 import { ALink } from "../common/Link";
+import { format } from "date-fns";
 
 const StyledWrapper = styled.div`
   text-align: left;
@@ -73,7 +74,7 @@ export function YourWishDetails() {
     return <Loading />;
   }
 
-  const { name, description: wishDescription, link, price } = wish;
+  const { name, description: wishDescription, link, price, date } = wish;
 
   const storeData = (
     field: string,
@@ -95,6 +96,12 @@ export function YourWishDetails() {
             <p>{name}</p>
           </Detail>
         </StyledTitle>
+        {date && (
+          <StyledDescription>
+            <StyledLabel>Dato for innleggelse</StyledLabel>
+            <p>{format(wish.date?.toDate() || new Date(), "dd.MM.yyyy")}</p>
+          </StyledDescription>
+        )}
         <StyledDescription>
           <StyledLabel>Beskrivelse</StyledLabel>
           <Detail

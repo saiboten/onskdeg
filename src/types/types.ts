@@ -28,6 +28,7 @@ export interface Wish {
   isSuggestion: boolean;
   suggestedBy?: string;
   price?: number;
+  date?: firebase.firestore.Timestamp;
 }
 
 export interface Purchases {
