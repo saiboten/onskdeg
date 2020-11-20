@@ -4,6 +4,7 @@ import firebase from "firebase";
 // const firebase = require("firebase");
 // Required for side-effects
 require("firebase/firestore");
+require("firebase/functions");
 
 var firebaseConfig = {
   apiKey: "AIzaSyDRCFzLXgaM36t-0Vnhp2XbbQJrUjDmQAw",

@@ -102,7 +102,7 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
       });
   }
 
-  function addWish(e: React.FormEvent<HTMLFormElement>) {
+  async function addWish(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     if (newWish === "") {
@@ -110,13 +110,30 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
       return;
     }
 
+    interface OgResponseData {
+      image?: string;
+      url?: string;
+      description?: string;
+      title?: string;
+    }
+
+    let data: OgResponseData | undefined = undefined;
+
+    if (newWish.startsWith("https")) {
+      data = await fetch(
+        `https://us-central1-onskdeg.cloudfunctions.net/addMessage?url=${newWish}`
+      ).then((data) => {
+        return data.json();
+      });
+    }
+
     const newWishObject: WishType = {
-      name: newWish,
+      name: data?.title || newWish,
       id: createGuid(),
-      image: "",
+      image: data?.image || "",
       deleted: false,
-      description: "",
-      link: "",
+      description: data?.description || "",
+      link: data?.url || "",
       isSuggestion: false,
     };
 
