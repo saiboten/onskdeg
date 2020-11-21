@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router";
-import { useKohorts } from "../hooks/useKohorts";
-import { useUser } from "../hooks/useUser";
-import { Kohort } from "../types/types";
-import { Container } from "./common/Container";
-import { StyledBigHeader } from "./common/StyledHeading";
+import { useKohorts } from "../../hooks/useKohorts";
+import { useUser } from "../../hooks/useUser";
+import { Kohort } from "../../types/types";
+import { Container } from "../common/Container";
+import { StyledBigHeader } from "../common/StyledHeading";
 
 interface KohortMemberProps {
   uid: string;

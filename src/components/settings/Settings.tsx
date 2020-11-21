@@ -1,14 +1,24 @@
 import React from "react";
-import { Container } from "./common/Container";
+import { Container } from "../common/Container";
 
-import { BorderButton, Button } from "./common/Button";
-import { Link } from "./common/Link";
-import { Spacer } from "./common/Spacer";
-import { useKohort } from "../hooks/useKohort";
-import { useUser } from "../hooks/useUser";
-import { StyledBigHeader, StyledSubHeader } from "./common/StyledHeading";
-import firebase from "./firebase/firebase";
+import { BorderButton, Button } from "../common/Button";
+import { Link } from "../common/Link";
+import { Spacer } from "../common/Spacer";
+import { useKohort } from "../../hooks/useKohort";
+import { useUser } from "../../hooks/useUser";
+import { StyledBigHeader, StyledSubHeader } from "../common/StyledHeading";
+import firebase from "../firebase/firebase";
 import styled from "styled-components";
+
+const StyledGroup = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+
+  @media (max-width: 450px) {
+    flex-direction: column;
+  }
+`;
 
 const ChildSetting = ({ childUid }: { childUid: string }) => {
   const { user } = useUser(childUid);
@@ -37,13 +47,7 @@ const GroupSetting = ({
   const { kohort } = useKohort(groupId);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "flex-start",
-        justifyContent: "flex-start",
-      }}
-    >
+    <StyledGroup>
       <StyledSubHeader style={{ marginRight: "1rem" }}>
         {kohort?.groupName}
       </StyledSubHeader>
@@ -59,7 +63,7 @@ const GroupSetting = ({
       <Button onClick={() => alert("Funksjon ikke støttet. Enda.")}>
         Forlate gruppen?
       </Button>
-    </div>
+    </StyledGroup>
   );
 };
 
@@ -108,15 +112,12 @@ export const Settings = ({ uid, firebaseUser }: Props) => {
         </React.Fragment>
       ))}
       <StyledBigHeader>Administrer brukere</StyledBigHeader>
-      <div
-        style={{
-          display: "flex",
-        }}
-      >
+      <StyledGroup>
         {user?.childs?.map((childUid) => (
           <ChildSetting childUid={childUid} />
         ))}
-      </div>
+      </StyledGroup>
+      <Spacer />
     </Container>
   );
 };

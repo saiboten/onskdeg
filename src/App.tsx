@@ -14,13 +14,13 @@ import { GlobalStyle } from "./GlobalStyles";
 import { AddChild } from "./components/childs/AddChild";
 import { AddKohort } from "./components/group/AddKohort";
 import firebase from "./components/firebase/firebase";
-import { Settings } from "./components/Settings";
+import { Settings } from "./components/settings/Settings";
 import { LegacyWishes } from "./components/LegacyWishes";
-import { GroupAdmin } from "./components/GroupAdmin";
+import { GroupAdmin } from "./components/settings/GroupAdmin";
 import { PrivacyPolicy } from "./components/PrivacyPolicy";
 import { TermsOfService } from "./components/TermsOfService";
 import { DeleteMe } from "./components/DeleteMe";
-import { ChildAdmin } from "./components/ChildAdmin";
+import { ChildAdmin } from "./components/settings/ChildAdmin";
 import ScrollToTop from "./components/ScrollToTop";
 
 const App = () => {

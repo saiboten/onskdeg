@@ -39,7 +39,10 @@ const NewsFeedEntry = ({
   return (
     <div
       style={{
-        wordBreak: "break-all",
+        overflowWrap: "break-word",
+        wordWrap: "break-word",
+        wordBreak: "break-word",
+        hyphens: "auto",
       }}
     >
       {isSuggestion
