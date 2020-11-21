@@ -11,13 +11,13 @@ const StyledNotificationBar = styled.div<Props>`
   left: 0;
   width: 100vw;
   border: 1px solid #000;
-  height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10;
   background-color: rgba(180, 155, 87);
   color: #fff;
+  padding: 1rem 0;
 
   transition: all 0.5s;
   transform: ${(props) =>

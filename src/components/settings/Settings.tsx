@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container } from "../common/Container";
 
 import { BorderButton, Button } from "../common/Button";
@@ -9,6 +9,10 @@ import { useUser } from "../../hooks/useUser";
 import { StyledBigHeader, StyledSubHeader } from "../common/StyledHeading";
 import firebase from "../firebase/firebase";
 import styled from "styled-components";
+import { Kohort } from "../../types/types";
+import { mutate } from "swr";
+import Loading from "../common/Loading";
+import { StyledNotification } from "../common/StyledNotification";
 
 const StyledGroup = styled.div`
   display: flex;
@@ -45,6 +49,37 @@ const GroupSetting = ({
   group: string;
 }) => {
   const { kohort } = useKohort(groupId);
+  const { user } = useUser(myUid);
+  const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState("");
+
+  async function handleDeleteUser() {
+    setLoading(true);
+    const docRef = firebase.firestore().collection("groups").doc(groupId);
+
+    const existingData = await docRef.get();
+
+    docRef.update({
+      members: existingData.data()?.members.filter((m: string) => myUid !== m),
+    });
+
+    await firebase
+      .firestore()
+      .collection("user")
+      .doc(myUid)
+      .update({
+        groups: user?.groups.filter((m) => m !== groupId) || [],
+      });
+
+    mutate(["groups", groupId]);
+    mutate(["user", myUid]);
+    setLoading(false);
+    setNotification(`Du er fjernet fra gruppe ${kohort?.groupName}`);
+
+    setTimeout(() => {
+      setNotification("");
+    }, 2000);
+  }
 
   return (
     <StyledGroup>
@@ -60,9 +95,12 @@ const GroupSetting = ({
         </Link>
       )}
       <Spacer />
-      <Button onClick={() => alert("Funksjon ikke støttet. Enda.")}>
-        Forlate gruppen?
-      </Button>
+      {loading ? (
+        <Loading />
+      ) : (
+        <Button onClick={handleDeleteUser}>Forlate gruppen?</Button>
+      )}
+      <StyledNotification active={notification !== ""} text={notification} />
     </StyledGroup>
   );
 };
