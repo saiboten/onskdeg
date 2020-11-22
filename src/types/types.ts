@@ -38,6 +38,9 @@ export interface Purchases {
 export interface Purchase {
   checked: boolean;
   checkedBy?: string;
+  wishId?: string;
+  wishOwner?: string;
+  date?: firebase.firestore.Timestamp;
 }
 
 export interface FirebaseSnapshot {

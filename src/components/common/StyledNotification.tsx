@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 interface Props {
@@ -23,6 +23,19 @@ const StyledNotificationBar = styled.div<Props>`
   transform: ${(props) =>
     props.active ? `translateY(0)` : `translateY(-50px)`};
 `;
+
+export const useNotification = (text: string) => {
+  const [active, setActive] = useState(false);
+
+  function flash() {
+    setActive(true);
+    setTimeout(() => {
+      setActive(false);
+    }, 2000);
+  }
+
+  return { flash, element: <StyledNotification active={active} text={text} /> };
+};
 
 export const StyledNotification = ({
   text,

@@ -55,7 +55,10 @@ export const Detail: React.FC<DetailInput> = ({
           <P
             style={{
               marginRight: "1rem",
-              wordBreak: "break-all",
+              overflowWrap: "break-word",
+              wordWrap: "break-word",
+              wordBreak: "break-word",
+              hyphens: "auto",
               flex: "1",
             }}
           >

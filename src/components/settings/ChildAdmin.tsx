@@ -1,26 +1,94 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { isJSDocNonNullableType, JsxElement } from "typescript";
 import { useKohorts } from "../../hooks/useKohorts";
 import { useUser } from "../../hooks/useUser";
 import { Kohort } from "../../types/types";
 import { Container } from "../common/Container";
-import { StyledBigHeader } from "../common/StyledHeading";
+import Loading from "../common/Loading";
+import { StyledBigHeader, StyledSubHeader } from "../common/StyledHeading";
+import firebase from "../firebase/firebase";
+import {
+  StyledNotification,
+  useNotification,
+} from "../common/StyledNotification";
+import styled from "styled-components";
 
 interface KohortMemberProps {
   uid: string;
   childId: string;
 }
 
+const StyledCheckbox = styled.input`
+  margin-left: 1rem;
+`;
+
 const KohortMember = ({ childId, uid }: KohortMemberProps) => {
   const { user } = useUser(uid);
+  const [loading, setLoading] = useState(false);
+  const [notificationText, setNotificationText] = useState(
+    "Bruker bla er nå admin"
+  );
+  const { flash, element } = useNotification(notificationText);
 
-  function handleUserClick() {}
+  const [isParent, setIsParent] = useState(user?.childs?.includes(childId));
 
-  const isParent = user?.childs?.includes(childId);
+  async function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setLoading(true);
+    const target = event.target;
+    const value = target.checked;
+    setIsParent(value);
+    setLoading(false);
+    setNotificationText(
+      value
+        ? `${user?.name} er nå administrator.`
+        : `${user?.name} er nå fjernet som administrator.`
+    );
+
+    const childDocRef = firebase.firestore().collection("user").doc(childId);
+    const childData = await childDocRef.get();
+
+    const newParentDocRef = firebase.firestore().collection("user").doc(uid);
+    const parentData = await newParentDocRef.get();
+
+    if (value) {
+      childDocRef.update({
+        parent: [uid, ...childData.data()?.parent],
+      });
+      newParentDocRef.update({
+        childs: [childId, ...parentData.data()?.childs],
+      });
+    } else {
+      childDocRef.update({
+        parent: childData.data()?.parent.filter((m: string) => m !== childId),
+      });
+
+      newParentDocRef.update({
+        childs: parentData.data()?.childs.filter((m: string) => m !== childId),
+      });
+    }
+
+    flash();
+  }
+
+  if (user?.isChild) {
+    return null;
+  }
 
   return (
     <div>
-      {user?.name} {isParent && <span>Forelder!!</span>}
+      {user?.name}
+      {loading ? (
+        <Loading />
+      ) : (
+        <StyledCheckbox
+          name="isParent"
+          type="checkbox"
+          checked={isParent}
+          onChange={handleInputChange}
+        />
+      )}
+      {element}
     </div>
   );
 };
@@ -52,8 +120,9 @@ export const ChildAdmin = ({ myUid }: Props) => {
     .filter((m) => m !== myUid);
 
   return (
-    <Container>
+    <Container textLeft>
       <StyledBigHeader>{user?.name}</StyledBigHeader>
+      <StyledSubHeader>Hvem andre skal styre {user?.name}?</StyledSubHeader>
       {filteredUserList?.map((user) => (
         <KohortMember uid={user} childId={childId} />
       ))}

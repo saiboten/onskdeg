@@ -65,10 +65,15 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
 
     const isChecked = purchaseData.exists && purchaseData.data()?.checked;
 
-    await purchaseRef.set({
+    const newPurchase: Purchase = {
       checked: isChecked ? false : true,
       checkedBy: myUid,
-    });
+      date: firebase.firestore.Timestamp.now(),
+      wishId: wishInfo.id,
+      wishOwner: user,
+    };
+
+    await purchaseRef.set(newPurchase);
 
     if (isChecked) {
       setFeedback(`Du solgte ${wishInfo.name}`);

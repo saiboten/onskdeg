@@ -206,7 +206,7 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
             marginLeft: "1rem",
           }}
         >
-          <Link to={`/legacy`}>Se tidligere ønsker</Link>
+          <Link to={`/mypurchases`}>Mine kjøp</Link>
         </BorderButton>
       </StyledBottomOptions>
     </Container>

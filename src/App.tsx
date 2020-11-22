@@ -22,6 +22,7 @@ import { TermsOfService } from "./components/TermsOfService";
 import { DeleteMe } from "./components/DeleteMe";
 import { ChildAdmin } from "./components/settings/ChildAdmin";
 import ScrollToTop from "./components/ScrollToTop";
+import { MyPurchases } from "./components/MyPurchases";
 
 const App = () => {
   const [uid, setUid] = useState<string | undefined>();
@@ -66,6 +67,9 @@ const App = () => {
           </Route>
           <Route path="/others">
             <SelectWishList uid={uid} />
+          </Route>
+          <Route path="/mypurchases">
+            <MyPurchases uid={uid} />
           </Route>
           <Route path="/other/:uid/:wishid">
             <OtherWishDetail />

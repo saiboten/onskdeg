@@ -88,14 +88,18 @@ export const InvitePopup = ({ invites, uid, firebaseUser }: Props) => {
     user?.childs?.forEach((m) => newSet.add(m));
     newSet.add(uid);
 
+    const groupRef = firebase.firestore().collection("groups").doc(firstInvite);
+
+    const groupData = await groupRef.get();
+
     // Join group in group collection
-    await firebase
-      .firestore()
-      .collection("groups")
-      .doc(firstInvite)
-      .update({
-        members: Array.from(newSet),
-      });
+    await groupRef.update({
+      members: Array.from(newSet),
+      invites:
+        groupData
+          .data()
+          ?.invites.filter((m: string) => m !== firebaseUser?.email) || [],
+    });
 
     // Add group to user
     await firebase

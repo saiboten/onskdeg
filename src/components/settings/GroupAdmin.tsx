@@ -23,6 +23,15 @@ const StyledRow = styled.div`
   align-items: center;
 `;
 
+const MiniButton = styled.button`
+  background: 0;
+  outline: none;
+  border: none;
+  display: inline;
+  color: #fff;
+  cursor: pointer;
+`;
+
 const KohortMember = ({
   kohort,
   kohortId,
@@ -35,6 +44,7 @@ const KohortMember = ({
   uid: string;
 }) => {
   const { user } = useUser(uid);
+  const [showUid, setShowUid] = useState(false);
 
   function handleRemoveUser() {
     firebase
@@ -49,9 +59,25 @@ const KohortMember = ({
 
   return (
     <StyledRow>
-      {user?.name || "Ukent bruker"} ({uid})
+      <div
+        style={{
+          flex: "1",
+          overflowWrap: "break-word",
+          wordWrap: "break-word",
+          wordBreak: "break-word",
+          hyphens: "auto",
+        }}
+      >
+        {user?.name || "Ukent bruker"} (
+        {showUid ? (
+          uid
+        ) : (
+          <MiniButton onClick={() => setShowUid(true)}>Vis ID</MiniButton>
+        )}
+        )
+      </div>
       {myUid !== uid ? (
-        <Button onClick={handleRemoveUser}>Fjern bruker fra gruppen</Button>
+        <Button onClick={handleRemoveUser}>Fjern bruker</Button>
       ) : (
         <div>Administrator</div>
       )}

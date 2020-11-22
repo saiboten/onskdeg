@@ -45,6 +45,9 @@ export function OtherWishDetail() {
   return (
     <Container textLeft>
       <StyledBigHeader>{wish.name}</StyledBigHeader>
+      <a target="_blank" href={`https://www.google.com/search?q=${wish.name}`}>
+        Søk
+      </a>
 
       {wish.image && (
         <div
