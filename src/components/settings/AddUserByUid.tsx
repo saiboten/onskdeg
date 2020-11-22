@@ -26,7 +26,7 @@ export const AddUserByUid = ({ kohort, kohortId }: AddUserByUidProps) => {
       .collection("groups")
       .doc(kohort?.id)
       .update({
-        members: [...(kohort?.members || []), newUid],
+        members: [...(kohort?.members ?? []), newUid],
       });
 
     // TODO notification

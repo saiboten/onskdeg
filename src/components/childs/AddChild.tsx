@@ -47,7 +47,7 @@ export function AddChild({ uid }: Props) {
       parent: [user?.uid || ""],
       uid: newChildDoc.id,
       isChild: true,
-      groups: [...(user?.groups || [])],
+      groups: [...(user?.groups ?? [])],
     };
 
     await newChildDoc.set(newChild);
@@ -57,7 +57,7 @@ export function AddChild({ uid }: Props) {
       .collection("user")
       .doc(user?.uid || "")
       .update({
-        childs: [...(user?.childs || []), newChildDoc.id],
+        childs: [...(user?.childs ?? []), newChildDoc.id],
       });
 
     user?.groups.forEach(async (group) => {
@@ -72,7 +72,7 @@ export function AddChild({ uid }: Props) {
         .collection("groups")
         .doc(group)
         .update({
-          members: [...(groupData.data()?.members || []), newChildDoc.id],
+          members: [...(groupData.data()?.members ?? []), newChildDoc.id],
         });
     });
 

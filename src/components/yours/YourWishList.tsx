@@ -121,7 +121,7 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
       date: firebase.firestore.Timestamp.now(),
     };
 
-    const newWishList = [newWishObject, ...(wishes || [])];
+    const newWishList = [newWishObject, ...(wishes ?? [])];
 
     storeWishesToFirebase(newWishList);
 
@@ -129,7 +129,7 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
       const groupRef = firebase.firestore().collection("groups").doc(group);
       const groupData = await groupRef.get();
 
-      const newsFeed: NewsEntryType[] = groupData.data()?.newsFeed || [];
+      const newsFeed: NewsEntryType[] = groupData.data()?.newsFeed ?? [];
       newsFeed.unshift({
         isSuggestion: false,
         user: user.uid,
@@ -138,7 +138,7 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
       });
 
       await groupRef.update({
-        newsFeed: newsFeed?.slice(0, 5) || [],
+        newsFeed: newsFeed?.slice(0, 5) ?? [],
       });
     });
 
@@ -148,7 +148,7 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
 
   function deleteThis(deleteId: string) {
     storeWishesToFirebase(
-      [...(wishes || [])].filter((e: WishType) => {
+      [...(wishes ?? [])].filter((e: WishType) => {
         return e.id !== deleteId;
       })
     );
@@ -172,7 +172,7 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
         <InvitePopup
           firebaseUser={firebaseUser}
           uid={uid}
-          invites={invites?.myInvites || []}
+          invites={invites?.myInvites ?? []}
         />
       )}
       <StyledBigHeader>Mine ønsker</StyledBigHeader>
@@ -188,7 +188,7 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
         {feedback && <div>{feedback}</div>}
       </StyledWrapper>
       <div>
-        {wishes?.filter((el) => !el.isSuggestion).map(wishToElement) || []}
+        {wishes?.filter((el) => !el.isSuggestion).map(wishToElement) ?? []}
       </div>
       <Spacer />
       <Suspense fallback={<div>Laster barn</div>}>

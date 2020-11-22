@@ -68,7 +68,7 @@ const GroupSetting = ({
       .collection("user")
       .doc(myUid)
       .update({
-        groups: user?.groups.filter((m) => m !== groupId) || [],
+        groups: user?.groups.filter((m) => m !== groupId) ?? [],
       });
 
     mutate(["groups", groupId]);

@@ -52,7 +52,7 @@ const KohortMember = ({
       .collection("groups")
       .doc(kohortId)
       .update({
-        members: kohort?.members.filter((memberId) => memberId !== uid) || [],
+        members: kohort?.members.filter((memberId) => memberId !== uid) ?? [],
       });
     mutate(["groups", kohortId]);
   }
@@ -101,7 +101,7 @@ const KohortInvite = ({
       .collection("groups")
       .doc(kohort?.id)
       .update({
-        invites: kohort?.invites.filter((m) => m !== invite) || [],
+        invites: kohort?.invites.filter((m) => m !== invite) ?? [],
       });
 
     setRemoveInviteLoading(true);
@@ -133,6 +133,7 @@ const KohortInvite = ({
 export const GroupAdmin = ({ myUid }: { myUid: string }) => {
   const { kohortId } = useParams<{ kohortId: string }>();
   const { kohort } = useKohort(kohortId);
+  const { user } = useUser(myUid);
 
   if (kohort?.admin !== myUid) return null;
 
@@ -163,7 +164,7 @@ export const GroupAdmin = ({ myUid }: { myUid: string }) => {
         );
       })}
       <Spacer />
-      <AddInvite kohort={kohort} kohortId={kohortId} />
+      <AddInvite kohort={kohort} kohortId={kohortId} user={user} />
       <Spacer />
       <AddUserByUid kohort={kohort} kohortId={kohortId} />
       <Spacer />

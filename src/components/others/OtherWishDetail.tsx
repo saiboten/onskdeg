@@ -5,7 +5,7 @@ import firebase from "../firebase/firebase";
 import { StyledLabel } from "../common/Label";
 import styled from "styled-components";
 import { Container } from "../common/Container";
-import { NavLink } from "../common/Link";
+import { ALink, NavLink } from "../common/Link";
 import { useWish } from "../../hooks/useWish";
 import { useParams } from "react-router";
 import { useUser } from "../../hooks/useUser";
@@ -45,9 +45,14 @@ export function OtherWishDetail() {
   return (
     <Container textLeft>
       <StyledBigHeader>{wish.name}</StyledBigHeader>
-      <a target="_blank" href={`https://www.google.com/search?q=${wish.name}`}>
-        Søk
-      </a>
+      <ALink
+        target="_blank"
+        href={`https://www.google.com/search?q=${wish.name}`}
+      >
+        Søk etter dette på Google
+      </ALink>
+
+      <Spacer />
 
       {wish.image && (
         <div
@@ -72,7 +77,7 @@ export function OtherWishDetail() {
         <>
           <StyledLabel>Link</StyledLabel>
           <div>
-            <a href={wish.link}>Link</a>
+            <ALink href={wish.link}>{wish.name}</ALink>
           </div>
         </>
       )}

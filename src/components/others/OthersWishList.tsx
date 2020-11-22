@@ -69,7 +69,7 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
       const groupRef = firebase.firestore().collection("groups").doc(group);
       const groupData = await groupRef.get();
 
-      const newsFeed: NewsEntryType[] = groupData.data()?.newsFeed || [];
+      const newsFeed: NewsEntryType[] = groupData.data()?.newsFeed ?? [];
       newsFeed.unshift({
         isSuggestion: true,
         suggestedBy: myUid,
@@ -78,7 +78,7 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
       });
 
       await groupRef.update({
-        newsFeed: newsFeed?.slice(0, 5) || [],
+        newsFeed: newsFeed?.slice(0, 5) ?? [],
       });
     });
 

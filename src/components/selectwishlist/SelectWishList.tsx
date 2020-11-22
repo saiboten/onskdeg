@@ -83,7 +83,7 @@ export const GroupUsers = ({
       </StyledBigHeader>
       <Spacer />
       <StyledSubHeader>Siste nytt!</StyledSubHeader>
-      <LatestNews newsFeed={kohort?.newsFeed || []}></LatestNews>
+      <LatestNews newsFeed={kohort?.newsFeed ?? []}></LatestNews>
       <Spacer />
       <StyledSubHeader>Brukere</StyledSubHeader>
       <StyledUl>

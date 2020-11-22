@@ -8,7 +8,7 @@ export function useKohorts(uid: string): Kohort[] | undefined {
   const { user } = useUser(uid);
 
   useEffect(() => {
-    const groups = user?.groups || [];
+    const groups = user?.groups ?? [];
 
     const getGroupData = async (groupId: string): Promise<Kohort> => {
       const group = await firebase

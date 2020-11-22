@@ -42,7 +42,7 @@ export const YourChild = ({ child, myUid }: Props) => {
 
   function deleteWish(deleteId: string) {
     storeWishesToFirebase(
-      [...(wishes || [])].filter((e: WishType) => {
+      [...(wishes ?? [])].filter((e: WishType) => {
         return e.id !== deleteId;
       })
     );
@@ -79,14 +79,14 @@ export const YourChild = ({ child, myUid }: Props) => {
       .collection("wishes")
       .doc(child.uid)
       .update({
-        wishes: [emptyWish, ...(wishes || [])],
+        wishes: [emptyWish, ...(wishes ?? [])],
       });
 
     user?.groups.forEach(async (group) => {
       const groupRef = firebase.firestore().collection("groups").doc(group);
       const groupData = await groupRef.get();
 
-      const newsFeed: NewsEntryType[] = groupData.data()?.newsFeed || [];
+      const newsFeed: NewsEntryType[] = groupData.data()?.newsFeed ?? [];
       newsFeed.unshift({
         isSuggestion: false,
         user: child.uid,
@@ -95,7 +95,7 @@ export const YourChild = ({ child, myUid }: Props) => {
       });
 
       await groupRef.update({
-        newsFeed: newsFeed?.slice(0, 5) || [],
+        newsFeed: newsFeed?.slice(0, 5) ?? [],
       });
     });
 
@@ -119,8 +119,8 @@ export const YourChild = ({ child, myUid }: Props) => {
         />
         <StyledCheckIcon type="submit" name="check" onClick={() => null} />
       </StyledWrapper>
-      {(wishes || []).length > 0 ? (
-        (wishes || []).map(wishToElement)
+      {(wishes ?? []).length > 0 ? (
+        (wishes ?? []).map(wishToElement)
       ) : (
         <div>Ingen ønsker lagt inn enda</div>
       )}

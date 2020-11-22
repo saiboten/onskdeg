@@ -8,7 +8,7 @@ export function useChilds(uid: string): Child[] | undefined {
   const { user } = useUser(uid);
 
   useEffect(() => {
-    const childrenList = user?.childs || [];
+    const childrenList = user?.childs ?? [];
 
     const getChildData = async (childId: string): Promise<Child> => {
       const child = await firebase

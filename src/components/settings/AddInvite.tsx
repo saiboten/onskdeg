@@ -6,15 +6,16 @@ import { StyledLabelInputPair } from "../common/StyledLabelInputPair";
 import firebase from "../firebase/firebase";
 import { mutate } from "swr";
 import Loading from "../common/Loading";
-import { Kohort } from "../../types/types";
+import { Kohort, User } from "../../types/types";
 import { StyledNotification } from "../common/StyledNotification";
 
 interface AddInviteProps {
   kohort: Kohort;
   kohortId: string;
+  user: User | undefined;
 }
 
-export const AddInvite = ({ kohort, kohortId }: AddInviteProps) => {
+export const AddInvite = ({ kohort, kohortId, user }: AddInviteProps) => {
   const [newInvite, setNewInvite] = useState("");
   const [showInviteAdded, setShowInviteAdded] = useState("");
 
@@ -42,8 +43,22 @@ export const AddInvite = ({ kohort, kohortId }: AddInviteProps) => {
       .collection("groups")
       .doc(kohort?.id)
       .update({
-        invites: [...(kohort?.invites || []), newInvite],
+        invites: [...(kohort?.invites ?? []), newInvite],
       });
+
+    try {
+      const sendInvite = firebase.functions().httpsCallable("sendInvite");
+      const result = await sendInvite({
+        email: newInvite,
+        groupName: kohort.groupName,
+        inviteFromUserName: user?.name ?? "Ukjent",
+      });
+
+      console.log(result);
+    } catch (e) {
+      // Email fails on localhost
+      console.log(e);
+    }
 
     setNewInvite("");
     mutate(["groups", kohort?.id]);

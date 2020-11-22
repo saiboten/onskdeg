@@ -82,7 +82,7 @@ export const InvitePopup = ({ invites, uid, firebaseUser }: Props) => {
 
     const newSet = new Set<string>();
 
-    [...(kohort?.members || []), ...(user?.childs || []), uid];
+    [...(kohort?.members ?? []), ...(user?.childs ?? []), uid];
 
     kohort?.members.forEach((m) => newSet.add(m));
     user?.childs?.forEach((m) => newSet.add(m));
@@ -98,7 +98,7 @@ export const InvitePopup = ({ invites, uid, firebaseUser }: Props) => {
       invites:
         groupData
           .data()
-          ?.invites.filter((m: string) => m !== firebaseUser?.email) || [],
+          ?.invites.filter((m: string) => m !== firebaseUser?.email) ?? [],
     });
 
     // Add group to user
@@ -107,7 +107,7 @@ export const InvitePopup = ({ invites, uid, firebaseUser }: Props) => {
       .collection("user")
       .doc(user?.uid)
       .update({
-        groups: [...(user?.groups || []), firstInvite],
+        groups: [...(user?.groups ?? []), firstInvite],
       });
 
     user?.childs?.forEach(async (child) => {
@@ -125,7 +125,7 @@ export const InvitePopup = ({ invites, uid, firebaseUser }: Props) => {
           .collection("user")
           .doc(child)
           .update({
-            groups: [...(childInfo.data()?.groups || []), firstInvite],
+            groups: [...(childInfo.data()?.groups ?? []), firstInvite],
           });
       }
 

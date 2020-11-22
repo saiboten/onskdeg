@@ -38,7 +38,7 @@ export const AddKohort: React.FC<Props> = ({ uid }) => {
       invites,
       admin: user?.uid,
       groupName,
-      members: [user?.uid, ...(user?.childs || [])],
+      members: [user?.uid, ...(user?.childs ?? [])],
     });
 
     await docRef.update({
@@ -50,7 +50,7 @@ export const AddKohort: React.FC<Props> = ({ uid }) => {
       .collection("user")
       .doc(user?.uid)
       .update({
-        groups: [...(user?.groups || []), docRef.id],
+        groups: [...(user?.groups ?? []), docRef.id],
       });
 
     // Add current users children to kohort as default
@@ -61,7 +61,7 @@ export const AddKohort: React.FC<Props> = ({ uid }) => {
         .collection("user")
         .doc(child)
         .update({
-          groups: [...(childData.data()?.groups || []), docRef.id],
+          groups: [...(childData.data()?.groups ?? []), docRef.id],
         });
     });
 
@@ -71,7 +71,7 @@ export const AddKohort: React.FC<Props> = ({ uid }) => {
       var docDetails = await doc.get();
 
       doc.set({
-        myInvites: [...(docDetails.data()?.myInvites || []), docRef.id],
+        myInvites: [...(docDetails.data()?.myInvites ?? []), docRef.id],
       });
     });
 
