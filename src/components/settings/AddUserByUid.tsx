@@ -29,6 +29,18 @@ export const AddUserByUid = ({ kohort, kohortId }: AddUserByUidProps) => {
         members: [...(kohort?.members ?? []), newUid],
       });
 
+    const docRef = firebase.firestore().collection("user").doc(newUid);
+
+    const userData = await docRef.get();
+
+    await firebase
+      .firestore()
+      .collection("user")
+      .doc(newUid)
+      .update({
+        groups: [...(userData.data()?.groups ?? []), kohort.id],
+      });
+
     // TODO notification
     mutate(["groups"], kohortId);
     setNewUid("");
