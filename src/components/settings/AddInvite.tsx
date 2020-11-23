@@ -28,7 +28,13 @@ export const AddInvite = ({ kohort, kohortId, user }: AddInviteProps) => {
   async function handleAddEmail(e: React.FormEvent<HTMLFormElement>) {
     setAddEmailLoading(true);
     e.preventDefault();
-    const inviteRef = firebase.firestore().collection("invites").doc(newInvite);
+
+    const newInviteIgnoreCase = newInvite.toLowerCase();
+
+    const inviteRef = firebase
+      .firestore()
+      .collection("invites")
+      .doc(newInviteIgnoreCase);
 
     const inviteData = await inviteRef.get();
     const set = new Set(inviteData.data()?.myInvites);
@@ -43,13 +49,13 @@ export const AddInvite = ({ kohort, kohortId, user }: AddInviteProps) => {
       .collection("groups")
       .doc(kohort?.id)
       .update({
-        invites: [...(kohort?.invites ?? []), newInvite],
+        invites: [...(kohort?.invites ?? []), newInviteIgnoreCase],
       });
 
     try {
       const sendInvite = firebase.functions().httpsCallable("sendInvite");
       const result = await sendInvite({
-        email: newInvite,
+        email: newInviteIgnoreCase,
         groupName: kohort.groupName,
         inviteFromUserName: user?.name ?? "Ukjent",
       });
@@ -63,7 +69,7 @@ export const AddInvite = ({ kohort, kohortId, user }: AddInviteProps) => {
     setNewInvite("");
     mutate(["groups", kohort?.id]);
     setAddEmailLoading(false);
-    setShowInviteAdded(`Sendte invitasjon til ${newInvite}`);
+    setShowInviteAdded(`Sendte invitasjon til ${newInviteIgnoreCase}`);
 
     setTimeout(() => {
       setShowInviteAdded("");

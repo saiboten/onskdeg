@@ -10,31 +10,28 @@ import { useWish } from "../../hooks/useWish";
 import { useParams } from "react-router";
 import { useUser } from "../../hooks/useUser";
 import { usePurchase } from "../../hooks/usePurchase";
-import { StyledBigHeader } from "../common/StyledHeading";
+import { StyledBigHeader, StyledSubHeader } from "../common/StyledHeading";
 import { Spacer } from "../common/Spacer";
+import { useQuestions } from "../../hooks/useQuestions";
+import { AddQuestion } from "./AddQuestion";
+import { ListQuestions } from "./ListQuestions";
 
 const StyledImage = styled.img`
   max-width: 40rem;
   width: 100%;
 `;
 
-interface OtherWishDetailProps {
-  setWishes: (user: string, wishes: Wish[]) => void;
-  setPurchases: (user: string, purchases: Purchase[]) => void;
-  user: User;
-  match: any;
-}
-
 interface Params {
   uid: string;
   wishid: string;
 }
 
-export function OtherWishDetail() {
+export function OtherWishDetail({ myUid }: { myUid: string }) {
   const { uid, wishid } = useParams<Params>();
   const { user } = useUser(uid);
   const { wish } = useWish(uid, wishid);
   const { purchase } = usePurchase(wishid);
+  const { questions } = useQuestions(wishid);
 
   const { user: purchaseUser } = useUser(purchase?.checkedBy || "");
 
@@ -88,6 +85,9 @@ export function OtherWishDetail() {
         </>
       )}
       {purchase?.checked && <div>Dette ble kjøpt av {purchaseUser?.name}</div>}
+      <Spacer />
+      <ListQuestions wishId={wishid} myUid={myUid} questions={questions} />
+      <AddQuestion myUid={myUid} wishOwnerUid={uid} wishId={wishid} />
     </Container>
   );
 }

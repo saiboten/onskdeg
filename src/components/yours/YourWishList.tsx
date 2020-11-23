@@ -5,13 +5,7 @@ import firebase from "../firebase/firebase";
 import Icon from "../common/Icon";
 import { mutate } from "swr";
 
-import {
-  Wish as WishType,
-  User,
-  FirebaseSnapshot,
-  Kohort,
-  NewsEntryType,
-} from "../../types/types";
+import { Wish as WishType, User, NewsEntryType } from "../../types/types";
 import { Container } from "../common/Container";
 import { BorderButton } from "../common/Button";
 import { Link } from "../common/Link";
@@ -73,6 +67,14 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
   const [newWish, setNewWish] = useState("");
   const [feedback, setFeedback] = useState("");
   const { user } = useUser(uid);
+
+  useEffect(() => {
+    if (!user?.email && firebaseUser?.email) {
+      firebase.firestore().collection("user").doc(uid).update({
+        email: firebaseUser?.email,
+      });
+    }
+  }, []);
 
   const { wishes } = useWishes(user?.uid || "?");
 

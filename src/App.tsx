@@ -72,7 +72,7 @@ const App = () => {
             <MyPurchases uid={uid} />
           </Route>
           <Route path="/other/:uid/:wishid">
-            <OtherWishDetail />
+            <OtherWishDetail myUid={uid} />
           </Route>
           <Route path="/other/:uid">
             <OthersWishList myUid={uid} />

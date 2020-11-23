@@ -149,12 +149,13 @@ export const Settings = ({ uid, firebaseUser }: Props) => {
           <Spacer />
         </React.Fragment>
       ))}
-      <StyledBigHeader>Administrer brukere</StyledBigHeader>
+      <StyledBigHeader>Brukere</StyledBigHeader>
       <StyledGroup>
         {user?.childs?.map((childUid) => (
           <ChildSetting childUid={childUid} />
         ))}
       </StyledGroup>
+
       <Spacer />
     </Container>
   );

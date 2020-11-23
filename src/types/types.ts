@@ -16,6 +16,7 @@ export interface User {
   childs?: string[];
   groups: string[];
   isChild: boolean;
+  email?: string;
 }
 
 export interface Wish {
@@ -29,6 +30,21 @@ export interface Wish {
   suggestedBy?: string;
   price?: number;
   date?: firebase.firestore.Timestamp;
+}
+
+export interface Question {
+  wishId: string;
+  question: string;
+  answer?: string;
+  questionOwner: string;
+  questionId: string;
+}
+
+export interface Notification {
+  link: string;
+  message: string;
+  to: string;
+  completed: boolean;
 }
 
 export interface Purchases {

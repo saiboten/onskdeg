@@ -14,6 +14,9 @@ import { useWishes } from "../../hooks/useWishes";
 import { ALink } from "../common/Link";
 import { format } from "date-fns";
 import { StyledBigHeader, StyledSubHeader } from "../common/StyledHeading";
+import { useQuestions } from "../../hooks/useQuestions";
+import { ListQuestions } from "../others/ListQuestions";
+import { ListMyQuestions } from "./ListMyQuestions";
 
 const StyledWrapper = styled.div`
   text-align: left;
@@ -49,6 +52,7 @@ export function YourWishDetails() {
 
   const { wishes } = useWishes(user?.uid || "");
   const { wish } = useWish(user?.uid || "?", wishid);
+  const { questions } = useQuestions(wishid);
 
   async function updateWishStore(newData: Array<Wish>) {
     await firebase
@@ -114,6 +118,8 @@ export function YourWishDetails() {
             <StyledImage src={wish.image} />
           </div>
         )}
+
+        <ListMyQuestions wishId={wishid} myUid={uid} questions={questions} />
 
         {date && (
           <StyledDescription>
