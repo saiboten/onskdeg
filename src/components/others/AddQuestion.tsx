@@ -4,6 +4,7 @@ import { useUser } from "../../hooks/useUser";
 import { useWish } from "../../hooks/useWish";
 import { Notification, Question } from "../../types/types";
 import { Button } from "../common/Button";
+import Loading from "../common/Loading";
 import { StyledSubHeader } from "../common/StyledHeading";
 import { StyledInput } from "../common/StyledInput";
 import { StyledLabelInputPair } from "../common/StyledLabelInputPair";
@@ -18,11 +19,13 @@ interface Props {
 
 export const AddQuestion = ({ myUid, wishOwnerUid, wishId }: Props) => {
   const [question, setQuestion] = useState("");
+  const [loading, setLoading] = useState(false);
   const { user } = useUser(wishOwnerUid);
   const { wish } = useWish(wishOwnerUid, wishId);
   const { flash, element } = useNotification("Spørsmål stilt");
 
   async function handleAddQuestion(e: React.FormEvent<HTMLFormElement>) {
+    setLoading(true);
     e.preventDefault();
 
     const questionObject: Question = {
@@ -69,21 +72,26 @@ export const AddQuestion = ({ myUid, wishOwnerUid, wishId }: Props) => {
     setQuestion("");
     flash();
     mutate(["question", wishId]);
+    setLoading(false);
   }
 
   return (
     <div>
       <StyledSubHeader>Still spørsmål</StyledSubHeader>
-      <form onSubmit={handleAddQuestion}>
-        <StyledLabelInputPair>
-          <StyledInput
-            placeholder="Legg til spørsmål her"
-            value={question}
-            onChange={(e) => setQuestion(e.target.value)}
-          ></StyledInput>
-          <Button type="submit">Legg til</Button>
-        </StyledLabelInputPair>
-      </form>
+      {loading ? (
+        <Loading />
+      ) : (
+        <form onSubmit={handleAddQuestion}>
+          <StyledLabelInputPair>
+            <StyledInput
+              placeholder="Legg til spørsmål her"
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+            ></StyledInput>
+            <Button type="submit">Legg til</Button>
+          </StyledLabelInputPair>
+        </form>
+      )}
       {element}
     </div>
   );
