@@ -57,6 +57,7 @@ export const AddQuestion = ({ myUid, wishOwnerUid, wishId }: Props) => {
           .httpsCallable("sendNotification");
         const result = await sendInvite({
           toEmail: user?.email,
+          wishName: wish?.name || "Ukjent",
         });
         console.log(result);
       } catch (e) {
