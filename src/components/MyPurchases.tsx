@@ -8,6 +8,7 @@ import { Container } from "./common/Container";
 import { StyledBigHeader } from "./common/StyledHeading";
 import { ALink } from "./common/Link";
 import firebase from "./firebase/firebase";
+import { Link } from "./yours/Wish";
 
 interface Props {
   uid: string;
@@ -20,7 +21,8 @@ const PurchaseInfo = ({ purchase }: { purchase: PurchaseType }) => {
   return (
     <div>
       {format(purchase?.date?.toDate() || new Date(), "dd.MM.yyyy")}:{" "}
-      {user?.name}: {wish?.name}
+      {user?.name}:{" "}
+      <Link to={`/other/${user?.uid}/${wish?.id}`}>{wish?.name}</Link>
       {wish?.link && (
         <ALink style={{ marginLeft: "1rem" }} href={wish.link}>
           Link

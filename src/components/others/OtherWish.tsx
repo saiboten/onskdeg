@@ -105,7 +105,7 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
         <UnstyledLink
           to={`/${wishSuggestedByMe ? "wish" : "other"}/${user}/${wishInfo.id}`}
         >
-          {item} {wishInfo.price && `(${wishInfo.price})`}
+          {item} {wishInfo.price ? `(${wishInfo.price})` : ""}
         </UnstyledLink>
       </LeftSection>
       <StyledActionButtons>
