@@ -48,7 +48,7 @@ export const AddQuestion = ({ myUid, wishOwnerUid, wishId }: Props) => {
       id: "",
       message: `Noen har stilt deg et spørsmål om ditt ønske ${wish?.name}. Gå til ønsket.`,
       link: `/wish/${wishOwnerUid}/${wishId}`,
-      to: myUid,
+      to: wishOwnerUid,
       completed: false,
     };
 
