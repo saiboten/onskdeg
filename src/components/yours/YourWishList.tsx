@@ -22,6 +22,8 @@ import Loading from "../common/Loading";
 import { SelectName } from "../SelectName";
 import { StyledBigHeader } from "../common/StyledHeading";
 import { getOgData, OgResponseData } from "../../util/getOgData";
+import { Redirect } from "react-router";
+import { Notifications } from "./Notifications";
 
 export const StyledCheckIcon = styled(Icon)`
   position: absolute;
@@ -67,6 +69,8 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
   const [newWish, setNewWish] = useState("");
   const [feedback, setFeedback] = useState("");
   const { user } = useUser(uid);
+  const [redirect, setRedirect] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!user?.email && firebaseUser?.email) {
@@ -76,18 +80,18 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
     }
   }, []);
 
-  const { wishes } = useWishes(user?.uid || "?");
+  const { wishes } = useWishes(user?.uid ?? "", false);
 
-  const childs = useChilds(user?.uid || "?");
+  const childs = useChilds(user?.uid ?? "");
 
-  const { invites } = useInvites(firebaseUser?.email || "");
+  const { invites } = useInvites(firebaseUser?.email ?? "");
 
   function storeWishesToFirebase(newData: Array<WishType>) {
-    mutate(["wishes", user?.uid || "?"], newData, false);
+    mutate(["wishes", user?.uid ?? ""], newData, false);
     firebase
       .firestore()
       .collection("wishes")
-      .doc(user?.uid || "?")
+      .doc(user?.uid ?? "")
       .set({
         wishes: newData,
       })
@@ -97,6 +101,7 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
   }
 
   async function addWish(e: React.FormEvent<HTMLFormElement>) {
+    setLoading(true);
     e.preventDefault();
 
     if (newWish === "") {
@@ -146,6 +151,11 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
 
     setFeedback("");
     setNewWish("");
+
+    if (data) {
+      setRedirect(`wish/${uid}/${newWishObject.id}`);
+    }
+    setLoading(false);
   }
 
   function deleteThis(deleteId: string) {
@@ -168,6 +178,10 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
     );
   }
 
+  if (redirect !== "") {
+    return <Redirect to={redirect} />;
+  }
+
   return (
     <Container>
       {(invites?.myInvites.length || 0) > 0 && (
@@ -177,6 +191,9 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
           invites={invites?.myInvites ?? []}
         />
       )}
+
+      <Notifications myUid={uid} />
+
       <StyledBigHeader>Mine ønsker</StyledBigHeader>
 
       <StyledWrapper onSubmit={addWish}>
@@ -186,7 +203,12 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
           value={newWish}
           onChange={(e) => setNewWish(e.target.value)}
         />
-        <StyledCheckIcon type="submit" name="check" onClick={() => null} />
+        {loading ? (
+          <Loading />
+        ) : (
+          <StyledCheckIcon type="submit" name="check" onClick={() => null} />
+        )}
+
         {feedback && <div>{feedback}</div>}
       </StyledWrapper>
       <div>

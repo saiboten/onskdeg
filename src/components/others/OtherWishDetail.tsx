@@ -1,16 +1,15 @@
-import React, { useEffect } from "react";
-import { Wish, Purchase, Purchases, User } from "../../types/types";
+import React from "react";
 import Loading from "../common/Loading";
-import firebase from "../firebase/firebase";
 import { StyledLabel } from "../common/Label";
 import styled from "styled-components";
 import { Container } from "../common/Container";
-import { ALink, NavLink } from "../common/Link";
+import { ALink } from "../common/Link";
 import { useWish } from "../../hooks/useWish";
 import { useParams } from "react-router";
 import { useUser } from "../../hooks/useUser";
 import { usePurchase } from "../../hooks/usePurchase";
-import { StyledBigHeader, StyledSubHeader } from "../common/StyledHeading";
+import { format } from "date-fns";
+import { StyledBigHeader } from "../common/StyledHeading";
 import { Spacer } from "../common/Spacer";
 import { useQuestions } from "../../hooks/useQuestions";
 import { AddQuestion } from "./AddQuestion";
@@ -19,6 +18,10 @@ import { ListQuestions } from "./ListQuestions";
 const StyledImage = styled.img`
   max-width: 40rem;
   width: 100%;
+`;
+
+const StyledDescription = styled.div`
+  font-size: 16px;
 `;
 
 interface Params {
@@ -61,6 +64,13 @@ export function OtherWishDetail({ myUid }: { myUid: string }) {
         >
           <StyledImage src={wish.image} />
         </div>
+      )}
+
+      {wish.date && (
+        <StyledDescription>
+          <StyledLabel>Lagt inn</StyledLabel>
+          <p>{format(wish.date?.toDate() || new Date(), "dd.MM.yyyy")}</p>
+        </StyledDescription>
       )}
 
       {wish.description !== "" && (

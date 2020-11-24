@@ -23,7 +23,7 @@ interface Props {
 
 export const YourChild = ({ child, myUid }: Props) => {
   const [newWish, setNewWish] = useState("");
-  const { wishes, isLoading } = useWishes(child.uid);
+  const { wishes, isLoading } = useWishes(child.uid, true);
   const { user } = useUser(myUid);
 
   function storeWishesToFirebase(newData: Array<WishType>) {

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { mutate } from "swr";
+import { useUser } from "../../hooks/useUser";
 import { Notification, Question as QuestionType } from "../../types/types";
 import { Button } from "../common/Button";
 import { Spacer } from "../common/Spacer";
@@ -65,11 +66,13 @@ export const StyledInput = styled.input`
 interface QuestionProps {
   question: QuestionType;
   wishId: string;
+  myUid: string;
 }
 
-const Question = ({ question, wishId }: QuestionProps) => {
+const Question = ({ myUid, question, wishId }: QuestionProps) => {
   const [answer, setAnswer] = useState("");
   const { element, flash } = useNotification("Spørsmål slettet");
+  const { user } = useUser(myUid);
 
   async function handleSaveQuestion(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -82,11 +85,21 @@ const Question = ({ question, wishId }: QuestionProps) => {
       });
 
     // TODO send notification
-    // const notification: Notification = {
-    //   link: `/#/${question.wishId}`
-    // };
+    const notification: Notification = {
+      link: `/other/${question.questionOwner}/${question.wishId}`,
+      completed: false,
+      id: "",
+      message: `${user?.name} har svart på spørsmålet ditt. Klikk her for å lese svaret.`,
+      to: question.questionOwner,
+    };
 
-    // firebase.firestore().collection("notifications").add(notification);
+    const ref = await firebase
+      .firestore()
+      .collection("notifications")
+      .add(notification);
+    await ref.update({
+      id: ref.id,
+    });
 
     flash();
     mutate(["question", wishId]);
@@ -122,8 +135,14 @@ export const ListMyQuestions = ({ myUid, wishId, questions }: Props) => {
       <StyledSubHeader>Spørsmål og svar</StyledSubHeader>
       <StyledQuestionWrapper>
         {questions?.map((el) => {
-          console.log(el.questionId);
-          return <Question key={el.questionId} wishId={wishId} question={el} />;
+          return (
+            <Question
+              key={el.questionId}
+              myUid={myUid}
+              wishId={wishId}
+              question={el}
+            />
+          );
         })}
       </StyledQuestionWrapper>
       <Spacer />

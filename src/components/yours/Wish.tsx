@@ -15,6 +15,8 @@ import {
 import { Link as RouterLink } from "react-router-dom";
 
 import { ReactComponent as ArrowRight } from "../images/arrow-right.svg";
+import { StyledLink, StyledLinkIcon } from "../common/StyledLink";
+import colors from "../../styles/colors";
 
 export const Link = styled(RouterLink)`
   text-decoration: none;
@@ -68,7 +70,17 @@ export const Wish = ({ wish, delete: deleteProp, user }: P) => {
     </StyledActionButtonsAnimated>
   ) : (
     <StyledActionButtons>
-      <GoldIconButton type="button" name="trash-2" onClick={deleteItem} />
+      {wish.link && (
+        <StyledLink href={wish.link} target="_blank">
+          <StyledLinkIcon />
+        </StyledLink>
+      )}
+      <GoldIconButton
+        color={colors.primaryLight}
+        type="button"
+        name="trash-2"
+        onClick={deleteItem}
+      />
     </StyledActionButtons>
   );
 

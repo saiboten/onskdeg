@@ -1,34 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import firebase from "../firebase/firebase";
 import Icon from "../common/Icon";
 import ListRow, { LeftSection } from "../common/ListRow";
 import styled from "styled-components";
 
 import { Wish, Purchase } from "../../types/types";
-import { ImageWrapper } from "../common/Image";
 import {
   StyledActionButtonsAnimated,
   StyledActionButtons,
   NeutralIconButton,
   NegativeIconButton,
 } from "../common/IconButton";
-import { ReactComponent as LinkIcon } from "../images/link.svg";
 import { UnstyledLink } from "../common/Link";
 import { usePurchase } from "../../hooks/usePurchase";
 import { mutate } from "swr";
 import { StyledNotification } from "../common/StyledNotification";
 import { format } from "date-fns";
-
-const StyledLinkIcon = styled(LinkIcon)`
-  fill: #fff;
-  height: 32px;
-  width: 32px;
-`;
-
-const StyledLink = styled.a`
-  padding: 0 0.5rem;
-  transform: translateY(3px);
-`;
+import { StyledLink, StyledLinkIcon } from "../common/StyledLink";
+import colors from "../../styles/colors";
 
 interface P {
   // purchase: Purchase;
@@ -147,13 +136,19 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
 
         {wishSuggestedByMe && (
           <Icon
+            color={colors.primaryLight}
             type="button"
             name={"trash-2"}
             onClick={() => setConfirm(true)}
           />
         )}
 
-        <Icon type="button" name={"shopping-cart"} onClick={handleBuyItem} />
+        <Icon
+          color={colors.primaryLight}
+          type="button"
+          name="shopping-cart"
+          onClick={handleBuyItem}
+        />
       </StyledActionButtons>
     </ListRow>
   );

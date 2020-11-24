@@ -45,6 +45,7 @@ export interface Notification {
   message: string;
   to: string;
   completed: boolean;
+  id: string;
 }
 
 export interface Purchases {

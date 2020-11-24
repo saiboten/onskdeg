@@ -45,13 +45,21 @@ export const AddQuestion = ({ myUid, wishOwnerUid, wishId }: Props) => {
     });
 
     const notification: Notification = {
-      message: "Bla bla",
-      link: `/#/wish/${wishOwnerUid}/${wishId}`,
+      id: "",
+      message: `Noen har stilt deg et spørsmål om ditt ønske ${wish?.name}. Gå til ønsket.`,
+      link: `/wish/${wishOwnerUid}/${wishId}`,
       to: myUid,
       completed: false,
     };
 
-    await firebase.firestore().collection("notifications").add(notification);
+    const ref = await firebase
+      .firestore()
+      .collection("notifications")
+      .add(notification);
+
+    await ref.update({
+      id: ref.id,
+    });
 
     if (user?.email) {
       try {

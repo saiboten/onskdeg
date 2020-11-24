@@ -33,7 +33,7 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
   const { uid } = useParams<Params>();
   const { user } = useUser(uid);
 
-  const { wishes } = useWishes(uid);
+  const { wishes } = useWishes(uid, false);
 
   async function handleAddSuggestion(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();

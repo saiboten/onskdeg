@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import colors from "../../styles/colors";
 
 const StyledIconButton = styled.button`
   display: flex;
@@ -23,6 +24,7 @@ interface IconProps {
   name: string;
   type: "button" | "submit" | "reset" | undefined;
   onClick: (args: any) => void;
+  color?: string;
   className?: string;
 }
 /* eslint-disable react/button-has-type */
@@ -30,6 +32,7 @@ export default function Icon({
   name,
   type,
   onClick,
+  color,
   className: classFromProps,
   ...rest
 }: IconProps) {
@@ -40,7 +43,7 @@ export default function Icon({
       onClick={onClick}
       {...rest}
     >
-      <StyledSvg fill="currentColor">
+      <StyledSvg fill={color || "currentColor"}>
         <use xlinkHref={`/svg/sprite.svg#icon-${name}`} />
       </StyledSvg>
     </StyledIconButton>

@@ -13,9 +13,8 @@ import { mutate } from "swr";
 import { useWishes } from "../../hooks/useWishes";
 import { ALink } from "../common/Link";
 import { format } from "date-fns";
-import { StyledBigHeader, StyledSubHeader } from "../common/StyledHeading";
+import { StyledBigHeader } from "../common/StyledHeading";
 import { useQuestions } from "../../hooks/useQuestions";
-import { ListQuestions } from "../others/ListQuestions";
 import { ListMyQuestions } from "./ListMyQuestions";
 
 const StyledWrapper = styled.div`
@@ -50,8 +49,9 @@ export function YourWishDetails() {
 
   const { user } = useUser(uid);
 
-  const { wishes } = useWishes(user?.uid || "");
+  const { wishes } = useWishes(user?.uid || "", false);
   const { wish } = useWish(user?.uid || "?", wishid);
+  const { user: suggestedByUser } = useUser(wish?.suggestedBy || "");
   const { questions } = useQuestions(wishid);
 
   async function updateWishStore(newData: Array<Wish>) {
@@ -119,11 +119,15 @@ export function YourWishDetails() {
           </div>
         )}
 
-        <ListMyQuestions wishId={wishid} myUid={uid} questions={questions} />
+        {wish.isSuggestion && <p>Foreslått av: {suggestedByUser?.name}</p>}
+
+        {!wish.isSuggestion && (
+          <ListMyQuestions wishId={wishid} myUid={uid} questions={questions} />
+        )}
 
         {date && (
           <StyledDescription>
-            <StyledLabel>Dato for innleggelse</StyledLabel>
+            <StyledLabel>Lagt inn</StyledLabel>
             <p>{format(wish.date?.toDate() || new Date(), "dd.MM.yyyy")}</p>
           </StyledDescription>
         )}

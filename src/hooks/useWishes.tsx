@@ -4,7 +4,8 @@ import { Wish } from "../types/types";
 
 const fetcher = async (
   wishes: "wishes",
-  userId: string
+  userId: string,
+  myWishesOnly: boolean
 ): Promise<Wish[] | undefined> => {
   return await new Promise(async (resolve) => {
     if (userId === "") {
@@ -27,8 +28,10 @@ const fetcher = async (
   });
 };
 
-export function useWishes(user: string) {
-  const { data, error } = useSWR(["wishes", user], fetcher, { suspense: true });
+export function useWishes(user: string, myWishesOnly: boolean) {
+  const { data, error } = useSWR(["wishes", user, myWishesOnly], fetcher, {
+    suspense: true,
+  });
 
   return {
     wishes: data,
