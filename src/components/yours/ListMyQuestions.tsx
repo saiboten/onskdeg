@@ -71,7 +71,7 @@ interface QuestionProps {
 
 const Question = ({ myUid, question, wishId }: QuestionProps) => {
   const [answer, setAnswer] = useState("");
-  const { element, flash } = useNotification("Spørsmål slettet");
+  const { element, flash } = useNotification("Spørsmål lagt til");
   const { user } = useUser(myUid);
 
   async function handleSaveQuestion(e: React.FormEvent<HTMLFormElement>) {
@@ -84,9 +84,8 @@ const Question = ({ myUid, question, wishId }: QuestionProps) => {
         answer,
       });
 
-    // TODO send notification
     const notification: Notification = {
-      link: `/other/${question.questionOwner}/${question.wishId}`,
+      link: `/other/${myUid}/${question.wishId}`,
       completed: false,
       id: "",
       message: `${user?.name} har svart på spørsmålet ditt. Klikk her for å lese svaret.`,
