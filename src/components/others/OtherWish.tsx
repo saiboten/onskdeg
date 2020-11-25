@@ -78,17 +78,12 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
   }
 
   async function handleDeleteItem() {
-    const wishRef = firebase.firestore().collection("wishes").doc(user);
-
-    const wishesData = await wishRef.get();
-
-    const existingWishes: Wish[] = wishesData.data()?.wishes;
-
-    wishRef.update({
-      wishes: existingWishes.filter((w) => w.id !== wishInfo.id),
-    });
-
-    mutate(["wishes", user]);
+    const wishRef = firebase
+      .firestore()
+      .collection("wish")
+      .doc(wishInfo.id)
+      .delete();
+    mutate(["wish", user]);
   }
 
   const wishSuggestedByMe = wishInfo.suggestedBy === myUid;

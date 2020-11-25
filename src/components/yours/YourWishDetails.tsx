@@ -49,35 +49,18 @@ export function YourWishDetails() {
 
   const { user } = useUser(uid);
 
-  const { wishes } = useWishes(user?.uid || "", false);
   const { wish } = useWish(user?.uid || "?", wishid);
   const { user: suggestedByUser } = useUser(wish?.suggestedBy || "");
   const { questions } = useQuestions(wishid);
 
-  async function updateWishStore(newData: Array<Wish>) {
-    await firebase
-      .firestore()
-      .collection("wishes")
-      .doc(user?.uid || "?")
-      .set({
-        wishes: newData,
-      })
-      .then(() => {
-        mutate(["wishes", user?.uid]);
-      });
-  }
-
   function storeWishDetails(updatedWish: Wish) {
-    const newWishList = wishes?.map((wish) => {
-      if (wish.id === updatedWish.id) {
-        return updatedWish;
-      }
-      return wish;
-    });
-
-    if (newWishList) {
-      updateWishStore(newWishList);
-    }
+    firebase
+      .firestore()
+      .collection("wish")
+      .doc(updatedWish.id)
+      .update({
+        ...updatedWish,
+      });
   }
 
   if (wish == null) {
@@ -96,6 +79,7 @@ export function YourWishDetails() {
       [field]: newData,
     });
     toggle(false);
+    mutate(["wish", uid]);
   };
 
   return (

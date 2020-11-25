@@ -70,7 +70,6 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
   const [feedback, setFeedback] = useState("");
   const { user } = useUser(uid);
   const [redirect, setRedirect] = useState("");
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!user?.email && firebaseUser?.email) {
@@ -80,34 +79,21 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
     }
   }, []);
 
-  const { wishes } = useWishes(user?.uid ?? "", false);
+  const { wishes } = useWishes(user?.uid ?? "");
 
   const childs = useChilds(user?.uid ?? "");
 
   const { invites } = useInvites(firebaseUser?.email ?? "");
 
-  function storeWishesToFirebase(newData: Array<WishType>) {
-    mutate(["wishes", user?.uid ?? ""], newData, false);
-    firebase
-      .firestore()
-      .collection("wishes")
-      .doc(user?.uid ?? "")
-      .set({
-        wishes: newData,
-      })
-      .then(() => {
-        mutate(["wishes", user?.uid]);
-      });
-  }
-
   async function addWish(e: React.FormEvent<HTMLFormElement>) {
-    setLoading(true);
     e.preventDefault();
 
     if (newWish === "") {
       setFeedback("Ønsket kan ikke være tomt");
       return;
     }
+
+    mutate(["wish", user?.uid], [{ name: newWish }, ...(wishes || [])], false);
 
     let data: OgResponseData | undefined = undefined;
     let link: string | undefined;
@@ -118,6 +104,7 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
     }
 
     const newWishObject: WishType = {
+      owner: uid,
       name: data?.title || newWish,
       id: createGuid(),
       image: data?.image || "",
@@ -128,9 +115,15 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
       date: firebase.firestore.Timestamp.now(),
     };
 
-    const newWishList = [newWishObject, ...(wishes ?? [])];
+    const newWishRef = await firebase
+      .firestore()
+      .collection("wish")
+      .add(newWishObject);
+    newWishRef.update({
+      id: newWishRef.id,
+    });
 
-    storeWishesToFirebase(newWishList);
+    mutate(["wish", user?.uid]);
 
     user?.groups.forEach(async (group) => {
       const groupRef = firebase.firestore().collection("groups").doc(group);
@@ -155,15 +148,11 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
     if (data) {
       setRedirect(`wish/${uid}/${newWishObject.id}`);
     }
-    setLoading(false);
   }
 
-  function deleteThis(deleteId: string) {
-    storeWishesToFirebase(
-      [...(wishes ?? [])].filter((e: WishType) => {
-        return e.id !== deleteId;
-      })
-    );
+  async function deleteThis(deleteId: string) {
+    await firebase.firestore().collection("wish").doc(deleteId).delete();
+    mutate(["wish", user?.uid]);
   }
 
   const wishToElement = (el: WishType) => {
@@ -203,11 +192,7 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
           value={newWish}
           onChange={(e) => setNewWish(e.target.value)}
         />
-        {loading ? (
-          <Loading />
-        ) : (
-          <StyledCheckIcon type="submit" name="check" onClick={() => null} />
-        )}
+        <StyledCheckIcon type="submit" name="check" onClick={() => null} />
 
         {feedback && <div>{feedback}</div>}
       </StyledWrapper>

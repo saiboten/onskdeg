@@ -33,7 +33,7 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
   const { uid } = useParams<Params>();
   const { user } = useUser(uid);
 
-  const { wishes } = useWishes(uid, false);
+  const { wishes } = useWishes(uid);
 
   async function handleAddSuggestion(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -47,6 +47,7 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
     }
 
     const newWish: Wish = {
+      owner: uid,
       deleted: false,
       description: data?.description || "",
       id: createGuid(),
@@ -58,11 +59,9 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
       date: firebase.firestore.Timestamp.now(),
     };
 
-    const docRef = firebase.firestore().collection("wishes").doc(uid);
-    const existingData = await (await docRef.get()).data()?.wishes;
-
-    docRef.update({
-      wishes: [newWish, ...existingData],
+    const docRef = await firebase.firestore().collection("wish").add(newWish);
+    await docRef.update({
+      id: docRef.id,
     });
 
     user?.groups.forEach(async (group) => {
@@ -84,7 +83,7 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
 
     setFeedback(`Lag til forslag ${suggestion}`);
     setSuggestion("");
-    mutate(["wishes", uid]);
+    mutate(["wish", uid]);
 
     setTimeout(() => {
       setFeedback("");

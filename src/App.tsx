@@ -23,6 +23,7 @@ import { DeleteMe } from "./components/DeleteMe";
 import { ChildAdmin } from "./components/settings/ChildAdmin";
 import ScrollToTop from "./components/ScrollToTop";
 import { MyPurchases } from "./components/MyPurchases";
+import { FixWishes } from "./components/FixWishes";
 
 const App = () => {
   const [uid, setUid] = useState<string | undefined>();
@@ -103,6 +104,9 @@ const App = () => {
           </Route>
           <Route path="/legacy">
             <LegacyWishes uid={uid} />
+          </Route>
+          <Route path="/fixwishes">
+            <FixWishes />
           </Route>
           <Route path="/">
             <YourWishList firebaseUser={firebaseUser} uid={uid} />
