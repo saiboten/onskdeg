@@ -10,7 +10,7 @@ export const GlobalStyle = createGlobalStyle`
 }
 
 html {
-  background-color: #262626;
+  background-color: ${(props) => props.theme.background};
   min-height:100%;
   font-size: 62.5%;
 }
@@ -21,7 +21,7 @@ body {
   font-family: "Exo 2", sans-serif;
   font-weight: 400;
   line-height: 1.7;
-  color: white;
+  color: ${(props: any) => props.theme.text};
   min-height:100%;
 }
 

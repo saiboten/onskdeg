@@ -15,8 +15,8 @@ const StyledNotificationBar = styled.div<Props>`
   align-items: center;
   justify-content: center;
   z-index: 10;
-  background-color: rgba(180, 155, 87);
-  color: #fff;
+  background-color: ${(props) => props.theme.contrast};
+  color: ${(props) => props.theme.text};
   padding: 1rem 0;
 
   transition: all 0.5s;

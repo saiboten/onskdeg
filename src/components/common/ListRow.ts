@@ -1,20 +1,16 @@
-import styled, { keyframes } from "styled-components";
-import colors from "../../styles/colors";
+import styled from "styled-components";
 
-export const ListRowStyles = `
+export const ListRow = styled.div`
   position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: ${colors.primaryDark};
+  background: ${(props: any) => props.theme.primaryDark};
   color: white;
   padding-left: 50px;
   margin-bottom: 2px;
   min-height: 52px;
   text-align: left;
-`;
-export const ListRow = styled.div`
-  ${ListRowStyles}
 `;
 
 export const LeftSection = styled.div`

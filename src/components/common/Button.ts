@@ -1,8 +1,7 @@
 import styled from "styled-components";
-import colors from "../../styles/colors";
 
 const BorderStyles = `
-  border: 2px solid ${colors.primary};
+  border: 2px solid ${(props: any) => props.theme.primary};
   padding: 7px 14px;
   background: transparent;
   border-radius: 8px;
@@ -28,7 +27,7 @@ export const ButtonNavigation = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  color: white;
+  color: ${(props) => props.theme.text};
   font-weight: 600;
   font-family: "Exo 2", sans-serif;
   text-align: center;
@@ -50,7 +49,7 @@ export const ButtonNavigation = styled.button`
 export const Button = styled.button`
   background-color: #666;
   display: inline-block;
-  color: white;
+  color: ${(props) => props.theme.text};
   font-weight: 600;
   font-family: "Exo 2", sans-serif;
   text-align: center;

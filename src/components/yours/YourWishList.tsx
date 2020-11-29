@@ -7,8 +7,7 @@ import { mutate } from "swr";
 
 import { Wish as WishType, User, NewsEntryType } from "../../types/types";
 import { Container } from "../common/Container";
-import { BorderButton } from "../common/Button";
-import { Link } from "../common/Link";
+
 import { StyledInput } from "../common/StyledInput";
 import { useUser } from "../../hooks/useUser";
 import { useWishes } from "../../hooks/useWishes";
@@ -16,7 +15,6 @@ import { useInvites } from "../../hooks/useInvites";
 import { Spacer } from "../common/Spacer";
 import { useChilds } from "../../hooks/useChilds";
 import { YourChild } from "./YourChild";
-import { createGuid } from "../../util/guid";
 import { InvitePopup } from "./InvitePopup";
 import Loading from "../common/Loading";
 import { SelectName } from "../SelectName";
@@ -53,11 +51,6 @@ interface S {
 export const StyledWrapper = styled.form`
   position: relative;
   margin-bottom: 0.8rem;
-`;
-
-const StyledBottomOptions = styled.div`
-  width: 100%;
-  text-align: left;
 `;
 
 interface Props {
@@ -106,7 +99,7 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
     const newWishObject: WishType = {
       owner: uid,
       name: data?.title || newWish,
-      id: createGuid(),
+      id: "",
       image: data?.image || "",
       deleted: false,
       description: data?.description || "",
@@ -119,6 +112,7 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
       .firestore()
       .collection("wish")
       .add(newWishObject);
+
     newWishRef.update({
       id: newWishRef.id,
     });
@@ -146,7 +140,7 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
     setNewWish("");
 
     if (data) {
-      setRedirect(`wish/${uid}/${newWishObject.id}`);
+      setRedirect(`wish/${uid}/${newWishRef.id}`);
     }
   }
 
@@ -205,19 +199,6 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
           return <YourChild key={child.uid} myUid={uid} child={child} />;
         })}
       </Suspense>
-      <Spacer />
-      <StyledBottomOptions>
-        <BorderButton>
-          <Link to={`/addchild`}>Legg til ekstra bruker</Link>
-        </BorderButton>
-        <BorderButton
-          style={{
-            marginLeft: "1rem",
-          }}
-        >
-          <Link to={`/mypurchases`}>Mine kjøp</Link>
-        </BorderButton>
-      </StyledBottomOptions>
     </Container>
   );
 };

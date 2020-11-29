@@ -36,7 +36,6 @@ const fetcher = async (wishes: "wish", userId: string): Promise<Wish[]> => {
 
       resolve(wishRes.reverse());
     } else {
-      console.log("query ... empty?");
       resolve([]);
     }
   });

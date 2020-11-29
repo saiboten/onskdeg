@@ -7,7 +7,6 @@ import { StyledWrapper, StyledCheckIcon } from "./YourWishList";
 import firebase from "../firebase/firebase";
 import { useWishes } from "../../hooks/useWishes";
 import { mutate } from "swr";
-import { createGuid } from "../../util/guid";
 import Loading from "../common/Loading";
 import { useUser } from "../../hooks/useUser";
 import { getOgData, OgResponseData } from "../../util/getOgData";
@@ -54,7 +53,7 @@ export const YourChild = ({ child, myUid }: Props) => {
       image: data?.image || "",
       link: link || "",
       isSuggestion: false,
-      id: createGuid(),
+      id: "",
       date: firebase.firestore.Timestamp.now(),
     };
 

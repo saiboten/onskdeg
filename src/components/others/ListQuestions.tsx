@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import { mutate } from "swr";
-import { StringLiteral } from "typescript";
 import { Question } from "../../types/types";
 import { Spacer } from "../common/Spacer";
 import { StyledSubHeader } from "../common/StyledHeading";
@@ -33,7 +32,7 @@ const StyledDeleteButton = styled.button`
 
 const StyledQuestion = styled.div`
   position: relative;
-  background-color: #fff;
+  background-color: ${(props) => props.theme.white};
   border-radius: 1rem;
   padding: 1.5rem;
   color: black;

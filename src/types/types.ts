@@ -42,6 +42,10 @@ export interface Question {
   questionId: string;
 }
 
+export interface Settings {
+  darkMode: boolean;
+}
+
 export interface Notification {
   link: string;
   message: string;

@@ -1,16 +1,14 @@
 import styled from "styled-components";
 import { Link as RouterLink, NavLink as RouterNavLink } from "react-router-dom";
-import colors from "../../styles/colors";
-import Color from "color";
 
 export const Link = styled(RouterLink)`
   text-decoration: none;
-  border-bottom: 2px solid ${colors.primary};
+  border-bottom: 2px solid ${(props) => props.theme.primary};
   font-weight: 400;
 
   &:visited,
   &:link {
-    color: white;
+    color: ${(props) => props.theme.text};
   }
   &:hover {
     color: grey;
@@ -19,7 +17,7 @@ export const Link = styled(RouterLink)`
 
 export const ALink = styled.a`
   text-decoration: none;
-  border-bottom: 2px solid ${colors.primary};
+  border-bottom: 2px solid ${(props) => props.theme.primary};
   font-weight: 400;
 
   &:visited,
@@ -45,13 +43,13 @@ export const UnstyledLink = styled(RouterLink)`
 `;
 
 export const NavLink = styled(RouterNavLink)`
-  background: ${colors.primaryDark};
-  color: ${Color("white").darken(0.3).string()};
+  background: ${(props) => props.theme.primaryDark};
+  color: ${(props) => props.theme.text};
   text-decoration: none;
   padding: 0.8rem;
   &.selected {
-    color: white;
-    background: ${colors.primary};
+    color: ${(props) => props.theme.text};
+    background: ${(props) => props.theme.primary};
   }
 `;
 

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
-
+import { ThemeContext } from "styled-components";
 import firebase from "../firebase/firebase";
 import { Wish as WishType } from "../../types/types";
 import ListRow, { LeftSection } from "../common/ListRow";
@@ -16,14 +16,13 @@ import { Link as RouterLink } from "react-router-dom";
 
 import { ReactComponent as ArrowRight } from "../images/arrow-right.svg";
 import { StyledLink, StyledLinkIcon } from "../common/StyledLink";
-import colors from "../../styles/colors";
 
 export const Link = styled(RouterLink)`
   text-decoration: none;
 
   &:visited,
   &:link {
-    color: white;
+    color: ${(props) => props.theme.text};
   }
   &:hover {
     color: grey;
@@ -45,6 +44,7 @@ const StyledArrowRight = styled(ArrowRight)`
 `;
 
 export const Wish = ({ wish, delete: deleteProp, user }: P) => {
+  const themeContext = useContext(ThemeContext);
   const [confirm, setConfirm] = useState(false);
 
   function deleteItem() {
@@ -76,7 +76,7 @@ export const Wish = ({ wish, delete: deleteProp, user }: P) => {
         </StyledLink>
       )}
       <GoldIconButton
-        color={colors.primaryLight}
+        color={themeContext.primaryLight}
         type="button"
         name="trash-2"
         onClick={deleteItem}

@@ -10,9 +10,6 @@ import { StyledBigHeader, StyledSubHeader } from "../common/StyledHeading";
 import { Spacer } from "../common/Spacer";
 
 const StyledKohorts = styled.div`
-  border: 1px solid black;
-  border-radius: 0.5rem;
-  border-color: #fff;
   padding: 1rem;
 `;
 

@@ -53,8 +53,8 @@ export function YourWishDetails() {
   const { user: suggestedByUser } = useUser(wish?.suggestedBy || "");
   const { questions } = useQuestions(wishid);
 
-  function storeWishDetails(updatedWish: Wish) {
-    firebase
+  async function storeWishDetails(updatedWish: Wish) {
+    await firebase
       .firestore()
       .collection("wish")
       .doc(updatedWish.id)
@@ -69,15 +69,17 @@ export function YourWishDetails() {
 
   const { name, description: wishDescription, link, price, date } = wish;
 
-  const storeData = (
+  const storeData = async (
     field: string,
     newData: string | number,
     toggle: (hm: boolean) => void
   ) => {
-    storeWishDetails({
+    const storeThis = {
       ...wish,
       [field]: newData,
-    });
+    };
+
+    await storeWishDetails(storeThis);
     toggle(false);
     mutate(["wish", uid]);
   };

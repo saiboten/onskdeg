@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import colors from "../../styles/colors";
 import { ReactComponent as LinkIcon } from "../images/link.svg";
 
 export const StyledLink = styled.a`
@@ -8,7 +7,7 @@ export const StyledLink = styled.a`
 `;
 
 export const StyledLinkIcon = styled(LinkIcon)`
-  fill: ${colors.primaryLight};
+  fill: ${(props) => props.theme.primaryLight};
   height: 32px;
   width: 32px;
 `;

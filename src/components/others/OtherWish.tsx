@@ -3,7 +3,8 @@ import firebase from "../firebase/firebase";
 import Icon from "../common/Icon";
 import ListRow, { LeftSection } from "../common/ListRow";
 import styled from "styled-components";
-
+import { useContext } from "react";
+import { ThemeContext } from "styled-components";
 import { Wish, Purchase } from "../../types/types";
 import {
   StyledActionButtonsAnimated,
@@ -17,7 +18,6 @@ import { mutate } from "swr";
 import { StyledNotification } from "../common/StyledNotification";
 import { format } from "date-fns";
 import { StyledLink, StyledLinkIcon } from "../common/StyledLink";
-import colors from "../../styles/colors";
 
 interface P {
   // purchase: Purchase;
@@ -38,6 +38,8 @@ const StyledDate = styled.div`
 `;
 
 const OtherWish = ({ wishInfo, user, myUid }: P) => {
+  const themeContext = useContext(ThemeContext);
+
   const [feedback, setFeedback] = useState("");
   const { purchase } = usePurchase(wishInfo?.id);
   const [confirm, setConfirm] = useState(false);
@@ -131,7 +133,7 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
 
         {wishSuggestedByMe && (
           <Icon
-            color={colors.primaryLight}
+            color={themeContext.primaryLight}
             type="button"
             name={"trash-2"}
             onClick={() => setConfirm(true)}
@@ -139,7 +141,7 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
         )}
 
         <Icon
-          color={colors.primaryLight}
+          color={themeContext.primaryLight}
           type="button"
           name="shopping-cart"
           onClick={handleBuyItem}

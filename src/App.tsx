@@ -24,11 +24,16 @@ import { ChildAdmin } from "./components/settings/ChildAdmin";
 import ScrollToTop from "./components/ScrollToTop";
 import { MyPurchases } from "./components/MyPurchases";
 import { FixWishes } from "./components/FixWishes";
+import { Profile } from "./components/Profile";
+import { ThemeProvider } from "styled-components";
+import { darkTheme, lightTheme } from "./components/themes";
+import { useSettings } from "./hooks/useSettings";
 
 const App = () => {
   const [uid, setUid] = useState<string | undefined>();
   const [firebaseUser, setFirebaseUser] = useState<firebase.User | undefined>();
   const [uidResolved, setUidResolved] = useState(false);
+  const { settings, isLoading, isError } = useSettings(uid || "", false);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(function (user) {
@@ -43,77 +48,88 @@ const App = () => {
     });
   }, []);
 
-  if (!uidResolved) {
+  if (!uidResolved || isLoading) {
     return <Loading />;
+  }
+
+  if (isError) {
+    return <div>Noe har gått galt.</div>;
   }
 
   if (!uid) {
     return (
       <>
-        <GlobalStyle />
-        <Login />
+        <ThemeProvider theme={darkTheme}>
+          <GlobalStyle />
+          <Login />
+        </ThemeProvider>
       </>
     );
   }
 
   return (
-    <HashRouter>
-      <ScrollToTop />
-      <Suspense fallback={<Loading />}>
-        <GlobalStyle />
-        <HeaderComponent uid={uid} />
-        <Switch>
-          <Route path="/wish/:uid/:wishid" exact>
-            <YourWishDetails />
-          </Route>
-          <Route path="/others">
-            <SelectWishList uid={uid} />
-          </Route>
-          <Route path="/mypurchases">
-            <MyPurchases uid={uid} />
-          </Route>
-          <Route path="/other/:uid/:wishid">
-            <OtherWishDetail myUid={uid} />
-          </Route>
-          <Route path="/other/:uid">
-            <OthersWishList myUid={uid} />
-          </Route>
-          <Route path="/addchild">
-            <AddChild uid={uid} />
-          </Route>
-          <Route path="/settings/kohort/:kohortId">
-            <GroupAdmin myUid={uid} />
-          </Route>
-          <Route path="/settings/child/:childId">
-            <ChildAdmin myUid={uid} />
-          </Route>
-          <Route path="/settings">
-            <Settings firebaseUser={firebaseUser} uid={uid} />
-          </Route>
-          <Route path="/addgroup">
-            <AddKohort uid={uid} />
-          </Route>
-          <Route path="/privacypolicy">
-            <PrivacyPolicy />
-          </Route>
-          <Route path="/tos">
-            <TermsOfService />
-          </Route>
-          <Route path="/deleteme">
-            <DeleteMe />
-          </Route>
-          <Route path="/legacy">
-            <LegacyWishes uid={uid} />
-          </Route>
-          <Route path="/fixwishes">
-            <FixWishes />
-          </Route>
-          <Route path="/">
-            <YourWishList firebaseUser={firebaseUser} uid={uid} />
-          </Route>
-        </Switch>
-      </Suspense>
-    </HashRouter>
+    <ThemeProvider theme={settings?.darkMode ? darkTheme : lightTheme}>
+      <HashRouter>
+        <ScrollToTop />
+        <Suspense fallback={<Loading />}>
+          <GlobalStyle />
+          <HeaderComponent uid={uid} />
+          <Switch>
+            <Route path="/wish/:uid/:wishid" exact>
+              <YourWishDetails />
+            </Route>
+            <Route path="/others">
+              <SelectWishList uid={uid} />
+            </Route>
+            <Route path="/mypurchases">
+              <MyPurchases uid={uid} />
+            </Route>
+            <Route path="/other/:uid/:wishid">
+              <OtherWishDetail myUid={uid} />
+            </Route>
+            <Route path="/other/:uid">
+              <OthersWishList myUid={uid} />
+            </Route>
+            <Route path="/addchild">
+              <AddChild uid={uid} />
+            </Route>
+            <Route path="/profile">
+              <Profile uid={uid} />
+            </Route>
+            <Route path="/settings/kohort/:kohortId">
+              <GroupAdmin myUid={uid} />
+            </Route>
+            <Route path="/settings/child/:childId">
+              <ChildAdmin myUid={uid} />
+            </Route>
+            <Route path="/settings">
+              <Settings firebaseUser={firebaseUser} uid={uid} />
+            </Route>
+            <Route path="/addgroup">
+              <AddKohort uid={uid} />
+            </Route>
+            <Route path="/privacypolicy">
+              <PrivacyPolicy />
+            </Route>
+            <Route path="/tos">
+              <TermsOfService />
+            </Route>
+            <Route path="/deleteme">
+              <DeleteMe />
+            </Route>
+            <Route path="/legacy">
+              <LegacyWishes uid={uid} />
+            </Route>
+            <Route path="/fixwishes">
+              <FixWishes />
+            </Route>
+            <Route path="/">
+              <YourWishList firebaseUser={firebaseUser} uid={uid} />
+            </Route>
+          </Switch>
+        </Suspense>
+      </HashRouter>
+    </ThemeProvider>
   );
 };
 

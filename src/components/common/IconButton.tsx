@@ -1,6 +1,5 @@
 import Icon from "./Icon";
 import styled, { keyframes } from "styled-components";
-import colors from "../../styles/colors";
 
 export const IconButton = styled(Icon)`
   height: 52px;
@@ -9,13 +8,13 @@ export const IconButton = styled(Icon)`
   max-width: 52px;
 `;
 export const NegativeIconButton = styled(IconButton)`
-  background: ${colors.negative};
+  background: ${(props) => props.theme.negative};
 `;
 export const NeutralIconButton = styled(IconButton)`
-  background: ${colors.neutral};
+  background: ${(props) => props.theme.neutral};
 `;
 export const GoldIconButton = styled(IconButton)`
-  color: ${colors.primaryLight};
+  color: ${(props) => props.theme.primaryLight};
 `;
 
 export const StyledActionButtons = styled.div`
