@@ -31,7 +31,6 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
 
   const { uid } = useParams<Params>();
   const { user } = useUser(uid);
-
   const { wishes } = useWishes(uid);
 
   async function handleAddSuggestion(e: React.FormEvent<HTMLFormElement>) {
@@ -80,7 +79,7 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
       });
     });
 
-    setFeedback(`Lag til forslag ${suggestion}`);
+    setFeedback(`La til forslag ${suggestion}`);
     setSuggestion("");
     mutate(["wish", uid]);
 
@@ -90,7 +89,6 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
   }
 
   const ownWishes = wishes?.filter((m) => !m.isSuggestion);
-
   const suggestions = wishes?.filter((m) => m.isSuggestion);
 
   return (

@@ -55,6 +55,13 @@ export const Profile = ({ uid }: { uid: string }) => {
     mutate(["settings", uid]);
   }
 
+  async function toggleHideGifts(event: React.ChangeEvent<HTMLInputElement>) {
+    await firebase.firestore().collection("settings").doc(uid).update({
+      hideGifts: event.target.checked,
+    });
+    mutate(["settings", uid]);
+  }
+
   return (
     <Container textLeft>
       <StyledBigHeader>Profil for {user?.name}</StyledBigHeader>
@@ -67,6 +74,15 @@ export const Profile = ({ uid }: { uid: string }) => {
           type="checkbox"
           onChange={toggleDarkMode}
           checked={settings?.darkMode ? true : false}
+        />
+      </p>
+      <p>
+        Skjul avkryssede gaver?
+        <input
+          name="hideGifts"
+          type="checkbox"
+          onChange={toggleHideGifts}
+          checked={settings?.hideGifts ? true : false}
         />
       </p>
       {feedback}

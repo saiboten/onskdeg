@@ -7,12 +7,14 @@ import { Settings } from "../types/types";
 const fetcher = async (
   collection: "settings",
   uid: string
-): Promise<Settings | undefined> => {
+): Promise<Settings> => {
   return await new Promise(async (resolve) => {
     if (uid === undefined || uid === "") {
       resolve({
+        hideGifts: false,
         darkMode: false,
       });
+      return;
     }
 
     const docRef = firebase.firestore().collection(collection).doc(uid);
@@ -22,10 +24,12 @@ const fetcher = async (
     if (docData.exists) {
       resolve({
         darkMode: true,
+        hideGifts: false,
         ...docData.data(),
       });
     } else {
       const newSettings = {
+        hideGifts: false,
         darkMode: true,
       };
       await docRef.set(newSettings);

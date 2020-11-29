@@ -9,7 +9,6 @@ import { useUser } from "../../hooks/useUser";
 import { StyledBigHeader, StyledSubHeader } from "../common/StyledHeading";
 import firebase from "../firebase/firebase";
 import styled from "styled-components";
-import { Kohort } from "../../types/types";
 import { mutate } from "swr";
 import Loading from "../common/Loading";
 import { StyledNotification } from "../common/StyledNotification";

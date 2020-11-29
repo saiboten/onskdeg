@@ -18,6 +18,7 @@ import { mutate } from "swr";
 import { StyledNotification } from "../common/StyledNotification";
 import { format } from "date-fns";
 import { StyledLink, StyledLinkIcon } from "../common/StyledLink";
+import { useSettings } from "../../hooks/useSettings";
 
 interface P {
   // purchase: Purchase;
@@ -43,6 +44,7 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
   const [feedback, setFeedback] = useState("");
   const { purchase } = usePurchase(wishInfo?.id);
   const [confirm, setConfirm] = useState(false);
+  const { settings } = useSettings(myUid, true);
 
   const item = purchase?.checked ? <del>{wishInfo.name}</del> : wishInfo.name;
 
@@ -80,15 +82,15 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
   }
 
   async function handleDeleteItem() {
-    const wishRef = firebase
-      .firestore()
-      .collection("wish")
-      .doc(wishInfo.id)
-      .delete();
+    await firebase.firestore().collection("wish").doc(wishInfo.id).delete();
     mutate(["wish", user]);
   }
 
   const wishSuggestedByMe = wishInfo.suggestedBy === myUid;
+
+  if (settings?.hideGifts && purchase?.checked) {
+    return null;
+  }
 
   return (
     <ListRow>

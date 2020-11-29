@@ -95,9 +95,15 @@ export function OtherWishDetail({ myUid }: { myUid: string }) {
         </>
       )}
       {purchase?.checked && <div>Dette ble kjøpt av {purchaseUser?.name}</div>}
+
       <Spacer />
-      <ListQuestions wishId={wishid} myUid={myUid} questions={questions} />
-      <AddQuestion myUid={myUid} wishOwnerUid={uid} wishId={wishid} />
+
+      {!wish.isSuggestion && (
+        <>
+          <ListQuestions wishId={wishid} myUid={myUid} questions={questions} />
+          <AddQuestion myUid={myUid} wishOwnerUid={uid} wishId={wishid} />
+        </>
+      )}
     </Container>
   );
 }

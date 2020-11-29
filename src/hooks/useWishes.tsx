@@ -18,7 +18,6 @@ const fetcher = async (wishes: "wish", userId: string): Promise<Wish[]> => {
     const query = await queryRef.get();
 
     if (!query.empty) {
-      console.log("query not empty");
       const wishRes: Wish[] = query.docs.map((doc) => {
         const wish: Wish = {
           owner: "",

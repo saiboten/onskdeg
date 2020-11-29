@@ -6,7 +6,7 @@ interface ContainerProps {
 
 export const Container = styled.div<ContainerProps>`
   max-width: 870px;
-  margin: 1rem auto;
+  margin: 0 auto;
   font-size: 1.6rem;
   padding: 0 0.5rem;
   background-color: ${(props) => props.theme.background};
