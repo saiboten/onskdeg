@@ -8,24 +8,29 @@ const fetcher = async (
   collection: "settings",
   uid: string
 ): Promise<Settings | undefined> => {
-  return await new Promise((resolve) => {
-    firebase
-      .firestore()
-      .collection(collection)
-      .doc(uid)
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          resolve({
-            darkMode: true,
-            ...doc.data(),
-          });
-        } else {
-          resolve({
-            darkMode: true,
-          });
-        }
+  return await new Promise(async (resolve) => {
+    if (uid === undefined || uid === "") {
+      resolve({
+        darkMode: false,
       });
+    }
+
+    const docRef = firebase.firestore().collection(collection).doc(uid);
+
+    const docData = await docRef.get();
+
+    if (docData.exists) {
+      resolve({
+        darkMode: true,
+        ...docData.data(),
+      });
+    } else {
+      const newSettings = {
+        darkMode: true,
+      };
+      await docRef.set(newSettings);
+      resolve(newSettings);
+    }
   });
 };
 
