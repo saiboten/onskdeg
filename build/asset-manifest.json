@@ -1,22 +1,23 @@
 {
   "files": {
-    "main.js": "/static/js/main.c98383c6.chunk.js",
-    "main.js.map": "/static/js/main.c98383c6.chunk.js.map",
+    "main.js": "/static/js/main.0e93c06c.chunk.js",
+    "main.js.map": "/static/js/main.0e93c06c.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.d1d1849e.js",
     "runtime-main.js.map": "/static/js/runtime-main.d1d1849e.js.map",
-    "static/js/2.efb24d65.chunk.js": "/static/js/2.efb24d65.chunk.js",
-    "static/js/2.efb24d65.chunk.js.map": "/static/js/2.efb24d65.chunk.js.map",
+    "static/js/2.b5cb603c.chunk.js": "/static/js/2.b5cb603c.chunk.js",
+    "static/js/2.b5cb603c.chunk.js.map": "/static/js/2.b5cb603c.chunk.js.map",
     "index.html": "/index.html",
-    "static/js/2.efb24d65.chunk.js.LICENSE.txt": "/static/js/2.efb24d65.chunk.js.LICENSE.txt",
+    "static/js/2.b5cb603c.chunk.js.LICENSE.txt": "/static/js/2.b5cb603c.chunk.js.LICENSE.txt",
     "static/media/arrow-right.fa20fe33.svg": "/static/media/arrow-right.fa20fe33.svg",
     "static/media/edit.01fc8539.svg": "/static/media/edit.01fc8539.svg",
     "static/media/facebook-icon.acfa9d2b.svg": "/static/media/facebook-icon.acfa9d2b.svg",
     "static/media/link.fd914b98.svg": "/static/media/link.fd914b98.svg",
-    "static/media/settings.d0b1f1df.svg": "/static/media/settings.d0b1f1df.svg"
+    "static/media/settings.d0b1f1df.svg": "/static/media/settings.d0b1f1df.svg",
+    "static/media/user.22a2800e.svg": "/static/media/user.22a2800e.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.d1d1849e.js",
-    "static/js/2.efb24d65.chunk.js",
-    "static/js/main.c98383c6.chunk.js"
+    "static/js/2.b5cb603c.chunk.js",
+    "static/js/main.0e93c06c.chunk.js"
   ]
 }
