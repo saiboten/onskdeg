@@ -1,4 +1,6 @@
 import Color from "color";
+import backgroundDark from "./images/background.svg";
+import backgroundLight from "./images/lightBackground.svg";
 
 // #586F7C - dark electric blue
 // #B1740F - gold
@@ -9,8 +11,10 @@ import Color from "color";
 interface Theme {
   background: string;
   primary: string;
-  primaryDark: string;
   primaryLight: string;
+  primaryLightest: string;
+  primaryDark: string;
+  primaryDarkest: string;
   negative: string;
   contrast: string;
   neutral: string;
@@ -18,29 +22,37 @@ interface Theme {
   white: string;
 }
 
-const lightPrimary = "#acacde";
+const lightPrimary = "#5FD0A1";
+
+// background: #5FD0A1; // mørkest grønn
+// background: #5FD0A1 50 % // lys grønn??;
+// rgba(95, 208, 161, 0.5);
 
 export const lightTheme: Theme = {
-  background: "#DEDEDE",
+  background: backgroundLight,
   primary: lightPrimary,
-  primaryDark: Color(lightPrimary).darken(0.1).string(),
-  primaryLight: Color(lightPrimary).lighten(0.1).string(),
+  primaryLight: "#DCD4E7",
+  primaryLightest: "#DCD4E7",
+  primaryDark: "#F7ECFB",
+  primaryDarkest: "#ffffff",
   negative: "#B1740F",
-  contrast: "#B1740F",
+  contrast: "#349EFF",
   neutral: "#3988ea",
-  text: "#4C2A0F",
+  text: "#000000",
   white: "#FFFFFF",
 };
 
-const darkPrimary = "#b49b57";
+const darkPrimary = "#BA5FD0";
 
 export const darkTheme: Theme = {
-  background: "#262626",
+  background: backgroundDark,
   primary: darkPrimary,
-  primaryDark: Color(darkPrimary).fade(0.7).string(),
-  primaryLight: Color(darkPrimary).saturate(0.5).lighten(0.4).string(),
+  primaryLight: "#BA5FD0",
+  primaryLightest: "#DCD4E7",
+  primaryDark: "#463F7C",
+  primaryDarkest: "#292547",
   negative: "#ff5656",
-  contrast: "#49b557",
+  contrast: "#1FFFA3",
   neutral: "#3988ea",
   text: "#FFFFFF",
   white: "#FFFFFF",

@@ -12,13 +12,14 @@ const StyledHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-top: 3rem;
 `;
 
 const StyledUserIcon = styled(UserIcon)`
   margin-left: 12px;
   width: 32px;
   height: 32px;
-  fill: ${(props) => props.theme.primaryDark};
+  fill: ${(props) => props.theme.contrast};
 `;
 
 const othersActive = (_: any, location: any) =>
@@ -46,53 +47,43 @@ export const HeaderComponent = ({ uid }: Props) => {
   `;
   const UserInfo = styled.div`
     position: absolute;
-    top: 1rem;
-    right: 0;
+    top: 2.5rem;
+    right: 3rem;
   `;
   const ActionButtons = styled.div`
     display: flex;
+    justify-content: center;
     width: 100%;
-  `;
-
-  const CustomNavLink = styled(NavLink)`
-    width: 50%;
+    gap: 1rem;
   `;
 
   return (
     <Container>
-      <div
-        style={{
-          position: "relative",
-        }}
-      >
-        <H1>
-          <Link to="/">{APP_TITLE}</Link>
-        </H1>
-        <UserInfo>
-          <RouterNavLink activeClassName="selected" exact to="/profile">
-            <StyledUserIcon />
-          </RouterNavLink>
-        </UserInfo>
-        <StyledHeader>
-          <ActionButtons>
-            <CustomNavLink
-              activeClassName="selected"
-              isActive={yoursActive}
-              exact
-              to=""
-            >
-              Mine ønsker
-            </CustomNavLink>
-            <CustomNavLink
-              activeClassName="selected"
-              isActive={othersActive}
-              to="/others"
-            >
-              Kohorter
-            </CustomNavLink>
-          </ActionButtons>
-        </StyledHeader>
-      </div>
+      <UserInfo>
+        <span>gaveønske.no</span>
+        <RouterNavLink activeClassName="selected" exact to="/profile">
+          <StyledUserIcon />
+        </RouterNavLink>
+      </UserInfo>
+      <StyledHeader>
+        <ActionButtons>
+          <NavLink
+            activeClassName="selected"
+            isActive={yoursActive}
+            exact
+            to=""
+          >
+            Mine ønsker
+          </NavLink>
+          <NavLink
+            activeClassName="selected"
+            isActive={othersActive}
+            to="/others"
+          >
+            Kohorter
+          </NavLink>
+        </ActionButtons>
+      </StyledHeader>
     </Container>
   );
 };

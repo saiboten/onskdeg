@@ -135,7 +135,7 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
 
         {wishSuggestedByMe && (
           <Icon
-            color={themeContext.primaryLight}
+            color={themeContext.text}
             type="button"
             name={"trash-2"}
             onClick={() => setConfirm(true)}
@@ -143,7 +143,7 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
         )}
 
         <Icon
-          color={themeContext.primaryLight}
+          color={themeContext.text}
           type="button"
           name="shopping-cart"
           onClick={handleBuyItem}

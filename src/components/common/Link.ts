@@ -22,10 +22,10 @@ export const ALink = styled.a`
 
   &:visited,
   &:link {
-    color: white;
+    color: ${(props) => props.theme.text};
   }
   &:hover {
-    color: grey;
+    color: ${(props) => props.theme.primaryDark};
   }
 `;
 
@@ -35,10 +35,10 @@ export const UnstyledLink = styled(RouterLink)`
 
   &:visited,
   &:link {
-    color: white;
+    color: ${(props) => props.theme.text};
   }
   &:hover {
-    color: grey;
+    color: ${(props) => props.theme.primaryDark};
   }
 `;
 
@@ -46,7 +46,10 @@ export const NavLink = styled(RouterNavLink)`
   background: ${(props) => props.theme.primaryDark};
   color: ${(props) => props.theme.text};
   text-decoration: none;
-  padding: 0.8rem;
+  padding: 1rem 2rem;
+  font-size: 2.5rem;
+  border-radius: 1.5rem;
+
   &.selected {
     color: ${(props) => props.theme.text};
     background: ${(props) => props.theme.primary};

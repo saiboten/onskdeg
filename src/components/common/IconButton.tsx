@@ -8,13 +8,13 @@ export const IconButton = styled(Icon)`
   max-width: 52px;
 `;
 export const NegativeIconButton = styled(IconButton)`
-  background: ${(props) => props.theme.negative};
+  background: ${(props) => props.theme.text};
 `;
 export const NeutralIconButton = styled(IconButton)`
-  background: ${(props) => props.theme.neutral};
+  background: ${(props) => props.theme.text};
 `;
 export const GoldIconButton = styled(IconButton)`
-  color: ${(props) => props.theme.primaryLight};
+  color: ${(props) => props.theme.text};
 `;
 
 export const StyledActionButtons = styled.div`

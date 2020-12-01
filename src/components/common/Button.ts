@@ -23,7 +23,7 @@ export const BorderInput = styled.input`
 `;
 
 export const ButtonNavigation = styled.button`
-  background-color: #666;
+  background-color: ${(props) => props.theme.primaryDark};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -47,7 +47,7 @@ export const ButtonNavigation = styled.button`
 `;
 
 export const Button = styled.button`
-  background-color: #666;
+  background-color: ${(props) => props.theme.primary};
   display: inline-block;
   color: ${(props) => props.theme.text};
   font-weight: 600;

@@ -10,7 +10,10 @@ export const GlobalStyle = createGlobalStyle`
 }
 
 html {
-  background-color: ${(props) => props.theme.background};
+  background: url(${(props) => props.theme.background});
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   min-height:100%;
   font-size: 62.5%;
 }
