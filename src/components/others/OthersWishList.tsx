@@ -12,7 +12,6 @@ import { Spacer } from "../common/Spacer";
 import { StyledCheckIcon } from "../yours/YourWishList";
 import firebase from "../firebase/firebase";
 import { NewsEntryType, Wish } from "../../types/types";
-import { createGuid } from "../../util/guid";
 import { StyledNotification } from "../common/StyledNotification";
 import { mutate } from "swr";
 import { getOgData, OgResponseData } from "../../util/getOgData";
@@ -32,8 +31,7 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
 
   const { uid } = useParams<Params>();
   const { user } = useUser(uid);
-
-  const { wishes } = useWishes(uid, false);
+  const { wishes } = useWishes(uid);
 
   async function handleAddSuggestion(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -47,9 +45,10 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
     }
 
     const newWish: Wish = {
+      owner: uid,
       deleted: false,
       description: data?.description || "",
-      id: createGuid(),
+      id: "",
       image: data?.image || "",
       isSuggestion: true,
       name: data?.title || suggestion,
@@ -58,11 +57,9 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
       date: firebase.firestore.Timestamp.now(),
     };
 
-    const docRef = firebase.firestore().collection("wishes").doc(uid);
-    const existingData = await (await docRef.get()).data()?.wishes;
-
-    docRef.update({
-      wishes: [newWish, ...existingData],
+    const docRef = await firebase.firestore().collection("wish").add(newWish);
+    await docRef.update({
+      id: docRef.id,
     });
 
     user?.groups.forEach(async (group) => {
@@ -82,9 +79,9 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
       });
     });
 
-    setFeedback(`Lag til forslag ${suggestion}`);
+    setFeedback(`La til forslag ${suggestion}`);
     setSuggestion("");
-    mutate(["wishes", uid]);
+    mutate(["wish", uid]);
 
     setTimeout(() => {
       setFeedback("");
@@ -92,7 +89,6 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
   }
 
   const ownWishes = wishes?.filter((m) => !m.isSuggestion);
-
   const suggestions = wishes?.filter((m) => m.isSuggestion);
 
   return (

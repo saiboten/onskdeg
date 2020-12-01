@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Link } from "../common/Link";
-import colors from "../../styles/colors";
 import { BorderInput } from "../common/Button";
 import firebase from "../firebase/firebase";
 import Icon from "../common/Icon";
@@ -13,7 +12,7 @@ const StyledInput = styled.input`
   margin-bottom: 12px;
   border: 0;
   -webkit-appearance: none;
-  background: ${colors.primaryDark};
+  background: ${(props) => props.theme.primaryDark};
   color: white;
   width: 100%;
   &::placeholder {

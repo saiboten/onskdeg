@@ -7,8 +7,7 @@ import { mutate } from "swr";
 
 import { Wish as WishType, User, NewsEntryType } from "../../types/types";
 import { Container } from "../common/Container";
-import { BorderButton } from "../common/Button";
-import { Link } from "../common/Link";
+
 import { StyledInput } from "../common/StyledInput";
 import { useUser } from "../../hooks/useUser";
 import { useWishes } from "../../hooks/useWishes";
@@ -16,7 +15,6 @@ import { useInvites } from "../../hooks/useInvites";
 import { Spacer } from "../common/Spacer";
 import { useChilds } from "../../hooks/useChilds";
 import { YourChild } from "./YourChild";
-import { createGuid } from "../../util/guid";
 import { InvitePopup } from "./InvitePopup";
 import Loading from "../common/Loading";
 import { SelectName } from "../SelectName";
@@ -55,11 +53,6 @@ export const StyledWrapper = styled.form`
   margin-bottom: 0.8rem;
 `;
 
-const StyledBottomOptions = styled.div`
-  width: 100%;
-  text-align: left;
-`;
-
 interface Props {
   uid: string;
   firebaseUser?: firebase.User;
@@ -70,7 +63,6 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
   const [feedback, setFeedback] = useState("");
   const { user } = useUser(uid);
   const [redirect, setRedirect] = useState("");
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!user?.email && firebaseUser?.email) {
@@ -80,34 +72,21 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
     }
   }, []);
 
-  const { wishes } = useWishes(user?.uid ?? "", false);
+  const { wishes } = useWishes(user?.uid ?? "");
 
   const childs = useChilds(user?.uid ?? "");
 
   const { invites } = useInvites(firebaseUser?.email ?? "");
 
-  function storeWishesToFirebase(newData: Array<WishType>) {
-    mutate(["wishes", user?.uid ?? ""], newData, false);
-    firebase
-      .firestore()
-      .collection("wishes")
-      .doc(user?.uid ?? "")
-      .set({
-        wishes: newData,
-      })
-      .then(() => {
-        mutate(["wishes", user?.uid]);
-      });
-  }
-
   async function addWish(e: React.FormEvent<HTMLFormElement>) {
-    setLoading(true);
     e.preventDefault();
 
     if (newWish === "") {
       setFeedback("Ønsket kan ikke være tomt");
       return;
     }
+
+    mutate(["wish", user?.uid], [{ name: newWish }, ...(wishes || [])], false);
 
     let data: OgResponseData | undefined = undefined;
     let link: string | undefined;
@@ -118,8 +97,9 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
     }
 
     const newWishObject: WishType = {
+      owner: uid,
       name: data?.title || newWish,
-      id: createGuid(),
+      id: "",
       image: data?.image || "",
       deleted: false,
       description: data?.description || "",
@@ -128,9 +108,16 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
       date: firebase.firestore.Timestamp.now(),
     };
 
-    const newWishList = [newWishObject, ...(wishes ?? [])];
+    const newWishRef = await firebase
+      .firestore()
+      .collection("wish")
+      .add(newWishObject);
 
-    storeWishesToFirebase(newWishList);
+    newWishRef.update({
+      id: newWishRef.id,
+    });
+
+    mutate(["wish", user?.uid]);
 
     user?.groups.forEach(async (group) => {
       const groupRef = firebase.firestore().collection("groups").doc(group);
@@ -153,17 +140,13 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
     setNewWish("");
 
     if (data) {
-      setRedirect(`wish/${uid}/${newWishObject.id}`);
+      setRedirect(`wish/${uid}/${newWishRef.id}`);
     }
-    setLoading(false);
   }
 
-  function deleteThis(deleteId: string) {
-    storeWishesToFirebase(
-      [...(wishes ?? [])].filter((e: WishType) => {
-        return e.id !== deleteId;
-      })
-    );
+  async function deleteThis(deleteId: string) {
+    await firebase.firestore().collection("wish").doc(deleteId).delete();
+    mutate(["wish", user?.uid]);
   }
 
   const wishToElement = (el: WishType) => {
@@ -203,11 +186,7 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
           value={newWish}
           onChange={(e) => setNewWish(e.target.value)}
         />
-        {loading ? (
-          <Loading />
-        ) : (
-          <StyledCheckIcon type="submit" name="check" onClick={() => null} />
-        )}
+        <StyledCheckIcon type="submit" name="check" onClick={() => null} />
 
         {feedback && <div>{feedback}</div>}
       </StyledWrapper>
@@ -220,19 +199,6 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
           return <YourChild key={child.uid} myUid={uid} child={child} />;
         })}
       </Suspense>
-      <Spacer />
-      <StyledBottomOptions>
-        <BorderButton>
-          <Link to={`/addchild`}>Legg til ekstra bruker</Link>
-        </BorderButton>
-        <BorderButton
-          style={{
-            marginLeft: "1rem",
-          }}
-        >
-          <Link to={`/mypurchases`}>Mine kjøp</Link>
-        </BorderButton>
-      </StyledBottomOptions>
     </Container>
   );
 };

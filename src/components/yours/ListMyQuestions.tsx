@@ -4,6 +4,7 @@ import { mutate } from "swr";
 import { useUser } from "../../hooks/useUser";
 import { Notification, Question as QuestionType } from "../../types/types";
 import { Button } from "../common/Button";
+import Loading from "../common/Loading";
 import { Spacer } from "../common/Spacer";
 import { StyledSubHeader } from "../common/StyledHeading";
 import { StyledLabelInputPair } from "../common/StyledLabelInputPair";
@@ -35,7 +36,7 @@ const StyledDeleteButton = styled.button`
 
 const StyledQuestion = styled.div`
   position: relative;
-  background-color: #fff;
+  background-color: ${(props) => props.theme.white};
   border-radius: 1rem;
   padding: 1.5rem;
   color: black;
@@ -73,8 +74,10 @@ const Question = ({ myUid, question, wishId }: QuestionProps) => {
   const [answer, setAnswer] = useState("");
   const { element, flash } = useNotification("Spørsmål lagt til");
   const { user } = useUser(myUid);
+  const [loading, setLoading] = useState(false);
 
   async function handleSaveQuestion(e: React.FormEvent<HTMLFormElement>) {
+    setLoading(true);
     e.preventDefault();
     await firebase
       .firestore()
@@ -102,6 +105,7 @@ const Question = ({ myUid, question, wishId }: QuestionProps) => {
 
     flash();
     mutate(["question", wishId]);
+    setLoading(false);
   }
 
   return (
@@ -117,7 +121,7 @@ const Question = ({ myUid, question, wishId }: QuestionProps) => {
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
               ></StyledInput>
-              <Button>Svar</Button>
+              {loading ? <Loading /> : <Button>Svar</Button>}
             </StyledLabelInputPair>
           </form>
         )}

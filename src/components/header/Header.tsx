@@ -1,44 +1,25 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
-import firebase from "../firebase/firebase";
 import { APP_TITLE } from "../../constants";
 import { NavLink, Link } from "../common/Link";
 import { NavLink as RouterNavLink } from "react-router-dom";
 import { Container } from "../common/Container";
-import { ButtonNavigation } from "../common/Button";
 import { useUser } from "../../hooks/useUser";
 
-import { ReactComponent as SettingsIcon } from "./settings.svg";
+import { ReactComponent as UserIcon } from "../images/user.svg";
 
 const StyledHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.8rem;
 `;
 
-const StyledSettingsIcon = styled(SettingsIcon)`
+const StyledUserIcon = styled(UserIcon)`
   margin-left: 12px;
   width: 32px;
   height: 32px;
-  fill: #fff;
+  fill: ${(props) => props.theme.primaryDark};
 `;
-
-function logOut(setFeedback: (n: string) => void, logout: () => void) {
-  firebase
-    .auth()
-    .signOut()
-    .then(
-      () => {
-        setFeedback("Du er nå logget ut");
-        logout();
-      },
-      (e) => {
-        console.log(e);
-        setFeedback("Noe gikk galt under utlogging.");
-      }
-    );
-}
 
 const othersActive = (_: any, location: any) =>
   location.pathname.startsWith("/other");
@@ -53,28 +34,20 @@ interface Props {
 export const HeaderComponent = ({ uid }: Props) => {
   const { user } = useUser(uid);
 
-  function logout() {
-    console.log("TODO LOGOUT");
-  }
-
-  const [feedback, setFeedback] = useState("");
-
   if (!user) {
     return null;
   }
 
   const H1 = styled.h1`
-    color: white;
+    color: ${(props) => props.theme.text};
   `;
   const UserEmail = styled.span`
     margin-right: 10px;
   `;
   const UserInfo = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    margin-bottom: 0.5rem;
-    padding-right: 0.5rem;
+    position: absolute;
+    top: 1rem;
+    right: 0;
   `;
   const ActionButtons = styled.div`
     display: flex;
@@ -87,41 +60,39 @@ export const HeaderComponent = ({ uid }: Props) => {
 
   return (
     <Container>
-      <H1>
-        <Link to="/">{APP_TITLE}</Link>
-      </H1>
-      <UserInfo>
-        <UserEmail>{user?.name || "Ukjent"}</UserEmail>
-        <ButtonNavigation
-          type="button"
-          onClick={() => logOut(setFeedback, logout)}
-        >
-          Logg ut
-        </ButtonNavigation>
-        <RouterNavLink activeClassName="selected" exact to="/settings">
-          <StyledSettingsIcon />
-        </RouterNavLink>
-        {feedback}
-      </UserInfo>
-      <StyledHeader>
-        <ActionButtons>
-          <CustomNavLink
-            activeClassName="selected"
-            isActive={yoursActive}
-            exact
-            to=""
-          >
-            Mine ønsker
-          </CustomNavLink>
-          <CustomNavLink
-            activeClassName="selected"
-            isActive={othersActive}
-            to="/others"
-          >
-            Kohorter
-          </CustomNavLink>
-        </ActionButtons>
-      </StyledHeader>
+      <div
+        style={{
+          position: "relative",
+        }}
+      >
+        <H1>
+          <Link to="/">{APP_TITLE}</Link>
+        </H1>
+        <UserInfo>
+          <RouterNavLink activeClassName="selected" exact to="/profile">
+            <StyledUserIcon />
+          </RouterNavLink>
+        </UserInfo>
+        <StyledHeader>
+          <ActionButtons>
+            <CustomNavLink
+              activeClassName="selected"
+              isActive={yoursActive}
+              exact
+              to=""
+            >
+              Mine ønsker
+            </CustomNavLink>
+            <CustomNavLink
+              activeClassName="selected"
+              isActive={othersActive}
+              to="/others"
+            >
+              Kohorter
+            </CustomNavLink>
+          </ActionButtons>
+        </StyledHeader>
+      </div>
     </Container>
   );
 };

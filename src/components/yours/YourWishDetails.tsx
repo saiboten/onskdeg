@@ -49,35 +49,18 @@ export function YourWishDetails() {
 
   const { user } = useUser(uid);
 
-  const { wishes } = useWishes(user?.uid || "", false);
   const { wish } = useWish(user?.uid || "?", wishid);
   const { user: suggestedByUser } = useUser(wish?.suggestedBy || "");
   const { questions } = useQuestions(wishid);
 
-  async function updateWishStore(newData: Array<Wish>) {
+  async function storeWishDetails(updatedWish: Wish) {
     await firebase
       .firestore()
-      .collection("wishes")
-      .doc(user?.uid || "?")
-      .set({
-        wishes: newData,
-      })
-      .then(() => {
-        mutate(["wishes", user?.uid]);
+      .collection("wish")
+      .doc(updatedWish.id)
+      .update({
+        ...updatedWish,
       });
-  }
-
-  function storeWishDetails(updatedWish: Wish) {
-    const newWishList = wishes?.map((wish) => {
-      if (wish.id === updatedWish.id) {
-        return updatedWish;
-      }
-      return wish;
-    });
-
-    if (newWishList) {
-      updateWishStore(newWishList);
-    }
   }
 
   if (wish == null) {
@@ -86,16 +69,19 @@ export function YourWishDetails() {
 
   const { name, description: wishDescription, link, price, date } = wish;
 
-  const storeData = (
+  const storeData = async (
     field: string,
     newData: string | number,
     toggle: (hm: boolean) => void
   ) => {
-    storeWishDetails({
+    const storeThis = {
       ...wish,
       [field]: newData,
-    });
+    };
+
+    await storeWishDetails(storeThis);
     toggle(false);
+    mutate(["wish", uid]);
   };
 
   return (

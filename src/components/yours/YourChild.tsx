@@ -7,7 +7,6 @@ import { StyledWrapper, StyledCheckIcon } from "./YourWishList";
 import firebase from "../firebase/firebase";
 import { useWishes } from "../../hooks/useWishes";
 import { mutate } from "swr";
-import { createGuid } from "../../util/guid";
 import Loading from "../common/Loading";
 import { useUser } from "../../hooks/useUser";
 import { getOgData, OgResponseData } from "../../util/getOgData";
@@ -23,29 +22,12 @@ interface Props {
 
 export const YourChild = ({ child, myUid }: Props) => {
   const [newWish, setNewWish] = useState("");
-  const { wishes, isLoading } = useWishes(child.uid, true);
+  const { wishes, isLoading } = useWishes(child.uid);
   const { user } = useUser(myUid);
 
-  function storeWishesToFirebase(newData: Array<WishType>) {
-    mutate(["wishes", child?.uid || "?"], newData, false);
-    firebase
-      .firestore()
-      .collection("wishes")
-      .doc(child?.uid || "?")
-      .set({
-        wishes: newData,
-      })
-      .then(() => {
-        mutate(["wishes", child?.uid]);
-      });
-  }
-
-  function deleteWish(deleteId: string) {
-    storeWishesToFirebase(
-      [...(wishes ?? [])].filter((e: WishType) => {
-        return e.id !== deleteId;
-      })
-    );
+  async function deleteWish(deleteId: string) {
+    await firebase.firestore().collection("wish").doc(deleteId).delete();
+    mutate(["wish", child?.uid]);
   }
 
   const wishToElement = (el: WishType) => {
@@ -64,23 +46,25 @@ export const YourChild = ({ child, myUid }: Props) => {
     }
 
     const emptyWish: WishType = {
+      owner: child.uid,
       name: data?.title || newWish,
       deleted: false,
       description: data?.description || "",
       image: data?.image || "",
       link: link || "",
       isSuggestion: false,
-      id: createGuid(),
+      id: "",
       date: firebase.firestore.Timestamp.now(),
     };
 
-    firebase
+    const newWishRef = await firebase
       .firestore()
-      .collection("wishes")
-      .doc(child.uid)
-      .update({
-        wishes: [emptyWish, ...(wishes ?? [])],
-      });
+      .collection("wish")
+      .add(emptyWish);
+
+    await newWishRef.update({
+      id: newWishRef.id,
+    });
 
     user?.groups.forEach(async (group) => {
       const groupRef = firebase.firestore().collection("groups").doc(group);
@@ -99,7 +83,7 @@ export const YourChild = ({ child, myUid }: Props) => {
       });
     });
 
-    mutate(["wishes", child.uid]);
+    mutate(["wish", child.uid]);
     setNewWish("");
   };
 

@@ -20,6 +20,7 @@ export interface User {
 }
 
 export interface Wish {
+  owner: string;
   id: string;
   name: string;
   image?: string;
@@ -30,6 +31,7 @@ export interface Wish {
   suggestedBy?: string;
   price?: number;
   date?: firebase.firestore.Timestamp;
+  wishes?: any;
 }
 
 export interface Question {
@@ -38,6 +40,11 @@ export interface Question {
   answer?: string;
   questionOwner: string;
   questionId: string;
+}
+
+export interface Settings {
+  darkMode: boolean;
+  hideGifts: boolean;
 }
 
 export interface Notification {

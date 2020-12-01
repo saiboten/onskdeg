@@ -28,7 +28,7 @@ const MiniButton = styled.button`
   outline: none;
   border: none;
   display: inline;
-  color: #fff;
+  color: ${(props) => props.theme.white};
   cursor: pointer;
 `;
 
