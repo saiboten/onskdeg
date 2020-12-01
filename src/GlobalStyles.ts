@@ -14,6 +14,7 @@ html {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  background-attachment: fixed;
   min-height:100%;
   font-size: 62.5%;
 }

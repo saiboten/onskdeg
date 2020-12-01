@@ -31,7 +31,7 @@ const lightPrimary = "#5FD0A1";
 export const lightTheme: Theme = {
   background: backgroundLight,
   primary: lightPrimary,
-  primaryLight: "#DCD4E7",
+  primaryLight: "rgba(95, 208, 161, 0.5)",
   primaryLightest: "#DCD4E7",
   primaryDark: "#F7ECFB",
   primaryDarkest: "#ffffff",
@@ -47,7 +47,7 @@ const darkPrimary = "#BA5FD0";
 export const darkTheme: Theme = {
   background: backgroundDark,
   primary: darkPrimary,
-  primaryLight: "#BA5FD0",
+  primaryLight: "rgba(186, 95, 208, 0.5)",
   primaryLightest: "#DCD4E7",
   primaryDark: "#463F7C",
   primaryDarkest: "#292547",

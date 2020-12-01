@@ -26,7 +26,9 @@ import { MyPurchases } from "./components/MyPurchases";
 import { FixWishes } from "./components/FixWishes";
 import { Profile } from "./components/Profile";
 import { ThemeProvider } from "styled-components";
+import { NavLink } from "react-router-dom";
 import { darkTheme, lightTheme } from "./components/themes";
+import { ReactComponent as UserIcon } from "./components/images/user.svg";
 import { useSettings } from "./hooks/useSettings";
 import styled from "styled-components";
 
@@ -37,6 +39,24 @@ const MainContainer = styled.div`
   margin-top: 10.5rem;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 25px;
+`;
+
+const StyledUserIcon = styled(UserIcon)`
+  margin-left: 12px;
+  width: 32px;
+  height: 32px;
+  fill: ${(props) => props.theme.contrast};
+  transform: translateY(0.5rem);
+`;
+
+const UserInfo = styled.div`
+  color: ${(props) => props.theme.contrast};
+  font-size: 1.6rem;
+  position: absolute;
+  top: 4.5rem;
+  right: 3rem;
+  position: fixed;
+  z-index: -1;
 `;
 
 const App = () => {
@@ -84,6 +104,12 @@ const App = () => {
         <Suspense fallback={<Loading />}>
           <GlobalStyle />
           <MainContainer>
+            <UserInfo>
+              <span>gaveønske.no</span>
+              <NavLink activeClassName="selected" exact to="/profile">
+                <StyledUserIcon />
+              </NavLink>
+            </UserInfo>
             <HeaderComponent uid={uid} />
             <Switch>
               <Route path="/wish/:uid/:wishid" exact>
