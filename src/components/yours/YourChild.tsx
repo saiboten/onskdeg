@@ -10,6 +10,7 @@ import { mutate } from "swr";
 import Loading from "../common/Loading";
 import { useUser } from "../../hooks/useUser";
 import { getOgData, OgResponseData } from "../../util/getOgData";
+import { EmptyButton } from "../common/EmptyButton";
 
 const StyledChildren = styled.div`
   margin-bottom: 2.4rem;
@@ -36,6 +37,9 @@ export const YourChild = ({ child, myUid }: Props) => {
 
   const handleSaveWish = async (e: React.MouseEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    mutate(["wish", child?.uid], [{ name: newWish }, ...(wishes || [])], false);
+    setNewWish("");
 
     let data: OgResponseData | undefined = undefined;
     let link: string | undefined = undefined;
@@ -84,7 +88,6 @@ export const YourChild = ({ child, myUid }: Props) => {
     });
 
     mutate(["wish", child.uid]);
-    setNewWish("");
   };
 
   if (isLoading) {
@@ -101,7 +104,9 @@ export const YourChild = ({ child, myUid }: Props) => {
           value={newWish}
           onChange={(e) => setNewWish(e.target.value)}
         />
-        <StyledCheckIcon type="submit" name="check" onClick={() => null} />
+        <EmptyButton type="submit" name="check">
+          <StyledCheckIcon />
+        </EmptyButton>
       </StyledWrapper>
       {(wishes ?? []).length > 0 ? (
         (wishes ?? []).map(wishToElement)

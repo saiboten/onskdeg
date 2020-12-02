@@ -35,7 +35,7 @@ export const lightTheme: Theme = {
   primaryLightest: "#DCD4E7",
   primaryDark: "#F7ECFB",
   primaryDarkest: "#ffffff",
-  negative: "#B1740F",
+  negative: "#E3363A",
   contrast: "#349EFF",
   neutral: "#3988ea",
   text: "#000000",

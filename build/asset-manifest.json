@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.js": "/static/js/main.0cc3d2f2.chunk.js",
-    "main.js.map": "/static/js/main.0cc3d2f2.chunk.js.map",
+    "main.js": "/static/js/main.4c9567e2.chunk.js",
+    "main.js.map": "/static/js/main.4c9567e2.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.d1d1849e.js",
     "runtime-main.js.map": "/static/js/runtime-main.d1d1849e.js.map",
-    "static/js/2.601bfabb.chunk.js": "/static/js/2.601bfabb.chunk.js",
-    "static/js/2.601bfabb.chunk.js.map": "/static/js/2.601bfabb.chunk.js.map",
+    "static/js/2.d33998e7.chunk.js": "/static/js/2.d33998e7.chunk.js",
+    "static/js/2.d33998e7.chunk.js.map": "/static/js/2.d33998e7.chunk.js.map",
     "index.html": "/index.html",
-    "static/js/2.601bfabb.chunk.js.LICENSE.txt": "/static/js/2.601bfabb.chunk.js.LICENSE.txt",
+    "static/js/2.d33998e7.chunk.js.LICENSE.txt": "/static/js/2.d33998e7.chunk.js.LICENSE.txt",
     "static/media/arrow-right.fa20fe33.svg": "/static/media/arrow-right.fa20fe33.svg",
     "static/media/background.530ed287.svg": "/static/media/background.530ed287.svg",
     "static/media/checkmark_new.5fd7df09.svg": "/static/media/checkmark_new.5fd7df09.svg",
@@ -20,7 +20,7 @@
   },
   "entrypoints": [
     "static/js/runtime-main.d1d1849e.js",
-    "static/js/2.601bfabb.chunk.js",
-    "static/js/main.0cc3d2f2.chunk.js"
+    "static/js/2.d33998e7.chunk.js",
+    "static/js/main.4c9567e2.chunk.js"
   ]
 }

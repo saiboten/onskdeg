@@ -22,18 +22,9 @@ import { getOgData, OgResponseData } from "../../util/getOgData";
 import { Redirect } from "react-router";
 import { Notifications } from "./Notifications";
 import { ReactComponent as CheckIcon } from "../images/checkmark_new.svg";
+import { EmptyButton } from "../common/EmptyButton";
 
-export const StyledCheckIcon = styled(CheckIcon)`
-  position: absolute;
-  color: black;
-  top: 0;
-  right: 1.5rem;
-  height: 100%;
-  background-color: transparent;
-  border: none;
-  float: right;
-  cursor: pointer;
-`;
+export const StyledCheckIcon = styled(CheckIcon)``;
 
 interface P {
   user: User;
@@ -93,6 +84,7 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
     }
 
     mutate(["wish", user?.uid], [{ name: newWish }, ...(wishes || [])], false);
+    setNewWish("");
 
     let data: OgResponseData | undefined = undefined;
     let link: string | undefined;
@@ -192,7 +184,10 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
           value={newWish}
           onChange={(e) => setNewWish(e.target.value)}
         />
-        <StyledCheckIcon type="submit" name="check" onClick={() => null} />
+
+        <EmptyButton type="submit" name="check">
+          <StyledCheckIcon />
+        </EmptyButton>
 
         {feedback && <div>{feedback}</div>}
       </StyledWrapper>
