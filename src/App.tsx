@@ -27,13 +27,13 @@ import { FixWishes } from "./components/FixWishes";
 import { Profile } from "./components/Profile";
 import { ThemeProvider } from "styled-components";
 import { NavLink } from "react-router-dom";
-import { darkTheme, lightTheme } from "./components/themes";
+import { darkTheme, lightTheme, christmasTheme } from "./components/themes";
 import { ReactComponent as UserIcon } from "./components/images/user.svg";
 import { useSettings } from "./hooks/useSettings";
 import styled from "styled-components";
 
 const MainContainer = styled.div`
-  background: ${(props) => props.theme.primaryDarkest};
+  background: ${(props) => props.theme.primaryDark};
   max-width: 103rem;
   margin: 0 auto;
   margin-top: 10.5rem;
@@ -98,7 +98,15 @@ const App = () => {
   }
 
   return (
-    <ThemeProvider theme={settings?.darkMode ? darkTheme : lightTheme}>
+    <ThemeProvider
+      theme={
+        settings?.festivitasThemesEnabled
+          ? christmasTheme
+          : settings?.darkMode
+          ? darkTheme
+          : lightTheme
+      }
+    >
       <HashRouter>
         <ScrollToTop />
         <Suspense fallback={<Loading />}>

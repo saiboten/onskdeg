@@ -6,12 +6,11 @@ export const StyledInput = styled.input`
   padding: 3rem;
   padding-left: 40px;
   width: 100%;
-  margin: 0 0.8rem;
   border-radius: 5rem;
   border: none;
   font-size: 1.6rem;
   flex: 1;
-  background-color: ${(props) => props.theme.primaryLightest};
+  background-color: ${(props) => props.theme.primaryLight};
 
   &::placeholder {
     font-size: 1.6rem;

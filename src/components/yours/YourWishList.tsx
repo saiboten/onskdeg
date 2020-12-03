@@ -24,7 +24,9 @@ import { Notifications } from "./Notifications";
 import { ReactComponent as CheckIcon } from "../images/checkmark_new.svg";
 import { EmptyButton } from "../common/EmptyButton";
 
-export const StyledCheckIcon = styled(CheckIcon)``;
+export const StyledCheckIcon = styled(CheckIcon)`
+  fill: ${(props) => props.theme.secondary};
+`;
 
 interface P {
   user: User;

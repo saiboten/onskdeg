@@ -3,7 +3,7 @@ import { Link as RouterLink, NavLink as RouterNavLink } from "react-router-dom";
 
 export const Link = styled(RouterLink)`
   text-decoration: none;
-  border-bottom: 2px solid ${(props) => props.theme.primary};
+  border-bottom: 2px solid ${(props) => props.theme.secondary};
   font-weight: 400;
 
   &:visited,
@@ -17,7 +17,7 @@ export const Link = styled(RouterLink)`
 
 export const ALink = styled.a`
   text-decoration: none;
-  border-bottom: 2px solid ${(props) => props.theme.primary};
+  border-bottom: 2px solid ${(props) => props.theme.secondary};
   font-weight: 400;
 
   &:visited,
@@ -25,7 +25,7 @@ export const ALink = styled.a`
     color: ${(props) => props.theme.text};
   }
   &:hover {
-    color: ${(props) => props.theme.primaryDark};
+    color: ${(props) => props.theme.primary};
   }
 `;
 
@@ -38,12 +38,12 @@ export const UnstyledLink = styled(RouterLink)`
     color: ${(props) => props.theme.text};
   }
   &:hover {
-    color: ${(props) => props.theme.primaryDark};
+    color: ${(props) => props.theme.primary};
   }
 `;
 
 export const NavLink = styled(RouterNavLink)`
-  background: ${(props) => props.theme.primaryLight};
+  background: ${(props) => props.theme.secondaryDark};
   color: ${(props) => props.theme.text};
   text-decoration: none;
   padding: 0.8rem 1.5rem;
@@ -59,7 +59,7 @@ export const NavLink = styled(RouterNavLink)`
 
   &.selected {
     color: ${(props) => props.theme.text};
-    background: ${(props) => props.theme.primary};
+    background: ${(props) => props.theme.secondary};
   }
 `;
 

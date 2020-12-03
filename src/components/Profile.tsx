@@ -62,6 +62,15 @@ export const Profile = ({ uid }: { uid: string }) => {
     mutate(["settings", uid]);
   }
 
+  async function toggleFestivitasTheme(
+    event: React.ChangeEvent<HTMLInputElement>
+  ) {
+    await firebase.firestore().collection("settings").doc(uid).update({
+      festivitasThemesEnabled: event.target.checked,
+    });
+    mutate(["settings", uid]);
+  }
+
   return (
     <Container textLeft>
       <StyledBigHeader>Profil for {user?.name}</StyledBigHeader>
@@ -74,6 +83,15 @@ export const Profile = ({ uid }: { uid: string }) => {
           type="checkbox"
           onChange={toggleDarkMode}
           checked={settings?.darkMode ? true : false}
+        />
+      </p>
+      <p>
+        Vil du ha årstidsbasert tema?
+        <input
+          name="festivitasTheme"
+          type="checkbox"
+          onChange={toggleFestivitasTheme}
+          checked={settings?.festivitasThemesEnabled ? true : false}
         />
       </p>
       <p>

@@ -5,7 +5,7 @@ export const ListRow = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: ${(props: any) => props.theme.primaryDark};
+  background: ${(props: any) => props.theme.primary};
   color: ${(props) => props.theme.text};
   padding-left: 50px;
   margin-bottom: 2px;

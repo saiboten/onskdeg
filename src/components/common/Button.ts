@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 const BorderStyles = `
-  border: 2px solid ${(props: any) => props.theme.primary};
+  border: 2px solid ${(props: any) => props.theme.secondary};
   padding: 7px 14px;
   background: transparent;
   border-radius: 8px;
@@ -23,7 +23,7 @@ export const BorderInput = styled.input`
 `;
 
 export const ButtonNavigation = styled.button`
-  background-color: ${(props) => props.theme.primaryDark};
+  background-color: ${(props) => props.theme.primary};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -47,7 +47,7 @@ export const ButtonNavigation = styled.button`
 `;
 
 export const Button = styled.button`
-  background-color: ${(props) => props.theme.primary};
+  background-color: ${(props) => props.theme.secondary};
   display: inline-block;
   color: ${(props) => props.theme.text};
   font-weight: 600;
