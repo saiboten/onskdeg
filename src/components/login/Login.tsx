@@ -6,13 +6,16 @@ import firebase from "../firebase/firebase";
 import ThirdPartyLogin from "./ThirdPartyLogin";
 import { InternalLogin } from "./InternalLogin";
 import FloatingCircles from "../common/FloatingCircles";
+import { Link } from "../common/Link";
+import { PrivacyPolicy } from "../PrivacyPolicy";
+import { TermsOfService } from "../TermsOfService";
 
 const StyledParagraph = styled.p`
   font-size: 3rem;
   margin: 2rem;
 `;
 
-const LoginContainer = styled.div`
+export const LoginContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -49,12 +52,18 @@ export const Login = () => {
   return (
     <BrowserRouter>
       <LoginContainer>
-        <H1>GAVEØNSKE.NO</H1>
+        <H1>
+          <Link to="/">GAVEØNSKE.NO</Link>
+        </H1>
         <Switch>
+          <Route path="/tos" component={TermsOfService} />
+          <Route path="/privacypolicy" component={PrivacyPolicy} />
           <Route path="/internal" component={InternalLogin} />
           <Route component={ThirdPartyLogin} />
         </Switch>
         <StyledParagraph>{feedback}</StyledParagraph>
+        <Link to="/privacypolicy">Privacy Policy</Link>
+        <Link to="/tos">Terms of Service</Link>
         <FloatingCircles />
       </LoginContainer>
     </BrowserRouter>

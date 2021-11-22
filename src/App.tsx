@@ -61,7 +61,19 @@ const App = () => {
       <>
         <ThemeProvider theme={darkTheme}>
           <GlobalStyle />
-          <Login />
+          <HashRouter>
+            <Switch>
+              <Route path="/privacypolicy">
+                <PrivacyPolicy />
+              </Route>
+              <Route path="/tos">
+                <TermsOfService />
+              </Route>
+              <Route path="/">
+                <Login />
+              </Route>
+            </Switch>
+          </HashRouter>
         </ThemeProvider>
       </>
     );
