@@ -1,6 +1,7 @@
 import React from "react";
 import { Container } from "./common/Container";
-import { StyledBigHeader } from "./common/StyledHeading";
+import { Link } from "./common/Link";
+import { StyledBigHeader, StyledSubHeader } from "./common/StyledHeading";
 
 export const PrivacyPolicy = () => {
   return (
@@ -18,6 +19,10 @@ export const PrivacyPolicy = () => {
       </p>
       Private policy for bruk av Google sine firebase-tjenester:{" "}
       <a href="https://firebase.google.com/support/privacy">firebase</a>
+      <StyledSubHeader>Sletting av data</StyledSubHeader>
+      <p>
+        Valget om sletting av ens egne data er tilgjengelig etter pålogging.
+      </p>
     </Container>
   );
 };
