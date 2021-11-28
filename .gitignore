@@ -7,7 +7,7 @@
 /coverage
 
 #build
-#/build
+/build
 
 # production
 
@@ -21,3 +21,8 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+firebase.json
+firestore.rules
+firestore.indexes.json
+firestore-debug.log
