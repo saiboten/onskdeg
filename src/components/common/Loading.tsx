@@ -1,5 +1,5 @@
-import React from 'react';
-import styled, { keyframes } from 'styled-components';
+import React from "react";
+import styled, { keyframes } from "styled-components";
 
 const animation = keyframes`
   0% {
@@ -22,7 +22,7 @@ const Spinner = styled.div`
     position: absolute;
     left: 6px;
     width: 13px;
-    background: #fff;
+    background: ${(props) => props.theme.secondary};
     animation: ${animation} 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
   }
   div:nth-child(1) {

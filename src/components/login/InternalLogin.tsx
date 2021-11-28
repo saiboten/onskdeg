@@ -12,7 +12,7 @@ const StyledInput = styled.input`
   margin-bottom: 12px;
   border: 0;
   -webkit-appearance: none;
-  background: ${(props) => props.theme.primaryDark};
+  background: ${(props) => props.theme.primary};
   color: white;
   width: 100%;
   &::placeholder {

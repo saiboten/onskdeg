@@ -9,7 +9,6 @@ export const Container = styled.div<ContainerProps>`
   margin: 0 auto;
   font-size: 1.6rem;
   padding: 0 0.5rem;
-  background-color: ${(props) => props.theme.background};
 
   text-align: ${(props) => (props.textLeft ? "left" : "center")};
   padding: 0.5rem;

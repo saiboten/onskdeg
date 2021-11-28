@@ -11,10 +11,10 @@ export const NegativeIconButton = styled(IconButton)`
   background: ${(props) => props.theme.negative};
 `;
 export const NeutralIconButton = styled(IconButton)`
-  background: ${(props) => props.theme.neutral};
+  background: ${(props) => props.theme.contrast};
 `;
 export const GoldIconButton = styled(IconButton)`
-  color: ${(props) => props.theme.primaryLight};
+  color: ${(props) => props.theme.text};
 `;
 
 export const StyledActionButtons = styled.div`

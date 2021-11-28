@@ -1,4 +1,6 @@
 import Color from "color";
+import backgroundDark from "./images/background.svg";
+import backgroundLight from "./images/lightBackground.svg";
 
 // #586F7C - dark electric blue
 // #B1740F - gold
@@ -8,9 +10,11 @@ import Color from "color";
 
 interface Theme {
   background: string;
+  secondary: string;
+  secondaryDark: string;
+  primaryLight: string;
   primary: string;
   primaryDark: string;
-  primaryLight: string;
   negative: string;
   contrast: string;
   neutral: string;
@@ -18,30 +22,44 @@ interface Theme {
   white: string;
 }
 
-const lightPrimary = "#acacde";
-
 export const lightTheme: Theme = {
-  background: "#DEDEDE",
-  primary: lightPrimary,
-  primaryDark: Color(lightPrimary).darken(0.1).string(),
-  primaryLight: Color(lightPrimary).lighten(0.1).string(),
-  negative: "#B1740F",
-  contrast: "#B1740F",
+  background: backgroundLight,
+  primaryLight: "#DCD4E7",
+  primary: "#F7ECFB",
+  primaryDark: "#ffffff",
+  secondary: "#5FD0A1",
+  secondaryDark: "rgba(95, 208, 161, 0.5)",
+  negative: "#E3363A",
+  contrast: "#349EFF",
   neutral: "#3988ea",
-  text: "#4C2A0F",
+  text: "#000000",
   white: "#FFFFFF",
 };
 
-const darkPrimary = "#b49b57";
-
 export const darkTheme: Theme = {
-  background: "#262626",
-  primary: darkPrimary,
-  primaryDark: Color(darkPrimary).fade(0.7).string(),
-  primaryLight: Color(darkPrimary).saturate(0.5).lighten(0.4).string(),
+  background: backgroundDark,
+  secondaryDark: "rgba(186, 95, 208, 0.5)",
+  primaryLight: "#DCD4E7",
+  primary: "#463F7C",
+  primaryDark: "#292547",
+  secondary: "#BA5FD0",
   negative: "#ff5656",
-  contrast: "#49b557",
+  contrast: "#1FFFA3",
   neutral: "#3988ea",
   text: "#FFFFFF",
+  white: "#FFFFFF",
+};
+
+export const christmasTheme: Theme = {
+  background: ".",
+  secondaryDark: "#78BCE3",
+  secondary: "#99CDEA",
+  primaryLight: "#F3F6F5",
+  primary: "#e5ebec",
+  primaryDark: "#bed8eb",
+  negative: "#ff5656",
+  contrast: "#E83151",
+  neutral: "#3988ea",
+  text: "#000",
   white: "#FFFFFF",
 };

@@ -7,7 +7,7 @@ export const StyledLink = styled.a`
 `;
 
 export const StyledLinkIcon = styled(LinkIcon)`
-  fill: ${(props) => props.theme.primaryLight};
+  fill: ${(props) => props.theme.text};
   height: 32px;
   width: 32px;
 `;

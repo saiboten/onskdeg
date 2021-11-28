@@ -15,6 +15,7 @@ import { NewsEntryType, Wish } from "../../types/types";
 import { StyledNotification } from "../common/StyledNotification";
 import { mutate } from "swr";
 import { getOgData, OgResponseData } from "../../util/getOgData";
+import { EmptyButton } from "../common/EmptyButton";
 
 interface Params {
   uid: string;
@@ -35,6 +36,8 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
 
   async function handleAddSuggestion(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    // mutate(["wish", uid], [{ name: suggestion }, ...(wishes || [])], false);
 
     let data: OgResponseData | undefined = undefined;
     let link: string | undefined = undefined;
@@ -100,11 +103,7 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
         <OtherWish myUid={myUid} key={wish.id} user={uid} wishInfo={wish} />
       ))}
       <Spacer />
-      <StyledBigHeader>Forslag for {user?.name}</StyledBigHeader>
-      {suggestions?.map((wish) => (
-        <OtherWish myUid={myUid} key={wish.id} user={uid} wishInfo={wish} />
-      ))}
-      <Spacer />
+
       <h3>Legg inn forslag til {user?.name}</h3>
       <Spacer />
       <StyledWrapper onSubmit={handleAddSuggestion}>
@@ -114,8 +113,18 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
           value={suggestion}
           onChange={(e) => setSuggestion(e.target.value)}
         />
-        <StyledCheckIcon type="submit" name="check" onClick={() => null} />
+        <EmptyButton type="submit" name="check">
+          <StyledCheckIcon />
+        </EmptyButton>
       </StyledWrapper>
+
+      <Spacer />
+
+      <StyledBigHeader>Forslag for {user?.name}</StyledBigHeader>
+      {suggestions?.map((wish) => (
+        <OtherWish myUid={myUid} key={wish.id} user={uid} wishInfo={wish} />
+      ))}
+      <Spacer />
     </Container>
   );
 };
