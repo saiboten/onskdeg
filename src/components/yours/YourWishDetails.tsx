@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Container } from "../common/Container";
 import { User, Wish } from "../../types/types";
 import styled from "styled-components";
@@ -16,6 +16,8 @@ import { format } from "date-fns";
 import { StyledBigHeader } from "../common/StyledHeading";
 import { useQuestions } from "../../hooks/useQuestions";
 import { ListMyQuestions } from "./ListMyQuestions";
+import { StyledActionButtons } from "../common/IconButton";
+import { Button } from "../common/Button";
 
 const StyledWrapper = styled.div`
   text-align: left;
@@ -52,6 +54,7 @@ export function YourWishDetails() {
   const { wish } = useWish(user?.uid || "?", wishid);
   const { user: suggestedByUser } = useUser(wish?.suggestedBy || "");
   const { questions } = useQuestions(wishid);
+  const [file, setFile] = useState<File | undefined>(undefined);
 
   async function storeWishDetails(updatedWish: Wish) {
     await firebase
@@ -68,6 +71,31 @@ export function YourWishDetails() {
   }
 
   const { name, description: wishDescription, link, price, date } = wish;
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const fileList = e?.target?.files;
+    const fileToUpload = fileList ? fileList[0] : undefined;
+    if (fileToUpload) setFile(fileToUpload);
+  }
+
+  async function handleUpload(e: any) {
+    e.preventDefault();
+
+    if (!file) {
+      return;
+    }
+
+    var storageRef = firebase.storage().ref();
+    const path = storageRef.child(`/${wish?.id}`);
+
+    await path.put(file);
+    const url = await path.getDownloadURL();
+    await firebase.firestore().collection("wish").doc(wish?.id).update({
+      image: url,
+    });
+    mutate(["wish", uid]);
+    setFile(undefined);
+  }
 
   const storeData = async (
     field: string,
@@ -126,6 +154,13 @@ export function YourWishDetails() {
           >
             <p>{wishDescription}</p>
           </Detail>
+        </StyledDescription>
+        <StyledDescription>
+          <StyledLabel>Velge bilde</StyledLabel>
+          <form onSubmit={handleUpload}>
+            <input type="file" onChange={handleChange} />
+            <Button disabled={!file}>Last opp bilde</Button>
+          </form>
         </StyledDescription>
         <StyledLink>
           <StyledLabel>Link</StyledLabel>

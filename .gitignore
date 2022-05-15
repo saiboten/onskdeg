@@ -26,3 +26,5 @@ firebase.json
 firestore.rules
 firestore.indexes.json
 firestore-debug.log
+firebase-debug.log
+ui-debug.log
