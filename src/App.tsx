@@ -26,8 +26,38 @@ import { MyPurchases } from "./components/MyPurchases";
 import { FixWishes } from "./components/FixWishes";
 import { Profile } from "./components/Profile";
 import { ThemeProvider } from "styled-components";
-import { darkTheme, lightTheme } from "./components/themes";
+import { NavLink } from "react-router-dom";
+import { darkTheme, lightTheme, christmasTheme } from "./components/themes";
+import { ReactComponent as UserIcon } from "./components/images/user.svg";
 import { useSettings } from "./hooks/useSettings";
+import styled from "styled-components";
+
+const MainContainer = styled.div`
+  background: ${(props) => props.theme.primaryDark};
+  max-width: 103rem;
+  margin: 0 auto;
+  margin-top: 10.5rem;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 25px;
+`;
+
+const StyledUserIcon = styled(UserIcon)`
+  margin-left: 12px;
+  width: 32px;
+  height: 32px;
+  fill: ${(props) => props.theme.contrast};
+  transform: translateY(0.5rem);
+`;
+
+const UserInfo = styled.div`
+  color: ${(props) => props.theme.contrast};
+  font-size: 1.6rem;
+  position: absolute;
+  top: 4.5rem;
+  right: 3rem;
+  position: fixed;
+  z-index: -1;
+`;
 
 const App = () => {
   const [uid, setUid] = useState<string | undefined>();
@@ -80,65 +110,81 @@ const App = () => {
   }
 
   return (
-    <ThemeProvider theme={settings?.darkMode ? darkTheme : lightTheme}>
+    <ThemeProvider
+      theme={
+        settings?.festivitasThemesEnabled
+          ? christmasTheme
+          : settings?.darkMode
+          ? darkTheme
+          : lightTheme
+      }
+    >
       <HashRouter>
         <ScrollToTop />
         <Suspense fallback={<Loading />}>
           <GlobalStyle />
-          <HeaderComponent uid={uid} />
-          <Switch>
-            <Route path="/wish/:uid/:wishid" exact>
-              <YourWishDetails />
-            </Route>
-            <Route path="/others">
-              <SelectWishList uid={uid} />
-            </Route>
-            <Route path="/mypurchases">
-              <MyPurchases uid={uid} />
-            </Route>
-            <Route path="/other/:uid/:wishid">
-              <OtherWishDetail myUid={uid} />
-            </Route>
-            <Route path="/other/:uid">
-              <OthersWishList myUid={uid} />
-            </Route>
-            <Route path="/addchild">
-              <AddChild uid={uid} />
-            </Route>
-            <Route path="/profile">
-              <Profile uid={uid} />
-            </Route>
-            <Route path="/settings/kohort/:kohortId">
-              <GroupAdmin myUid={uid} />
-            </Route>
-            <Route path="/settings/child/:childId">
-              <ChildAdmin myUid={uid} />
-            </Route>
-            <Route path="/settings">
-              <Settings firebaseUser={firebaseUser} uid={uid} />
-            </Route>
-            <Route path="/addgroup">
-              <AddKohort uid={uid} />
-            </Route>
-            <Route path="/privacypolicy">
-              <PrivacyPolicy />
-            </Route>
-            <Route path="/tos">
-              <TermsOfService />
-            </Route>
-            <Route path="/deleteme">
-              <DeleteMe />
-            </Route>
-            <Route path="/legacy">
-              <LegacyWishes uid={uid} />
-            </Route>
-            <Route path="/fixwishes">
-              <FixWishes />
-            </Route>
-            <Route path="/">
-              <YourWishList firebaseUser={firebaseUser} uid={uid} />
-            </Route>
-          </Switch>
+          <MainContainer>
+            <UserInfo>
+              <span>gaveønske.no</span>
+              <NavLink activeClassName="selected" exact to="/profile">
+                <StyledUserIcon />
+              </NavLink>
+            </UserInfo>
+            <HeaderComponent uid={uid} />
+            <Switch>
+              <Route path="/wish/:uid/:wishid" exact>
+                <YourWishDetails />
+              </Route>
+              <Route path="/others">
+                <SelectWishList uid={uid} />
+              </Route>
+              <Route path="/mypurchases">
+                <MyPurchases uid={uid} />
+              </Route>
+              <Route path="/other/:uid/:wishid">
+                <OtherWishDetail myUid={uid} />
+              </Route>
+              <Route path="/other/:uid">
+                <OthersWishList myUid={uid} />
+              </Route>
+              <Route path="/addchild">
+                <AddChild uid={uid} />
+              </Route>
+              <Route path="/profile">
+                <Profile uid={uid} />
+              </Route>
+              <Route path="/settings/kohort/:kohortId">
+                <GroupAdmin myUid={uid} />
+              </Route>
+              <Route path="/settings/child/:childId">
+                <ChildAdmin myUid={uid} />
+              </Route>
+              <Route path="/settings">
+                <Settings firebaseUser={firebaseUser} uid={uid} />
+              </Route>
+              <Route path="/addgroup">
+                <AddKohort uid={uid} />
+              </Route>
+              <Route path="/privacypolicy">
+                <PrivacyPolicy />
+              </Route>
+              <Route path="/tos">
+                <TermsOfService />
+              </Route>
+              <Route path="/deleteme">
+                <DeleteMe />
+              </Route>
+              <Route path="/legacy">
+                <LegacyWishes uid={uid} />
+              </Route>
+              <Route path="/fixwishes">
+                <FixWishes />
+              </Route>
+              <Route path="/">
+                <YourWishList firebaseUser={firebaseUser} uid={uid} />
+              </Route>
+            </Switch>
+          </MainContainer>
         </Suspense>
       </HashRouter>
     </ThemeProvider>

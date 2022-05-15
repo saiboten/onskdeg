@@ -5,12 +5,17 @@ export const ListRow = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: ${(props: any) => props.theme.primaryDark};
-  color: white;
+  background: ${(props: any) => props.theme.primary};
+  color: ${(props) => props.theme.text};
   padding-left: 50px;
   margin-bottom: 2px;
   min-height: 52px;
   text-align: left;
+  border-radius: 2.4rem;
+
+  &:not(:last-child) {
+    margin-bottom: 1rem;
+  }
 `;
 
 export const LeftSection = styled.div`

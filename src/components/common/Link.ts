@@ -3,7 +3,7 @@ import { Link as RouterLink, NavLink as RouterNavLink } from "react-router-dom";
 
 export const Link = styled(RouterLink)`
   text-decoration: none;
-  border-bottom: 2px solid ${(props) => props.theme.primary};
+  border-bottom: 2px solid ${(props) => props.theme.secondary};
   font-weight: 400;
 
   &:visited,
@@ -17,15 +17,15 @@ export const Link = styled(RouterLink)`
 
 export const ALink = styled.a`
   text-decoration: none;
-  border-bottom: 2px solid ${(props) => props.theme.primary};
+  border-bottom: 2px solid ${(props) => props.theme.secondary};
   font-weight: 400;
 
   &:visited,
   &:link {
-    color: white;
+    color: ${(props) => props.theme.text};
   }
   &:hover {
-    color: grey;
+    color: ${(props) => props.theme.primary};
   }
 `;
 
@@ -35,21 +35,39 @@ export const UnstyledLink = styled(RouterLink)`
 
   &:visited,
   &:link {
-    color: white;
+    color: ${(props) => props.theme.text};
   }
   &:hover {
-    color: grey;
+    color: ${(props) => props.theme.primary};
   }
 `;
 
 export const NavLink = styled(RouterNavLink)`
-  background: ${(props) => props.theme.primaryDark};
+  background: ${(props) => props.theme.secondaryDark};
   color: ${(props) => props.theme.text};
   text-decoration: none;
-  padding: 0.8rem;
+  padding: 0.8rem 1.5rem;
+  font-size: 2rem;
+  border-radius: 1.5rem;
+
+  @media (max-width: 450px) {
+    flex: 1;
+    border-radius: 0;
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+  }
+
   &.selected {
     color: ${(props) => props.theme.text};
-    background: ${(props) => props.theme.primary};
+    background: ${(props) => props.theme.secondary};
+  }
+`;
+
+export const NavLinkRight = styled(NavLink)`
+  @media (max-width: 450px) {
+    border-radius: 0;
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
   }
 `;
 

@@ -2,7 +2,6 @@ import React, { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Wish } from "./Wish";
 import firebase from "../firebase/firebase";
-import Icon from "../common/Icon";
 import { mutate } from "swr";
 
 import { Wish as WishType, User, NewsEntryType } from "../../types/types";
@@ -22,17 +21,11 @@ import { StyledBigHeader } from "../common/StyledHeading";
 import { getOgData, OgResponseData } from "../../util/getOgData";
 import { Redirect } from "react-router";
 import { Notifications } from "./Notifications";
+import { ReactComponent as CheckIcon } from "../images/checkmark_new.svg";
+import { EmptyButton } from "../common/EmptyButton";
 
-export const StyledCheckIcon = styled(Icon)`
-  position: absolute;
-  color: black;
-  top: 0;
-  left: 15px;
-  height: 100%;
-  background-color: transparent;
-  border: none;
-  float: right;
-  cursor: pointer;
+export const StyledCheckIcon = styled(CheckIcon)`
+  fill: ${(props) => props.theme.secondary};
 `;
 
 interface P {
@@ -50,7 +43,13 @@ interface S {
 
 export const StyledWrapper = styled.form`
   position: relative;
+  margin: 0 auto;
   margin-bottom: 0.8rem;
+  width: 60%;
+
+  @media (max-width: 450px) {
+    width: 100%;
+  }
 `;
 
 interface Props {
@@ -87,6 +86,7 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
     }
 
     mutate(["wish", user?.uid], [{ name: newWish }, ...(wishes || [])], false);
+    setNewWish("");
 
     let data: OgResponseData | undefined = undefined;
     let link: string | undefined;
@@ -186,7 +186,10 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
           value={newWish}
           onChange={(e) => setNewWish(e.target.value)}
         />
-        <StyledCheckIcon type="submit" name="check" onClick={() => null} />
+
+        <EmptyButton type="submit" name="check">
+          <StyledCheckIcon />
+        </EmptyButton>
 
         {feedback && <div>{feedback}</div>}
       </StyledWrapper>

@@ -76,7 +76,7 @@ export const Wish = ({ wish, delete: deleteProp, user }: P) => {
         </StyledLink>
       )}
       <GoldIconButton
-        color={themeContext.primaryLight}
+        color={themeContext.text}
         type="button"
         name="trash-2"
         onClick={deleteItem}

@@ -45,6 +45,7 @@ export interface Question {
 export interface Settings {
   darkMode: boolean;
   hideGifts: boolean;
+  festivitasThemesEnabled: boolean;
 }
 
 export interface Notification {

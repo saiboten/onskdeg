@@ -11,6 +11,7 @@ const fetcher = async (
   return await new Promise(async (resolve) => {
     if (uid === undefined || uid === "") {
       resolve({
+        festivitasThemesEnabled: true,
         hideGifts: false,
         darkMode: false,
       });
@@ -23,12 +24,14 @@ const fetcher = async (
 
     if (docData.exists) {
       resolve({
+        festivitasThemesEnabled: true,
         darkMode: true,
         hideGifts: false,
         ...docData.data(),
       });
     } else {
       const newSettings = {
+        festivitasThemesEnabled: true,
         hideGifts: false,
         darkMode: true,
       };
@@ -42,6 +45,9 @@ export function useSettings(uid: string, useSuspense: boolean) {
   const { data, error } = useSWR(["settings", uid], fetcher, {
     suspense: useSuspense,
   });
+
+  console.log(data);
+
   return {
     settings: data,
     isLoading: !error && !data,
