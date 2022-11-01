@@ -42,7 +42,11 @@ export const UnstyledLink = styled(RouterLink)`
   }
 `;
 
-export const NavLink = styled(RouterNavLink)`
+export const NavLink = styled(RouterNavLink)<{
+  activeClassName: string;
+  isActive: (_: any, location: any) => any;
+  exact?: boolean;
+}>`
   background: ${(props) => props.theme.secondaryDark};
   color: ${(props) => props.theme.text};
   text-decoration: none;

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Redirect } from "react-router";
+import { redirect } from "react-router-dom";
 import styled from "styled-components";
 import { useUser } from "../../hooks/useUser";
 import { BorderButton } from "../common/Button";
@@ -33,7 +33,6 @@ interface Props {
 export function AddChild({ uid }: Props) {
   const [name, setName] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [created, setCreated] = useState(false);
   const { user } = useUser(uid);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -76,12 +75,8 @@ export function AddChild({ uid }: Props) {
         });
     });
 
-    setCreated(true);
     mutate(["user", uid]);
-  }
-
-  if (created) {
-    return <Redirect to="/" />;
+    redirect("/");
   }
 
   return (

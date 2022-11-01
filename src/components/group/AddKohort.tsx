@@ -7,7 +7,7 @@ import firebase from "../firebase/firebase";
 import { useUser } from "../../hooks/useUser";
 import styled from "styled-components";
 import { Spacer } from "../common/Spacer";
-import { Redirect } from "react-router";
+import { redirect } from "react-router-dom";
 import { StyledBigHeader } from "../common/StyledHeading";
 
 interface Props {
@@ -75,11 +75,7 @@ export const AddKohort: React.FC<Props> = ({ uid }) => {
       });
     });
 
-    setGroupCreated(true);
-  }
-
-  if (groupCreated) {
-    return <Redirect to="/others?groupCreated=true" />;
+    redirect("/others?groupCreated=true");
   }
 
   return (

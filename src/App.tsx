@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Suspense } from "react";
-import { HashRouter, Route, Switch } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
 
 import { YourWishList } from "./components/yours/YourWishList";
 import { YourWishDetails } from "./components/yours/YourWishDetails";
@@ -31,6 +31,10 @@ import { darkTheme, lightTheme, christmasTheme } from "./components/themes";
 import { ReactComponent as UserIcon } from "./components/images/user.svg";
 import { useSettings } from "./hooks/useSettings";
 import styled from "styled-components";
+import { InternalLogin } from "./components/login/InternalLogin";
+import { LoginWrapper } from "./components/login/LoginWrapper";
+import { Link } from "./components/common/Link";
+import { Spacer } from "./components/common/Spacer";
 
 const MainContainer = styled.div`
   background: ${(props) => props.theme.primaryDark};
@@ -92,17 +96,26 @@ const App = () => {
         <ThemeProvider theme={darkTheme}>
           <GlobalStyle />
           <HashRouter>
-            <Switch>
-              <Route path="/privacypolicy">
-                <PrivacyPolicy />
-              </Route>
-              <Route path="/tos">
-                <TermsOfService />
-              </Route>
-              <Route path="/">
-                <Login />
-              </Route>
-            </Switch>
+            <Routes>
+              <Route
+                path="/privacypolicy"
+                element={
+                  <LoginWrapper>
+                    <PrivacyPolicy />
+                  </LoginWrapper>
+                }
+              ></Route>
+              <Route
+                path="/tos"
+                element={
+                  <LoginWrapper>
+                    <TermsOfService />
+                  </LoginWrapper>
+                }
+              ></Route>
+              <Route path="/" element={<Login />}></Route>
+              <Route path="/internal" element={<InternalLogin />} />
+            </Routes>
           </HashRouter>
         </ThemeProvider>
       </>
@@ -126,64 +139,62 @@ const App = () => {
           <MainContainer>
             <UserInfo>
               <span>gaveønske.no</span>
-              <NavLink activeClassName="selected" exact to="/profile">
+              <NavLink to="/profile">
                 <StyledUserIcon />
               </NavLink>
             </UserInfo>
             <HeaderComponent uid={uid} />
-            <Switch>
-              <Route path="/wish/:uid/:wishid" exact>
-                <YourWishDetails />
-              </Route>
-              <Route path="/others">
-                <SelectWishList uid={uid} />
-              </Route>
-              <Route path="/mypurchases">
-                <MyPurchases uid={uid} />
-              </Route>
-              <Route path="/other/:uid/:wishid">
-                <OtherWishDetail myUid={uid} />
-              </Route>
-              <Route path="/other/:uid">
-                <OthersWishList myUid={uid} />
-              </Route>
-              <Route path="/addchild">
-                <AddChild uid={uid} />
-              </Route>
-              <Route path="/profile">
-                <Profile uid={uid} />
-              </Route>
-              <Route path="/settings/kohort/:kohortId">
-                <GroupAdmin myUid={uid} />
-              </Route>
-              <Route path="/settings/child/:childId">
-                <ChildAdmin myUid={uid} />
-              </Route>
-              <Route path="/settings">
-                <Settings firebaseUser={firebaseUser} uid={uid} />
-              </Route>
-              <Route path="/addgroup">
-                <AddKohort uid={uid} />
-              </Route>
-              <Route path="/privacypolicy">
-                <PrivacyPolicy />
-              </Route>
-              <Route path="/tos">
-                <TermsOfService />
-              </Route>
-              <Route path="/deleteme">
-                <DeleteMe />
-              </Route>
-              <Route path="/legacy">
-                <LegacyWishes uid={uid} />
-              </Route>
-              <Route path="/fixwishes">
-                <FixWishes />
-              </Route>
-              <Route path="/">
-                <YourWishList firebaseUser={firebaseUser} uid={uid} />
-              </Route>
-            </Switch>
+            <Routes>
+              <Route
+                path="/wish/:uid/:wishid"
+                element={<YourWishDetails />}
+              ></Route>
+              <Route
+                path="/others"
+                element={<SelectWishList uid={uid} />}
+              ></Route>
+              <Route
+                path="/mypurchases"
+                element={<MyPurchases uid={uid} />}
+              ></Route>
+              <Route
+                path="/other/:uid/:wishid"
+                element={<OtherWishDetail myUid={uid} />}
+              ></Route>
+              <Route
+                path="/other/:uid"
+                element={<OthersWishList myUid={uid} />}
+              ></Route>
+              <Route path="/addchild" element={<AddChild uid={uid} />}></Route>
+              <Route path="/profile" element={<Profile uid={uid} />}></Route>
+              <Route
+                path="/settings/kohort/:kohortId"
+                element={<GroupAdmin myUid={uid} />}
+              ></Route>
+              <Route
+                path="/settings/child/:childId"
+                element={<ChildAdmin myUid={uid} />}
+              ></Route>
+              <Route
+                path="/settings"
+                element={<Settings firebaseUser={firebaseUser} uid={uid} />}
+              ></Route>
+              <Route path="/addgroup" element={<AddKohort uid={uid} />}></Route>
+              <Route path="/privacypolicy" element={<PrivacyPolicy />}></Route>
+              <Route path="/tos" element={<TermsOfService />}></Route>
+              <Route path="/deleteme" element={<DeleteMe />}></Route>
+              <Route
+                path="/legacy"
+                element={<LegacyWishes uid={uid} />}
+              ></Route>
+              <Route path="/fixwishes" element={<FixWishes />}></Route>
+              <Route
+                path="/"
+                element={<YourWishList firebaseUser={firebaseUser} uid={uid} />}
+              ></Route>
+            </Routes>
+            <Link to="/privacypolicy">Privacy Policy</Link> -{" "}
+            <Link to="/tos">Terms of Service</Link>
           </MainContainer>
         </Suspense>
       </HashRouter>

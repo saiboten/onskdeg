@@ -21,7 +21,10 @@ export const PrivacyPolicy = () => {
       <a href="https://firebase.google.com/support/privacy">firebase</a>
       <StyledSubHeader>Sletting av data</StyledSubHeader>
       <p>
-        Valget om sletting av ens egne data er tilgjengelig etter pålogging.
+        Dersom man ønsker å få slettet sine data, velg innstillinger i menyen.
+        Herfra kan du velge å slette data ved å klikke på slett egne
+        data-knappen. Deretter vil kontoen i løpet av få virkedager blir
+        slettet.
       </p>
     </Container>
   );

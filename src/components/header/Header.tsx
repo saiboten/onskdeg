@@ -11,10 +11,10 @@ const StyledHeader = styled.div`
   padding-top: 3rem;
 `;
 
-const othersActive = (_: any, location: any) =>
+const othersActive = (_: any, location: any): any =>
   location.pathname.startsWith("/other");
 
-const yoursActive = (_: any, location: any) =>
+const yoursActive = (_: any, location: any): any =>
   location.pathname === "/" || location.pathname.startsWith("/wish");
 
 interface Props {

@@ -4,6 +4,7 @@ import { Link } from "../common/Link";
 import { BorderInput } from "../common/Button";
 import firebase from "../firebase/firebase";
 import Icon from "../common/Icon";
+import { LoginWrapper } from "./LoginWrapper";
 
 const StyledInput = styled.input`
   height: 2.5rem;
@@ -67,40 +68,42 @@ export const InternalLogin = () => {
   }
 
   return (
-    <form onSubmit={logIn}>
-      <label htmlFor="username" className="screen-reader-only">
-        Brukernavn
-      </label>
-      <StyledInput
-        id="username"
-        value={user}
-        onChange={(e) => setUser(e.target.value)}
-        placeholder="Brukernavn"
-      />
-
-      <PasswordContainer>
-        <label htmlFor="password" className="screen-reader-only">
-          Passord
+    <LoginWrapper>
+      <form onSubmit={logIn}>
+        <label htmlFor="username" className="screen-reader-only">
+          Brukernavn
         </label>
         <StyledInput
-          id="password"
-          type={peek ? "text" : "password"}
-          placeholder="Passord"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          id="username"
+          value={user}
+          onChange={(e) => setUser(e.target.value)}
+          placeholder="Brukernavn"
         />
-        <StyledPeek type="button" onClick={togglePeek}>
-          <Icon
-            type="button"
-            name={peek ? "eye-off" : "eye"}
-            onClick={() => null}
-          />
-        </StyledPeek>
-      </PasswordContainer>
 
-      <SubmitButton type="submit" value="Logg inn" />
-      <p>{errorMessage}</p>
-      <Link to="/">Google/Facebook</Link>
-    </form>
+        <PasswordContainer>
+          <label htmlFor="password" className="screen-reader-only">
+            Passord
+          </label>
+          <StyledInput
+            id="password"
+            type={peek ? "text" : "password"}
+            placeholder="Passord"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <StyledPeek type="button" onClick={togglePeek}>
+            <Icon
+              type="button"
+              name={peek ? "eye-off" : "eye"}
+              onClick={() => null}
+            />
+          </StyledPeek>
+        </PasswordContainer>
+
+        <SubmitButton type="submit" value="Logg inn" />
+        <p>{errorMessage}</p>
+        <Link to="/">Google/Facebook</Link>
+      </form>
+    </LoginWrapper>
   );
 };

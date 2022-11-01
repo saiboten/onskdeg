@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Switch, Route, BrowserRouter } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import firebase from "../firebase/firebase";
 import ThirdPartyLogin from "./ThirdPartyLogin";
@@ -9,18 +9,11 @@ import FloatingCircles from "../common/FloatingCircles";
 import { Link } from "../common/Link";
 import { PrivacyPolicy } from "../PrivacyPolicy";
 import { TermsOfService } from "../TermsOfService";
+import { LoginWrapper } from "./LoginWrapper";
 
 const StyledParagraph = styled.p`
   font-size: 3rem;
   margin: 2rem;
-`;
-
-export const LoginContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: white;
-  height: 100%;
 `;
 
 export const Login = () => {
@@ -43,29 +36,10 @@ export const Login = () => {
       });
   }, []);
 
-  const H1 = styled.h1`
-    color: white;
-    font-weight: 400;
-    margin: 4rem 0;
-  `;
-
   return (
-    <BrowserRouter>
-      <LoginContainer>
-        <H1>
-          <Link to="/">GAVEØNSKE.NO</Link>
-        </H1>
-        <Switch>
-          <Route path="/tos" component={TermsOfService} />
-          <Route path="/privacypolicy" component={PrivacyPolicy} />
-          <Route path="/internal" component={InternalLogin} />
-          <Route component={ThirdPartyLogin} />
-        </Switch>
-        <StyledParagraph>{feedback}</StyledParagraph>
-        <Link to="/privacypolicy">Privacy Policy</Link>
-        <Link to="/tos">Terms of Service</Link>
-        <FloatingCircles />
-      </LoginContainer>
-    </BrowserRouter>
+    <LoginWrapper>
+      <StyledParagraph>{feedback}</StyledParagraph>
+      <ThirdPartyLogin />
+    </LoginWrapper>
   );
 };

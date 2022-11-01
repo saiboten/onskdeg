@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { Container } from "../common/Container";
 import { ALink } from "../common/Link";
 import { useWish } from "../../hooks/useWish";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import { useUser } from "../../hooks/useUser";
 import { usePurchase } from "../../hooks/usePurchase";
 import { format } from "date-fns";
@@ -27,14 +27,15 @@ const StyledDescription = styled.div`
 interface Params {
   uid: string;
   wishid: string;
+  [id: string]: string | undefined;
 }
 
 export function OtherWishDetail({ myUid }: { myUid: string }) {
   const { uid, wishid } = useParams<Params>();
-  const { user } = useUser(uid);
-  const { wish } = useWish(uid, wishid);
-  const { purchase } = usePurchase(wishid);
-  const { questions } = useQuestions(wishid);
+  const { user } = useUser(uid ?? "");
+  const { wish } = useWish(uid ?? "", wishid ?? "");
+  const { purchase } = usePurchase(wishid ?? "");
+  const { questions } = useQuestions(wishid ?? "");
 
   const { user: purchaseUser } = useUser(purchase?.checkedBy || "");
 
@@ -100,8 +101,16 @@ export function OtherWishDetail({ myUid }: { myUid: string }) {
 
       {!wish.isSuggestion && (
         <>
-          <ListQuestions wishId={wishid} myUid={myUid} questions={questions} />
-          <AddQuestion myUid={myUid} wishOwnerUid={uid} wishId={wishid} />
+          <ListQuestions
+            wishId={wishid ?? ""}
+            myUid={myUid}
+            questions={questions}
+          />
+          <AddQuestion
+            myUid={myUid}
+            wishOwnerUid={uid ?? ""}
+            wishId={wishid ?? ""}
+          />
         </>
       )}
     </Container>

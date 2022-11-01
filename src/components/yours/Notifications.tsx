@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { useNotifications } from "../../hooks/useNotifications";
 import { Spacer } from "../common/Spacer";
 import { ALink } from "../common/Link";
-import { Redirect } from "react-router";
+import { redirect } from "react-router-dom";
 import { Notification as NotificationType } from "../../types/types";
 import firebase from "../firebase/firebase";
 
@@ -20,18 +20,13 @@ const StyledNotification = styled.div`
 `;
 
 const Notification = ({ notification }: { notification: NotificationType }) => {
-  const [redirect, setRedirect] = useState(false);
   async function handleClick() {
     await firebase
       .firestore()
       .collection("notifications")
       .doc(notification.id)
       .delete();
-    setRedirect(true);
-  }
-
-  if (redirect) {
-    return <Redirect to={notification.link} />;
+    redirect(notification.link);
   }
 
   return (

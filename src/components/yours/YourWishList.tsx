@@ -19,7 +19,7 @@ import Loading from "../common/Loading";
 import { SelectName } from "../SelectName";
 import { StyledBigHeader } from "../common/StyledHeading";
 import { getOgData, OgResponseData } from "../../util/getOgData";
-import { Redirect } from "react-router";
+import { redirect } from "react-router-dom";
 import { Notifications } from "./Notifications";
 import { ReactComponent as CheckIcon } from "../images/checkmark_new.svg";
 import { EmptyButton } from "../common/EmptyButton";
@@ -61,7 +61,6 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
   const [newWish, setNewWish] = useState("");
   const [feedback, setFeedback] = useState("");
   const { user } = useUser(uid);
-  const [redirect, setRedirect] = useState("");
 
   useEffect(() => {
     if (!user?.email && firebaseUser?.email) {
@@ -140,7 +139,7 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
     setNewWish("");
 
     if (data) {
-      setRedirect(`wish/${uid}/${newWishRef.id}`);
+      redirect(`wish/${uid}/${newWishRef.id}`);
     }
   }
 
@@ -159,10 +158,6 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
         <SelectName uid={uid} firebaseUser={firebaseUser} />
       </Suspense>
     );
-  }
-
-  if (redirect !== "") {
-    return <Redirect to={redirect} />;
   }
 
   return (

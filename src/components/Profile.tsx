@@ -10,6 +10,7 @@ import { ReactComponent as SettingsIcon } from "./images/settings.svg";
 import { useSettings } from "../hooks/useSettings";
 import { mutate } from "swr";
 import { Spacer } from "./common/Spacer";
+import { HeaderComponent } from "./header/Header";
 
 const StyledSettingsIcon = styled(SettingsIcon)`
   margin-left: 12px;
@@ -43,6 +44,8 @@ export const Profile = ({ uid }: { uid: string }) => {
   const { user } = useUser(uid);
   const [feedback, setFeedback] = useState("");
   const { settings } = useSettings(uid, true);
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const [userDeleted, setUserDeleted] = useState(false);
 
   function logout() {
     console.log("Logged out");
@@ -69,6 +72,15 @@ export const Profile = ({ uid }: { uid: string }) => {
       festivitasThemesEnabled: event.target.checked,
     });
     mutate(["settings", uid]);
+  }
+
+  function handleDelete() {
+    if (!deleteConfirm) {
+      setDeleteConfirm(true);
+    } else {
+      console.log("Deleting user");
+      setUserDeleted(true);
+    }
   }
 
   return (
@@ -104,6 +116,30 @@ export const Profile = ({ uid }: { uid: string }) => {
         />
       </p>
       {feedback}
+      <Spacer />
+      <h1>Sletting av brukerdata</h1>
+      <p>
+        Dersom du ønsker å slette dine brukerdata kan du trykke på knappen
+        under. Dine data vil bli slettet i løpet av få virkedager.
+      </p>
+      <Spacer />
+      {deleteConfirm ? (
+        <p>
+          Er du sikker på at du vil slette brukerdata? Det er ingen vei tilbake!
+        </p>
+      ) : null}
+      <Spacer />
+      {userDeleted ? null : (
+        <BorderButton onClick={handleDelete}>Slett bruker</BorderButton>
+      )}
+
+      {userDeleted ? (
+        <p>
+          Brukeren din vil bli slettet i løpet av få virkedager. Takk for at du
+          brukte gaveønske.no!
+        </p>
+      ) : null}
+
       <Spacer />
 
       <StyledBottomOptions>

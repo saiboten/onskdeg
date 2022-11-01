@@ -100,3 +100,17 @@ export interface Kohort {
   invites: string[];
   newsFeed?: NewsEntryType[];
 }
+
+declare module "styled-components" {
+  export interface DefaultTheme {
+    text: string;
+    secondary: string;
+    white: string;
+    primary: string;
+    secondaryDark: string;
+    contrast: string;
+    negative: string;
+    primaryLight: string;
+    primaryDark: string;
+  }
+}

@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import firebase from "../firebase/firebase";
 import Icon from "../common/Icon";
 import ListRow, { LeftSection } from "../common/ListRow";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 import { useContext } from "react";
-import { ThemeContext } from "styled-components";
 import { Wish, Purchase } from "../../types/types";
 import {
   StyledActionButtonsAnimated,
@@ -39,7 +38,7 @@ const StyledDate = styled.div`
 `;
 
 const OtherWish = ({ wishInfo, user, myUid }: P) => {
-  const themeContext = useContext(ThemeContext);
+  const themeContext = useTheme();
 
   const [feedback, setFeedback] = useState("");
   const { purchase } = usePurchase(wishInfo?.id);

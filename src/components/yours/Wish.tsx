@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import styled from "styled-components";
-import { ThemeContext } from "styled-components";
+import { useTheme } from "styled-components";
 import firebase from "../firebase/firebase";
 import { Wish as WishType } from "../../types/types";
 import ListRow, { LeftSection } from "../common/ListRow";
@@ -44,7 +44,7 @@ const StyledArrowRight = styled(ArrowRight)`
 `;
 
 export const Wish = ({ wish, delete: deleteProp, user }: P) => {
-  const themeContext = useContext(ThemeContext);
+  const theme = useTheme();
   const [confirm, setConfirm] = useState(false);
 
   function deleteItem() {
@@ -76,7 +76,7 @@ export const Wish = ({ wish, delete: deleteProp, user }: P) => {
         </StyledLink>
       )}
       <GoldIconButton
-        color={themeContext.text}
+        color={theme.text}
         type="button"
         name="trash-2"
         onClick={deleteItem}

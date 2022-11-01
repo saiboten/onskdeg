@@ -7,7 +7,7 @@ import firebase from "../firebase/firebase";
 import { Detail } from "./Detail";
 import { StyledLabel } from "../common/Label";
 import { useWish } from "../../hooks/useWish";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import { useUser } from "../../hooks/useUser";
 import { mutate } from "swr";
 import { useWishes } from "../../hooks/useWishes";
@@ -42,18 +42,19 @@ const StyledImage = styled.img`
 `;
 
 interface Params {
-  wishid: string;
-  uid: string;
+  wishid: string | undefined;
+  uid: string | undefined;
+  [id: string]: string | undefined;
 }
 
 export function YourWishDetails() {
   const { wishid, uid } = useParams<Params>();
 
-  const { user } = useUser(uid);
+  const { user } = useUser(uid ?? "");
 
-  const { wish } = useWish(user?.uid || "?", wishid);
+  const { wish } = useWish(user?.uid || "?", wishid ?? "");
   const { user: suggestedByUser } = useUser(wish?.suggestedBy || "");
-  const { questions } = useQuestions(wishid);
+  const { questions } = useQuestions(wishid ?? "");
   const [file, setFile] = useState<File | undefined>(undefined);
 
   async function storeWishDetails(updatedWish: Wish) {
@@ -136,7 +137,11 @@ export function YourWishDetails() {
         {wish.isSuggestion && <p>Foreslått av: {suggestedByUser?.name}</p>}
 
         {!wish.isSuggestion && (
-          <ListMyQuestions wishId={wishid} myUid={uid} questions={questions} />
+          <ListMyQuestions
+            wishId={wishid ?? ""}
+            myUid={uid ?? ""}
+            questions={questions}
+          />
         )}
 
         {date && (

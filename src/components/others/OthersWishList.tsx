@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Container } from "../common/Container";
 import OtherWish from "./OtherWish";
 import { useWishes } from "../../hooks/useWishes";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import { useUser } from "../../hooks/useUser";
 import { StyledBigHeader } from "../common/StyledHeading";
 import { StyledInput } from "../common/StyledInput";
@@ -19,6 +19,7 @@ import { EmptyButton } from "../common/EmptyButton";
 
 interface Params {
   uid: string;
+  [id: string]: string | undefined;
 }
 
 export const StyledWrapper = styled.form`
@@ -31,8 +32,8 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
   const [suggestion, setSuggestion] = useState("");
 
   const { uid } = useParams<Params>();
-  const { user } = useUser(uid);
-  const { wishes } = useWishes(uid);
+  const { user } = useUser(uid ?? "");
+  const { wishes } = useWishes(uid ?? "");
 
   async function handleAddSuggestion(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -48,7 +49,7 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
     }
 
     const newWish: Wish = {
-      owner: uid,
+      owner: uid ?? "",
       deleted: false,
       description: data?.description || "",
       id: "",
@@ -73,7 +74,7 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
       newsFeed.unshift({
         isSuggestion: true,
         suggestedBy: myUid,
-        user: uid,
+        user: uid ?? "",
         date: firebase.firestore.Timestamp.now(),
       });
 
@@ -100,7 +101,12 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
       <StyledBigHeader>{`Ønskelisten til ${user?.name}`}</StyledBigHeader>
       {ownWishes?.length === 0 && <p>Ingen ønsker enda.</p>}
       {ownWishes?.map((wish) => (
-        <OtherWish myUid={myUid} key={wish.id} user={uid} wishInfo={wish} />
+        <OtherWish
+          myUid={myUid}
+          key={wish.id}
+          user={uid ?? ""}
+          wishInfo={wish}
+        />
       ))}
       <Spacer />
 
@@ -122,7 +128,12 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
 
       <StyledBigHeader>Forslag for {user?.name}</StyledBigHeader>
       {suggestions?.map((wish) => (
-        <OtherWish myUid={myUid} key={wish.id} user={uid} wishInfo={wish} />
+        <OtherWish
+          myUid={myUid}
+          key={wish.id}
+          user={uid ?? ""}
+          wishInfo={wish}
+        />
       ))}
       <Spacer />
     </Container>

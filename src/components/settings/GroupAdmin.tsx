@@ -10,7 +10,7 @@ import { Kohort } from "../../types/types";
 import { StyledBigHeader, StyledSubHeader } from "../common/StyledHeading";
 import firebase from "../firebase/firebase";
 import { mutate } from "swr";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Loading from "../common/Loading";
 import { AddUserByUid } from "./AddUserByUid";
@@ -131,8 +131,8 @@ const KohortInvite = ({
 };
 
 export const GroupAdmin = ({ myUid }: { myUid: string }) => {
-  const { kohortId } = useParams<{ kohortId: string }>();
-  const { kohort } = useKohort(kohortId);
+  const { kohortId } = useParams<{ kohortId?: string }>();
+  const { kohort } = useKohort(kohortId ?? "");
   const { user } = useUser(myUid);
 
   if (kohort?.admin !== myUid) return null;
@@ -146,7 +146,7 @@ export const GroupAdmin = ({ myUid }: { myUid: string }) => {
           <KohortInvite
             key={invite}
             kohort={kohort}
-            kohortId={kohortId}
+            kohortId={kohortId ?? ""}
             invite={invite}
           />
         );
@@ -157,16 +157,16 @@ export const GroupAdmin = ({ myUid }: { myUid: string }) => {
         return (
           <KohortMember
             kohort={kohort}
-            kohortId={kohortId}
+            kohortId={kohortId ?? ""}
             myUid={myUid}
             uid={member}
           />
         );
       })}
       <Spacer />
-      <AddInvite kohort={kohort} kohortId={kohortId} user={user} />
+      <AddInvite kohort={kohort} kohortId={kohortId ?? ""} user={user} />
       <Spacer />
-      <AddUserByUid kohort={kohort} kohortId={kohortId} />
+      <AddUserByUid kohort={kohort} kohortId={kohortId ?? ""} />
       <Spacer />
       <Link to="/settings">Tilbake til innstillinger</Link>
     </Container>

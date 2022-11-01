@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import { isJSDocNonNullableType, JsxElement } from "typescript";
 import { useKohorts } from "../../hooks/useKohorts";
 import { useUser } from "../../hooks/useUser";
@@ -99,7 +99,7 @@ interface Props {
 
 export const ChildAdmin = ({ myUid }: Props) => {
   const { childId } = useParams<{ childId: string }>();
-  const { user } = useUser(childId);
+  const { user } = useUser(childId ?? "");
   const kohortData = useKohorts(myUid);
 
   const allusers = kohortData?.reduce(
@@ -124,7 +124,7 @@ export const ChildAdmin = ({ myUid }: Props) => {
       <StyledBigHeader>{user?.name}</StyledBigHeader>
       <StyledSubHeader>Hvem andre skal styre {user?.name}?</StyledSubHeader>
       {filteredUserList?.map((user) => (
-        <KohortMember uid={user} childId={childId} />
+        <KohortMember uid={user} childId={childId ?? ""} />
       ))}
     </Container>
   );
