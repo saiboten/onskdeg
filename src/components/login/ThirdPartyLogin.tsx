@@ -38,7 +38,7 @@ const ThirdPartyLogin = () => {
     e.preventDefault();
     e.stopPropagation();
     setSubmittingGoogle(true);
-    firebase.auth().signInWithRedirect(googleProvider);
+    firebase.auth().signInWithPopup(googleProvider);
   }
 
   const SmButton = styled(BorderButton)`
