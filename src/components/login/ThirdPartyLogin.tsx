@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { facebookProvider, googleProvider } from "../firebase/loginProviders";
 import firebase from "../firebase/firebase";
 
-import { ReactComponent as FbIcon } from "./facebook-icon.svg";
+import FbIcon from "./facebook-icon.svg?react";
 import btn_google_signin_dark_normal_web from "../images/btn_google_signin_dark_normal_web.png";
 import Spinner from "../common/Spinner";
 import { Link } from "../common/Link";

@@ -132,16 +132,16 @@ export const Settings = ({ uid, firebaseUser }: Props) => {
       {showNoEmailDisclaimer && (
         <StyledWarning>
           Vi kunne ikke finne eposten din. Dette betyr at du ikke kan inviteres
-          til kohorter. Send din id til administrator slik at vedkommende kan
+          til grupper. Send din id til administrator slik at vedkommende kan
           legge deg inn manuelt. Din id er: {uid}.
         </StyledWarning>
       )}
 
       <Spacer />
       <BorderButton>
-        <Link to={`/addgroup`}>Opprett ny kohort</Link>
+        <Link to={`/addgroup`}>Opprett ny gruppe</Link>
       </BorderButton>
-      <StyledBigHeader>Administrer kohorter</StyledBigHeader>
+      <StyledBigHeader>Administrer grupper</StyledBigHeader>
       {user?.groups.map((group) => (
         <React.Fragment key={group}>
           <GroupSetting myUid={uid} group={group} />

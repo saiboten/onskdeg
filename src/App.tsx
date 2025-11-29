@@ -3,6 +3,7 @@ import { HashRouter, Route, Routes } from "react-router-dom";
 
 import { YourWishList } from "./components/yours/YourWishList";
 import { YourWishDetails } from "./components/yours/YourWishDetails";
+import { UploadWishesPage } from "./components/yours/UploadWishesPage";
 
 import { SelectWishList } from "./components/selectwishlist/SelectWishList";
 import { OthersWishList } from "./components/others/OthersWishList";
@@ -10,6 +11,7 @@ import { OtherWishDetail } from "./components/others/OtherWishDetail";
 import { HeaderComponent } from "./components/header/Header";
 import { Login } from "./components/login/Login";
 import Loading from "./components/common/Loading";
+import { GlobalLoading } from "./components/common/GlobalLoading";
 import { GlobalStyle } from "./GlobalStyles";
 import { AddChild } from "./components/childs/AddChild";
 import { AddKohort } from "./components/group/AddKohort";
@@ -28,7 +30,7 @@ import { Profile } from "./components/Profile";
 import { ThemeProvider } from "styled-components";
 import { NavLink } from "react-router-dom";
 import { darkTheme, lightTheme, christmasTheme } from "./components/themes";
-import { ReactComponent as UserIcon } from "./components/images/user.svg";
+import UserIcon from "./components/images/user.svg?react";
 import { useSettings } from "./hooks/useSettings";
 import styled from "styled-components";
 import { InternalLogin } from "./components/login/InternalLogin";
@@ -134,7 +136,7 @@ const App = () => {
     >
       <HashRouter>
         <ScrollToTop />
-        <Suspense fallback={<Loading />}>
+        <Suspense fallback={<GlobalLoading />}>
           <GlobalStyle />
           <MainContainer>
             <UserInfo>
@@ -148,6 +150,10 @@ const App = () => {
               <Route
                 path="/wish/:uid/:wishid"
                 element={<YourWishDetails />}
+              ></Route>
+              <Route
+                path="/upload-wishes"
+                element={<UploadWishesPage uid={uid} />}
               ></Route>
               <Route
                 path="/others"

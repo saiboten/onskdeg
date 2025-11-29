@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { StyledInput } from "../common/StyledInput";
 import styled from "styled-components";
-import { Container } from "../common/Container";
 import { P } from "../common/P";
 import { Button } from "../common/Button";
-import { ReactComponent as Edit } from "../images/edit.svg";
+import Edit from "../images/edit.svg?react";
 
 const StyledEdit = styled(Edit)`
   height: 2rem;
@@ -20,6 +19,7 @@ interface DetailInput {
     value: string | number,
     setEdit: (status: boolean) => void
   ) => void;
+  children?: React.ReactNode;
 }
 
 const StyledWrapper = styled.div`

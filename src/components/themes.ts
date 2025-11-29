@@ -1,6 +1,6 @@
 import Color from "color";
-import backgroundDark from "./images/background.svg";
-import backgroundLight from "./images/lightBackground.svg";
+import backgroundDark from "./images/background.svg?url";
+import backgroundLight from "./images/lightBackground.svg?url";
 
 // #586F7C - dark electric blue
 // #B1740F - gold

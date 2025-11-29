@@ -21,11 +21,19 @@ import { StyledBigHeader } from "../common/StyledHeading";
 import { getOgData, OgResponseData } from "../../util/getOgData";
 import { redirect } from "react-router-dom";
 import { Notifications } from "./Notifications";
-import { ReactComponent as CheckIcon } from "../images/checkmark_new.svg";
+import CheckIcon from "../images/checkmark_new.svg?react";
+import UploadIcon from "../images/upload.svg?react";
 import { EmptyButton } from "../common/EmptyButton";
+import { useNavigate } from "react-router-dom";
 
 export const StyledCheckIcon = styled(CheckIcon)`
   fill: ${(props) => props.theme.secondary};
+`;
+
+export const StyledUploadIcon = styled(UploadIcon)`
+  fill: ${(props) => props.theme.secondary};
+  width: 24px;
+  height: 24px;
 `;
 
 interface P {
@@ -42,10 +50,12 @@ interface S {
 }
 
 export const StyledWrapper = styled.form`
-  position: relative;
   margin: 0 auto;
   margin-bottom: 0.8rem;
   width: 60%;
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
 
   @media (max-width: 450px) {
     width: 100%;
@@ -61,6 +71,7 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
   const [newWish, setNewWish] = useState("");
   const [feedback, setFeedback] = useState("");
   const { user } = useUser(uid);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!user?.email && firebaseUser?.email) {
@@ -184,6 +195,10 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
 
         <EmptyButton type="submit" name="check">
           <StyledCheckIcon />
+        </EmptyButton>
+
+        <EmptyButton type="button" name="upload" onClick={() => navigate("/upload-wishes")}>
+          <StyledUploadIcon />
         </EmptyButton>
 
         {feedback && <div>{feedback}</div>}

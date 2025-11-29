@@ -80,8 +80,8 @@ export const AddKohort: React.FC<Props> = ({ uid }) => {
 
   return (
     <Container textLeft>
-      <StyledBigHeader>Opprett kohort</StyledBigHeader>
-      <StyledLabel>Navn på kohort</StyledLabel>
+      <StyledBigHeader>Opprett gruppe</StyledBigHeader>
+      <StyledLabel>Navn på gruppe</StyledLabel>
       <StyledInput
         autoComplete="off"
         id="groupName"
@@ -89,7 +89,7 @@ export const AddKohort: React.FC<Props> = ({ uid }) => {
         onChange={(e) => setGroupName(e.target.value)}
       ></StyledInput>
       <Spacer />
-      <h2>Legg til kohortmedlem</h2>
+      <h2>Legg til gruppemedlem</h2>
       <form
         onSubmit={(e) => {
           e.preventDefault();

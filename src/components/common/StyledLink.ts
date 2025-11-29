@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { ReactComponent as LinkIcon } from "../images/link.svg";
+import LinkIcon from "../images/link.svg?react";
 
 export const StyledLink = styled.a`
   padding: 0 0.5rem;

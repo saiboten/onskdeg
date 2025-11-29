@@ -139,7 +139,7 @@ export const GroupAdmin = ({ myUid }: { myUid: string }) => {
 
   return (
     <Container textLeft>
-      <StyledBigHeader>Administrer kohort {kohort.groupName}</StyledBigHeader>
+      <StyledBigHeader>Administrer gruppe {kohort.groupName}</StyledBigHeader>
       <StyledSubHeader>Invitasjoner</StyledSubHeader>
       {kohort.invites.map((invite) => {
         return (

@@ -14,7 +14,7 @@ import {
 } from "../common/IconButton";
 import { Link as RouterLink } from "react-router-dom";
 
-import { ReactComponent as ArrowRight } from "../images/arrow-right.svg";
+import ArrowRight from "../images/arrow-right.svg?react";
 import { StyledLink, StyledLinkIcon } from "../common/StyledLink";
 
 export const Link = styled(RouterLink)`

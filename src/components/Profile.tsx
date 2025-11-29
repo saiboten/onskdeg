@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { BorderButton, ButtonNavigation } from "./common/Button";
 import { Link } from "./common/Link";
 import firebase from "./firebase/firebase";
-import { ReactComponent as SettingsIcon } from "./images/settings.svg";
+import SettingsIcon from "./images/settings.svg?react";
 import { useSettings } from "../hooks/useSettings";
 import { mutate } from "swr";
 import { Spacer } from "./common/Spacer";

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { NavLink, NavLinkRight } from "../common/Link";
 import { Container } from "../common/Container";
 import { useUser } from "../../hooks/useUser";
+import { useLocation } from "react-router-dom";
 
 const StyledHeader = styled.div`
   display: flex;
@@ -11,22 +12,20 @@ const StyledHeader = styled.div`
   padding-top: 3rem;
 `;
 
-const othersActive = (_: any, location: any): any =>
-  location.pathname.startsWith("/other");
-
-const yoursActive = (_: any, location: any): any =>
-  location.pathname === "/" || location.pathname.startsWith("/wish");
-
 interface Props {
   uid: string;
 }
 
 export const HeaderComponent = ({ uid }: Props) => {
   const { user } = useUser(uid);
+  const location = useLocation();
 
   if (!user) {
     return null;
   }
+
+  const isYoursActive = location.pathname === "/" || location.pathname.startsWith("/wish");
+  const isOthersActive = location.pathname.startsWith("/other");
 
   const ActionButtons = styled.div`
     display: flex;
@@ -45,19 +44,16 @@ export const HeaderComponent = ({ uid }: Props) => {
       <StyledHeader>
         <ActionButtons>
           <NavLink
-            activeClassName="selected"
-            isActive={yoursActive}
-            exact
+            className={isYoursActive ? "selected" : ""}
             to=""
           >
             Mine ønsker
           </NavLink>
           <NavLinkRight
-            activeClassName="selected"
-            isActive={othersActive}
+            className={isOthersActive ? "selected" : ""}
             to="/others"
           >
-            Kohorter
+            Grupper
           </NavLinkRight>
         </ActionButtons>
       </StyledHeader>

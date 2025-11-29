@@ -1,10 +1,6 @@
 import firebase from "firebase";
-// import "firebase/firestore";
-
-// const firebase = require("firebase");
-// Required for side-effects
-require("firebase/firestore");
-require("firebase/functions");
+import "firebase/firestore";
+import "firebase/functions";
 
 var firebaseConfig = {
   apiKey: "AIzaSyDRCFzLXgaM36t-0Vnhp2XbbQJrUjDmQAw",
@@ -18,7 +14,7 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 if (location.hostname === "localhost") {
-  firebase.firestore().useEmulator("localhost", 8080);
+  firebase.firestore().useEmulator("localhost", 8081);
 }
 
 export default firebase;

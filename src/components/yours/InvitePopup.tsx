@@ -154,14 +154,14 @@ export const InvitePopup = ({ invites, uid, firebaseUser }: Props) => {
       <StyledInnerContent>
         <Spacer />
         <StyledBigHeader>
-          Du er invitert til en kohort med navn:{" "}
+          Du er invitert til en gruppe med navn:{" "}
           <strong>{kohort?.groupName}</strong>
         </StyledBigHeader>
         <Spacer />
 
         <p>
           Hvis du takker nei til invitasjonen må du få en ny invitasjon av
-          eieren av kohorten.
+          eieren av gruppen.
         </p>
 
         <p>Her kommer en liste med de som er med fra før.</p>

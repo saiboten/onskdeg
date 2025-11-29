@@ -42,17 +42,15 @@ export const UnstyledLink = styled(RouterLink)`
   }
 `;
 
-export const NavLink = styled(RouterNavLink)<{
-  activeClassName: string;
-  isActive: (_: any, location: any) => any;
-  exact?: boolean;
-}>`
+export const NavLink = styled(RouterNavLink)`
   background: ${(props) => props.theme.secondaryDark};
   color: ${(props) => props.theme.text};
   text-decoration: none;
   padding: 0.8rem 1.5rem;
   font-size: 2rem;
   border-radius: 1.5rem;
+  transition: all 0.2s ease-in-out;
+  font-weight: 400;
 
   @media (max-width: 450px) {
     flex: 1;
@@ -64,6 +62,9 @@ export const NavLink = styled(RouterNavLink)<{
   &.selected {
     color: ${(props) => props.theme.text};
     background: ${(props) => props.theme.secondary};
+    font-weight: 700;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   }
 `;
 

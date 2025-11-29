@@ -76,7 +76,7 @@ export const GroupUsers = ({
   return (
     <StyledKohorts>
       <StyledBigHeader>
-        Kohort: <strong>{kohort?.groupName}</strong>
+        Gruppe: <strong>{kohort?.groupName}</strong>
       </StyledBigHeader>
       <Spacer />
       <StyledSubHeader>Siste nytt!</StyledSubHeader>
@@ -109,9 +109,9 @@ export const SelectWishList = function ({ uid }: Props) {
     <Container textLeft>
       {user?.groups.length === 0 && (
         <div>
-          Du er ikke med i noen kohorter enda. Enten må du få en invitasjon fra
-          administrator i en annen kohort, eller{" "}
-          <Link to="/settings">opprett en kokort her</Link>
+          Du er ikke med i noen grupper enda. Enten må du få en invitasjon fra
+          administrator i en annen gruppe, eller{" "}
+          <Link to="/settings">opprett en gruppe her</Link>
         </div>
       )}
 
