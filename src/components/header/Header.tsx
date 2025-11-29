@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import { NavLink, NavLinkRight } from "../common/Link";
 import { Container } from "../common/Container";

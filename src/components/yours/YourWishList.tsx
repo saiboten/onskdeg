@@ -1,10 +1,10 @@
-import React, { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Wish } from "./Wish";
 import firebase from "../firebase/firebase";
 import { mutate } from "swr";
 
-import { Wish as WishType, User, NewsEntryType } from "../../types/types";
+import { Wish as WishType, NewsEntryType } from "../../types/types";
 import { Container } from "../common/Container";
 
 import { StyledInput } from "../common/StyledInput";
@@ -35,19 +35,6 @@ export const StyledUploadIcon = styled(UploadIcon)`
   width: 24px;
   height: 24px;
 `;
-
-interface P {
-  user: User;
-  updateWishStore: (newWishes: Array<WishType>) => void;
-  storeWishesToFirebase: (newWishes: Array<WishType>) => void;
-  wishes: Array<WishType>;
-  firebaseUser: firebase.User;
-}
-
-interface S {
-  newWish: string;
-  feedback: string;
-}
 
 export const StyledWrapper = styled.form`
   margin: 0 auto;

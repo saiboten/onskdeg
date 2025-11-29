@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import firebase from "../components/firebase/firebase";
-import { Child, Wish } from "../types/types";
+import { Child } from "../types/types";
 import { useUser } from "./useUser";
 
 export function useChilds(uid: string): Child[] | undefined {

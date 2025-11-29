@@ -1,10 +1,8 @@
-import React, { useState, useContext } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import { useTheme } from "styled-components";
-import firebase from "../firebase/firebase";
 import { Wish as WishType } from "../../types/types";
 import ListRow, { LeftSection } from "../common/ListRow";
-import { ImageWrapper } from "../common/Image";
 import {
   NeutralIconButton,
   NegativeIconButton,
@@ -14,7 +12,6 @@ import {
 } from "../common/IconButton";
 import { Link as RouterLink } from "react-router-dom";
 
-import ArrowRight from "../images/arrow-right.svg?react";
 import { StyledLink, StyledLinkIcon } from "../common/StyledLink";
 
 export const Link = styled(RouterLink)`
@@ -34,14 +31,6 @@ interface P {
   wish: WishType;
   delete: (wishId: string) => void;
 }
-
-const StyledArrowRight = styled(ArrowRight)`
-  width: 2rem;
-  height: 2rem;
-  fill: #fff;
-  transform: translateY(4px);
-  margin-left: 1rem;
-`;
 
 export const Wish = ({ wish, delete: deleteProp, user }: P) => {
   const theme = useTheme();

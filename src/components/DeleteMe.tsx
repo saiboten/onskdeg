@@ -1,4 +1,3 @@
-import React from "react";
 import { Button } from "./common/Button";
 import { Container } from "./common/Container";
 import { StyledBigHeader } from "./common/StyledHeading";

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Suspense } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { HashRouter, Route, Routes } from "react-router-dom";
 
 import { YourWishList } from "./components/yours/YourWishList";
@@ -36,7 +36,6 @@ import styled from "styled-components";
 import { InternalLogin } from "./components/login/InternalLogin";
 import { LoginWrapper } from "./components/login/LoginWrapper";
 import { Link } from "./components/common/Link";
-import { Spacer } from "./components/common/Spacer";
 
 const MainContainer = styled.div`
   background: ${(props) => props.theme.primaryDark};

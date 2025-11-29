@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { usePurchase } from "../hooks/usePurchase";
 import { useUser } from "../hooks/useUser";
 import { useWish } from "../hooks/useWish";
@@ -33,7 +33,6 @@ const PurchaseInfo = ({ purchase }: { purchase: PurchaseType }) => {
 };
 
 const Purchase = ({ purchaseId }: { purchaseId: string }) => {
-  const [wishId, setWishId] = useState<string>("");
   const { purchase } = usePurchase(purchaseId);
 
   return (

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { Container } from "../common/Container";
-import { User, Wish } from "../../types/types";
+import { Wish } from "../../types/types";
 import styled from "styled-components";
 import Loading from "../common/Loading";
 import firebase from "../firebase/firebase";
@@ -10,13 +10,11 @@ import { useWish } from "../../hooks/useWish";
 import { useParams } from "react-router-dom";
 import { useUser } from "../../hooks/useUser";
 import { mutate } from "swr";
-import { useWishes } from "../../hooks/useWishes";
 import { ALink } from "../common/Link";
 import { format } from "date-fns";
 import { StyledBigHeader } from "../common/StyledHeading";
 import { useQuestions } from "../../hooks/useQuestions";
 import { ListMyQuestions } from "./ListMyQuestions";
-import { StyledActionButtons } from "../common/IconButton";
 import { Button } from "../common/Button";
 
 const StyledWrapper = styled.div`

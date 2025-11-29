@@ -1,8 +1,6 @@
-import React from "react";
 import { Container } from "./common/Container";
 import { Link } from "./common/Link";
 import { StyledBigHeader, StyledSubHeader } from "./common/StyledHeading";
-import { HeaderComponent } from "./header/Header";
 
 export const TermsOfService = () => {
   return (

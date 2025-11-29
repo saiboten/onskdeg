@@ -1,9 +1,6 @@
-import React from "react";
-import { Wish } from "../types/types";
 import { Container } from "./common/Container";
 import firebase from "./firebase/firebase";
 import { parse } from "date-fns";
-import { isUndefined } from "util";
 
 export const FixWishes = () => {
   async function go() {

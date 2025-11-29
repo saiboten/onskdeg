@@ -1,4 +1,3 @@
-import React from "react";
 import Loading from "../common/Loading";
 import { StyledLabel } from "../common/Label";
 import styled from "styled-components";
@@ -32,7 +31,6 @@ interface Params {
 
 export function OtherWishDetail({ myUid }: { myUid: string }) {
   const { uid, wishid } = useParams<Params>();
-  const { user } = useUser(uid ?? "");
   const { wish } = useWish(uid ?? "", wishid ?? "");
   const { purchase } = usePurchase(wishid ?? "");
   const { questions } = useQuestions(wishid ?? "");

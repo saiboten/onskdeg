@@ -1,7 +1,4 @@
-import React from "react";
 import { Container } from "./common/Container";
-import { Link } from "./common/Link";
-import { StyledBigHeader, StyledSubHeader } from "./common/StyledHeading";
 
 export const PrivacyPolicy = () => {
   return (

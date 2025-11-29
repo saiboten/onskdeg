@@ -27,7 +27,6 @@ export const AddKohort: React.FC<Props> = ({ uid }) => {
   const [groupName, setGroupName] = useState("");
   const [email, setEmail] = useState("");
   const [invites, setInvites] = useState<string[]>([]);
-  const [groupCreated, setGroupCreated] = useState(false);
 
   const { user } = useUser(uid);
 

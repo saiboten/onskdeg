@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import firebase from "../firebase/firebase";
 import Icon from "../common/Icon";
 import ListRow, { LeftSection } from "../common/ListRow";
 import styled, { useTheme } from "styled-components";
-import { useContext } from "react";
 import { Wish, Purchase } from "../../types/types";
 import {
   StyledActionButtonsAnimated,
@@ -24,10 +23,6 @@ interface P {
   wishInfo: Wish;
   user: string;
   myUid: string;
-}
-
-interface S {
-  image: string;
 }
 
 const StyledDate = styled.div`

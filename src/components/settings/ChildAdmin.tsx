@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { isJSDocNonNullableType, JsxElement } from "typescript";
 import { useKohorts } from "../../hooks/useKohorts";
 import { useUser } from "../../hooks/useUser";
 import { Kohort } from "../../types/types";
@@ -8,10 +7,7 @@ import { Container } from "../common/Container";
 import Loading from "../common/Loading";
 import { StyledBigHeader, StyledSubHeader } from "../common/StyledHeading";
 import firebase from "../firebase/firebase";
-import {
-  StyledNotification,
-  useNotification,
-} from "../common/StyledNotification";
+import { useNotification } from "../common/StyledNotification";
 import styled from "styled-components";
 
 interface KohortMemberProps {

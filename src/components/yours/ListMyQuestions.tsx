@@ -22,18 +22,6 @@ const StyledQuestionWrapper = styled.div`
   flex-wrap: wrap;
 `;
 
-const StyledDeleteButton = styled.button`
-  background: none;
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 2rem;
-  width: 2rem;
-  outline: none;
-  border: none;
-  cursor: pointer;
-`;
-
 const StyledQuestion = styled.div`
   position: relative;
   background-color: ${(props) => props.theme.white};

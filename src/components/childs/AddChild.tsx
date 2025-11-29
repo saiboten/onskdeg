@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { redirect } from "react-router-dom";
 import styled from "styled-components";
 import { useUser } from "../../hooks/useUser";
@@ -9,7 +9,6 @@ import firebase from "../firebase/firebase";
 import { mutate } from "swr";
 import { Child } from "../../types/types";
 import { Spacer } from "../common/Spacer";
-import Loading from "../common/Loading";
 import Spinner from "../common/Spinner";
 
 const StyledForm = styled.form`

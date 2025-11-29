@@ -1,4 +1,3 @@
-import React from "react";
 import styled, { keyframes } from "styled-components";
 
 const StyledCircleContainer = styled.div`
@@ -54,7 +53,7 @@ const StyledCircle = styled.div`
 export default function FloatingCircles() {
   const circles = Array(15)
     .fill(0)
-    .map((el, index) => (
+    .map((_, index) => (
       <StyledCircle
         key={index}
         size={`${getRandomInt(50, 500)}px`}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useUser } from "../hooks/useUser";
 import { Container } from "./common/Container";
 import { StyledBigHeader } from "./common/StyledHeading";
@@ -6,18 +6,9 @@ import styled from "styled-components";
 import { BorderButton, ButtonNavigation } from "./common/Button";
 import { Link } from "./common/Link";
 import firebase from "./firebase/firebase";
-import SettingsIcon from "./images/settings.svg?react";
 import { useSettings } from "../hooks/useSettings";
 import { mutate } from "swr";
 import { Spacer } from "./common/Spacer";
-import { HeaderComponent } from "./header/Header";
-
-const StyledSettingsIcon = styled(SettingsIcon)`
-  margin-left: 12px;
-  width: 32px;
-  height: 32px;
-  fill: #fff;
-`;
 
 const StyledBottomOptions = styled.div`
   display: flex;

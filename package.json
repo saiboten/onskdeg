@@ -37,7 +37,8 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui"
+    "test:e2e:ui": "playwright test --ui",
+    "tsc": "tsc"
   },
   "browserslist": [
     ">0.2%",

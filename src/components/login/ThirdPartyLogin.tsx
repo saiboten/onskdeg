@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 
 import { facebookProvider, googleProvider } from "../firebase/loginProviders";
@@ -9,7 +9,6 @@ import btn_google_signin_dark_normal_web from "../images/btn_google_signin_dark_
 import Spinner from "../common/Spinner";
 import { Link } from "../common/Link";
 import { BorderButton } from "../common/Button";
-import { LoginWrapper } from "./LoginWrapper";
 
 const iconHeight = "30px";
 const FacebookIcon = styled(FbIcon)`

@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import useSWR from "swr";
 import firebase from "../components/firebase/firebase";
 import { Kohort } from "../types/types";

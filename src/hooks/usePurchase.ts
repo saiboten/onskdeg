@@ -5,7 +5,7 @@ import firebase from "../components/firebase/firebase";
 import { Purchase } from "../types/types";
 
 const fetcher = async (
-  purchase: "purchase",
+  _: "purchase",
   purchaseId: string
 ): Promise<Purchase | undefined> => {
   return await new Promise((resolve) => {

@@ -1,4 +1,3 @@
-import Color from "color";
 import backgroundDark from "./images/background.svg?url";
 import backgroundLight from "./images/lightBackground.svg?url";
 

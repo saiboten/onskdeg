@@ -15,7 +15,7 @@ interface AddInviteProps {
   user: User | undefined;
 }
 
-export const AddInvite = ({ kohort, kohortId, user }: AddInviteProps) => {
+export const AddInvite = ({ kohort, user }: AddInviteProps) => {
   const [newInvite, setNewInvite] = useState("");
   const [showInviteAdded, setShowInviteAdded] = useState("");
 

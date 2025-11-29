@@ -1,14 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Routes, Route } from "react-router-dom";
 
 import firebase from "../firebase/firebase";
 import ThirdPartyLogin from "./ThirdPartyLogin";
-import { InternalLogin } from "./InternalLogin";
-import FloatingCircles from "../common/FloatingCircles";
-import { Link } from "../common/Link";
-import { PrivacyPolicy } from "../PrivacyPolicy";
-import { TermsOfService } from "../TermsOfService";
 import { LoginWrapper } from "./LoginWrapper";
 
 const StyledParagraph = styled.p`

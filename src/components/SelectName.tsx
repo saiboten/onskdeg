@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./common/Button";
 import { Container } from "./common/Container";
 import { StyledLabel } from "./common/Label";
 import { StyledInput } from "./common/StyledInput";
 import styled from "styled-components";
-import { useUser } from "../hooks/useUser";
 import firebase from "./firebase/firebase";
 import { mutate } from "swr";
 import { StyledBigHeader } from "./common/StyledHeading";
