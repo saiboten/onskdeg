@@ -1,16 +1,14 @@
 import { useState } from "react";
 import firebase from "../firebase/firebase";
 import Icon from "../common/Icon";
-import ListRow, { LeftSection } from "../common/ListRow";
 import styled, { useTheme } from "styled-components";
 import { Wish, Purchase } from "../../types/types";
 import {
   StyledActionButtonsAnimated,
-  StyledActionButtons,
   NeutralIconButton,
   NegativeIconButton,
 } from "../common/IconButton";
-import { UnstyledLink } from "../common/Link";
+import { useNavigate } from "react-router-dom";
 import { usePurchase } from "../../hooks/usePurchase";
 import { mutate } from "swr";
 import { StyledNotification } from "../common/StyledNotification";
@@ -19,30 +17,126 @@ import { StyledLink, StyledLinkIcon } from "../common/StyledLink";
 import { useSettings } from "../../hooks/useSettings";
 
 interface P {
-  // purchase: Purchase;
   wishInfo: Wish;
   user: string;
   myUid: string;
 }
 
-const StyledDate = styled.div`
+const WishCard = styled.div<{ $isTaken: boolean }>`
+  position: relative;
+  border: 2px solid ${(props) => props.theme.secondary};
+  border-radius: 8px;
+  padding: 1.6rem;
+  margin-bottom: 1.6rem;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  background: ${(props) => props.theme.primaryDark};
+  opacity: ${(props) => (props.$isTaken ? 0.7 : 1)};
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+`;
+
+const WishHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+`;
+
+const WishTitle = styled.h3<{ $isTaken: boolean }>`
+  margin: 0;
+  font-size: 1.8rem;
+  color: ${(props) => props.theme.text};
+  text-decoration: ${(props) => (props.$isTaken ? "line-through" : "none")};
+`;
+
+const WishDate = styled.div`
+  font-size: 1.2rem;
+  color: ${(props) => props.theme.contrast};
+  white-space: nowrap;
+  margin-left: 1rem;
+`;
+
+const ImageContainer = styled.div`
+  width: 100%;
+  margin-bottom: 1rem;
+  position: relative;
+`;
+
+const WishImage = styled.img`
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  object-fit: cover;
+`;
+
+const ImagePlaceholder = styled.div`
+  width: 100%;
+  height: 200px;
+  background: ${(props) => props.theme.primary};
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${(props) => props.theme.contrast};
+  font-size: 1.4rem;
+`;
+
+const WishDescription = styled.p`
+  color: ${(props) => props.theme.text};
+  font-size: 1.4rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  word-wrap: break-word;
+`;
+
+const WishPrice = styled.div`
+  color: ${(props) => props.theme.secondary};
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+`;
+
+const StatusBadge = styled.div<{ $isTaken: boolean }>`
   position: absolute;
-  font-size: 1rem;
-  top: 3px;
-  transform: rotate(-45deg) translateY(-2rem) translateX(-4rem);
+  top: 1rem;
+  right: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  background: ${(props) =>
+    props.$isTaken ? props.theme.negative : props.theme.secondary};
+  color: ${(props) => props.theme.text};
+  font-size: 1.2rem;
+  font-weight: 600;
+  z-index: 1;
+`;
+
+const ActionBar = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid ${(props) => props.theme.secondary};
 `;
 
 const OtherWish = ({ wishInfo, user, myUid }: P) => {
   const themeContext = useTheme();
+  const navigate = useNavigate();
 
   const [feedback, setFeedback] = useState("");
   const { purchase } = usePurchase(wishInfo?.id);
   const [confirm, setConfirm] = useState(false);
   const { settings } = useSettings(myUid, true);
 
-  const item = purchase?.checked ? <del>{wishInfo.name}</del> : wishInfo.name;
+  const isTaken = purchase?.checked ?? false;
 
-  async function handleBuyItem() {
+  async function handleBuyItem(e: React.MouseEvent) {
+    e.stopPropagation();
     const purchaseRef = firebase
       .firestore()
       .collection("purchase")
@@ -75,7 +169,8 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
     mutate(["purchase", wishInfo.id]);
   }
 
-  async function handleDeleteItem() {
+  async function handleDeleteItem(e: React.MouseEvent) {
+    e.stopPropagation();
     await firebase.firestore().collection("wish").doc(wishInfo.id).delete();
     mutate(["wish", user]);
   }
@@ -86,22 +181,42 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
     return null;
   }
 
+  const handleCardClick = () => {
+    navigate(`/${wishSuggestedByMe ? "wish" : "other"}/${user}/${wishInfo.id}`);
+  };
+
   return (
-    <ListRow>
-      <StyledNotification active={feedback !== ""} text={feedback} />
-      <LeftSection>
+    <>
+      {feedback && <StyledNotification active={feedback !== ""} text={feedback} />}
+      <WishCard $isTaken={isTaken} onClick={handleCardClick}>
+        {isTaken && <StatusBadge $isTaken={true}>Kjøpt</StatusBadge>}
+      
+      <WishHeader>
+        <WishTitle $isTaken={isTaken}>
+          {wishInfo.name}
+        </WishTitle>
         {wishInfo.date && (
-          <StyledDate>
+          <WishDate>
             {format(wishInfo.date.toDate(), "dd.MM.yyyy")}
-          </StyledDate>
+          </WishDate>
         )}
-        <UnstyledLink
-          to={`/${wishSuggestedByMe ? "wish" : "other"}/${user}/${wishInfo.id}`}
-        >
-          {item} {wishInfo.price ? `(${wishInfo.price})` : ""}
-        </UnstyledLink>
-      </LeftSection>
-      <StyledActionButtons>
+      </WishHeader>
+
+      {wishInfo.price && <WishPrice>Kr {wishInfo.price},-</WishPrice>}
+
+      <ImageContainer>
+        {wishInfo.image ? (
+          <WishImage src={wishInfo.image} alt={wishInfo.name} />
+        ) : (
+          <ImagePlaceholder>Ingen bilde</ImagePlaceholder>
+        )}
+      </ImageContainer>
+
+      {wishInfo.description && (
+        <WishDescription>{wishInfo.description}</WishDescription>
+      )}
+
+      <ActionBar onClick={(e) => e.stopPropagation()}>
         {wishInfo.link && (
           <StyledLink href={wishInfo.link} target="_blank">
             <StyledLinkIcon />
@@ -109,12 +224,15 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
         )}
 
         {confirm ? (
-          <div style={{ transform: "translateX(8rem)" }}>
+          <div>
             <StyledActionButtonsAnimated>
               <NeutralIconButton
                 type="button"
                 name="x"
-                onClick={() => setConfirm(false)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setConfirm(false);
+                }}
               />
               <NegativeIconButton
                 type="button"
@@ -124,16 +242,17 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
             </StyledActionButtonsAnimated>
           </div>
         ) : (
-          <div></div>
-        )}
-
-        {wishSuggestedByMe && (
-          <Icon
-            color={themeContext.text}
-            type="button"
-            name={"trash-2"}
-            onClick={() => setConfirm(true)}
-          />
+          wishSuggestedByMe && (
+            <Icon
+              color={themeContext.text}
+              type="button"
+              name={"trash-2"}
+              onClick={(e) => {
+                e.stopPropagation();
+                setConfirm(true);
+              }}
+            />
+          )
         )}
 
         <Icon
@@ -142,8 +261,9 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
           name="shopping-cart"
           onClick={handleBuyItem}
         />
-      </StyledActionButtons>
-    </ListRow>
+      </ActionBar>
+    </WishCard>
+    </>
   );
 };
 

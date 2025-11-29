@@ -1,5 +1,5 @@
 import { useEffect, useState, Suspense } from "react";
-import { HashRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { YourWishList } from "./components/yours/YourWishList";
 import { YourWishDetails } from "./components/yours/YourWishDetails";
@@ -96,7 +96,7 @@ const App = () => {
       <>
         <ThemeProvider theme={darkTheme}>
           <GlobalStyle />
-          <HashRouter>
+          <BrowserRouter>
             <Routes>
               <Route
                 path="/privacypolicy"
@@ -117,7 +117,7 @@ const App = () => {
               <Route path="/" element={<Login />}></Route>
               <Route path="/internal" element={<InternalLogin />} />
             </Routes>
-          </HashRouter>
+          </BrowserRouter>
         </ThemeProvider>
       </>
     );
@@ -133,7 +133,7 @@ const App = () => {
           : lightTheme
       }
     >
-      <HashRouter>
+      <BrowserRouter>
         <ScrollToTop />
         <Suspense fallback={<GlobalLoading />}>
           <GlobalStyle />
@@ -202,7 +202,7 @@ const App = () => {
             <Link to="/tos">Terms of Service</Link>
           </MainContainer>
         </Suspense>
-      </HashRouter>
+      </BrowserRouter>
     </ThemeProvider>
   );
 };

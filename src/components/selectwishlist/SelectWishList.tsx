@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 import { Container } from "../common/Container";
 import { NewsEntryType } from "../../types/types";
 import { useUser } from "../../hooks/useUser";
@@ -7,6 +8,7 @@ import { useKohort } from "../../hooks/useKohort";
 import { Link } from "../common/Link";
 import { StyledBigHeader, StyledSubHeader } from "../common/StyledHeading";
 import { Spacer } from "../common/Spacer";
+import { Button } from "../common/Button";
 
 const StyledKohorts = styled.div`
   padding: 1rem;
@@ -14,12 +16,20 @@ const StyledKohorts = styled.div`
 
 const StyledUl = styled.ul`
   list-style-type: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
 `;
 
 export const GroupUser = ({ uid }: { uid: string }) => {
   const { user } = useUser(uid);
+  const navigate = useNavigate();
 
-  return <Link to={`/other/${user?.uid}`}>{user?.name}</Link>;
+  return (
+    <Button onClick={() => navigate(`/other/${user?.uid}`)}>
+      {user?.name}
+    </Button>
+  );
 };
 
 const NewsFeedEntry = ({
