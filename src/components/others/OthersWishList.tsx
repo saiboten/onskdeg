@@ -92,8 +92,18 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
     }, 3000);
   }
 
-  const ownWishes = wishes?.filter((m) => !m.isSuggestion);
-  const suggestions = wishes?.filter((m) => m.isSuggestion);
+  const ownWishes = wishes?.filter((m) => !m.isSuggestion)
+    .sort((a, b) => {
+      if (a.favorite && !b.favorite) return -1;
+      if (!a.favorite && b.favorite) return 1;
+      return 0;
+    });
+  const suggestions = wishes?.filter((m) => m.isSuggestion)
+    .sort((a, b) => {
+      if (a.favorite && !b.favorite) return -1;
+      if (!a.favorite && b.favorite) return 1;
+      return 0;
+    });
 
   return (
     <Container>

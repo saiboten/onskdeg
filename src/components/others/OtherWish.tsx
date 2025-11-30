@@ -51,6 +51,14 @@ const WishTitle = styled.h3<{ $isTaken: boolean }>`
   font-size: 1.8rem;
   color: ${(props) => props.theme.text};
   text-decoration: ${(props) => (props.$isTaken ? "line-through" : "none")};
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`;
+
+const StarIcon = styled.span`
+  font-size: 1.8rem;
+  color: #FFD700;
 `;
 
 const WishDate = styled.div`
@@ -193,6 +201,7 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
       
       <WishHeader>
         <WishTitle $isTaken={isTaken}>
+          {wishInfo.favorite && <StarIcon>★</StarIcon>}
           {wishInfo.name}
         </WishTitle>
         {wishInfo.date && (

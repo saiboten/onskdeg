@@ -32,6 +32,7 @@ export interface Wish {
   price?: number;
   date?: firebase.firestore.Timestamp;
   wishes?: any;
+  favorite?: boolean;
 }
 
 export interface Question {

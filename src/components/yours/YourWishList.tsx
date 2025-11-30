@@ -158,6 +158,14 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
     return <Wish user={activeTab} key={el.id} delete={deleteThis} wish={el} />;
   };
 
+  const sortedWishes = wishes
+    ?.filter((el) => !el.isSuggestion)
+    .sort((a, b) => {
+      if (a.favorite && !b.favorite) return -1;
+      if (!a.favorite && b.favorite) return 1;
+      return 0;
+    });
+
   if (!user?.name) {
     return (
       <Suspense fallback={<Loading />}>
@@ -219,7 +227,7 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
         {feedback && <div>{feedback}</div>}
       </StyledWrapper>
       <div>
-        {wishes?.filter((el) => !el.isSuggestion).map(wishToElement) ?? []}
+        {sortedWishes?.map(wishToElement) ?? []}
       </div>
       <Spacer />
     </Container>
