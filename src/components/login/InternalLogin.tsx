@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Link } from "../common/Link";
 import { BorderInput } from "../common/Button";
 import firebase from "../firebase/firebase";
-import Icon from "../common/Icon";
+import { Eye, EyeOff } from "lucide-react";
 import { LoginWrapper } from "./LoginWrapper";
 
 const StyledInput = styled.input`
@@ -88,11 +88,7 @@ export const InternalLogin = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
           <StyledPeek type="button" onClick={togglePeek}>
-            <Icon
-              type="button"
-              name={peek ? "eye-off" : "eye"}
-              onClick={() => null}
-            />
+            {peek ? <EyeOff size={24} /> : <Eye size={24} />}
           </StyledPeek>
         </PasswordContainer>
 

@@ -15,7 +15,8 @@ import { format } from "date-fns";
 import { StyledBigHeader } from "../common/StyledHeading";
 import { useQuestions } from "../../hooks/useQuestions";
 import { ListMyQuestions } from "./ListMyQuestions";
-import { Button } from "../common/Button";
+import { compressImage } from "../../util/imageCompression";
+import Spinner from "../common/Spinner";
 
 const StyledWrapper = styled.div`
   text-align: left;
@@ -24,19 +25,55 @@ const StyledWrapper = styled.div`
 
 const StyledTitle = styled.div`
   font-size: 24px;
+  color: ${(props) => props.theme.text};
 `;
 
 const StyledDescription = styled.div`
   font-size: 16px;
+  color: ${(props) => props.theme.text};
 `;
 
 const StyledLink = styled.div`
   font-size: 16px;
+  color: ${(props) => props.theme.text};
 `;
 
 const StyledImage = styled.img`
   max-width: 40rem;
   width: 100%;
+`;
+
+const StyledFileInput = styled.input`
+  display: none;
+`;
+
+const FileUploadButton = styled.label<{ $disabled?: boolean }>`
+  display: inline-block;
+  padding: 1rem 2rem;
+  margin-top: 0.5rem;
+  background: ${(props) => props.theme.secondary};
+  color: ${(props) => props.theme.text};
+  border: 2px solid ${(props) => props.theme.secondary};
+  border-radius: 4px;
+  cursor: ${(props) => props.$disabled ? 'not-allowed' : 'pointer'};
+  font-size: 1.4rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  opacity: ${(props) => props.$disabled ? 0.6 : 1};
+  pointer-events: ${(props) => props.$disabled ? 'none' : 'auto'};
+
+  &:hover {
+    transform: ${(props) => props.$disabled ? 'none' : 'translateY(-2px)'};
+    box-shadow: ${(props) => props.$disabled ? 'none' : '0 4px 8px rgba(0, 0, 0, 0.2)'};
+  }
+`;
+
+const UploadStatus = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 0.5rem;
+  font-size: 1.4rem;
+  color: ${(props) => props.theme.text};
 `;
 
 interface Params {
@@ -47,13 +84,13 @@ interface Params {
 
 export function YourWishDetails() {
   const { wishid, uid } = useParams<Params>();
+  const [uploading, setUploading] = useState(false);
 
   const { user } = useUser(uid ?? "");
 
   const { wish } = useWish(user?.uid || "?", wishid ?? "");
   const { user: suggestedByUser } = useUser(wish?.suggestedBy || "");
   const { questions } = useQuestions(wishid ?? "");
-  const [file, setFile] = useState<File | undefined>(undefined);
 
   async function storeWishDetails(updatedWish: Wish) {
     await firebase
@@ -74,26 +111,33 @@ export function YourWishDetails() {
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const fileList = e?.target?.files;
     const fileToUpload = fileList ? fileList[0] : undefined;
-    if (fileToUpload) setFile(fileToUpload);
+    if (fileToUpload) {
+      handleUpload(fileToUpload);
+    }
   }
 
-  async function handleUpload(e: any) {
-    e.preventDefault();
-
-    if (!file) {
+  async function handleUpload(fileToUpload: File) {
+    if (!fileToUpload) {
       return;
     }
 
-    var storageRef = firebase.storage().ref();
-    const path = storageRef.child(`/${wish?.id}`);
+    setUploading(true);
+    try {
+      // Compress the image before uploading
+      const compressedBlob = await compressImage(fileToUpload);
 
-    await path.put(file);
-    const url = await path.getDownloadURL();
-    await firebase.firestore().collection("wish").doc(wish?.id).update({
-      image: url,
-    });
-    mutate(["wish", uid]);
-    setFile(undefined);
+      var storageRef = firebase.storage().ref();
+      const path = storageRef.child(`/${wish?.id}`);
+
+      await path.put(compressedBlob);
+      const url = await path.getDownloadURL();
+      await firebase.firestore().collection("wish").doc(wish?.id).update({
+        image: url,
+      });
+      await mutate(["wish", uid]);
+    } finally {
+      setUploading(false);
+    }
   }
 
   const storeData = async (
@@ -120,16 +164,29 @@ export function YourWishDetails() {
           </Detail>
         </StyledTitle>
 
-        {wish.image && (
+        {uploading ? (
           <div
             style={{
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
+              minHeight: "200px",
             }}
           >
-            <StyledImage src={wish.image} />
+            <Spinner />
           </div>
+        ) : (
+          wish.image && (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <StyledImage src={wish.image} />
+            </div>
+          )
         )}
 
         {wish.isSuggestion && <p>Foreslått av: {suggestedByUser?.name}</p>}
@@ -159,11 +216,22 @@ export function YourWishDetails() {
           </Detail>
         </StyledDescription>
         <StyledDescription>
-          <StyledLabel>Velge bilde</StyledLabel>
-          <form onSubmit={handleUpload}>
-            <input type="file" onChange={handleChange} />
-            <Button disabled={!file}>Last opp bilde</Button>
-          </form>
+          <StyledFileInput 
+            type="file" 
+            id="file-upload" 
+            onChange={handleChange} 
+            accept="image/*"
+            disabled={uploading}
+          />
+          <FileUploadButton htmlFor="file-upload" $disabled={uploading}>
+            Last opp bilde
+          </FileUploadButton>
+          {uploading && (
+            <UploadStatus>
+              <Spinner />
+              <span>Laster opp bilde...</span>
+            </UploadStatus>
+          )}
         </StyledDescription>
         <StyledLink>
           <StyledLabel>Link</StyledLabel>

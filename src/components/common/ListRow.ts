@@ -7,11 +7,11 @@ export const ListRow = styled.div`
   align-items: center;
   background: ${(props: any) => props.theme.primary};
   color: ${(props) => props.theme.text};
-  padding-left: 50px;
+  padding-left: 15px;
   margin-bottom: 2px;
   min-height: 52px;
   text-align: left;
-  border-radius: 2.4rem;
+  border-radius: 10px;
 
   &:not(:last-child) {
     margin-bottom: 1rem;

@@ -19,21 +19,17 @@ import { StyledBigHeader } from "../common/StyledHeading";
 import { getOgData, OgResponseData } from "../../util/getOgData";
 import { redirect } from "react-router-dom";
 import { Notifications } from "./Notifications";
-import CheckIcon from "../images/checkmark_new.svg?react";
-import UploadIcon from "../images/upload.svg?react";
+import { Check, Upload } from "lucide-react";
 import { EmptyButton } from "../common/EmptyButton";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { InvitePopup } from "./InvitePopup";
 import { TabContainer, Tab } from "../common/Tabs";
 
-export const StyledCheckIcon = styled(CheckIcon)`
-  fill: ${(props) => props.theme.secondary};
-`;
-
-export const StyledUploadIcon = styled(UploadIcon)`
-  fill: ${(props) => props.theme.secondary};
-  width: 24px;
-  height: 24px;
+const IconWrapper = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${(props) => props.theme.text};
 `;
 
 export const StyledWrapper = styled.form`
@@ -217,11 +213,15 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
         />
 
         <EmptyButton type="submit" name="check">
-          <StyledCheckIcon />
+          <IconWrapper>
+            <Check size={24} />
+          </IconWrapper>
         </EmptyButton>
 
         <EmptyButton type="button" name="upload" onClick={() => navigate("/upload-wishes")}>
-          <StyledUploadIcon />
+          <IconWrapper>
+            <Upload size={24} />
+          </IconWrapper>
         </EmptyButton>
 
         {feedback && <div>{feedback}</div>}

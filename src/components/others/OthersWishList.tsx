@@ -9,13 +9,13 @@ import { useUser } from "../../hooks/useUser";
 import { StyledBigHeader } from "../common/StyledHeading";
 import { StyledInput } from "../common/StyledInput";
 import { Spacer } from "../common/Spacer";
-import { StyledCheckIcon } from "../yours/YourWishList";
 import firebase from "../firebase/firebase";
 import { NewsEntryType, Wish } from "../../types/types";
 import { StyledNotification } from "../common/StyledNotification";
 import { mutate } from "swr";
 import { getOgData, OgResponseData } from "../../util/getOgData";
 import { EmptyButton } from "../common/EmptyButton";
+import { Check } from "lucide-react";
 
 interface Params {
   uid: string;
@@ -25,6 +25,13 @@ interface Params {
 export const StyledWrapper = styled.form`
   position: relative;
   margin-bottom: 0.8rem;
+`;
+
+const IconWrapper = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${(props) => props.theme.text};
 `;
 
 export const OthersWishList = ({ myUid }: { myUid: string }) => {
@@ -130,7 +137,9 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
           onChange={(e) => setSuggestion(e.target.value)}
         />
         <EmptyButton type="submit" name="check">
-          <StyledCheckIcon />
+          <IconWrapper>
+            <Check size={24} />
+          </IconWrapper>
         </EmptyButton>
       </StyledWrapper>
 

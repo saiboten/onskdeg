@@ -1,13 +1,8 @@
 import { useState } from "react";
 import firebase from "../firebase/firebase";
-import Icon from "../common/Icon";
+import { Trash2, ShoppingCart, X, Check } from "lucide-react";
 import styled, { useTheme } from "styled-components";
 import { Wish, Purchase } from "../../types/types";
-import {
-  StyledActionButtonsAnimated,
-  NeutralIconButton,
-  NegativeIconButton,
-} from "../common/IconButton";
 import { useNavigate } from "react-router-dom";
 import { usePurchase } from "../../hooks/usePurchase";
 import { mutate } from "swr";
@@ -30,7 +25,7 @@ const WishCard = styled.div<{ $isTaken: boolean }>`
   margin-bottom: 1.6rem;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
-  background: ${(props) => props.theme.primaryDark};
+  background: ${(props) => props.theme.primary};
   opacity: ${(props) => (props.$isTaken ? 0.7 : 1)};
 
   &:hover {
@@ -63,7 +58,7 @@ const StarIcon = styled.span`
 
 const WishDate = styled.div`
   font-size: 1.2rem;
-  color: ${(props) => props.theme.contrast};
+  color: ${(props) => props.theme.text};
   white-space: nowrap;
   margin-left: 1rem;
 `;
@@ -89,7 +84,7 @@ const ImagePlaceholder = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${(props) => props.theme.contrast};
+  color: ${(props) => props.theme.text};
   font-size: 1.4rem;
 `;
 
@@ -130,6 +125,31 @@ const ActionBar = styled.div`
   margin-top: 1rem;
   padding-top: 1rem;
   border-top: 1px solid ${(props) => props.theme.secondary};
+`;
+
+const ConfirmButtons = styled.div`
+  display: flex;
+  gap: 0.5rem;
+`;
+
+const IconButtonStyled = styled.button<{ $variant?: 'neutral' | 'negative' }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: ${(props) => 
+    props.$variant === 'negative' ? props.theme.negative :
+    props.$variant === 'neutral' ? props.theme.contrast : 'transparent'
+  };
+  border: none;
+  cursor: pointer;
+  padding: 0.75rem;
+  border-radius: 4px;
+  color: white;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: scale(1.1);
+  }
 `;
 
 const OtherWish = ({ wishInfo, user, myUid }: P) => {
@@ -233,43 +253,47 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
         )}
 
         {confirm ? (
-          <div>
-            <StyledActionButtonsAnimated>
-              <NeutralIconButton
-                type="button"
-                name="x"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setConfirm(false);
-                }}
-              />
-              <NegativeIconButton
-                type="button"
-                name="check"
-                onClick={handleDeleteItem}
-              />
-            </StyledActionButtonsAnimated>
-          </div>
+          <ConfirmButtons>
+            <IconButtonStyled
+              $variant="neutral"
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setConfirm(false);
+              }}
+            >
+              <X size={24} />
+            </IconButtonStyled>
+            <IconButtonStyled
+              $variant="negative"
+              type="button"
+              onClick={handleDeleteItem}
+            >
+              <Check size={24} />
+            </IconButtonStyled>
+          </ConfirmButtons>
         ) : (
           wishSuggestedByMe && (
-            <Icon
-              color={themeContext.text}
+            <button
+              style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: '0.5rem', display: 'flex', alignItems: 'center' }}
               type="button"
-              name={"trash-2"}
               onClick={(e) => {
                 e.stopPropagation();
                 setConfirm(true);
               }}
-            />
+            >
+              <Trash2 size={24} color={themeContext.text} />
+            </button>
           )
         )}
 
-        <Icon
-          color={themeContext.text}
+        <button
+          style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: '0.5rem', display: 'flex', alignItems: 'center' }}
           type="button"
-          name="shopping-cart"
           onClick={handleBuyItem}
-        />
+        >
+          <ShoppingCart size={24} color={themeContext.text} />
+        </button>
       </ActionBar>
     </WishCard>
     </>
