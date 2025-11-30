@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Wish as WishType, Child, NewsEntryType } from "../../types/types";
 import { StyledInput } from "../common/StyledInput";
 import { Wish } from "./Wish";
-import { StyledWrapper, StyledCheckIcon } from "./YourWishList";
+import { StyledWrapper } from "./YourWishList";
 import firebase from "../firebase/firebase";
 import { useWishes } from "../../hooks/useWishes";
 import { mutate } from "swr";
@@ -11,9 +11,17 @@ import Loading from "../common/Loading";
 import { useUser } from "../../hooks/useUser";
 import { getOgData, OgResponseData } from "../../util/getOgData";
 import { EmptyButton } from "../common/EmptyButton";
+import { Check } from "lucide-react";
 
 const StyledChildren = styled.div`
   margin-bottom: 2.4rem;
+`;
+
+const IconWrapper = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${(props) => props.theme.text};
 `;
 
 interface Props {
@@ -105,7 +113,9 @@ export const YourChild = ({ child, myUid }: Props) => {
           onChange={(e) => setNewWish(e.target.value)}
         />
         <EmptyButton type="submit" name="check">
-          <StyledCheckIcon />
+          <IconWrapper>
+            <Check size={24} />
+          </IconWrapper>
         </EmptyButton>
       </StyledWrapper>
       {(wishes ?? []).length > 0 ? (
