@@ -6,7 +6,7 @@ import { useUser } from "../../hooks/useUser";
 import firebase from "../firebase/firebase";
 import styled from "styled-components";
 import { mutate } from "swr";
-import { Wish as WishType } from "../../types/types";
+import { Wish as WishType, NewsEntryType } from "../../types/types";
 import { Button } from "../common/Button";
 import { Spacer } from "../common/Spacer";
 import { generateWishDescription } from "../../services/openai";
@@ -128,6 +128,7 @@ export const UploadWishesPage = ({ uid }: Props) => {
   const [success, setSuccess] = useState("");
 
   const { user } = useUser(uid);
+  const { user: selectedUserData } = useUser(selectedUser);
   const childs = useChilds(uid);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -211,6 +212,24 @@ export const UploadWishesPage = ({ uid }: Props) => {
           image: imageUrl,
           name: wishName,
           description: wishDescription,
+        });
+
+        // Add to news feed for all groups the user belongs to
+        selectedUserData?.groups.forEach(async (group) => {
+          const groupRef = firebase.firestore().collection("groups").doc(group);
+          const groupData = await groupRef.get();
+
+          const newsFeed: NewsEntryType[] = groupData.data()?.newsFeed ?? [];
+          newsFeed.unshift({
+            isSuggestion: false,
+            user: selectedUser,
+            wish: wishName,
+            date: firebase.firestore.Timestamp.now(),
+          });
+
+          await groupRef.update({
+            newsFeed: newsFeed?.slice(0, 5) ?? [],
+          });
         });
 
         setProgress((prev) => [...prev, `✓ ${file.name} lastet opp!`]);

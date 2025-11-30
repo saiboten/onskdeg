@@ -2,7 +2,7 @@ import useSWR from "swr";
 import firebase from "../components/firebase/firebase";
 import { Wish } from "../types/types";
 
-const fetcher = async (wishes: "wish", userId: string): Promise<Wish[]> => {
+const fetcher = async ([wishes, userId]: [string, string]): Promise<Wish[]> => {
   return await new Promise(async (resolve) => {
     if (userId === "") {
       resolve([]);

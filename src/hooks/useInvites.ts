@@ -3,8 +3,7 @@ import firebase from "../components/firebase/firebase";
 import { Invites } from "../types/types";
 
 const fetcher = async (
-  collection: "invites",
-  email: string
+  [collection, email]: [string, string]
 ): Promise<Invites> => {
   return await new Promise((resolve) => {
     if (email === "") {

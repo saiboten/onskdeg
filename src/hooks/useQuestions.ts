@@ -3,8 +3,7 @@ import firebase from "../components/firebase/firebase";
 import { Question } from "../types/types";
 
 const fetcher = async (
-  question: "question",
-  wishId: string
+  [question, wishId]: [string, string]
 ): Promise<Question[] | undefined> => {
   const refs = firebase
     .firestore()

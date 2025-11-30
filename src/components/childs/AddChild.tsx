@@ -22,7 +22,12 @@ const StyledForm = styled.form`
 
 const StyledRow = styled.div`
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  
+  button {
+    margin-bottom: 0;
+  }
 `;
 
 interface Props {

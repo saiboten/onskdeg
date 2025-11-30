@@ -3,8 +3,7 @@ import firebase from "../components/firebase/firebase";
 import { Notification } from "../types/types";
 
 const fetcher = async (
-  collection: "notifications",
-  uid: string
+  [collection, uid]: [string, string]
 ): Promise<Notification[] | undefined> => {
   const refs = firebase
     .firestore()

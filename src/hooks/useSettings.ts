@@ -5,8 +5,7 @@ import firebase from "../components/firebase/firebase";
 import { Settings } from "../types/types";
 
 const fetcher = async (
-  collection: "settings",
-  uid: string
+  [collection, uid]: [string, string]
 ): Promise<Settings> => {
   return await new Promise(async (resolve) => {
     if (uid === undefined || uid === "") {

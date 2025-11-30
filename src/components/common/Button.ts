@@ -1,25 +1,53 @@
 import styled from "styled-components";
 
-const BorderStyles = `
-  border: 2px solid ${(props: any) => props.theme.secondary};
+export const BorderButton = styled.button`
+  border: 2px solid ${(props) => props.theme.secondary};
   padding: 7px 14px;
   background: transparent;
   border-radius: 8px;
   outline: none;
   font-size: 16px;
-  color: white;
+  color: ${(props) => props.theme.text};
   max-width: 300px;
   min-height: 48px;
   margin-bottom: 16px;
   cursor: pointer;
-`;
+  transition: all 0.2s ease;
 
-export const BorderButton = styled.button`
-  ${BorderStyles}
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  }
 `;
 
 export const BorderInput = styled.input`
-  ${BorderStyles}
+  border: 2px solid ${(props) => props.theme.secondary};
+  padding: 7px 14px;
+  background: transparent;
+  border-radius: 8px;
+  outline: none;
+  font-size: 16px;
+  color: ${(props) => props.theme.text};
+  max-width: 300px;
+  min-height: 48px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  }
 `;
 
 export const ButtonNavigation = styled.button`
@@ -62,6 +90,32 @@ export const Button = styled.button`
   line-height: 40px;
   text-decoration: none;
   cursor: pointer;
+`;
+
+export const DangerButton = styled.button`
+  border: 2px solid ${(props) => props.theme.negative};
+  background-color: ${(props) => props.theme.negative};
+  padding: 7px 14px;
+  border-radius: 8px;
+  outline: none;
+  font-size: 16px;
+  color: ${(props) => props.theme.white};
+  max-width: 300px;
+  min-height: 48px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  font-weight: 600;
+  font-family: "Exo 2", sans-serif;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: transparent;
+    color: ${(props) => props.theme.negative};
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
 `;
 
 export default {

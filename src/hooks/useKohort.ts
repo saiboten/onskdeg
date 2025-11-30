@@ -2,7 +2,7 @@ import useSWR from "swr";
 import firebase from "../components/firebase/firebase";
 import { Kohort } from "../types/types";
 
-const fetcher = async (groups: "groups", groupId: string): Promise<Kohort> => {
+const fetcher = async ([groups, groupId]: [string, string]): Promise<Kohort> => {
   return await new Promise((resolve) => {
     if (groupId === undefined || groupId === "") {
       return {};

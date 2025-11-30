@@ -34,11 +34,9 @@ export const UnstyledLink = styled(RouterLink)`
   font-weight: 400;
 
   &:visited,
-  &:link {
-    color: ${(props) => props.theme.text};
-  }
+  &:link,
   &:hover {
-    color: ${(props) => props.theme.primary};
+    color: ${(props) => props.theme.text};
   }
 `;
 
