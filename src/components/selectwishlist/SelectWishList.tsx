@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { format } from "date-fns";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Container } from "../common/Container";
 import { NewsEntryType } from "../../types/types";
 import { useUser } from "../../hooks/useUser";
@@ -9,6 +9,7 @@ import { Link } from "../common/Link";
 import { StyledBigHeader, StyledSubHeader } from "../common/StyledHeading";
 import { Spacer } from "../common/Spacer";
 import { Button } from "../common/Button";
+import { TabContainer, Tab } from "../common/Tabs";
 
 const StyledKohorts = styled.div`
   padding: 1rem;
@@ -107,12 +108,36 @@ export const GroupUsers = ({
   );
 };
 
+const GroupTab = ({
+  groupId,
+  $active,
+  onClick,
+}: {
+  groupId: string;
+  $active: boolean;
+  onClick: () => void;
+}) => {
+  const { kohort } = useKohort(groupId);
+  
+  return (
+    <Tab $active={$active} onClick={onClick}>
+      {kohort?.groupName || "Laster..."}
+    </Tab>
+  );
+};
+
 interface Props {
   uid: string;
 }
 
 export const SelectWishList = function ({ uid }: Props) {
   const { user } = useUser(uid);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeGroup = searchParams.get('group') || user?.groups[0];
+
+  const handleGroupChange = (groupId: string) => {
+    setSearchParams({ group: groupId });
+  };
 
   return (
     <Container textLeft>
@@ -124,9 +149,20 @@ export const SelectWishList = function ({ uid }: Props) {
         </div>
       )}
 
-      {user?.groups.map((group) => {
-        return <GroupUsers key={group} uid={uid} groupId={group} />;
-      })}
+      {user?.groups && user.groups.length > 1 && (
+        <TabContainer>
+          {user.groups.map((groupId) => (
+            <GroupTab
+              key={groupId}
+              groupId={groupId}
+              $active={groupId === activeGroup}
+              onClick={() => handleGroupChange(groupId)}
+            />
+          ))}
+        </TabContainer>
+      )}
+
+      {activeGroup && <GroupUsers uid={uid} groupId={activeGroup} />}
     </Container>
   );
 };
