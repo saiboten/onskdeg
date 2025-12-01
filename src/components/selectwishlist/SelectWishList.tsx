@@ -37,21 +37,24 @@ const SortedGroupUsers = ({ members, uid }: { members: string[]; uid: string }) 
   // Filter out current user
   const filteredMembers = members.filter((member) => member !== uid);
   
-  // Fetch all users
-  const users = filteredMembers.map((memberId) => {
+  // Sort by UID first (to maintain consistent hook order)
+  const sortedByUid = [...filteredMembers].sort();
+  
+  // Fetch all users (hooks must be called unconditionally)
+  const users = sortedByUid.map((memberId) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const { user } = useUser(memberId);
     return { uid: memberId, name: user?.name || '' };
   });
 
-  // Sort by name
-  const sortedUsers = users.sort((a, b) => 
+  // Sort by name for display
+  const sortedByName = [...users].sort((a, b) => 
     a.name.localeCompare(b.name, 'no', { sensitivity: 'base' })
   );
   
   return (
     <>
-      {sortedUsers.map((user) => (
+      {sortedByName.map((user) => (
         <li key={user.uid}>
           <GroupUser uid={user.uid} />
         </li>

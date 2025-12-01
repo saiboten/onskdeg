@@ -13,8 +13,8 @@ var firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 
-if (location.hostname === "localhost") {
-  firebase.firestore().useEmulator("localhost", 8081);
-}
+// if (location.hostname === "localhost") {
+//   firebase.firestore().useEmulator("localhost", 8081);
+// }
 
 export default firebase;
