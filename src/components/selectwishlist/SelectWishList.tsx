@@ -27,36 +27,23 @@ export const GroupUser = ({ uid }: { uid: string }) => {
   const navigate = useNavigate();
 
   return (
-    <Button onClick={() => navigate(`/other/${user?.uid}`)} data-name={user?.name || ''}>
+    <Button onClick={() => navigate(`/other/${user?.uid}`)}>
       {user?.name}
     </Button>
   );
 };
 
 const SortedGroupUsers = ({ members, uid }: { members: string[]; uid: string }) => {
-  // Filter out current user
-  const filteredMembers = members.filter((member) => member !== uid);
-  
-  // Sort by UID first (to maintain consistent hook order)
-  const sortedByUid = [...filteredMembers].sort();
-  
-  // Fetch all users (hooks must be called unconditionally)
-  const users = sortedByUid.map((memberId) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { user } = useUser(memberId);
-    return { uid: memberId, name: user?.name || '' };
-  });
-
-  // Sort by name for display
-  const sortedByName = [...users].sort((a, b) => 
-    a.name.localeCompare(b.name, 'no', { sensitivity: 'base' })
-  );
+  // Filter out current user and sort by UID for consistent rendering
+  const filteredMembers = members
+    .filter((member) => member !== uid)
+    .sort();
   
   return (
     <>
-      {sortedByName.map((user) => (
-        <li key={user.uid}>
-          <GroupUser uid={user.uid} />
+      {filteredMembers.map((memberId) => (
+        <li key={memberId}>
+          <GroupUser uid={memberId} />
         </li>
       ))}
     </>
