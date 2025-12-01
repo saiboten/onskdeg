@@ -13,6 +13,7 @@ import { Spacer } from "../common/Spacer";
 import { useQuestions } from "../../hooks/useQuestions";
 import { AddQuestion } from "./AddQuestion";
 import { ListQuestions } from "./ListQuestions";
+import { useState, useRef } from "react";
 
 const StyledImage = styled.img`
   max-width: 40rem;
@@ -21,6 +22,70 @@ const StyledImage = styled.img`
 
 const StyledDescription = styled.div`
   font-size: 16px;
+`;
+
+const StyledDialog = styled.dialog`
+  padding: 2rem;
+  border: 2px solid ${(props) => props.theme.secondary};
+  border-radius: 8px;
+  background: ${(props) => props.theme.primary};
+  color: ${(props) => props.theme.text};
+  max-width: 500px;
+
+  &::backdrop {
+    background: rgba(0, 0, 0, 0.7);
+  }
+`;
+
+const DialogContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+`;
+
+const DialogButtons = styled.div`
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+`;
+
+const DialogButton = styled.button`
+  padding: 0.8rem 1.6rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1.4rem;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+`;
+
+const ConfirmButton = styled(DialogButton)`
+  background: ${(props) => props.theme.secondary};
+  color: ${(props) => props.theme.text};
+`;
+
+const CancelButton = styled(DialogButton)`
+  background: ${(props) => props.theme.contrast};
+  color: ${(props) => props.theme.text};
+`;
+
+const RevealButton = styled.button`
+  padding: 0.8rem 1.6rem;
+  background: ${(props) => props.theme.secondary};
+  color: ${(props) => props.theme.text};
+  border: 2px solid ${(props) => props.theme.secondary};
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1.4rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
 `;
 
 interface Params {
@@ -34,8 +99,23 @@ export function OtherWishDetail({ myUid }: { myUid: string }) {
   const { wish } = useWish(uid ?? "", wishid ?? "");
   const { purchase } = usePurchase(wishid ?? "");
   const { questions } = useQuestions(wishid ?? "");
+  const [showPurchaser, setShowPurchaser] = useState(false);
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
   const { user: purchaseUser } = useUser(purchase?.checkedBy || "");
+
+  const handleRevealClick = () => {
+    dialogRef.current?.showModal();
+  };
+
+  const handleConfirm = () => {
+    setShowPurchaser(true);
+    dialogRef.current?.close();
+  };
+
+  const handleCancel = () => {
+    dialogRef.current?.close();
+  };
 
   if (!wish) {
     return <Loading />;
@@ -93,7 +173,37 @@ export function OtherWishDetail({ myUid }: { myUid: string }) {
           <div>{wish.price}</div>
         </>
       )}
-      {purchase?.checked && <div>Dette ble kjøpt av {purchaseUser?.name}</div>}
+      
+      {purchase?.checked && (
+        <>
+          {showPurchaser ? (
+            <div>Dette ble kjøpt av {purchaseUser?.name}</div>
+          ) : (
+            <>
+              <div>Dette ønsket er kjøpt av noen</div>
+              <RevealButton onClick={handleRevealClick}>
+                Vis hvem som kjøpte dette
+              </RevealButton>
+            </>
+          )}
+          
+          <StyledDialog ref={dialogRef}>
+            <DialogContent>
+              <h3>Bekreft visning</h3>
+              <p>
+                Er du sikker på at du vil se hvem som har kjøpt dette ønsket?
+                Dette kan ødelegge overraskelsen!
+              </p>
+              <DialogButtons>
+                <CancelButton onClick={handleCancel}>Avbryt</CancelButton>
+                <ConfirmButton onClick={handleConfirm}>
+                  Ja, vis hvem
+                </ConfirmButton>
+              </DialogButtons>
+            </DialogContent>
+          </StyledDialog>
+        </>
+      )}
 
       <Spacer />
 

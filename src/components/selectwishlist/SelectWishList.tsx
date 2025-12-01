@@ -27,9 +27,36 @@ export const GroupUser = ({ uid }: { uid: string }) => {
   const navigate = useNavigate();
 
   return (
-    <Button onClick={() => navigate(`/other/${user?.uid}`)}>
+    <Button onClick={() => navigate(`/other/${user?.uid}`)} data-name={user?.name || ''}>
       {user?.name}
     </Button>
+  );
+};
+
+const SortedGroupUsers = ({ members, uid }: { members: string[]; uid: string }) => {
+  // Filter out current user
+  const filteredMembers = members.filter((member) => member !== uid);
+  
+  // Fetch all users
+  const users = filteredMembers.map((memberId) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const { user } = useUser(memberId);
+    return { uid: memberId, name: user?.name || '' };
+  });
+
+  // Sort by name
+  const sortedUsers = users.sort((a, b) => 
+    a.name.localeCompare(b.name, 'no', { sensitivity: 'base' })
+  );
+  
+  return (
+    <>
+      {sortedUsers.map((user) => (
+        <li key={user.uid}>
+          <GroupUser uid={user.uid} />
+        </li>
+      ))}
+    </>
   );
 };
 
@@ -94,15 +121,7 @@ export const GroupUsers = ({
       <Spacer />
       <StyledSubHeader>Brukere</StyledSubHeader>
       <StyledUl>
-        {kohort?.members
-          .filter((member) => member !== uid)
-          .map((member) => {
-            return (
-              <li key={member}>
-                <GroupUser uid={member} />
-              </li>
-            );
-          })}
+        {kohort?.members && <SortedGroupUsers members={kohort.members} uid={uid} />}
       </StyledUl>
     </StyledKohorts>
   );
