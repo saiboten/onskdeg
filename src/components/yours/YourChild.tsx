@@ -43,7 +43,7 @@ export const YourChild = ({ child, myUid }: Props) => {
     return <Wish user={child.uid} key={el.id} delete={deleteWish} wish={el} />;
   };
 
-  const handleSaveWish = async (e: React.MouseEvent<HTMLFormElement>) => {
+  const handleSaveWish = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     mutate(["wish", child?.uid], [{ name: newWish }, ...(wishes || [])], false);

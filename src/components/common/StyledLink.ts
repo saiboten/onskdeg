@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import LinkIcon from "../images/link.svg?react";
+import { Link as LinkIcon } from "lucide-react";
 
 export const StyledLink = styled.a`
   padding: 0 0.5rem;
@@ -7,7 +7,7 @@ export const StyledLink = styled.a`
 `;
 
 export const StyledLinkIcon = styled(LinkIcon)`
-  fill: ${(props) => props.theme.text};
+  color: ${(props) => props.theme.text};
   height: 32px;
   width: 32px;
 `;

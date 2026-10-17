@@ -3,12 +3,12 @@ import { StyledInput } from "../common/StyledInput";
 import styled from "styled-components";
 import { P } from "../common/P";
 import { Button } from "../common/Button";
-import Edit from "../images/edit.svg?react";
+import { SquarePen as Edit } from "lucide-react";
 
 const StyledEdit = styled(Edit)`
   height: 2rem;
   width: 2rem;
-  fill: white;
+  color: white;
 `;
 
 interface DetailInput {

@@ -30,7 +30,7 @@ import { Profile } from "./components/Profile";
 import { ThemeProvider } from "styled-components";
 import { NavLink } from "react-router-dom";
 import { darkTheme, lightTheme, christmasTheme } from "./components/themes";
-import UserIcon from "./components/images/user.svg?react";
+import { User as UserIcon } from "lucide-react";
 import { useSettings } from "./hooks/useSettings";
 import styled from "styled-components";
 import { LoginWrapper } from "./components/login/LoginWrapper";
@@ -49,7 +49,7 @@ const StyledUserIcon = styled(UserIcon)`
   margin-left: 12px;
   width: 32px;
   height: 32px;
-  fill: ${(props) => props.theme.contrast};
+  color: ${(props) => props.theme.contrast};
   transform: translateY(0.5rem);
 `;
 
