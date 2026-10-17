@@ -2161,11 +2161,6 @@ once@^1.4.0:
   dependencies:
     wrappy "1"
 
-openai@^6.9.1:
-  version "6.9.1"
-  resolved "https://registry.npmjs.org/openai/-/openai-6.9.1.tgz"
-  integrity sha512-vQ5Rlt0ZgB3/BNmTa7bIijYFhz3YBceAA3Z4JuoMSBftBF9YqFHIEhZakSs+O/Ad7EaoEimZvHxD5ylRjN11Lg==
-
 p-limit@^3.0.1:
   version "3.1.0"
   resolved "https://registry.npmjs.org/p-limit/-/p-limit-3.1.0.tgz"

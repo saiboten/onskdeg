@@ -1,0 +1,20 @@
+{
+  "name": "onskdeg-functions-ai",
+  "private": true,
+  "main": "lib/index.js",
+  "engines": {
+    "node": "22"
+  },
+  "scripts": {
+    "build": "tsc",
+    "deploy": "npm run build && firebase deploy --only functions:ai"
+  },
+  "dependencies": {
+    "firebase-admin": "^14.5.0",
+    "firebase-functions": "^7.4.0",
+    "openai": "^7.36.0"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
+}
