@@ -1,5 +1,5 @@
 import { useEffect, useState, Suspense } from "react";
-import { HashRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import { YourWishList } from "./components/yours/YourWishList";
 import { YourWishDetails } from "./components/yours/YourWishDetails";
@@ -33,7 +33,6 @@ import { darkTheme, lightTheme, christmasTheme } from "./components/themes";
 import UserIcon from "./components/images/user.svg?react";
 import { useSettings } from "./hooks/useSettings";
 import styled from "styled-components";
-import { InternalLogin } from "./components/login/InternalLogin";
 import { LoginWrapper } from "./components/login/LoginWrapper";
 import { Link } from "./components/common/Link";
 
@@ -115,7 +114,7 @@ const App = () => {
                 }
               ></Route>
               <Route path="/" element={<Login />}></Route>
-              <Route path="/internal" element={<InternalLogin />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </HashRouter>
         </ThemeProvider>
