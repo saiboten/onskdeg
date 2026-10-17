@@ -20,6 +20,7 @@
   --color-contrast: #1fffa3;
   --color-neutral: #3988ea;
   --color-text: #ffffff;
+  --color-page: #1a1730;
 
   --animate-bars: bars 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
   --animate-spinner: spinner 1.2s linear infinite;
@@ -35,6 +36,7 @@
   --color-negative: #e3363a;
   --color-contrast: #349eff;
   --color-text: #000000;
+  --color-page: #ffffff;
 }
 
 :root[data-theme="christmas"] {
@@ -46,6 +48,7 @@
   --color-negative: #ff5656;
   --color-contrast: #e83151;
   --color-text: #000;
+  --color-page: #ffffff;
 }
 
 @keyframes bars {
@@ -109,6 +112,7 @@
     background-attachment: fixed;
     min-height: 100%;
     font-size: 62.5%;
+    background-color: var(--color-page);
   }
 
   body {
