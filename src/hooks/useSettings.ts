@@ -1,55 +1,44 @@
-// wishRef =
-
-import useSWR from "swr";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import firebase from "../components/firebase/firebase";
 import { Settings } from "../types/types";
 
-const fetcher = async (
-  [collection, uid]: [string, string]
-): Promise<Settings> => {
-  return await new Promise(async (resolve) => {
-    if (uid === undefined || uid === "") {
-      resolve({
-        festivitasThemesEnabled: true,
-        hideGifts: false,
-        darkMode: false,
-      });
-      return;
-    }
+async function fetchSettings(uid: string): Promise<Settings> {
+  if (uid === undefined || uid === "") {
+    return {
+      festivitasThemesEnabled: true,
+      hideGifts: false,
+      darkMode: false,
+    };
+  }
 
-    const docRef = firebase.firestore().collection(collection).doc(uid);
+  const docRef = firebase.firestore().collection("settings").doc(uid);
+  const docData = await docRef.get();
 
-    const docData = await docRef.get();
+  if (docData.exists) {
+    return {
+      festivitasThemesEnabled: true,
+      darkMode: true,
+      hideGifts: false,
+      ...docData.data(),
+    };
+  }
 
-    if (docData.exists) {
-      resolve({
-        festivitasThemesEnabled: true,
-        darkMode: true,
-        hideGifts: false,
-        ...docData.data(),
-      });
-    } else {
-      const newSettings = {
-        festivitasThemesEnabled: true,
-        hideGifts: false,
-        darkMode: true,
-      };
-      await docRef.set(newSettings);
-      resolve(newSettings);
-    }
-  });
-};
-
-export function useSettings(uid: string, useSuspense: boolean) {
-  const { data, error } = useSWR(["settings", uid], fetcher, {
-    suspense: useSuspense,
-  });
-
-  console.log(data);
-
-  return {
-    settings: data,
-    isLoading: !error && !data,
-    isError: error,
+  const newSettings = {
+    festivitasThemesEnabled: true,
+    hideGifts: false,
+    darkMode: true,
   };
+  await docRef.set(newSettings);
+  return newSettings;
+}
+
+export const settingsQuery = (uid: string) =>
+  queryOptions({
+    queryKey: ["settings", uid],
+    queryFn: () => fetchSettings(uid),
+  });
+
+export function useSettings(uid: string) {
+  const { data } = useSuspenseQuery(settingsQuery(uid));
+  return { settings: data };
 }

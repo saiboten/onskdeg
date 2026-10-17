@@ -1,53 +1,47 @@
-import useSWR from "swr";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import firebase from "../components/firebase/firebase";
 import { User } from "../types/types";
 
-const fetcher = async ([collection, userId]: [string, string]): Promise<User> => {
-  return await new Promise(async (resolve) => {
-    if (userId === "") {
-      resolve({
-        uid: "",
-        groups: [],
-        isChild: false,
-      });
-      return;
-    }
+async function fetchUser(userId: string): Promise<User> {
+  if (userId === "") {
+    return {
+      uid: "",
+      groups: [],
+      isChild: false,
+    };
+  }
 
-    const userDoc = firebase.firestore().collection(collection).doc(userId);
+  const userDoc = firebase.firestore().collection("user").doc(userId);
+  const userData = await userDoc.get();
 
-    const userData = await userDoc.get();
+  if (userData.exists) {
+    return {
+      uid: "",
+      childs: [],
+      groups: [],
+      isChild: false,
+      ...userData.data(),
+    };
+  }
 
-    if (userData.exists) {
-      const user = {
-        uid: "",
-        childs: [],
-        groups: [],
-        isChild: false,
-        ...userData.data(),
-      };
-      resolve(user);
-    } else {
-      await userDoc.set({
-        uid: userId,
-        childs: [],
-        groups: [],
-        isChild: false,
-      });
-      resolve({
-        uid: userId,
-        childs: [],
-        groups: [],
-        isChild: false,
-      });
-    }
-  });
-};
+  const newUser = {
+    uid: userId,
+    childs: [],
+    groups: [],
+    isChild: false,
+  };
+  await userDoc.set(newUser);
+  return newUser;
+}
 
 export function useUser(user: string) {
-  const { data, error } = useSWR(["user", user], fetcher, { suspense: true });
+  const { data, error } = useSuspenseQuery({
+    queryKey: ["user", user],
+    queryFn: () => fetchUser(user),
+  });
   return {
     user: data,
-    isLoading: !error && !data,
+    isLoading: false,
     isError: error,
   };
 }

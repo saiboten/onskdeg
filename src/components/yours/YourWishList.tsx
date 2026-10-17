@@ -1,7 +1,7 @@
 import { ComponentProps, Suspense, useEffect, useState } from "react";
 import { Wish } from "./Wish";
 import firebase from "../firebase/firebase";
-import { mutate } from "swr";
+import { invalidate, queryClient } from "../../queryClient";
 
 import { Wish as WishType, NewsEntryType } from "../../types/types";
 import { Container } from "../common/Container";
@@ -73,7 +73,10 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
       return;
     }
 
-    mutate(["wish", activeTab], [{ name: newWish }, ...(wishes || [])], false);
+    queryClient.setQueryData(
+      ["wish", activeTab],
+      [{ name: newWish }, ...(wishes || [])]
+    );
     setNewWish("");
 
     let data: OgResponseData | undefined = undefined;
@@ -105,7 +108,7 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
       id: newWishRef.id,
     });
 
-    mutate(["wish", activeTab]);
+    invalidate(["wish", activeTab]);
 
     user?.groups.forEach(async (group) => {
       const groupRef = firebase.firestore().collection("groups").doc(group);
@@ -134,7 +137,7 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
 
   async function deleteThis(deleteId: string) {
     await firebase.firestore().collection("wish").doc(deleteId).delete();
-    mutate(["wish", activeTab]);
+    invalidate(["wish", activeTab]);
   }
 
   const wishToElement = (el: WishType) => {

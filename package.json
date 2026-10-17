@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@tanstack/react-query": "^5.104.4",
     "clsx": "^2.1.1",
     "date-fns": "^4.4.0",
     "firebase": "^13.0.0",
@@ -11,7 +12,6 @@
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-router-dom": "^7.18.4",
-    "swr": "^2.3.7",
     "tailwind-merge": "^3.7.0",
     "typescript": "^7.0.2"
   },

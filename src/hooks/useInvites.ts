@@ -1,46 +1,30 @@
-import useSWR from "swr";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import firebase from "../components/firebase/firebase";
 import { Invites } from "../types/types";
 
-const fetcher = async (
-  [collection, email]: [string, string]
-): Promise<Invites> => {
-  return await new Promise((resolve) => {
-    if (email === "") {
-      resolve({
-        myInvites: [],
-      });
-      return;
-    }
+async function fetchInvites(email: string): Promise<Invites> {
+  if (email === "") {
+    return {
+      myInvites: [],
+    };
+  }
 
-    firebase
-      .firestore()
-      .collection(collection)
-      .doc(email)
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          const user = {
-            myInvites: [],
-            ...doc.data(),
-          };
-          resolve(user);
-        } else {
-          resolve({
-            myInvites: [],
-          });
-        }
-      });
-  });
-};
+  const doc = await firebase.firestore().collection("invites").doc(email).get();
+
+  return {
+    myInvites: [],
+    ...doc.data(),
+  };
+}
 
 export function useInvites(email: string) {
-  const { data, error } = useSWR(["invites", email], fetcher, {
-    suspense: true,
+  const { data, error } = useSuspenseQuery({
+    queryKey: ["invites", email],
+    queryFn: () => fetchInvites(email),
   });
   return {
     invites: data,
-    isLoading: !error && !data,
+    isLoading: false,
     isError: error,
   };
 }

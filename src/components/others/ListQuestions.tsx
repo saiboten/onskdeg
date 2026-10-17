@@ -1,5 +1,5 @@
 import React from "react";
-import { mutate } from "swr";
+import { invalidate } from "../../queryClient";
 import { Question } from "../../types/types";
 import { Spacer } from "../common/Spacer";
 import { StyledSubHeader } from "../common/StyledHeading";
@@ -18,7 +18,7 @@ export const ListQuestions = ({ myUid, wishId, questions }: Props) => {
   async function handleDeleteQuestion(questionId: string) {
     await firebase.firestore().collection("question").doc(questionId).delete();
     flash();
-    mutate(["question", wishId]);
+    invalidate(["question", wishId]);
   }
 
   return (

@@ -4,7 +4,7 @@ import { Button } from "../common/Button";
 import { StyledInput } from "../common/StyledInput";
 import { StyledLabelInputPair } from "../common/StyledLabelInputPair";
 import firebase from "../firebase/firebase";
-import { mutate } from "swr";
+import { invalidate } from "../../queryClient";
 import Loading from "../common/Loading";
 import { Kohort, User } from "../../types/types";
 import { StyledNotification } from "../common/StyledNotification";
@@ -67,7 +67,7 @@ export const AddInvite = ({ kohort, user }: AddInviteProps) => {
     }
 
     setNewInvite("");
-    mutate(["groups", kohort?.id]);
+    invalidate(["groups", kohort?.id]);
     setAddEmailLoading(false);
     setShowInviteAdded(`Sendte invitasjon til ${newInviteIgnoreCase}`);
 

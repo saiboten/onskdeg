@@ -4,7 +4,7 @@ import ListRow, { LeftSection } from "../common/ListRow";
 import { StyledActionButtons } from "../common/IconButton";
 import { Link as RouterLink } from "react-router-dom";
 import firebase from "../firebase/firebase";
-import { mutate } from "swr";
+import { invalidate } from "../../queryClient";
 import { Star, Trash2, X, Check } from "lucide-react";
 
 import { StyledLink, StyledLinkIcon } from "../common/StyledLink";
@@ -60,7 +60,7 @@ export const Wish = ({ wish, delete: deleteProp, user }: P) => {
       .doc(wish.id)
       .update({ favorite: !wish.favorite });
 
-    mutate(["wish", user]);
+    invalidate(["wish", user]);
   }
 
   const deleteWish = confirm ? (

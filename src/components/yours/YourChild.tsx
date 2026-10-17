@@ -5,7 +5,7 @@ import { Wish } from "./Wish";
 import { StyledWrapper } from "./YourWishList";
 import firebase from "../firebase/firebase";
 import { useWishes } from "../../hooks/useWishes";
-import { mutate } from "swr";
+import { invalidate, queryClient } from "../../queryClient";
 import Loading from "../common/Loading";
 import { useUser } from "../../hooks/useUser";
 import { getOgData, OgResponseData } from "../../util/getOgData";
@@ -24,7 +24,7 @@ export const YourChild = ({ child, myUid }: Props) => {
 
   async function deleteWish(deleteId: string) {
     await firebase.firestore().collection("wish").doc(deleteId).delete();
-    mutate(["wish", child?.uid]);
+    invalidate(["wish", child?.uid]);
   }
 
   const wishToElement = (el: WishType) => {
@@ -34,7 +34,10 @@ export const YourChild = ({ child, myUid }: Props) => {
   const handleSaveWish = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    mutate(["wish", child?.uid], [{ name: newWish }, ...(wishes || [])], false);
+    queryClient.setQueryData(
+      ["wish", child?.uid],
+      [{ name: newWish }, ...(wishes || [])]
+    );
     setNewWish("");
 
     let data: OgResponseData | undefined = undefined;
@@ -83,7 +86,7 @@ export const YourChild = ({ child, myUid }: Props) => {
       });
     });
 
-    mutate(["wish", child.uid]);
+    invalidate(["wish", child.uid]);
   };
 
   if (isLoading) {

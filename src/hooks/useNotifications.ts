@@ -1,18 +1,15 @@
-import useSWR from "swr";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import firebase from "../components/firebase/firebase";
 import { Notification } from "../types/types";
 
-const fetcher = async (
-  [collection, uid]: [string, string]
-): Promise<Notification[] | undefined> => {
-  const refs = firebase
+async function fetchNotifications(uid: string): Promise<Notification[]> {
+  const docs = await firebase
     .firestore()
-    .collection(collection)
-    .where("to", "==", uid);
+    .collection("notifications")
+    .where("to", "==", uid)
+    .get();
 
-  const docs = await refs.get();
-
-  const notifications: Notification[] = docs.docs.map((el) => ({
+  return docs.docs.map((el) => ({
     id: "",
     completed: false,
     link: "",
@@ -20,16 +17,16 @@ const fetcher = async (
     to: "",
     ...el.data(),
   }));
-  return notifications;
-};
+}
 
 export function useNotifications(uid: string) {
-  const { data, error } = useSWR(["notifications", uid], fetcher, {
-    suspense: true,
+  const { data, error } = useSuspenseQuery({
+    queryKey: ["notifications", uid],
+    queryFn: () => fetchNotifications(uid),
   });
   return {
     notifications: data,
-    isLoading: !error && !data,
+    isLoading: false,
     isError: error,
   };
 }

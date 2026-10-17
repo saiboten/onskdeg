@@ -9,7 +9,7 @@ import { useUser } from "../../hooks/useUser";
 import { Kohort } from "../../types/types";
 import { StyledBigHeader, StyledSubHeader } from "../common/StyledHeading";
 import firebase from "../firebase/firebase";
-import { mutate } from "swr";
+import { invalidate } from "../../queryClient";
 import { useParams } from "react-router-dom";
 import Loading from "../common/Loading";
 import { AddUserByUid } from "./AddUserByUid";
@@ -37,7 +37,7 @@ const KohortMember = ({
       .update({
         members: kohort?.members.filter((memberId) => memberId !== uid) ?? [],
       });
-    mutate(["groups", kohortId]);
+    invalidate(["groups", kohortId]);
   }
 
   return (
@@ -102,7 +102,7 @@ const KohortInvite = ({
         inviteData.data()?.myInvites.filter((m: string) => m !== kohortId) ||
         [],
     });
-    mutate(["groups", kohortId]);
+    invalidate(["groups", kohortId]);
     setRemoveInviteLoading(false);
   }
 

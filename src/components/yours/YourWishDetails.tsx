@@ -9,7 +9,7 @@ import { StyledLabel } from "../common/Label";
 import { useWish } from "../../hooks/useWish";
 import { useParams } from "react-router-dom";
 import { useUser } from "../../hooks/useUser";
-import { mutate } from "swr";
+import { invalidate } from "../../queryClient";
 import { ALink } from "../common/Link";
 import { format } from "date-fns";
 import { StyledBigHeader } from "../common/StyledHeading";
@@ -76,7 +76,7 @@ export function YourWishDetails() {
       await firebase.firestore().collection("wish").doc(wish?.id).update({
         image: url,
       });
-      await mutate(["wish", uid]);
+      await invalidate(["wish", uid]);
     } finally {
       setUploading(false);
     }
@@ -94,7 +94,7 @@ export function YourWishDetails() {
 
     await storeWishDetails(storeThis);
     toggle(false);
-    mutate(["wish", uid]);
+    invalidate(["wish", uid]);
   };
 
   return (

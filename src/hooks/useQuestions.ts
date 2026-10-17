@@ -1,36 +1,31 @@
-import useSWR from "swr";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import firebase from "../components/firebase/firebase";
 import { Question } from "../types/types";
 
-const fetcher = async (
-  [question, wishId]: [string, string]
-): Promise<Question[] | undefined> => {
-  const refs = firebase
+async function fetchQuestions(wishId: string): Promise<Question[]> {
+  const docs = await firebase
     .firestore()
-    .collection(question)
-    .where("wishId", "==", wishId);
+    .collection("question")
+    .where("wishId", "==", wishId)
+    .get();
 
-  const docs = await refs.get();
-
-  console.log(docs.size);
-
-  const bla: Question[] = docs.docs.map((el) => ({
+  return docs.docs.map((el) => ({
     wishId: wishId,
     question: "",
     questionOwner: "",
     questionId: "",
     ...el.data(),
   }));
-  return bla;
-};
+}
 
 export function useQuestions(wishId: string) {
-  const { data, error } = useSWR(["question", wishId], fetcher, {
-    suspense: true,
+  const { data, error } = useSuspenseQuery({
+    queryKey: ["question", wishId],
+    queryFn: () => fetchQuestions(wishId),
   });
   return {
     questions: data,
-    isLoading: !error && !data,
+    isLoading: false,
     isError: error,
   };
 }

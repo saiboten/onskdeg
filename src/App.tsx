@@ -28,7 +28,8 @@ import { FixWishes } from "./components/FixWishes";
 import { Profile } from "./components/Profile";
 import { NavLink } from "react-router-dom";
 import { User as UserIcon } from "lucide-react";
-import { useSettings } from "./hooks/useSettings";
+import { useQuery } from "@tanstack/react-query";
+import { settingsQuery } from "./hooks/useSettings";
 import { LoginWrapper } from "./components/login/LoginWrapper";
 import { Link } from "./components/common/Link";
 
@@ -36,7 +37,11 @@ const App = () => {
   const [uid, setUid] = useState<string | undefined>();
   const [firebaseUser, setFirebaseUser] = useState<firebase.User | undefined>();
   const [uidResolved, setUidResolved] = useState(false);
-  const { settings, isLoading, isError } = useSettings(uid || "", false);
+  const {
+    data: settings,
+    isPending: isLoading,
+    isError,
+  } = useQuery(settingsQuery(uid || ""));
 
   const theme = !uid
     ? "dark"

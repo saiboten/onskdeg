@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { mutate } from "swr";
+import { invalidate } from "../../queryClient";
 import { useUser } from "../../hooks/useUser";
 import { Notification, Question as QuestionType } from "../../types/types";
 import { Button } from "../common/Button";
@@ -56,7 +56,7 @@ const Question = ({ myUid, question, wishId }: QuestionProps) => {
     });
 
     flash();
-    mutate(["question", wishId]);
+    invalidate(["question", wishId]);
     setLoading(false);
   }
 

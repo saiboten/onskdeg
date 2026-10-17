@@ -6,7 +6,7 @@ import { StyledLabel } from "../common/Label";
 import { StyledInput } from "../common/StyledInput";
 import { StyledLabelInputPair } from "../common/StyledLabelInputPair";
 import firebase from "../firebase/firebase";
-import { mutate } from "swr";
+import { invalidate } from "../../queryClient";
 import Loading from "../common/Loading";
 
 interface AddUserByUidProps {
@@ -42,7 +42,7 @@ export const AddUserByUid = ({ kohort, kohortId }: AddUserByUidProps) => {
       });
 
     // TODO notification
-    mutate(["groups"], kohortId);
+    invalidate(["groups", kohortId]);
     setNewUid("");
     setAddUidLoading(false);
   }

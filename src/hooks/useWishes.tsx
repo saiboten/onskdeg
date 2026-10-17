@@ -1,53 +1,42 @@
-import useSWR from "swr";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import firebase from "../components/firebase/firebase";
 import { Wish } from "../types/types";
 
-const fetcher = async ([wishes, userId]: [string, string]): Promise<Wish[]> => {
-  return await new Promise(async (resolve) => {
-    if (userId === "") {
-      resolve([]);
-      return;
-    }
+async function fetchWishes(userId: string): Promise<Wish[]> {
+  if (userId === "") {
+    return [];
+  }
 
-    const queryRef = firebase
-      .firestore()
-      .collection(wishes)
-      .where("owner", "==", userId)
-      .orderBy("date", "asc");
+  const query = await firebase
+    .firestore()
+    .collection("wish")
+    .where("owner", "==", userId)
+    .orderBy("date", "asc")
+    .get();
 
-    const query = await queryRef.get();
+  const wishes: Wish[] = query.docs.map((doc) => ({
+    owner: "",
+    deleted: false,
+    description: "",
+    id: "",
+    isSuggestion: false,
+    link: "",
+    name: "",
+    ...doc.data(),
+  }));
 
-    if (!query.empty) {
-      const wishRes: Wish[] = query.docs.map((doc) => {
-        const wish: Wish = {
-          owner: "",
-          deleted: false,
-          description: "",
-          id: "",
-          isSuggestion: false,
-          link: "",
-          name: "",
-          ...doc.data(),
-        };
-
-        return wish;
-      });
-
-      resolve(wishRes.reverse());
-    } else {
-      resolve([]);
-    }
-  });
-};
+  return wishes.reverse();
+}
 
 export function useWishes(user: string) {
-  const { data, error } = useSWR(["wish", user], fetcher, {
-    suspense: true,
+  const { data, error } = useSuspenseQuery({
+    queryKey: ["wish", user],
+    queryFn: () => fetchWishes(user),
   });
 
   return {
     wishes: data,
-    isLoading: !error && !data,
+    isLoading: false,
     isError: error,
   };
 }

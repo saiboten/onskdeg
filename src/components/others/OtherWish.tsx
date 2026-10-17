@@ -5,7 +5,7 @@ import { Trash2, ShoppingCart, X, Check } from "lucide-react";
 import { Wish, Purchase } from "../../types/types";
 import { useNavigate } from "react-router-dom";
 import { usePurchase } from "../../hooks/usePurchase";
-import { mutate } from "swr";
+import { invalidate } from "../../queryClient";
 import { StyledNotification } from "../common/StyledNotification";
 import { format } from "date-fns";
 import { StyledLink, StyledLinkIcon } from "../common/StyledLink";
@@ -26,7 +26,7 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
   const [feedback, setFeedback] = useState("");
   const { purchase } = usePurchase(wishInfo?.id);
   const [confirm, setConfirm] = useState(false);
-  const { settings } = useSettings(myUid, true);
+  const { settings } = useSettings(myUid);
 
   const isTaken = purchase?.checked ?? false;
 
@@ -61,13 +61,13 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
       setFeedback("");
     }, 3000);
 
-    mutate(["purchase", wishInfo.id]);
+    invalidate(["purchase", wishInfo.id]);
   }
 
   async function handleDeleteItem(e: React.MouseEvent) {
     e.stopPropagation();
     await firebase.firestore().collection("wish").doc(wishInfo.id).delete();
-    mutate(["wish", user]);
+    invalidate(["wish", user]);
   }
 
   const wishSuggestedByMe = wishInfo.suggestedBy === myUid;

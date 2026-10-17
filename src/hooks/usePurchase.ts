@@ -1,41 +1,34 @@
-// wishRef =
-
-import useSWR from "swr";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import firebase from "../components/firebase/firebase";
 import { Purchase } from "../types/types";
 
-const fetcher = async (
-  [_, purchaseId]: [string, string]
-): Promise<Purchase | undefined> => {
-  return await new Promise((resolve) => {
-    firebase
-      .firestore()
-      .collection("purchase")
-      .doc(purchaseId)
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          resolve({
-            checked: false,
-            checkedBy: undefined,
-            ...doc.data(),
-          });
-        } else {
-          resolve({
-            checked: false,
-          });
-        }
-      });
-  });
-};
+async function fetchPurchase(purchaseId: string): Promise<Purchase> {
+  const doc = await firebase
+    .firestore()
+    .collection("purchase")
+    .doc(purchaseId)
+    .get();
+
+  if (doc.exists) {
+    return {
+      checked: false,
+      checkedBy: undefined,
+      ...doc.data(),
+    };
+  }
+  return {
+    checked: false,
+  };
+}
 
 export function usePurchase(purchaseId: string) {
-  const { data, error } = useSWR(["purchase", purchaseId], fetcher, {
-    suspense: true,
+  const { data, error } = useSuspenseQuery({
+    queryKey: ["purchase", purchaseId],
+    queryFn: () => fetchPurchase(purchaseId),
   });
   return {
     purchase: data,
-    isLoading: !error && !data,
+    isLoading: false,
     isError: error,
   };
 }

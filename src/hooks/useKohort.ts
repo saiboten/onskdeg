@@ -1,48 +1,40 @@
-import useSWR from "swr";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import firebase from "../components/firebase/firebase";
 import { Kohort } from "../types/types";
 
-const fetcher = async ([groups, groupId]: [string, string]): Promise<Kohort> => {
-  return await new Promise((resolve) => {
-    if (groupId === undefined || groupId === "") {
-      return {};
-    }
-
-    firebase
-      .firestore()
-      .collection(groups)
-      .doc(groupId)
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          resolve({
-            id: "",
-            groupName: "",
-            admin: "",
-            members: [],
-            invites: [],
-            ...doc.data(),
-          });
-        } else {
-          resolve({
-            id: "",
-            admin: "",
-            members: [],
-            invites: [],
-            groupName: "",
-          });
-        }
-      });
-  });
+const emptyKohort: Kohort = {
+  id: "",
+  groupName: "",
+  admin: "",
+  members: [],
+  invites: [],
 };
 
+async function fetchKohort(groupId: string): Promise<Kohort> {
+  if (groupId === undefined || groupId === "") {
+    return emptyKohort;
+  }
+
+  const doc = await firebase
+    .firestore()
+    .collection("groups")
+    .doc(groupId)
+    .get();
+
+  return {
+    ...emptyKohort,
+    ...doc.data(),
+  };
+}
+
 export function useKohort(groupId: string) {
-  const { data, error } = useSWR(["groups", groupId], fetcher, {
-    suspense: true,
+  const { data, error } = useSuspenseQuery({
+    queryKey: ["groups", groupId],
+    queryFn: () => fetchKohort(groupId),
   });
   return {
     kohort: data,
-    isLoading: !error && !data,
+    isLoading: false,
     isError: error,
   };
 }

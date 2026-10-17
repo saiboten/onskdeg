@@ -4,7 +4,7 @@ import { StyledBigHeader } from "../common/StyledHeading";
 import { useChilds } from "../../hooks/useChilds";
 import { useUser } from "../../hooks/useUser";
 import firebase from "../firebase/firebase";
-import { mutate } from "swr";
+import { invalidate } from "../../queryClient";
 import { Wish as WishType, NewsEntryType } from "../../types/types";
 import { Button } from "../common/Button";
 import { Spacer } from "../common/Spacer";
@@ -138,7 +138,7 @@ export const UploadWishesPage = ({ uid }: Props) => {
         successCount++;
       }
 
-      mutate(["wish", selectedUser]);
+      invalidate(["wish", selectedUser]);
       setSuccess(`${successCount} av ${totalFiles} bilder lastet opp!`);
       setFiles(null);
       // Reset file input

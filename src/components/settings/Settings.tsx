@@ -8,7 +8,7 @@ import { useKohort } from "../../hooks/useKohort";
 import { useUser } from "../../hooks/useUser";
 import { StyledBigHeader, StyledSubHeader } from "../common/StyledHeading";
 import firebase from "../firebase/firebase";
-import { mutate } from "swr";
+import { invalidate } from "../../queryClient";
 import Loading from "../common/Loading";
 import { StyledNotification } from "../common/StyledNotification";
 
@@ -59,8 +59,8 @@ const GroupSetting = ({
         groups: user?.groups.filter((m) => m !== groupId) ?? [],
       });
 
-    mutate(["groups", groupId]);
-    mutate(["user", myUid]);
+    invalidate(["groups", groupId]);
+    invalidate(["user", myUid]);
     setLoading(false);
     setNotification(`Du er fjernet fra gruppe ${kohort?.groupName}`);
 

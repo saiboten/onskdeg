@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { mutate } from "swr";
+import { invalidate } from "../../queryClient";
 import { useKohort } from "../../hooks/useKohort";
 import { useUser } from "../../hooks/useUser";
 import { BorderButton } from "../common/Button";
@@ -84,7 +84,7 @@ export const InvitePopup = ({ invites, uid, firebaseUser }: Props) => {
       setLoading(false);
     });
 
-    mutate(["invites", firebaseUser?.email]);
+    invalidate(["invites", firebaseUser?.email]);
   }
 
   async function declineGroupInvite() {
@@ -97,7 +97,7 @@ export const InvitePopup = ({ invites, uid, firebaseUser }: Props) => {
       .update({
         myInvites: invites.filter((m) => m !== firstInvite),
       });
-    mutate(["invites", firebaseUser?.email]);
+    invalidate(["invites", firebaseUser?.email]);
     setLoading(false);
   }
 

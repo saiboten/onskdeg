@@ -11,7 +11,7 @@ import { Spacer } from "../common/Spacer";
 import firebase from "../firebase/firebase";
 import { NewsEntryType, Wish } from "../../types/types";
 import { StyledNotification } from "../common/StyledNotification";
-import { mutate } from "swr";
+import { invalidate } from "../../queryClient";
 import { getOgData, OgResponseData } from "../../util/getOgData";
 import { EmptyButton } from "../common/EmptyButton";
 import { Check } from "lucide-react";
@@ -32,7 +32,7 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
   async function handleAddSuggestion(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    // mutate(["wish", uid], [{ name: suggestion }, ...(wishes || [])], false);
+    // queryClient.setQueryData(["wish", uid], [{ name: suggestion }, ...(wishes || [])]);
 
     let data: OgResponseData | undefined = undefined;
     let link: string | undefined = undefined;
@@ -79,7 +79,7 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
 
     setFeedback(`La til forslag ${suggestion}`);
     setSuggestion("");
-    mutate(["wish", uid]);
+    invalidate(["wish", uid]);
 
     setTimeout(() => {
       setFeedback("");

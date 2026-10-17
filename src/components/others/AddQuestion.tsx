@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { mutate } from "swr";
+import { invalidate } from "../../queryClient";
 import { useUser } from "../../hooks/useUser";
 import { useWish } from "../../hooks/useWish";
 import { Notification, Question } from "../../types/types";
@@ -79,7 +79,7 @@ export const AddQuestion = ({ myUid, wishOwnerUid, wishId }: Props) => {
 
     setQuestion("");
     flash();
-    mutate(["question", wishId]);
+    invalidate(["question", wishId]);
     setLoading(false);
   }
 

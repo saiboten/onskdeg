@@ -6,7 +6,7 @@ import { BorderButton, ButtonNavigation, DangerButton } from "./common/Button";
 import { UnstyledLink } from "./common/Link";
 import firebase from "./firebase/firebase";
 import { useSettings } from "../hooks/useSettings";
-import { mutate } from "swr";
+import { invalidate } from "../queryClient";
 import { Spacer } from "./common/Spacer";
 
 function logOut(setFeedback: (n: string) => void, logout: () => void) {
@@ -34,7 +34,7 @@ const checkbox =
 export const Profile = ({ uid }: { uid: string }) => {
   const { user } = useUser(uid);
   const [feedback, setFeedback] = useState("");
-  const { settings } = useSettings(uid, true);
+  const { settings } = useSettings(uid);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [userDeleted, setUserDeleted] = useState(false);
 
@@ -46,14 +46,14 @@ export const Profile = ({ uid }: { uid: string }) => {
     await firebase.firestore().collection("settings").doc(uid).update({
       darkMode: event.target.checked,
     });
-    mutate(["settings", uid]);
+    invalidate(["settings", uid]);
   }
 
   async function toggleHideGifts(event: React.ChangeEvent<HTMLInputElement>) {
     await firebase.firestore().collection("settings").doc(uid).update({
       hideGifts: event.target.checked,
     });
-    mutate(["settings", uid]);
+    invalidate(["settings", uid]);
   }
 
   async function toggleFestivitasTheme(
@@ -62,7 +62,7 @@ export const Profile = ({ uid }: { uid: string }) => {
     await firebase.firestore().collection("settings").doc(uid).update({
       festivitasThemesEnabled: event.target.checked,
     });
-    mutate(["settings", uid]);
+    invalidate(["settings", uid]);
   }
 
   function handleDelete() {

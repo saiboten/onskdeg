@@ -4,7 +4,7 @@ import { Container } from "./common/Container";
 import { StyledLabel } from "./common/Label";
 import { StyledInput } from "./common/StyledInput";
 import firebase from "./firebase/firebase";
-import { mutate } from "swr";
+import { invalidate } from "../queryClient";
 import { StyledBigHeader } from "./common/StyledHeading";
 
 interface Props {
@@ -24,7 +24,7 @@ export const SelectName = ({ firebaseUser, uid }: Props) => {
     await firebase.firestore().collection("user").doc(uid).update({
       name,
     });
-    mutate(["user", uid]);
+    invalidate(["user", uid]);
   }
 
   return (

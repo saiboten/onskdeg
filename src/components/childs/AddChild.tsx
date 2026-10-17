@@ -5,7 +5,7 @@ import { BorderButton } from "../common/Button";
 import { Container } from "../common/Container";
 import { StyledInput } from "../common/StyledInput";
 import firebase from "../firebase/firebase";
-import { mutate } from "swr";
+import { invalidate } from "../../queryClient";
 import { Child } from "../../types/types";
 import { Spacer } from "../common/Spacer";
 import Spinner from "../common/Spinner";
@@ -59,7 +59,7 @@ export function AddChild({ uid }: Props) {
         });
     });
 
-    mutate(["user", uid]);
+    invalidate(["user", uid]);
     redirect("/");
   }
 
