@@ -1,30 +1,21 @@
-import styled from "styled-components";
+import { ComponentProps } from "react";
+import { cn } from "../../util/cn";
 
-export const TabContainer = styled.div`
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 2rem;
-  flex-wrap: wrap;
-  justify-content: center;
-`;
+export const TabContainer = (props: ComponentProps<"div">) => (
+  <div className="mb-20 flex flex-wrap justify-center gap-5" {...props} />
+);
 
-export const Tab = styled.button<{ $active: boolean }>`
-  padding: 1rem 2rem;
-  border: 2px solid ${(props) => props.theme.secondary};
-  background: ${(props) => props.$active ? props.theme.secondary : 'transparent'};
-  color: ${(props) => props.theme.text};
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1.6rem;
-  font-weight: ${(props) => props.$active ? '600' : '400'};
-  transition: all 0.2s ease;
-
-  &:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    transform: translateY(-1px);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
-`;
+export const Tab = ({
+  $active,
+  className,
+  ...props
+}: ComponentProps<"button"> & { $active: boolean }) => (
+  <button
+    className={cn(
+      "cursor-pointer rounded-[8px] border-2 border-solid border-secondary px-20 py-10 text-[1.6rem] text-text transition-all duration-200 ease-[ease] hover:-translate-y-1 hover:shadow-[0_2px_8px_rgba(0,0,0,0.2)] active:translate-y-0",
+      $active ? "bg-secondary font-semibold" : "bg-transparent font-normal",
+      className
+    )}
+    {...props}
+  />
+);

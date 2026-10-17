@@ -5,7 +5,6 @@ import { StyledLabel } from "../common/Label";
 import { Button } from "../common/Button";
 import firebase from "../firebase/firebase";
 import { useUser } from "../../hooks/useUser";
-import styled from "styled-components";
 import { Spacer } from "../common/Spacer";
 import { redirect } from "react-router-dom";
 import { StyledBigHeader } from "../common/StyledHeading";
@@ -13,15 +12,6 @@ import { StyledBigHeader } from "../common/StyledHeading";
 interface Props {
   uid: string;
 }
-
-const StyledLabelInput = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
-const StyledUl = styled.ul`
-  padding-left: 20px;
-`;
 
 export const AddKohort: React.FC<Props> = ({ uid }) => {
   const [groupName, setGroupName] = useState("");
@@ -97,7 +87,7 @@ export const AddKohort: React.FC<Props> = ({ uid }) => {
         }}
       >
         <StyledLabel htmlFor="email">Epost</StyledLabel>
-        <StyledLabelInput>
+        <div className="flex justify-between">
           <StyledInput
             autoComplete="off"
             id="email"
@@ -105,17 +95,17 @@ export const AddKohort: React.FC<Props> = ({ uid }) => {
             onChange={(e) => setEmail(e.target.value)}
           ></StyledInput>
           <Button type="submit">Legg til</Button>
-        </StyledLabelInput>
+        </div>
       </form>
       <Spacer />
       <div>Inviterte brukere:</div>
 
       {invites.length > 0 ? (
-        <StyledUl>
+        <ul className="pl-20">
           {invites.map((email: string) => {
             return <li key={email}>{email}</li>;
           })}
-        </StyledUl>
+        </ul>
       ) : (
         <div>Ingen brukere lagt til</div>
       )}

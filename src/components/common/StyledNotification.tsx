@@ -1,28 +1,5 @@
 import { useState } from "react";
-import styled from "styled-components";
-
-interface Props {
-  active: boolean;
-}
-
-const StyledNotificationBar = styled.div<Props>`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  border: 1px solid #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-  background-color: ${(props) => props.theme.contrast};
-  color: ${(props) => props.theme.text};
-  padding: 1rem 0;
-
-  transition: all 0.5s;
-  transform: ${(props) =>
-    props.active ? `translateY(0)` : `translateY(-50px)`};
-`;
+import { cn } from "../../util/cn";
 
 export const useNotification = (text: string) => {
   const [active, setActive] = useState(false);
@@ -43,4 +20,13 @@ export const StyledNotification = ({
 }: {
   text: string;
   active: boolean;
-}) => <StyledNotificationBar active={active}>{text}</StyledNotificationBar>;
+}) => (
+  <div
+    className={cn(
+      "fixed top-0 left-0 z-10 flex w-screen items-center justify-center border border-solid border-black bg-contrast py-10 text-text transition-all duration-500 ease-[ease]",
+      active ? "translate-y-0" : "-translate-y-50"
+    )}
+  >
+    {text}
+  </div>
+);

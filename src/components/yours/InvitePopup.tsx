@@ -1,5 +1,4 @@
 import { useState } from "react";
-import styled from "styled-components";
 import { mutate } from "swr";
 import { useKohort } from "../../hooks/useKohort";
 import { useUser } from "../../hooks/useUser";
@@ -14,53 +13,6 @@ interface Props {
   uid: string;
   firebaseUser?: firebase.User;
 }
-
-const StyledBlurredBackground = styled.div`
-  height: 100vh;
-  width: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 3000;
-  transition: all 1s;
-
-  @supports (-webkit-backdrop-filter: blur(10px)) or
-    (backdrop-filter: blur(10px)) {
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-  }
-`;
-
-const StyledInnerContent = styled.div`
-  width: 50%;
-  height: 50%;
-  background: #000;
-  color: #fff;
-  box-shadow: 0 2rem 4rem rgba(#000, 0.2);
-  border-radius: 3px;
-  overflow: hidden;
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(0);
-  transition: all 0.6s 0.25s;
-
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
-  @media (max-width: 450px) {
-    width: 100%;
-    height: 70vh;
-  }
-`;
-
-const StyledButton = styled.div`
-  position: absolute;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  width: 100%;
-`;
 
 export const InvitePopup = ({ invites, uid, firebaseUser }: Props) => {
   const firstInvite = invites[0];
@@ -150,8 +102,8 @@ export const InvitePopup = ({ invites, uid, firebaseUser }: Props) => {
   }
 
   return (
-    <StyledBlurredBackground>
-      <StyledInnerContent>
+    <div className="fixed top-0 left-0 z-3000 h-screen w-full backdrop-blur-[10px] transition-all duration-1000 ease-[ease]">
+      <div className="absolute top-1/2 left-1/2 h-1/2 w-1/2 -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[3px] bg-black text-white opacity-100 transition-all delay-250 duration-600 ease-[ease] max-[450px]:h-[70vh] max-[450px]:w-full">
         <Spacer />
         <StyledBigHeader>
           Du er invitert til en gruppe med navn:{" "}
@@ -167,7 +119,7 @@ export const InvitePopup = ({ invites, uid, firebaseUser }: Props) => {
         <p>Her kommer en liste med de som er med fra før.</p>
 
         <p>Vil du være med?</p>
-        <StyledButton>
+        <div className="absolute bottom-0 flex w-full justify-center">
           {loading ? (
             <Loading />
           ) : (
@@ -181,8 +133,8 @@ export const InvitePopup = ({ invites, uid, firebaseUser }: Props) => {
               <BorderButton onClick={joinGroup}>OK</BorderButton>
             </>
           )}
-        </StyledButton>
-      </StyledInnerContent>
-    </StyledBlurredBackground>
+        </div>
+      </div>
+    </div>
   );
 };

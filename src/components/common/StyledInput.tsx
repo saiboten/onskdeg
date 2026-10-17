@@ -1,18 +1,15 @@
-import styled from "styled-components";
+import { ComponentProps } from "react";
+import { cn } from "../../util/cn";
 
-export const StyledInput = styled.input`
-  font-size: 2.4rem;
-  height: 48px;
-  padding: 3rem;
-  padding-left: 15px;
-  width: 100%;
-  border-radius: 5rem;
-  border: none;
-  font-size: 1.6rem;
-  flex: 1;
-  background-color: ${(props) => props.theme.primaryLight};
-
-  &::placeholder {
-    font-size: 1.6rem;
-  }
-`;
+export const StyledInput = ({
+  className,
+  ...props
+}: ComponentProps<"input">) => (
+  <input
+    className={cn(
+      "h-48 w-full flex-1 rounded-[5rem] border-none bg-primary-light p-30 pl-15 text-[1.6rem] placeholder:text-[1.6rem]",
+      className
+    )}
+    {...props}
+  />
+);

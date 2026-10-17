@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "styled-components";
 import { mutate } from "swr";
 import { Question } from "../../types/types";
 import { Spacer } from "../common/Spacer";
@@ -13,36 +12,6 @@ interface Props {
   wishId: string;
 }
 
-const StyledQuestionWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-`;
-
-const StyledDeleteButton = styled.button`
-  background: none;
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 2rem;
-  width: 2rem;
-  outline: none;
-  border: none;
-  cursor: pointer;
-`;
-
-const StyledQuestion = styled.div`
-  position: relative;
-  background-color: ${(props) => props.theme.white};
-  border-radius: 1rem;
-  padding: 1.5rem;
-  color: black;
-  display: inline-block;
-  &:not(:last-child) {
-    margin-right: 1rem;
-    margin-bottom: 1rem;
-  }
-`;
-
 export const ListQuestions = ({ myUid, wishId, questions }: Props) => {
   const { element, flash } = useNotification("Spørsmål slettet");
 
@@ -55,26 +24,27 @@ export const ListQuestions = ({ myUid, wishId, questions }: Props) => {
   return (
     <div>
       <StyledSubHeader>Spørsmål og svar</StyledSubHeader>
-      <StyledQuestionWrapper>
+      <div className="flex flex-wrap">
         {questions?.map((el) => {
           return (
             <React.Fragment key={el.question}>
-              <StyledQuestion>
+              <div className="relative inline-block rounded-[1rem] bg-white p-15 text-black not-last:mr-10 not-last:mb-10">
                 {el.question}
                 {el.answer && <div>Svar: {el.answer}</div>}
                 {el.questionOwner === myUid && (
-                  <StyledDeleteButton
+                  <button
+                    className="absolute top-0 right-0 h-20 w-20 cursor-pointer border-none bg-transparent outline-none"
                     onClick={() => handleDeleteQuestion(el.questionId)}
                   >
                     X
-                  </StyledDeleteButton>
+                  </button>
                 )}
-              </StyledQuestion>
+              </div>
               <Spacer />
             </React.Fragment>
           );
         })}
-      </StyledQuestionWrapper>
+      </div>
       <Spacer />
       {element}
     </div>

@@ -1,7 +1,7 @@
+import { cn } from "../../util/cn";
 import { useState } from "react";
 import firebase from "../firebase/firebase";
 import { Trash2, ShoppingCart, X, Check } from "lucide-react";
-import styled, { useTheme } from "styled-components";
 import { Wish, Purchase } from "../../types/types";
 import { useNavigate } from "react-router-dom";
 import { usePurchase } from "../../hooks/usePurchase";
@@ -17,143 +17,10 @@ interface P {
   myUid: string;
 }
 
-const WishCard = styled.div<{ $isTaken: boolean }>`
-  position: relative;
-  border: 2px solid ${(props) => props.theme.secondary};
-  border-radius: 8px;
-  padding: 1.6rem;
-  margin-bottom: 1.6rem;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  background: ${(props) => props.theme.primary};
-  opacity: ${(props) => (props.$isTaken ? 0.7 : 1)};
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-`;
-
-const WishHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1rem;
-`;
-
-const WishTitle = styled.h3<{ $isTaken: boolean }>`
-  margin: 0;
-  font-size: 1.8rem;
-  color: ${(props) => props.theme.text};
-  text-decoration: ${(props) => (props.$isTaken ? "line-through" : "none")};
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-`;
-
-const StarIcon = styled.span`
-  font-size: 1.8rem;
-  color: #FFD700;
-`;
-
-const WishDate = styled.div`
-  font-size: 1.2rem;
-  color: ${(props) => props.theme.text};
-  white-space: nowrap;
-  margin-left: 1rem;
-`;
-
-const ImageContainer = styled.div`
-  width: 100%;
-  margin-bottom: 1rem;
-  position: relative;
-`;
-
-const WishImage = styled.img`
-  width: 100%;
-  height: auto;
-  border-radius: 4px;
-  object-fit: cover;
-`;
-
-const ImagePlaceholder = styled.div`
-  width: 100%;
-  height: 200px;
-  background: ${(props) => props.theme.primary};
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: ${(props) => props.theme.text};
-  font-size: 1.4rem;
-`;
-
-const WishDescription = styled.p`
-  color: ${(props) => props.theme.text};
-  font-size: 1.4rem;
-  line-height: 1.6;
-  margin-bottom: 1rem;
-  word-wrap: break-word;
-`;
-
-const WishPrice = styled.div`
-  color: ${(props) => props.theme.secondary};
-  font-size: 1.6rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-`;
-
-const StatusBadge = styled.div<{ $isTaken: boolean }>`
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  background: ${(props) =>
-    props.$isTaken ? props.theme.negative : props.theme.secondary};
-  color: ${(props) => props.theme.text};
-  font-size: 1.2rem;
-  font-weight: 600;
-  z-index: 1;
-`;
-
-const ActionBar = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid ${(props) => props.theme.secondary};
-`;
-
-const ConfirmButtons = styled.div`
-  display: flex;
-  gap: 0.5rem;
-`;
-
-const IconButtonStyled = styled.button<{ $variant?: 'neutral' | 'negative' }>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: ${(props) => 
-    props.$variant === 'negative' ? props.theme.negative :
-    props.$variant === 'neutral' ? props.theme.contrast : 'transparent'
-  };
-  border: none;
-  cursor: pointer;
-  padding: 0.75rem;
-  border-radius: 4px;
-  color: white;
-  transition: transform 0.2s;
-
-  &:hover {
-    transform: scale(1.1);
-  }
-`;
+const confirmButton =
+  "flex cursor-pointer items-center justify-center rounded-[4px] border-none p-7.5 text-white transition-transform duration-200 ease-[ease] hover:scale-110";
 
 const OtherWish = ({ wishInfo, user, myUid }: P) => {
-  const themeContext = useTheme();
   const navigate = useNavigate();
 
   const [feedback, setFeedback] = useState("");
@@ -215,87 +82,135 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
 
   return (
     <>
-      {feedback && <StyledNotification active={feedback !== ""} text={feedback} />}
-      <WishCard $isTaken={isTaken} onClick={handleCardClick}>
-        {isTaken && <StatusBadge $isTaken={true}>Kjøpt</StatusBadge>}
-      
-      <WishHeader>
-        <WishTitle $isTaken={isTaken}>
-          {wishInfo.favorite && <StarIcon>★</StarIcon>}
-          {wishInfo.name}
-        </WishTitle>
-        {wishInfo.date && (
-          <WishDate>
-            {format(wishInfo.date.toDate(), "dd.MM.yyyy")}
-          </WishDate>
-        )}
-      </WishHeader>
-
-      {wishInfo.price && <WishPrice>Kr {wishInfo.price},-</WishPrice>}
-
-      <ImageContainer>
-        {wishInfo.image ? (
-          <WishImage src={wishInfo.image} alt={wishInfo.name} />
-        ) : (
-          <ImagePlaceholder>Ingen bilde</ImagePlaceholder>
-        )}
-      </ImageContainer>
-
-      {wishInfo.description && (
-        <WishDescription>{wishInfo.description}</WishDescription>
+      {feedback && (
+        <StyledNotification active={feedback !== ""} text={feedback} />
       )}
-
-      <ActionBar onClick={(e) => e.stopPropagation()}>
-        {wishInfo.link && (
-          <StyledLink href={wishInfo.link} target="_blank">
-            <StyledLinkIcon />
-          </StyledLink>
+      <div
+        onClick={handleCardClick}
+        className={cn(
+          "relative mb-16 cursor-pointer rounded-[8px] border-2 border-solid border-secondary bg-primary p-16 transition-[transform,box-shadow] duration-200 ease-[ease] hover:-translate-y-2 hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)]",
+          isTaken ? "opacity-70" : "opacity-100"
+        )}
+      >
+        {isTaken && (
+          <div className="absolute top-10 right-10 z-1 rounded-[4px] bg-negative px-10 py-5 text-[1.2rem] font-semibold text-text">
+            Kjøpt
+          </div>
         )}
 
-        {confirm ? (
-          <ConfirmButtons>
-            <IconButtonStyled
-              $variant="neutral"
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setConfirm(false);
-              }}
-            >
-              <X size={24} />
-            </IconButtonStyled>
-            <IconButtonStyled
-              $variant="negative"
-              type="button"
-              onClick={handleDeleteItem}
-            >
-              <Check size={24} />
-            </IconButtonStyled>
-          </ConfirmButtons>
-        ) : (
-          wishSuggestedByMe && (
-            <button
-              style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: '0.5rem', display: 'flex', alignItems: 'center' }}
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setConfirm(true);
-              }}
-            >
-              <Trash2 size={24} color={themeContext.text} />
-            </button>
-          )
+        <div className="mb-10 flex items-start justify-between">
+          <h3
+            className={cn(
+              "m-0 flex items-center gap-5 text-[1.8rem] text-text",
+              isTaken ? "line-through" : "no-underline"
+            )}
+          >
+            {wishInfo.favorite && (
+              <span className="text-[1.8rem] text-[#FFD700]">★</span>
+            )}
+            {wishInfo.name}
+          </h3>
+          {wishInfo.date && (
+            <div className="ml-10 text-[1.2rem] whitespace-nowrap text-text">
+              {format(wishInfo.date.toDate(), "dd.MM.yyyy")}
+            </div>
+          )}
+        </div>
+
+        {wishInfo.price && (
+          <div className="mb-10 text-[1.6rem] font-semibold text-secondary">
+            Kr {wishInfo.price},-
+          </div>
         )}
 
-        <button
-          style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: '0.5rem', display: 'flex', alignItems: 'center' }}
-          type="button"
-          onClick={handleBuyItem}
+        <div className="relative mb-10 w-full">
+          {wishInfo.image ? (
+            <img
+              className="h-auto w-full rounded-[4px] object-cover"
+              src={wishInfo.image}
+              alt={wishInfo.name}
+            />
+          ) : (
+            <div className="flex h-200 w-full items-center justify-center rounded-[4px] bg-primary text-[1.4rem] text-text">
+              Ingen bilde
+            </div>
+          )}
+        </div>
+
+        {wishInfo.description && (
+          <p className="mb-10 text-[1.4rem] leading-[1.6] wrap-break-word text-text">
+            {wishInfo.description}
+          </p>
+        )}
+
+        <div
+          className="mt-10 flex items-center justify-end gap-10 [border-top:1px_solid_var(--color-secondary)] pt-10"
+          onClick={(e) => e.stopPropagation()}
         >
-          <ShoppingCart size={24} color={themeContext.text} />
-        </button>
-      </ActionBar>
-    </WishCard>
+          {wishInfo.link && (
+            <StyledLink href={wishInfo.link} target="_blank">
+              <StyledLinkIcon />
+            </StyledLink>
+          )}
+
+          {confirm ? (
+            <div className="flex gap-5">
+              <button
+                className={cn(confirmButton, "bg-contrast")}
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setConfirm(false);
+                }}
+              >
+                <X size={24} />
+              </button>
+              <button
+                className={cn(confirmButton, "bg-negative")}
+                type="button"
+                onClick={handleDeleteItem}
+              >
+                <Check size={24} />
+              </button>
+            </div>
+          ) : (
+            wishSuggestedByMe && (
+              <button
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  cursor: "pointer",
+                  padding: "0.5rem",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setConfirm(true);
+                }}
+              >
+                <Trash2 size={24} className="text-text" />
+              </button>
+            )
+          )}
+
+          <button
+            style={{
+              background: "transparent",
+              border: "none",
+              cursor: "pointer",
+              padding: "0.5rem",
+              display: "flex",
+              alignItems: "center",
+            }}
+            type="button"
+            onClick={handleBuyItem}
+          >
+            <ShoppingCart size={24} className="text-text" />
+          </button>
+        </div>
+      </div>
     </>
   );
 };

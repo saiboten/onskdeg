@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import { format } from "date-fns";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Container } from "../common/Container";
@@ -11,17 +10,6 @@ import { Spacer } from "../common/Spacer";
 import { Button } from "../common/Button";
 import { TabContainer, Tab } from "../common/Tabs";
 
-const StyledKohorts = styled.div`
-  padding: 1rem;
-`;
-
-const StyledUl = styled.ul`
-  list-style-type: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-`;
-
 export const GroupUser = ({ uid }: { uid: string }) => {
   const { user } = useUser(uid);
   const navigate = useNavigate();
@@ -33,12 +21,16 @@ export const GroupUser = ({ uid }: { uid: string }) => {
   );
 };
 
-const SortedGroupUsers = ({ members, uid }: { members: string[]; uid: string }) => {
+const SortedGroupUsers = ({
+  members,
+  uid,
+}: {
+  members: string[];
+  uid: string;
+}) => {
   // Filter out current user and sort by UID for consistent rendering
-  const filteredMembers = members
-    .filter((member) => member !== uid)
-    .sort();
-  
+  const filteredMembers = members.filter((member) => member !== uid).sort();
+
   return (
     <>
       {filteredMembers.map((memberId) => (
@@ -101,7 +93,7 @@ export const GroupUsers = ({
   const { kohort } = useKohort(groupId);
 
   return (
-    <StyledKohorts>
+    <div className="p-10">
       <StyledBigHeader>
         Gruppe: <strong>{kohort?.groupName}</strong>
       </StyledBigHeader>
@@ -110,10 +102,12 @@ export const GroupUsers = ({
       <LatestNews newsFeed={kohort?.newsFeed ?? []}></LatestNews>
       <Spacer />
       <StyledSubHeader>Brukere</StyledSubHeader>
-      <StyledUl>
-        {kohort?.members && <SortedGroupUsers members={kohort.members} uid={uid} />}
-      </StyledUl>
-    </StyledKohorts>
+      <ul className="flex list-none flex-wrap gap-10">
+        {kohort?.members && (
+          <SortedGroupUsers members={kohort.members} uid={uid} />
+        )}
+      </ul>
+    </div>
   );
 };
 
@@ -127,7 +121,7 @@ const GroupTab = ({
   onClick: () => void;
 }) => {
   const { kohort } = useKohort(groupId);
-  
+
   return (
     <Tab $active={$active} onClick={onClick}>
       {kohort?.groupName || "Laster..."}
@@ -142,7 +136,7 @@ interface Props {
 export const SelectWishList = function ({ uid }: Props) {
   const { user } = useUser(uid);
   const [searchParams, setSearchParams] = useSearchParams();
-  const activeGroup = searchParams.get('group') || user?.groups[0];
+  const activeGroup = searchParams.get("group") || user?.groups[0];
 
   const handleGroupChange = (groupId: string) => {
     setSearchParams({ group: groupId });

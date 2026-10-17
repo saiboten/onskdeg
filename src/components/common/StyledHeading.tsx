@@ -1,11 +1,16 @@
-import styled from "styled-components";
+import { ComponentProps } from "react";
+import { cn } from "../../util/cn";
 
-export const StyledBigHeader = styled.h1`
-  font-size: 3rem;
-  font-weight: 500;
-`;
+export const StyledBigHeader = ({
+  className,
+  ...props
+}: ComponentProps<"h1">) => (
+  <h1 className={cn("text-[3rem] font-medium", className)} {...props} />
+);
 
-export const StyledSubHeader = styled.h2`
-  font-size: 2rem;
-  font-weight: 300;
-`;
+export const StyledSubHeader = ({
+  className,
+  ...props
+}: ComponentProps<"h2">) => (
+  <h2 className={cn("text-[2rem] font-light", className)} {...props} />
+);

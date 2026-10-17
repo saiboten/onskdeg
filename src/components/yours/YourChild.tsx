@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import { Wish as WishType, Child, NewsEntryType } from "../../types/types";
 import { StyledInput } from "../common/StyledInput";
 import { Wish } from "./Wish";
@@ -12,17 +11,6 @@ import { useUser } from "../../hooks/useUser";
 import { getOgData, OgResponseData } from "../../util/getOgData";
 import { EmptyButton } from "../common/EmptyButton";
 import { Check } from "lucide-react";
-
-const StyledChildren = styled.div`
-  margin-bottom: 2.4rem;
-`;
-
-const IconWrapper = styled.span`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: ${(props) => props.theme.text};
-`;
 
 interface Props {
   child: Child;
@@ -103,7 +91,7 @@ export const YourChild = ({ child, myUid }: Props) => {
   }
 
   return (
-    <StyledChildren>
+    <div className="mb-24">
       <h2>{child.name}</h2>
       <StyledWrapper onSubmit={handleSaveWish}>
         <StyledInput
@@ -113,9 +101,9 @@ export const YourChild = ({ child, myUid }: Props) => {
           onChange={(e) => setNewWish(e.target.value)}
         />
         <EmptyButton type="submit" name="check">
-          <IconWrapper>
+          <span className="flex items-center justify-center text-text">
             <Check size={24} />
-          </IconWrapper>
+          </span>
         </EmptyButton>
       </StyledWrapper>
       {(wishes ?? []).length > 0 ? (
@@ -123,6 +111,6 @@ export const YourChild = ({ child, myUid }: Props) => {
       ) : (
         <div>Ingen ønsker lagt inn enda</div>
       )}
-    </StyledChildren>
+    </div>
   );
 };

@@ -1,31 +1,15 @@
-import styled, { keyframes } from 'styled-components';
+import { cn } from "../../util/cn";
 
-const spinnerKeyframe = keyframes`
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-`;
-
-const Spinner = styled.div`
-  display: flex;
-  width: 24px;
-  height: 24px;
-  justify-content: center;
-  align-items: center;
-  &::after {
-    content: " ";
-    display: block;
-    width: 24px;
-    height: 24px;
-    transform: translateY(50%);
-    border-radius: 50%;
-    border: 3px solid #fff;
-    border-color: #fff transparent #fff transparent;
-    animation: ${spinnerKeyframe} 1.2s linear infinite;
-  }
-`;
+// The ring uses `transform` (not `translate`) so the spin animation replaces
+// the offset while running, as it always has.
+const Spinner = ({ className }: { className?: string }) => (
+  <div
+    className={cn(
+      "flex h-24 w-24 items-center justify-center",
+      "after:block after:h-24 after:w-24 after:rounded-full after:border-3 after:border-solid after:border-x-transparent after:border-y-white after:content-['_'] after:[transform:translateY(50%)] after:animate-spinner",
+      className
+    )}
+  />
+);
 
 export default Spinner;

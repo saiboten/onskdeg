@@ -1,0 +1,134 @@
+@layer theme, base, components, utilities;
+
+/* Preflight is intentionally left out; the app ships its own reset below. */
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+@theme {
+  /* html is 62.5% (1rem = 10px), so one spacing step is 1px: p-16 = 1.6rem. */
+  --spacing: 0.1rem;
+
+  --font-sans: "Exo 2", sans-serif;
+
+  /* Theme colors; defaults are the dark theme, overridden by [data-theme]. */
+  --color-primary-light: #dcd4e7;
+  --color-primary: #463f7c;
+  --color-primary-dark: #292547;
+  --color-secondary: #ba5fd0;
+  --color-secondary-dark: rgba(186, 95, 208, 0.5);
+  --color-negative: #ff5656;
+  --color-contrast: #1fffa3;
+  --color-neutral: #3988ea;
+  --color-text: #ffffff;
+
+  --animate-bars: bars 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+  --animate-spinner: spinner 1.2s linear infinite;
+  --animate-move-in: move-in 0.2s ease-in;
+}
+
+:root[data-theme="light"] {
+  --color-primary-light: #dcd4e7;
+  --color-primary: #f7ecfb;
+  --color-primary-dark: #ffffff;
+  --color-secondary: #5fd0a1;
+  --color-secondary-dark: rgba(95, 208, 161, 0.5);
+  --color-negative: #e3363a;
+  --color-contrast: #349eff;
+  --color-text: #000000;
+}
+
+:root[data-theme="christmas"] {
+  --color-primary-light: #f3f6f5;
+  --color-primary: #e5ebec;
+  --color-primary-dark: #bed8eb;
+  --color-secondary: #99cdea;
+  --color-secondary-dark: #78bce3;
+  --color-negative: #ff5656;
+  --color-contrast: #e83151;
+  --color-text: #000;
+}
+
+@keyframes bars {
+  0% {
+    top: 6px;
+    height: 51px;
+  }
+  50%,
+  100% {
+    top: 19px;
+    height: 26px;
+  }
+}
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes move-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: scale(1) translateY(0px) translateX(50px);
+  }
+  25% {
+    transform: scale(1.2) translateY(200px) translateX(-50px);
+  }
+  50% {
+    transform: scale(1) translateY(300px) translateX(200px);
+  }
+  75% {
+    transform: scale(0.8) translateY(500px) translateX(-300px);
+  }
+}
+
+@layer base {
+  *,
+  *::after,
+  *::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    min-height: 100%;
+    font-size: 62.5%;
+  }
+
+  body {
+    box-sizing: border-box;
+    margin: 0;
+    font-family: var(--font-sans);
+    font-weight: 400;
+    line-height: 1.7;
+    color: var(--color-text);
+    min-height: 100%;
+  }
+
+  #root {
+    text-align: center;
+    height: 100vh;
+  }
+
+  input,
+  textarea {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+  }
+}

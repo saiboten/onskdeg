@@ -1,15 +1,8 @@
 import React, { useState } from "react";
 import { StyledInput } from "../common/StyledInput";
-import styled from "styled-components";
 import { P } from "../common/P";
 import { Button } from "../common/Button";
 import { SquarePen as Edit } from "lucide-react";
-
-const StyledEdit = styled(Edit)`
-  height: 2rem;
-  width: 2rem;
-  color: white;
-`;
 
 interface DetailInput {
   fieldName: string;
@@ -22,11 +15,6 @@ interface DetailInput {
   children?: React.ReactNode;
 }
 
-const StyledWrapper = styled.div`
-  text-align: left;
-  font-size: 1.5rem;
-`;
-
 export const Detail: React.FC<DetailInput> = ({
   children,
   fieldName,
@@ -37,7 +25,7 @@ export const Detail: React.FC<DetailInput> = ({
   const [edit, setEdit] = useState(false);
 
   return (
-    <StyledWrapper>
+    <div className="text-left text-[1.5rem]">
       {edit ? (
         <StyledInput
           value={value}
@@ -73,10 +61,10 @@ export const Detail: React.FC<DetailInput> = ({
               padding: "1rem",
             }}
           >
-            <StyledEdit />
+            <Edit className="h-20 w-20 text-white" />
           </Button>
         </div>
       )}
-    </StyledWrapper>
+    </div>
   );
 };

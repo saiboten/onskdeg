@@ -1,73 +1,33 @@
-import { useState } from "react";
-import styled from "styled-components";
-import { useTheme } from "styled-components";
+import { ComponentProps, useState } from "react";
 import { Wish as WishType } from "../../types/types";
 import ListRow, { LeftSection } from "../common/ListRow";
-import {
-  StyledActionButtons,
-} from "../common/IconButton";
+import { StyledActionButtons } from "../common/IconButton";
 import { Link as RouterLink } from "react-router-dom";
 import firebase from "../firebase/firebase";
 import { mutate } from "swr";
 import { Star, Trash2, X, Check } from "lucide-react";
 
 import { StyledLink, StyledLinkIcon } from "../common/StyledLink";
+import { cn } from "../../util/cn";
 
-export const Link = styled(RouterLink)`
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+export const Link = ({
+  className,
+  ...props
+}: ComponentProps<typeof RouterLink>) => (
+  <RouterLink
+    className={cn(
+      "flex items-center gap-5 text-text no-underline hover:text-[grey]",
+      className
+    )}
+    {...props}
+  />
+);
 
-  &:visited,
-  &:link {
-    color: ${(props) => props.theme.text};
-  }
-  &:hover {
-    color: grey;
-  }
-`;
+const iconButton =
+  "flex cursor-pointer items-center justify-center border-none bg-transparent p-5 text-text transition-transform duration-200 ease-[ease] hover:scale-110";
 
-const IconButton = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0.5rem;
-  color: ${(props) => props.theme.text};
-  transition: transform 0.2s;
-
-  &:hover {
-    transform: scale(1.1);
-  }
-`;
-
-const ConfirmButtons = styled.div`
-  display: flex;
-  gap: 0.5rem;
-`;
-
-const IconButtonStyled = styled.button<{ $variant?: 'neutral' | 'negative' }>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: ${(props) => 
-    props.$variant === 'negative' ? props.theme.negative :
-    props.$variant === 'neutral' ? props.theme.contrast : 'transparent'
-  };
-  border: none;
-  cursor: pointer;
-  padding: 0.75rem;
-  border-radius: 4px;
-  color: white;
-  transition: transform 0.2s;
-
-  &:hover {
-    transform: scale(1.1);
-  }
-`;
+const confirmButton =
+  "flex cursor-pointer items-center justify-center rounded-[4px] border-none p-7.5 text-white transition-transform duration-200 ease-[ease] hover:scale-110";
 
 interface P {
   user: string;
@@ -76,7 +36,6 @@ interface P {
 }
 
 export const Wish = ({ wish, delete: deleteProp, user }: P) => {
-  const theme = useTheme();
   const [confirm, setConfirm] = useState(false);
 
   function deleteItem() {
@@ -94,55 +53,57 @@ export const Wish = ({ wish, delete: deleteProp, user }: P) => {
   async function toggleFavorite(e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
-    
+
     await firebase
       .firestore()
       .collection("wish")
       .doc(wish.id)
       .update({ favorite: !wish.favorite });
-    
+
     mutate(["wish", user]);
   }
 
   const deleteWish = confirm ? (
-    <ConfirmButtons>
-      <IconButtonStyled $variant="neutral" type="button" onClick={cancel}>
+    <div className="flex gap-5">
+      <button
+        className={cn(confirmButton, "bg-contrast")}
+        type="button"
+        onClick={cancel}
+      >
         <X size={24} />
-      </IconButtonStyled>
-      <IconButtonStyled
-        $variant="negative"
+      </button>
+      <button
+        className={cn(confirmButton, "bg-negative")}
         type="button"
         onClick={deleteConfirmed}
       >
         <Check size={24} />
-      </IconButtonStyled>
-    </ConfirmButtons>
+      </button>
+    </div>
   ) : (
     <StyledActionButtons>
-      <IconButton type="button" onClick={toggleFavorite}>
+      <button className={iconButton} type="button" onClick={toggleFavorite}>
         <Star
           size={24}
           fill={wish.favorite ? "#FFD700" : "none"}
-          color={wish.favorite ? "#FFD700" : theme.text}
+          color={wish.favorite ? "#FFD700" : "currentColor"}
         />
-      </IconButton>
+      </button>
       {wish.link && (
         <StyledLink href={wish.link} target="_blank">
           <StyledLinkIcon />
         </StyledLink>
       )}
-      <IconButton type="button" onClick={deleteItem}>
-        <Trash2 size={24} color={theme.text} />
-      </IconButton>
+      <button className={iconButton} type="button" onClick={deleteItem}>
+        <Trash2 size={24} />
+      </button>
     </StyledActionButtons>
   );
 
   return (
     <ListRow>
       <LeftSection>
-        <Link to={`/wish/${user}/${wish.id}`}>
-          {wish.name}
-        </Link>
+        <Link to={`/wish/${user}/${wish.id}`}>{wish.name}</Link>
       </LeftSection>
       {deleteWish}
     </ListRow>

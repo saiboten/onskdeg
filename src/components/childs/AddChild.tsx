@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { redirect } from "react-router-dom";
-import styled from "styled-components";
 import { useUser } from "../../hooks/useUser";
 import { BorderButton } from "../common/Button";
 import { Container } from "../common/Container";
@@ -10,25 +9,6 @@ import { mutate } from "swr";
 import { Child } from "../../types/types";
 import { Spacer } from "../common/Spacer";
 import Spinner from "../common/Spinner";
-
-const StyledForm = styled.form`
-  display: flex;
-  text-align: left;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  font-size: 3rem;
-`;
-
-const StyledRow = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  
-  button {
-    margin-bottom: 0;
-  }
-`;
 
 interface Props {
   uid: string;
@@ -93,8 +73,11 @@ export function AddChild({ uid }: Props) {
         vel! Du kan dele brukeren etter opprettelse.
       </p>
       <Spacer />
-      <StyledForm onSubmit={handleSubmit}>
-        <StyledRow>
+      <form
+        className="flex flex-col items-start justify-center text-left text-[3rem]"
+        onSubmit={handleSubmit}
+      >
+        <div className="flex items-center gap-10 [&_button]:mb-0">
           <StyledInput
             type="text"
             placeholder="Navn"
@@ -108,8 +91,8 @@ export function AddChild({ uid }: Props) {
           ) : (
             <BorderButton type="submit">OK</BorderButton>
           )}
-        </StyledRow>
-      </StyledForm>
+        </div>
+      </form>
     </Container>
   );
 }

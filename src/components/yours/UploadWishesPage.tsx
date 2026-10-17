@@ -4,7 +4,6 @@ import { StyledBigHeader } from "../common/StyledHeading";
 import { useChilds } from "../../hooks/useChilds";
 import { useUser } from "../../hooks/useUser";
 import firebase from "../firebase/firebase";
-import styled from "styled-components";
 import { mutate } from "swr";
 import { Wish as WishType, NewsEntryType } from "../../types/types";
 import { Button } from "../common/Button";
@@ -15,53 +14,6 @@ import { compressImage } from "../../util/imageCompression";
 interface Props {
   uid: string;
 }
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  max-width: 60rem;
-  margin: 0 auto;
-`;
-
-const Label = styled.label`
-  font-size: 1.6rem;
-  font-weight: 600;
-`;
-
-const Select = styled.select`
-  font-size: 1.6rem;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  border: 1px solid ${(props) => props.theme.secondary};
-  background-color: ${(props) => props.theme.primaryLight};
-  color: ${(props) => props.theme.text};
-`;
-
-const FileInput = styled.input`
-  font-size: 1.4rem;
-`;
-
-const ProgressContainer = styled.div`
-  margin-top: 2rem;
-`;
-
-const ProgressItem = styled.div`
-  padding: 0.5rem;
-  font-size: 1.4rem;
-`;
-
-const ErrorMessage = styled.div`
-  color: ${(props) => props.theme.negative};
-  font-size: 1.4rem;
-  margin-top: 1rem;
-`;
-
-const SuccessMessage = styled.div`
-  color: ${(props) => props.theme.secondary};
-  font-size: 1.4rem;
-  margin-top: 1rem;
-`;
 
 export const UploadWishesPage = ({ uid }: Props) => {
   const [selectedUser, setSelectedUser] = useState(uid);
@@ -83,7 +35,7 @@ export const UploadWishesPage = ({ uid }: Props) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!files || files.length === 0) {
       setError("Vennligst velg minst ett bilde");
       return;
@@ -139,15 +91,21 @@ export const UploadWishesPage = ({ uid }: Props) => {
         setProgress((prev) => [...prev, `Analyserer ${file.name} med AI...`]);
         let wishName = tempWishName;
         let wishDescription = "";
-        
+
         try {
           const analysis = await generateWishDescription(imageUrl);
           wishName = analysis.title || tempWishName;
           wishDescription = analysis.description || "";
-          setProgress((prev) => [...prev, `AI-analyse fullført: "${wishName}"`]);
+          setProgress((prev) => [
+            ...prev,
+            `AI-analyse fullført: "${wishName}"`,
+          ]);
         } catch (error) {
           console.error("OpenAI analysis failed:", error);
-          setProgress((prev) => [...prev, `⚠ AI-analyse feilet, bruker standardnavn`]);
+          setProgress((prev) => [
+            ...prev,
+            `⚠ AI-analyse feilet, bruker standardnavn`,
+          ]);
         }
 
         // Update wish with image URL, AI-generated name and description
@@ -184,7 +142,9 @@ export const UploadWishesPage = ({ uid }: Props) => {
       setSuccess(`${successCount} av ${totalFiles} bilder lastet opp!`);
       setFiles(null);
       // Reset file input
-      const fileInput = document.getElementById("file-input") as HTMLInputElement;
+      const fileInput = document.getElementById(
+        "file-input"
+      ) as HTMLInputElement;
       if (fileInput) fileInput.value = "";
     } catch (err) {
       console.error(err);
@@ -197,12 +157,18 @@ export const UploadWishesPage = ({ uid }: Props) => {
   return (
     <Container>
       <StyledBigHeader>Last opp ønsker</StyledBigHeader>
-      
-      <Form onSubmit={handleSubmit}>
+
+      <form
+        className="mx-auto flex max-w-600 flex-col gap-20"
+        onSubmit={handleSubmit}
+      >
         <div>
-          <Label htmlFor="user-select">Last opp til:</Label>
+          <label className="text-[1.6rem] font-semibold" htmlFor="user-select">
+            Last opp til:
+          </label>
           <Spacer />
-          <Select
+          <select
+            className="rounded-[0.5rem] border border-solid border-secondary bg-primary-light p-10 text-[1.6rem] text-text"
             id="user-select"
             value={selectedUser}
             onChange={(e) => setSelectedUser(e.target.value)}
@@ -214,13 +180,16 @@ export const UploadWishesPage = ({ uid }: Props) => {
                 {child.name}
               </option>
             ))}
-          </Select>
+          </select>
         </div>
 
         <div>
-          <Label htmlFor="file-input">Velg bilder:</Label>
+          <label className="text-[1.6rem] font-semibold" htmlFor="file-input">
+            Velg bilder:
+          </label>
           <Spacer />
-          <FileInput
+          <input
+            className="text-[1.4rem]"
             id="file-input"
             type="file"
             accept="image/*"
@@ -234,17 +203,23 @@ export const UploadWishesPage = ({ uid }: Props) => {
           {uploading ? "Laster opp..." : "Last opp bilder"}
         </Button>
 
-        {error && <ErrorMessage>{error}</ErrorMessage>}
-        {success && <SuccessMessage>{success}</SuccessMessage>}
+        {error && (
+          <div className="mt-10 text-[1.4rem] text-negative">{error}</div>
+        )}
+        {success && (
+          <div className="mt-10 text-[1.4rem] text-secondary">{success}</div>
+        )}
 
         {progress.length > 0 && (
-          <ProgressContainer>
+          <div className="mt-20">
             {progress.map((msg, idx) => (
-              <ProgressItem key={idx}>{msg}</ProgressItem>
+              <div className="p-5 text-[1.4rem]" key={idx}>
+                {msg}
+              </div>
             ))}
-          </ProgressContainer>
+          </div>
         )}
-      </Form>
+      </form>
     </Container>
   );
 };

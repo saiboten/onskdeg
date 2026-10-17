@@ -1,5 +1,4 @@
-import { Suspense, useEffect, useState } from "react";
-import styled from "styled-components";
+import { ComponentProps, Suspense, useEffect, useState } from "react";
 import { Wish } from "./Wish";
 import firebase from "../firebase/firebase";
 import { mutate } from "swr";
@@ -25,25 +24,12 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { InvitePopup } from "./InvitePopup";
 import { TabContainer, Tab } from "../common/Tabs";
 
-const IconWrapper = styled.span`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: ${(props) => props.theme.text};
-`;
-
-export const StyledWrapper = styled.form`
-  margin: 0 auto;
-  margin-bottom: 0.8rem;
-  width: 60%;
-  display: flex;
-  gap: 0.8rem;
-  align-items: center;
-
-  @media (max-width: 450px) {
-    width: 100%;
-  }
-`;
+export const StyledWrapper = (props: ComponentProps<"form">) => (
+  <form
+    className="mx-auto mb-8 flex w-[60%] items-center gap-8 max-[450px]:w-full"
+    {...props}
+  />
+);
 
 interface Props {
   uid: string;
@@ -56,9 +42,9 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
   const { user } = useUser(uid);
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  
+
   const childs = useChilds(user?.uid ?? "");
-  const activeTab = searchParams.get('tab') || uid;
+  const activeTab = searchParams.get("tab") || uid;
 
   useEffect(() => {
     if (!user?.email && firebaseUser?.email) {
@@ -76,7 +62,8 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
     setSearchParams({ tab: tabUid });
   };
 
-  const activeUser = activeTab === uid ? user : childs?.find(c => c.uid === activeTab);
+  const activeUser =
+    activeTab === uid ? user : childs?.find((c) => c.uid === activeTab);
 
   async function addWish(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -186,10 +173,7 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
 
       {childs && childs.length > 0 && (
         <TabContainer>
-          <Tab
-            $active={activeTab === uid}
-            onClick={() => handleTabChange(uid)}
-          >
+          <Tab $active={activeTab === uid} onClick={() => handleTabChange(uid)}>
             {user?.name}
           </Tab>
           {childs.map((child) => (
@@ -207,28 +191,30 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
       <StyledWrapper onSubmit={addWish}>
         <StyledInput
           type="text"
-          placeholder={`Legg inn ønske ${activeUser?.name ? `for ${activeUser.name}` : 'her'}`}
+          placeholder={`Legg inn ønske ${activeUser?.name ? `for ${activeUser.name}` : "her"}`}
           value={newWish}
           onChange={(e) => setNewWish(e.target.value)}
         />
 
         <EmptyButton type="submit" name="check">
-          <IconWrapper>
+          <span className="flex items-center justify-center text-text">
             <Check size={24} />
-          </IconWrapper>
+          </span>
         </EmptyButton>
 
-        <EmptyButton type="button" name="upload" onClick={() => navigate("/upload-wishes")}>
-          <IconWrapper>
+        <EmptyButton
+          type="button"
+          name="upload"
+          onClick={() => navigate("/upload-wishes")}
+        >
+          <span className="flex items-center justify-center text-text">
             <Upload size={24} />
-          </IconWrapper>
+          </span>
         </EmptyButton>
 
         {feedback && <div>{feedback}</div>}
       </StyledWrapper>
-      <div>
-        {sortedWishes?.map(wishToElement) ?? []}
-      </div>
+      <div>{sortedWishes?.map(wishToElement) ?? []}</div>
       <Spacer />
     </Container>
   );

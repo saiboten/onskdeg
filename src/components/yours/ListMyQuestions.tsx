@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import { mutate } from "swr";
 import { useUser } from "../../hooks/useUser";
 import { Notification, Question as QuestionType } from "../../types/types";
@@ -16,41 +15,6 @@ interface Props {
   myUid: string;
   wishId: string;
 }
-
-const StyledQuestionWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-`;
-
-const StyledQuestion = styled.div`
-  position: relative;
-  background-color: ${(props) => props.theme.white};
-  border-radius: 1rem;
-  padding: 1.5rem;
-  color: black;
-  display: inline-block;
-  &:not(:last-child) {
-    margin-right: 1rem;
-    margin-bottom: 1rem;
-  }
-`;
-
-export const StyledInput = styled.input`
-  height: 48px;
-  padding: 0 10px;
-  padding-left: 40px;
-  width: calc(100% - 1.6rem);
-  margin: 0 0.8rem;
-  border-radius: 10px;
-  border: none;
-  font-size: 1.6rem;
-  flex: 1;
-  border: 1px solid black;
-
-  &::placeholder {
-    font-size: 1.6rem;
-  }
-`;
 
 interface QuestionProps {
   question: QuestionType;
@@ -98,22 +62,23 @@ const Question = ({ myUid, question, wishId }: QuestionProps) => {
 
   return (
     <>
-      <StyledQuestion>
+      <div className="relative inline-block rounded-[1rem] bg-white p-15 text-black not-last:mr-10 not-last:mb-10">
         {question.question}
         {question.answer ? (
           <div>Svar: {question.answer}</div>
         ) : (
           <form onSubmit={handleSaveQuestion}>
             <StyledLabelInputPair>
-              <StyledInput
+              <input
+                className="mx-8 h-48 w-[calc(100%-1.6rem)] flex-1 rounded-[10px] border border-solid border-black pr-10 pl-40 text-[1.6rem] placeholder:text-[1.6rem]"
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
-              ></StyledInput>
+              ></input>
               {loading ? <Loading /> : <Button>Svar</Button>}
             </StyledLabelInputPair>
           </form>
         )}
-      </StyledQuestion>
+      </div>
       <Spacer />
       {element}
     </>
@@ -124,7 +89,7 @@ export const ListMyQuestions = ({ myUid, wishId, questions }: Props) => {
   return (
     <div>
       <StyledSubHeader>Spørsmål og svar</StyledSubHeader>
-      <StyledQuestionWrapper>
+      <div className="flex flex-wrap">
         {questions?.map((el) => {
           return (
             <Question
@@ -135,7 +100,7 @@ export const ListMyQuestions = ({ myUid, wishId, questions }: Props) => {
             />
           );
         })}
-      </StyledQuestionWrapper>
+      </div>
       <Spacer />
     </div>
   );

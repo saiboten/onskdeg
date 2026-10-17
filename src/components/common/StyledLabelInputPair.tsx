@@ -1,6 +1,5 @@
-import styled from "styled-components";
+import { ComponentProps } from "react";
 
-export const StyledLabelInputPair = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
+export const StyledLabelInputPair = (props: ComponentProps<"div">) => (
+  <div className="flex justify-between" {...props} />
+);

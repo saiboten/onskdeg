@@ -11,26 +11,9 @@ import { StyledBigHeader, StyledSubHeader } from "../common/StyledHeading";
 import firebase from "../firebase/firebase";
 import { mutate } from "swr";
 import { useParams } from "react-router-dom";
-import styled from "styled-components";
 import Loading from "../common/Loading";
 import { AddUserByUid } from "./AddUserByUid";
 import { AddInvite } from "./AddInvite";
-
-const StyledRow = styled.div`
-  margin-bottom: 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const MiniButton = styled.button`
-  background: 0;
-  outline: none;
-  border: none;
-  display: inline;
-  color: ${(props) => props.theme.white};
-  cursor: pointer;
-`;
 
 const KohortMember = ({
   kohort,
@@ -58,7 +41,7 @@ const KohortMember = ({
   }
 
   return (
-    <StyledRow>
+    <div className="mb-10 flex items-center justify-between">
       <div
         style={{
           flex: "1",
@@ -72,7 +55,12 @@ const KohortMember = ({
         {showUid ? (
           uid
         ) : (
-          <MiniButton onClick={() => setShowUid(true)}>Vis ID</MiniButton>
+          <button
+            className="inline cursor-pointer border-none bg-transparent text-white outline-none"
+            onClick={() => setShowUid(true)}
+          >
+            Vis ID
+          </button>
         )}
         )
       </div>
@@ -81,7 +69,7 @@ const KohortMember = ({
       ) : (
         <div>Administrator</div>
       )}
-    </StyledRow>
+    </div>
   );
 };
 
@@ -119,14 +107,14 @@ const KohortInvite = ({
   }
 
   return (
-    <StyledRow>
+    <div className="mb-10 flex items-center justify-between">
       {invite}
       {removeInviteLoading ? (
         <Loading />
       ) : (
         <Button onClick={handleRemoveInvite}>Fjern invitasjon</Button>
       )}
-    </StyledRow>
+    </div>
   );
 };
 

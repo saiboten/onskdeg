@@ -3,15 +3,9 @@ import { Button } from "./common/Button";
 import { Container } from "./common/Container";
 import { StyledLabel } from "./common/Label";
 import { StyledInput } from "./common/StyledInput";
-import styled from "styled-components";
 import firebase from "./firebase/firebase";
 import { mutate } from "swr";
 import { StyledBigHeader } from "./common/StyledHeading";
-
-const StyledLabelInput = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
 
 interface Props {
   firebaseUser?: firebase.User;
@@ -40,7 +34,7 @@ export const SelectName = ({ firebaseUser, uid }: Props) => {
 
       <form onSubmit={handleSetName}>
         <StyledLabel htmlFor="name">Navn</StyledLabel>
-        <StyledLabelInput>
+        <div className="flex justify-between">
           <StyledInput
             autoComplete="off"
             id="name"
@@ -48,7 +42,7 @@ export const SelectName = ({ firebaseUser, uid }: Props) => {
             onChange={(e) => setName(e.target.value)}
           ></StyledInput>
           <Button type="submit">Lagre</Button>
-        </StyledLabelInput>
+        </div>
       </form>
     </Container>
   );

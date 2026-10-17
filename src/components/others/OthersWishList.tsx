@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 
 import { Container } from "../common/Container";
 import OtherWish from "./OtherWish";
@@ -21,18 +20,6 @@ interface Params {
   uid: string;
   [id: string]: string | undefined;
 }
-
-export const StyledWrapper = styled.form`
-  position: relative;
-  margin-bottom: 0.8rem;
-`;
-
-const IconWrapper = styled.span`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: ${(props) => props.theme.text};
-`;
 
 export const OthersWishList = ({ myUid }: { myUid: string }) => {
   const [feedback, setFeedback] = useState("");
@@ -99,13 +86,15 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
     }, 3000);
   }
 
-  const ownWishes = wishes?.filter((m) => !m.isSuggestion)
+  const ownWishes = wishes
+    ?.filter((m) => !m.isSuggestion)
     .sort((a, b) => {
       if (a.favorite && !b.favorite) return -1;
       if (!a.favorite && b.favorite) return 1;
       return 0;
     });
-  const suggestions = wishes?.filter((m) => m.isSuggestion)
+  const suggestions = wishes
+    ?.filter((m) => m.isSuggestion)
     .sort((a, b) => {
       if (a.favorite && !b.favorite) return -1;
       if (!a.favorite && b.favorite) return 1;
@@ -129,7 +118,7 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
 
       <h3>Legg inn forslag til {user?.name}</h3>
       <Spacer />
-      <StyledWrapper onSubmit={handleAddSuggestion}>
+      <form className="relative mb-8" onSubmit={handleAddSuggestion}>
         <StyledInput
           type="text"
           placeholder="Legg inn forslag her"
@@ -137,11 +126,11 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
           onChange={(e) => setSuggestion(e.target.value)}
         />
         <EmptyButton type="submit" name="check">
-          <IconWrapper>
+          <span className="flex items-center justify-center text-text">
             <Check size={24} />
-          </IconWrapper>
+          </span>
         </EmptyButton>
-      </StyledWrapper>
+      </form>
 
       <Spacer />
 

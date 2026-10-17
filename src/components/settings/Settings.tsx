@@ -8,20 +8,9 @@ import { useKohort } from "../../hooks/useKohort";
 import { useUser } from "../../hooks/useUser";
 import { StyledBigHeader, StyledSubHeader } from "../common/StyledHeading";
 import firebase from "../firebase/firebase";
-import styled from "styled-components";
 import { mutate } from "swr";
 import Loading from "../common/Loading";
 import { StyledNotification } from "../common/StyledNotification";
-
-const StyledGroup = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-
-  @media (max-width: 450px) {
-    flex-direction: column;
-  }
-`;
 
 const ChildSetting = ({ childUid }: { childUid: string }) => {
   const { user } = useUser(childUid);
@@ -81,7 +70,7 @@ const GroupSetting = ({
   }
 
   return (
-    <StyledGroup>
+    <div className="flex items-start justify-start max-[450px]:flex-col">
       <StyledSubHeader style={{ marginRight: "1rem" }}>
         {kohort?.groupName}
       </StyledSubHeader>
@@ -100,18 +89,9 @@ const GroupSetting = ({
         <Button onClick={handleDeleteUser}>Forlate gruppen?</Button>
       )}
       <StyledNotification active={notification !== ""} text={notification} />
-    </StyledGroup>
+    </div>
   );
 };
-
-const StyledWarning = styled.div`
-  border: 5px red solid;
-  border-radius: 5px;
-  background: #fff;
-  color: black;
-  padding: 1rem;
-  margin: 1rem;
-`;
 
 interface Props {
   uid: string;
@@ -130,11 +110,11 @@ export const Settings = ({ uid, firebaseUser }: Props) => {
       <p>Din epost er: {firebaseUser?.email || "Ukjent"}</p>
 
       {showNoEmailDisclaimer && (
-        <StyledWarning>
+        <div className="m-10 rounded-[5px] border-5 border-solid border-[red] bg-white p-10 text-black">
           Vi kunne ikke finne eposten din. Dette betyr at du ikke kan inviteres
           til grupper. Send din id til administrator slik at vedkommende kan
           legge deg inn manuelt. Din id er: {uid}.
-        </StyledWarning>
+        </div>
       )}
 
       <Spacer />
@@ -149,11 +129,11 @@ export const Settings = ({ uid, firebaseUser }: Props) => {
         </React.Fragment>
       ))}
       <StyledBigHeader>Brukere</StyledBigHeader>
-      <StyledGroup>
+      <div className="flex items-start justify-start max-[450px]:flex-col">
         {user?.childs?.map((childUid) => (
           <ChildSetting childUid={childUid} />
         ))}
-      </StyledGroup>
+      </div>
 
       <Spacer />
     </Container>

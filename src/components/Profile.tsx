@@ -2,76 +2,12 @@ import { useState } from "react";
 import { useUser } from "../hooks/useUser";
 import { Container } from "./common/Container";
 import { StyledBigHeader } from "./common/StyledHeading";
-import styled from "styled-components";
 import { BorderButton, ButtonNavigation, DangerButton } from "./common/Button";
 import { UnstyledLink } from "./common/Link";
 import firebase from "./firebase/firebase";
 import { useSettings } from "../hooks/useSettings";
 import { mutate } from "swr";
 import { Spacer } from "./common/Spacer";
-
-const StyledBottomOptions = styled.div`
-  display: flex;
-  gap: 1rem;
-`;
-
-const ButtonLink = styled(UnstyledLink)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-`;
-
-const SettingsSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  margin: 2rem 0;
-`;
-
-const CheckboxLabel = styled.label`
-  display: flex;
-  align-items: center;
-  gap: 1.2rem;
-  font-size: 1.6rem;
-  cursor: pointer;
-  user-select: none;
-  color: ${(props) => props.theme.text};
-`;
-
-const StyledCheckbox = styled.input`
-  appearance: none;
-  width: 2.4rem;
-  height: 2.4rem;
-  border: 2px solid ${(props) => props.theme.secondary};
-  border-radius: 4px;
-  cursor: pointer;
-  position: relative;
-  transition: all 0.2s ease;
-  background-color: ${(props) => props.theme.primaryDark};
-
-  &:checked {
-    background-color: ${(props) => props.theme.secondary};
-    border-color: ${(props) => props.theme.secondary};
-  }
-
-  &:checked::after {
-    content: "✓";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: ${(props) => props.theme.text};
-    font-size: 1.8rem;
-    font-weight: bold;
-  }
-
-  &:hover {
-    border-color: ${(props) => props.theme.primaryLight};
-    box-shadow: 0 0 0 2px ${(props) => props.theme.secondaryDark};
-  }
-`;
 
 function logOut(setFeedback: (n: string) => void, logout: () => void) {
   firebase
@@ -88,6 +24,12 @@ function logOut(setFeedback: (n: string) => void, logout: () => void) {
       }
     );
 }
+
+const checkboxLabel =
+  "flex cursor-pointer items-center gap-12 text-[1.6rem] text-text select-none";
+
+const checkbox =
+  "relative h-24 w-24 cursor-pointer appearance-none rounded-[4px] border-2 border-solid border-secondary bg-primary-dark transition-all duration-200 ease-[ease] checked:border-secondary checked:bg-secondary checked:after:absolute checked:after:top-1/2 checked:after:left-1/2 checked:after:-translate-x-1/2 checked:after:-translate-y-1/2 checked:after:text-[1.8rem] checked:after:font-bold checked:after:text-text checked:after:content-['✓'] hover:border-primary-light hover:shadow-[0_0_0_2px_var(--color-secondary-dark)]";
 
 export const Profile = ({ uid }: { uid: string }) => {
   const { user } = useUser(uid);
@@ -137,38 +79,41 @@ export const Profile = ({ uid }: { uid: string }) => {
       <StyledBigHeader>Profil for {user?.name}</StyledBigHeader>
       <p>{user?.email}</p>
       <Spacer />
-      
-      <SettingsSection>
-        <CheckboxLabel>
-          <StyledCheckbox
+
+      <div className="my-20 flex flex-col gap-15">
+        <label className={checkboxLabel}>
+          <input
+            className={checkbox}
             name="darkMode"
             type="checkbox"
             onChange={toggleDarkMode}
             checked={settings?.darkMode ? true : false}
           />
           <span>Dark mode?</span>
-        </CheckboxLabel>
+        </label>
 
-        <CheckboxLabel>
-          <StyledCheckbox
+        <label className={checkboxLabel}>
+          <input
+            className={checkbox}
             name="festivitasTheme"
             type="checkbox"
             onChange={toggleFestivitasTheme}
             checked={settings?.festivitasThemesEnabled ? true : false}
           />
           <span>Vil du ha årstidsbasert tema?</span>
-        </CheckboxLabel>
+        </label>
 
-        <CheckboxLabel>
-          <StyledCheckbox
+        <label className={checkboxLabel}>
+          <input
+            className={checkbox}
             name="hideGifts"
             type="checkbox"
             onChange={toggleHideGifts}
             checked={settings?.hideGifts ? true : false}
           />
           <span>Skjul avkryssede gaver?</span>
-        </CheckboxLabel>
-      </SettingsSection>
+        </label>
+      </div>
 
       {feedback}
       <Spacer />
@@ -197,22 +142,37 @@ export const Profile = ({ uid }: { uid: string }) => {
 
       <Spacer />
 
-      <StyledBottomOptions>
+      <div className="flex gap-10">
         <BorderButton>
-          <ButtonLink to="/settings">Innstillinger</ButtonLink>
+          <UnstyledLink
+            className="flex h-full w-full items-center justify-center"
+            to="/settings"
+          >
+            Innstillinger
+          </UnstyledLink>
         </BorderButton>
 
         <BorderButton>
-          <ButtonLink to={`/addchild`}>Legg til ekstra bruker</ButtonLink>
+          <UnstyledLink
+            className="flex h-full w-full items-center justify-center"
+            to={`/addchild`}
+          >
+            Legg til ekstra bruker
+          </UnstyledLink>
         </BorderButton>
         <BorderButton
           style={{
             marginLeft: "1rem",
           }}
         >
-          <ButtonLink to={`/mypurchases`}>Mine kjøp</ButtonLink>
+          <UnstyledLink
+            className="flex h-full w-full items-center justify-center"
+            to={`/mypurchases`}
+          >
+            Mine kjøp
+          </UnstyledLink>
         </BorderButton>
-      </StyledBottomOptions>
+      </div>
       <ButtonNavigation
         type="button"
         onClick={() => logOut(setFeedback, logout)}

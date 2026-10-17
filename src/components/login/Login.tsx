@@ -1,200 +1,20 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import { Eye, EyeOff } from "lucide-react";
 
 import firebase from "../firebase/firebase";
 import { googleProvider } from "../firebase/loginProviders";
 import Spinner from "../common/Spinner";
 import { LoginWrapper } from "./LoginWrapper";
+import { cn } from "../../util/cn";
 
-const Card = styled.div`
-  width: 100%;
-  max-width: 40rem;
-  padding: 3.6rem 3.2rem;
-  border-radius: 2.4rem;
-  background: rgba(41, 37, 71, 0.75);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
-  text-align: left;
+const lift =
+  "cursor-pointer transition-[transform,box-shadow] duration-150 ease-[ease] enabled:hover:-translate-y-1 enabled:hover:shadow-[0_6px_16px_rgba(0,0,0,0.3)] disabled:cursor-default disabled:opacity-70";
 
-  @media (max-width: 450px) {
-    padding: 2.8rem 2rem;
-  }
-`;
+const input =
+  "h-48 w-full rounded-[1.2rem] border-2 border-solid border-transparent bg-primary px-16 text-[1.6rem] text-text outline-none transition-[border-color] duration-150 ease-[ease] placeholder:text-[rgba(255,255,255,0.4)] focus:border-secondary";
 
-const Title = styled.h1`
-  font-size: 2.6rem;
-  font-weight: 600;
-  line-height: 1.3;
-  text-align: center;
-`;
-
-const Subtitle = styled.p`
-  font-size: 1.5rem;
-  opacity: 0.7;
-  text-align: center;
-  margin: 0.4rem 0 2.8rem;
-`;
-
-const GoogleButton = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.2rem;
-  width: 100%;
-  height: 4.8rem;
-  border: 0;
-  border-radius: 1.2rem;
-  background: #ffffff;
-  color: #1f1f1f;
-  font-family: inherit;
-  font-size: 1.6rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-
-  &:hover:not(:disabled) {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-  }
-
-  &:disabled {
-    opacity: 0.7;
-    cursor: default;
-  }
-`;
-
-const Divider = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1.2rem;
-  margin: 2.4rem 0;
-  font-size: 1.3rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1rem;
-  opacity: 0.6;
-
-  &::before,
-  &::after {
-    content: "";
-    flex: 1;
-    height: 1px;
-    background: currentColor;
-    opacity: 0.4;
-  }
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 1.6rem;
-`;
-
-const Field = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-`;
-
-const Label = styled.label`
-  font-size: 1.4rem;
-  font-weight: 600;
-`;
-
-const InputWrapper = styled.div`
-  position: relative;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  height: 4.8rem;
-  padding: 0 1.6rem;
-  border-radius: 1.2rem;
-  border: 2px solid transparent;
-  outline: none;
-  background: ${(props) => props.theme.primary};
-  color: ${(props) => props.theme.text};
-  font-size: 1.6rem;
-  transition: border-color 0.15s ease;
-
-  &::placeholder {
-    color: rgba(255, 255, 255, 0.4);
-  }
-
-  &:focus {
-    border-color: ${(props) => props.theme.secondary};
-  }
-`;
-
-const PasswordInput = styled(Input)`
-  padding-right: 5rem;
-`;
-
-const PeekButton = styled.button`
-  position: absolute;
-  top: 50%;
-  right: 1.2rem;
-  transform: translateY(-50%);
-  display: flex;
-  padding: 0.4rem;
-  border: 0;
-  background: transparent;
-  color: ${(props) => props.theme.text};
-  opacity: 0.7;
-  cursor: pointer;
-
-  &:hover {
-    opacity: 1;
-  }
-`;
-
-const SubmitButton = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 4.8rem;
-  margin-top: 0.8rem;
-  border: 0;
-  border-radius: 1.2rem;
-  background: ${(props) => props.theme.secondary};
-  color: ${(props) => props.theme.white};
-  font-family: inherit;
-  font-size: 1.6rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-
-  &:hover:not(:disabled) {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-  }
-
-  &:disabled {
-    opacity: 0.7;
-    cursor: default;
-  }
-`;
-
-const ErrorMessage = styled.p`
-  margin-top: 2rem;
-  padding: 1.2rem 1.6rem;
-  border-radius: 1.2rem;
-  background: rgba(255, 86, 86, 0.15);
-  color: #ffb3b3;
-  font-size: 1.4rem;
-  text-align: center;
-`;
-
-const SmallSpinner = styled(Spinner)`
-  margin: 0 auto;
-`;
-
-const DarkSpinner = styled(SmallSpinner)`
-  &::after {
-    border-color: #1f1f1f transparent #1f1f1f transparent;
-  }
-`;
+const dividerLine =
+  "before:h-px before:flex-1 before:bg-current before:opacity-40 before:content-[''] after:h-px after:flex-1 after:bg-current after:opacity-40 after:content-['']";
 
 const GoogleLogo = () => (
   <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true">
@@ -276,27 +96,49 @@ export const Login = () => {
 
   return (
     <LoginWrapper>
-      <Card>
-        <Title>Velkommen!</Title>
-        <Subtitle>Logg inn for å se og dele ønskelister</Subtitle>
+      <div className="w-full max-w-400 rounded-[2.4rem] border border-solid border-[rgba(255,255,255,0.08)] bg-[rgba(41,37,71,0.75)] px-32 py-36 text-left shadow-[0_20px_50px_rgba(0,0,0,0.35)] backdrop-blur-[12px] max-[450px]:px-20 max-[450px]:py-28">
+        <h1 className="text-center text-[2.6rem] leading-[1.3] font-semibold">
+          Velkommen!
+        </h1>
+        <p className="mx-0 mt-4 mb-28 text-center text-[1.5rem] opacity-70">
+          Logg inn for å se og dele ønskelister
+        </p>
 
-        <GoogleButton type="button" onClick={loginGoogle} disabled={submitting}>
+        <button
+          type="button"
+          onClick={loginGoogle}
+          disabled={submitting}
+          className={cn(
+            "flex h-48 w-full items-center justify-center gap-12 rounded-[1.2rem] border-0 bg-white text-[1.6rem] font-semibold text-[#1f1f1f] [font-family:inherit]",
+            lift
+          )}
+        >
           {submittingGoogle ? (
-            <DarkSpinner />
+            <Spinner className="mx-auto after:border-y-[#1f1f1f]" />
           ) : (
             <>
               <GoogleLogo />
               Fortsett med Google
             </>
           )}
-        </GoogleButton>
+        </button>
 
-        <Divider>eller</Divider>
+        <div
+          className={cn(
+            "my-24 flex items-center gap-12 text-[1.3rem] tracking-[0.1rem] uppercase opacity-60",
+            dividerLine
+          )}
+        >
+          eller
+        </div>
 
-        <Form onSubmit={loginPassword}>
-          <Field>
-            <Label htmlFor="email">E-post</Label>
-            <Input
+        <form className="flex flex-col gap-16" onSubmit={loginPassword}>
+          <div className="flex flex-col gap-6">
+            <label className="text-[1.4rem] font-semibold" htmlFor="email">
+              E-post
+            </label>
+            <input
+              className={input}
               id="email"
               type="email"
               autoComplete="username"
@@ -305,12 +147,15 @@ export const Login = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-          </Field>
+          </div>
 
-          <Field>
-            <Label htmlFor="password">Passord</Label>
-            <InputWrapper>
-              <PasswordInput
+          <div className="flex flex-col gap-6">
+            <label className="text-[1.4rem] font-semibold" htmlFor="password">
+              Passord
+            </label>
+            <div className="relative">
+              <input
+                className={cn(input, "pr-50")}
                 id="password"
                 type={peek ? "text" : "password"}
                 autoComplete="current-password"
@@ -318,23 +163,38 @@ export const Login = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
-              <PeekButton
+              <button
+                className="absolute top-1/2 right-12 flex -translate-y-1/2 cursor-pointer border-0 bg-transparent p-4 text-text opacity-70 hover:opacity-100"
                 type="button"
                 onClick={() => setPeek(!peek)}
                 aria-label={peek ? "Skjul passord" : "Vis passord"}
               >
                 {peek ? <EyeOff size={20} /> : <Eye size={20} />}
-              </PeekButton>
-            </InputWrapper>
-          </Field>
+              </button>
+            </div>
+          </div>
 
-          <SubmitButton type="submit" disabled={submitting}>
-            {submittingPassword ? <SmallSpinner /> : "Logg inn"}
-          </SubmitButton>
-        </Form>
+          <button
+            type="submit"
+            disabled={submitting}
+            className={cn(
+              "mt-8 flex h-48 items-center justify-center rounded-[1.2rem] border-0 bg-secondary text-[1.6rem] font-bold text-white [font-family:inherit]",
+              lift
+            )}
+          >
+            {submittingPassword ? <Spinner className="mx-auto" /> : "Logg inn"}
+          </button>
+        </form>
 
-        {errorMessage && <ErrorMessage role="alert">{errorMessage}</ErrorMessage>}
-      </Card>
+        {errorMessage && (
+          <p
+            role="alert"
+            className="mt-20 rounded-[1.2rem] bg-[rgba(255,86,86,0.15)] px-16 py-12 text-center text-[1.4rem] text-[#ffb3b3]"
+          >
+            {errorMessage}
+          </p>
+        )}
+      </div>
     </LoginWrapper>
   );
 };

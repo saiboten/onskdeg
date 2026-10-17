@@ -1,4 +1,4 @@
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useLayoutEffect, useState, Suspense } from "react";
 import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import { YourWishList } from "./components/yours/YourWishList";
@@ -12,7 +12,6 @@ import { HeaderComponent } from "./components/header/Header";
 import { Login } from "./components/login/Login";
 import Loading from "./components/common/Loading";
 import { GlobalLoading } from "./components/common/GlobalLoading";
-import { GlobalStyle } from "./GlobalStyles";
 import { AddChild } from "./components/childs/AddChild";
 import { AddKohort } from "./components/group/AddKohort";
 import firebase from "./components/firebase/firebase";
@@ -27,47 +26,29 @@ import ScrollToTop from "./components/ScrollToTop";
 import { MyPurchases } from "./components/MyPurchases";
 import { FixWishes } from "./components/FixWishes";
 import { Profile } from "./components/Profile";
-import { ThemeProvider } from "styled-components";
 import { NavLink } from "react-router-dom";
-import { darkTheme, lightTheme, christmasTheme } from "./components/themes";
 import { User as UserIcon } from "lucide-react";
 import { useSettings } from "./hooks/useSettings";
-import styled from "styled-components";
 import { LoginWrapper } from "./components/login/LoginWrapper";
 import { Link } from "./components/common/Link";
-
-const MainContainer = styled.div`
-  background: ${(props) => props.theme.primaryDark};
-  max-width: 103rem;
-  margin: 0 auto;
-  margin-top: 10.5rem;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 25px;
-`;
-
-const StyledUserIcon = styled(UserIcon)`
-  margin-left: 12px;
-  width: 32px;
-  height: 32px;
-  color: ${(props) => props.theme.contrast};
-  transform: translateY(0.5rem);
-`;
-
-const UserInfo = styled.div`
-  color: ${(props) => props.theme.contrast};
-  font-size: 1.6rem;
-  position: absolute;
-  top: 4.5rem;
-  right: 3rem;
-  position: fixed;
-  z-index: -1;
-`;
 
 const App = () => {
   const [uid, setUid] = useState<string | undefined>();
   const [firebaseUser, setFirebaseUser] = useState<firebase.User | undefined>();
   const [uidResolved, setUidResolved] = useState(false);
   const { settings, isLoading, isError } = useSettings(uid || "", false);
+
+  const theme = !uid
+    ? "dark"
+    : settings?.festivitasThemesEnabled
+      ? "christmas"
+      : settings?.darkMode
+        ? "dark"
+        : "light";
+
+  useLayoutEffect(() => {
+    document.documentElement.dataset.theme = theme;
+  }, [theme]);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(function (user) {
@@ -92,117 +73,98 @@ const App = () => {
 
   if (!uid) {
     return (
-      <>
-        <ThemeProvider theme={darkTheme}>
-          <GlobalStyle />
-          <HashRouter>
-            <Routes>
-              <Route
-                path="/privacypolicy"
-                element={
-                  <LoginWrapper>
-                    <PrivacyPolicy />
-                  </LoginWrapper>
-                }
-              ></Route>
-              <Route
-                path="/tos"
-                element={
-                  <LoginWrapper>
-                    <TermsOfService />
-                  </LoginWrapper>
-                }
-              ></Route>
-              <Route path="/" element={<Login />}></Route>
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </HashRouter>
-        </ThemeProvider>
-      </>
+      <HashRouter>
+        <Routes>
+          <Route
+            path="/privacypolicy"
+            element={
+              <LoginWrapper>
+                <PrivacyPolicy />
+              </LoginWrapper>
+            }
+          ></Route>
+          <Route
+            path="/tos"
+            element={
+              <LoginWrapper>
+                <TermsOfService />
+              </LoginWrapper>
+            }
+          ></Route>
+          <Route path="/" element={<Login />}></Route>
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </HashRouter>
     );
   }
 
   return (
-    <ThemeProvider
-      theme={
-        settings?.festivitasThemesEnabled
-          ? christmasTheme
-          : settings?.darkMode
-          ? darkTheme
-          : lightTheme
-      }
-    >
-      <HashRouter>
-        <ScrollToTop />
-        <Suspense fallback={<GlobalLoading />}>
-          <GlobalStyle />
-          <MainContainer>
-            <UserInfo>
-              <span>gaveønske.no</span>
-              <NavLink to="/profile">
-                <StyledUserIcon />
-              </NavLink>
-            </UserInfo>
-            <HeaderComponent uid={uid} />
-            <Routes>
-              <Route
-                path="/wish/:uid/:wishid"
-                element={<YourWishDetails />}
-              ></Route>
-              <Route
-                path="/upload-wishes"
-                element={<UploadWishesPage uid={uid} />}
-              ></Route>
-              <Route
-                path="/others"
-                element={<SelectWishList uid={uid} />}
-              ></Route>
-              <Route
-                path="/mypurchases"
-                element={<MyPurchases uid={uid} />}
-              ></Route>
-              <Route
-                path="/other/:uid/:wishid"
-                element={<OtherWishDetail myUid={uid} />}
-              ></Route>
-              <Route
-                path="/other/:uid"
-                element={<OthersWishList myUid={uid} />}
-              ></Route>
-              <Route path="/addchild" element={<AddChild uid={uid} />}></Route>
-              <Route path="/profile" element={<Profile uid={uid} />}></Route>
-              <Route
-                path="/settings/kohort/:kohortId"
-                element={<GroupAdmin myUid={uid} />}
-              ></Route>
-              <Route
-                path="/settings/child/:childId"
-                element={<ChildAdmin myUid={uid} />}
-              ></Route>
-              <Route
-                path="/settings"
-                element={<Settings firebaseUser={firebaseUser} uid={uid} />}
-              ></Route>
-              <Route path="/addgroup" element={<AddKohort uid={uid} />}></Route>
-              <Route path="/privacypolicy" element={<PrivacyPolicy />}></Route>
-              <Route path="/tos" element={<TermsOfService />}></Route>
-              <Route path="/deleteme" element={<DeleteMe />}></Route>
-              <Route
-                path="/legacy"
-                element={<LegacyWishes uid={uid} />}
-              ></Route>
-              <Route path="/fixwishes" element={<FixWishes />}></Route>
-              <Route
-                path="/"
-                element={<YourWishList firebaseUser={firebaseUser} uid={uid} />}
-              ></Route>
-            </Routes>
-            <Link to="/privacypolicy">Privacy Policy</Link> -{" "}
-            <Link to="/tos">Terms of Service</Link>
-          </MainContainer>
-        </Suspense>
-      </HashRouter>
-    </ThemeProvider>
+    <HashRouter>
+      <ScrollToTop />
+      <Suspense fallback={<GlobalLoading />}>
+        <div className="mx-auto mt-105 max-w-1030 rounded-[25px] bg-primary-dark shadow-[0px_4px_4px_rgba(0,0,0,0.25),0px_4px_4px_rgba(0,0,0,0.25)]">
+          <div className="fixed top-45 right-30 -z-1 text-[1.6rem] text-contrast">
+            <span>gaveønske.no</span>
+            <NavLink to="/profile">
+              <UserIcon className="ml-12 h-32 w-32 translate-y-5 text-contrast" />
+            </NavLink>
+          </div>
+          <HeaderComponent uid={uid} />
+          <Routes>
+            <Route
+              path="/wish/:uid/:wishid"
+              element={<YourWishDetails />}
+            ></Route>
+            <Route
+              path="/upload-wishes"
+              element={<UploadWishesPage uid={uid} />}
+            ></Route>
+            <Route
+              path="/others"
+              element={<SelectWishList uid={uid} />}
+            ></Route>
+            <Route
+              path="/mypurchases"
+              element={<MyPurchases uid={uid} />}
+            ></Route>
+            <Route
+              path="/other/:uid/:wishid"
+              element={<OtherWishDetail myUid={uid} />}
+            ></Route>
+            <Route
+              path="/other/:uid"
+              element={<OthersWishList myUid={uid} />}
+            ></Route>
+            <Route path="/addchild" element={<AddChild uid={uid} />}></Route>
+            <Route path="/profile" element={<Profile uid={uid} />}></Route>
+            <Route
+              path="/settings/kohort/:kohortId"
+              element={<GroupAdmin myUid={uid} />}
+            ></Route>
+            <Route
+              path="/settings/child/:childId"
+              element={<ChildAdmin myUid={uid} />}
+            ></Route>
+            <Route
+              path="/settings"
+              element={<Settings firebaseUser={firebaseUser} uid={uid} />}
+            ></Route>
+            <Route path="/addgroup" element={<AddKohort uid={uid} />}></Route>
+            <Route path="/privacypolicy" element={<PrivacyPolicy />}></Route>
+            <Route path="/tos" element={<TermsOfService />}></Route>
+            <Route path="/deleteme" element={<DeleteMe />}></Route>
+            <Route path="/legacy" element={<LegacyWishes uid={uid} />}></Route>
+            <Route path="/fixwishes" element={<FixWishes />}></Route>
+            <Route
+              path="/"
+              element={<YourWishList firebaseUser={firebaseUser} uid={uid} />}
+            ></Route>
+          </Routes>
+          <Link to="/privacypolicy">Privacy Policy</Link> -{" "}
+          <Link to="/tos">Terms of Service</Link>
+        </div>
+      </Suspense>
+    </HashRouter>
   );
 };
 

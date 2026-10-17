@@ -8,16 +8,11 @@ import Loading from "../common/Loading";
 import { StyledBigHeader, StyledSubHeader } from "../common/StyledHeading";
 import firebase from "../firebase/firebase";
 import { useNotification } from "../common/StyledNotification";
-import styled from "styled-components";
 
 interface KohortMemberProps {
   uid: string;
   childId: string;
 }
-
-const StyledCheckbox = styled.input`
-  margin-left: 1rem;
-`;
 
 const KohortMember = ({ childId, uid }: KohortMemberProps) => {
   const { user } = useUser(uid);
@@ -77,7 +72,8 @@ const KohortMember = ({ childId, uid }: KohortMemberProps) => {
       {loading ? (
         <Loading />
       ) : (
-        <StyledCheckbox
+        <input
+          className="ml-10"
           name="isParent"
           type="checkbox"
           checked={isParent}
