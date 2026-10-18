@@ -17,9 +17,9 @@ import { useQuestions } from "../../hooks/useQuestions";
 import { ListMyQuestions } from "./ListMyQuestions";
 import { compressImage } from "../../util/imageCompression";
 import Spinner from "../common/Spinner";
-import { BorderButton } from "../common/Button";
+import { BorderButton, borderButton } from "../common/Button";
 import { generateWishDescription } from "../../services/ai";
-import { Sparkles } from "lucide-react";
+import { ImageUp, Sparkles } from "lucide-react";
 
 interface Params {
   wishid: string | undefined;
@@ -133,62 +133,85 @@ export function YourWishDetails() {
     invalidate(["wish", uid]);
   };
 
-  return (
-    <Container>
-      <div className="px-10 text-left">
-        <div className="text-[24px] text-text">
-          <Detail fieldName="name" storeData={storeData} initialValue={name}>
-            <StyledBigHeader>{name}</StyledBigHeader>
-          </Detail>
-        </div>
+  const uploadButton = (
+    <label
+      htmlFor="file-upload"
+      className={cn(
+        borderButton,
+        uploading && "pointer-events-none cursor-not-allowed opacity-60"
+      )}
+    >
+      <ImageUp size={18} />
+      {wish.image ? "Bytt bilde" : "Last opp bilde"}
+    </label>
+  );
 
+  return (
+    <Container textLeft>
+      <Detail fieldName="name" storeData={storeData} initialValue={name}>
+        <StyledBigHeader className="mb-0">{name}</StyledBigHeader>
+      </Detail>
+
+      <input
+        className="hidden"
+        type="file"
+        id="file-upload"
+        onChange={handleChange}
+        accept="image/*"
+        disabled={uploading}
+      />
+
+      <div className="my-20 flex flex-col items-center gap-12">
         {uploading ? (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              minHeight: "200px",
-            }}
-          >
+          <div className="flex min-h-200 items-center justify-center gap-8 text-[1.4rem]">
             <Spinner />
+            <span>Laster opp bilde...</span>
           </div>
         ) : (
           wish.image && (
-            <div className="flex flex-col items-center gap-10">
-              <img className="w-full max-w-400" src={wish.image} />
-              <BorderButton
-                className="mb-0 flex items-center gap-8 font-sans disabled:pointer-events-none disabled:opacity-60"
-                onClick={handleAnalyze}
-                disabled={analyzing}
-              >
-                {analyzing ? <Spinner /> : <Sparkles size={18} />}
-                {analyzing ? "Analyserer..." : "Analyser med AI"}
-              </BorderButton>
-              {analyzeError && (
-                <p className="text-[1.4rem] text-negative">{analyzeError}</p>
-              )}
-            </div>
+            <img
+              className="w-full max-w-400 rounded-[10px]"
+              src={wish.image}
+              alt={name}
+            />
           )
         )}
-
-        {wish.isSuggestion && <p>Foreslått av: {suggestedByUser?.name}</p>}
-
-        {!wish.isSuggestion && (
-          <ListMyQuestions
-            wishId={wishid ?? ""}
-            myUid={uid ?? ""}
-            questions={questions}
-          />
+        <div className="flex flex-wrap justify-center gap-10">
+          {wish.image && !uploading && (
+            <BorderButton onClick={handleAnalyze} disabled={analyzing}>
+              {analyzing ? <Spinner /> : <Sparkles size={18} />}
+              {analyzing ? "Analyserer..." : "Analyser med AI"}
+            </BorderButton>
+          )}
+          {uploadButton}
+        </div>
+        {analyzeError && (
+          <p className="text-[1.4rem] text-negative">{analyzeError}</p>
         )}
+      </div>
 
+      {wish.isSuggestion && (
+        <p className="mb-16">Foreslått av: {suggestedByUser?.name}</p>
+      )}
+
+      {!wish.isSuggestion && (
+        <ListMyQuestions
+          wishId={wishid ?? ""}
+          myUid={uid ?? ""}
+          questions={questions}
+        />
+      )}
+
+      <div className="flex flex-col gap-16">
         {date && (
-          <div className="text-[16px] text-text">
+          <div>
             <StyledLabel>Lagt inn</StyledLabel>
-            <p>{format(wish.date?.toDate() || new Date(), "dd.MM.yyyy")}</p>
+            <p className="flex min-h-40 items-center">
+              {format(wish.date?.toDate() || new Date(), "dd.MM.yyyy")}
+            </p>
           </div>
         )}
-        <div className="text-[16px] text-text">
+        <div>
           <StyledLabel>Beskrivelse</StyledLabel>
           <Detail
             fieldName="description"
@@ -198,34 +221,7 @@ export function YourWishDetails() {
             <p>{wishDescription}</p>
           </Detail>
         </div>
-        <div className="text-[16px] text-text">
-          <input
-            className="hidden"
-            type="file"
-            id="file-upload"
-            onChange={handleChange}
-            accept="image/*"
-            disabled={uploading}
-          />
-          <label
-            htmlFor="file-upload"
-            className={cn(
-              "mt-5 inline-block rounded-[4px] border-2 border-solid border-secondary bg-secondary px-20 py-10 text-[1.4rem] text-text transition-[transform,box-shadow] duration-200 ease-[ease]",
-              uploading
-                ? "pointer-events-none cursor-not-allowed opacity-60"
-                : "cursor-pointer opacity-100 hover:-translate-y-2 hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)]"
-            )}
-          >
-            Last opp bilde
-          </label>
-          {uploading && (
-            <div className="mt-5 flex items-center gap-8 text-[1.4rem] text-text">
-              <Spinner />
-              <span>Laster opp bilde...</span>
-            </div>
-          )}
-        </div>
-        <div className="text-[16px] text-text">
+        <div>
           <StyledLabel>Link</StyledLabel>
           <Detail fieldName="link" storeData={storeData} initialValue={link}>
             <ALink target="_blank" href={link}>
@@ -233,14 +229,14 @@ export function YourWishDetails() {
             </ALink>
           </Detail>
         </div>
-        <div className="text-[16px] text-text">
+        <div>
           <StyledLabel>Pris</StyledLabel>
           <Detail
             fieldName="price"
             storeData={storeData}
             initialValue={price || 0}
           >
-            <div>{price}</div>
+            <p>Kr {price},-</p>
           </Detail>
         </div>
       </div>

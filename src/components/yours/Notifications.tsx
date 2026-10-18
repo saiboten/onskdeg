@@ -1,7 +1,7 @@
 import { useNotifications } from "../../hooks/useNotifications";
-import { Spacer } from "../common/Spacer";
 import { ALink } from "../common/Link";
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { invalidate } from "../../queryClient";
 import { Notification as NotificationType } from "../../types/types";
 import firebase from "../firebase/firebase";
 
@@ -10,17 +10,20 @@ interface Props {
 }
 
 const Notification = ({ notification }: { notification: NotificationType }) => {
+  const navigate = useNavigate();
+
   async function handleClick() {
     await firebase
       .firestore()
       .collection("notifications")
       .doc(notification.id)
       .delete();
-    redirect(notification.link);
+    invalidate(["notifications", notification.to]);
+    navigate(notification.link);
   }
 
   return (
-    <div className="mb-10 rounded-[0.8rem] border-2 border-solid p-10">
+    <div className="mb-10 rounded-[10px] border-2 border-solid border-secondary px-16 py-12 text-left">
       <ALink onClick={handleClick}>{notification.message}</ALink>
     </div>
   );
@@ -29,17 +32,15 @@ const Notification = ({ notification }: { notification: NotificationType }) => {
 export const Notifications = (props: Props) => {
   const { notifications } = useNotifications(props.myUid);
 
-  if (notifications?.length == 0) {
+  if (!notifications?.length) {
     return null;
   }
 
   return (
-    <>
-      <Spacer />
-      {notifications?.map((el) => (
-        <Notification notification={el} />
+    <div className="mb-24">
+      {notifications.map((el) => (
+        <Notification key={el.id} notification={el} />
       ))}
-      <Spacer />
-    </>
+    </div>
   );
 };

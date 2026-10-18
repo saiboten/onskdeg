@@ -7,7 +7,9 @@ import firebase from "../firebase/firebase";
 import { invalidate } from "../../queryClient";
 import { Wish as WishType, NewsEntryType } from "../../types/types";
 import { Button } from "../common/Button";
-import { Spacer } from "../common/Spacer";
+import { StyledLabel } from "../common/Label";
+import { inputStyle } from "../common/StyledInput";
+import { cn } from "../../util/cn";
 import { generateWishDescription } from "../../services/ai";
 import { compressImage } from "../../util/imageCompression";
 
@@ -159,16 +161,13 @@ export const UploadWishesPage = ({ uid }: Props) => {
       <StyledBigHeader>Last opp ønsker</StyledBigHeader>
 
       <form
-        className="mx-auto flex max-w-600 flex-col gap-20"
+        className="mx-auto flex max-w-600 flex-col gap-20 text-left"
         onSubmit={handleSubmit}
       >
         <div>
-          <label className="text-[1.6rem] font-semibold" htmlFor="user-select">
-            Last opp til:
-          </label>
-          <Spacer />
+          <StyledLabel htmlFor="user-select">Last opp til</StyledLabel>
           <select
-            className="rounded-[0.5rem] border border-solid border-secondary bg-primary-light p-10 text-[1.6rem] text-text"
+            className={cn(inputStyle, "w-full cursor-pointer")}
             id="user-select"
             value={selectedUser}
             onChange={(e) => setSelectedUser(e.target.value)}
@@ -184,12 +183,9 @@ export const UploadWishesPage = ({ uid }: Props) => {
         </div>
 
         <div>
-          <label className="text-[1.6rem] font-semibold" htmlFor="file-input">
-            Velg bilder:
-          </label>
-          <Spacer />
+          <StyledLabel htmlFor="file-input">Velg bilder</StyledLabel>
           <input
-            className="text-[1.4rem]"
+            className="w-full rounded-[10px] border-2 border-dashed border-secondary p-12 text-[1.4rem] file:mr-12 file:cursor-pointer file:rounded-[8px] file:border-0 file:bg-secondary file:px-14 file:py-8 file:font-sans file:font-semibold file:text-text"
             id="file-input"
             type="file"
             accept="image/*"
@@ -199,7 +195,7 @@ export const UploadWishesPage = ({ uid }: Props) => {
           />
         </div>
 
-        <Button type="submit" disabled={uploading || !files}>
+        <Button className="h-48" type="submit" disabled={uploading || !files}>
           {uploading ? "Laster opp..." : "Last opp bilder"}
         </Button>
 

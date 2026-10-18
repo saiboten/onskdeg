@@ -1,7 +1,7 @@
 import { ComponentProps, useState } from "react";
 import { Wish as WishType } from "../../types/types";
 import ListRow, { LeftSection } from "../common/ListRow";
-import { StyledActionButtons } from "../common/IconButton";
+import { IconButton } from "../common/Button";
 import { Link as RouterLink } from "react-router-dom";
 import firebase from "../firebase/firebase";
 import { invalidate } from "../../queryClient";
@@ -16,18 +16,13 @@ export const Link = ({
 }: ComponentProps<typeof RouterLink>) => (
   <RouterLink
     className={cn(
-      "flex items-center gap-5 text-text no-underline hover:text-[grey]",
+      "flex min-w-0 items-center gap-5 py-10 text-text no-underline wrap-break-word hover:opacity-75",
       className
     )}
     {...props}
   />
 );
 
-const iconButton =
-  "flex cursor-pointer items-center justify-center border-none bg-transparent p-5 text-text transition-transform duration-200 ease-[ease] hover:scale-110";
-
-const confirmButton =
-  "flex cursor-pointer items-center justify-center rounded-[4px] border-none p-7.5 text-white transition-transform duration-200 ease-[ease] hover:scale-110";
 
 interface P {
   user: string;
@@ -64,40 +59,40 @@ export const Wish = ({ wish, delete: deleteProp, user }: P) => {
   }
 
   const deleteWish = confirm ? (
-    <div className="flex gap-5">
-      <button
-        className={cn(confirmButton, "bg-contrast")}
-        type="button"
+    <div className="flex shrink-0 gap-6">
+      <IconButton
+        className="bg-contrast text-white"
+        aria-label="Avbryt"
         onClick={cancel}
       >
-        <X size={24} />
-      </button>
-      <button
-        className={cn(confirmButton, "bg-negative")}
-        type="button"
+        <X size={22} />
+      </IconButton>
+      <IconButton
+        className="bg-negative text-white"
+        aria-label="Bekreft sletting"
         onClick={deleteConfirmed}
       >
-        <Check size={24} />
-      </button>
+        <Check size={22} />
+      </IconButton>
     </div>
   ) : (
-    <StyledActionButtons>
-      <button className={iconButton} type="button" onClick={toggleFavorite}>
+    <div className="flex shrink-0 items-center gap-4">
+      <IconButton aria-label="Favoritt" onClick={toggleFavorite}>
         <Star
           size={24}
           fill={wish.favorite ? "#FFD700" : "none"}
           color={wish.favorite ? "#FFD700" : "currentColor"}
         />
-      </button>
+      </IconButton>
       {wish.link && (
-        <StyledLink href={wish.link} target="_blank">
+        <StyledLink href={wish.link} target="_blank" aria-label="Åpne lenke">
           <StyledLinkIcon />
         </StyledLink>
       )}
-      <button className={iconButton} type="button" onClick={deleteItem}>
+      <IconButton aria-label="Slett" onClick={deleteItem}>
         <Trash2 size={24} />
-      </button>
-    </StyledActionButtons>
+      </IconButton>
+    </div>
   );
 
   return (

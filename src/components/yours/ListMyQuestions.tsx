@@ -4,9 +4,9 @@ import { useUser } from "../../hooks/useUser";
 import { Notification, Question as QuestionType } from "../../types/types";
 import { Button } from "../common/Button";
 import Loading from "../common/Loading";
-import { Spacer } from "../common/Spacer";
 import { StyledSubHeader } from "../common/StyledHeading";
 import { StyledLabelInputPair } from "../common/StyledLabelInputPair";
+import { StyledInput } from "../common/StyledInput";
 import { useNotification } from "../common/StyledNotification";
 import firebase from "../firebase/firebase";
 
@@ -61,35 +61,36 @@ const Question = ({ myUid, question, wishId }: QuestionProps) => {
   }
 
   return (
-    <>
-      <div className="relative inline-block rounded-[1rem] bg-white p-15 text-black not-last:mr-10 not-last:mb-10">
-        {question.question}
-        {question.answer ? (
-          <div>Svar: {question.answer}</div>
-        ) : (
-          <form onSubmit={handleSaveQuestion}>
-            <StyledLabelInputPair>
-              <input
-                className="mx-8 h-48 w-[calc(100%-1.6rem)] flex-1 rounded-[10px] border border-solid border-black pr-10 pl-40 text-[1.6rem] placeholder:text-[1.6rem]"
-                value={answer}
-                onChange={(e) => setAnswer(e.target.value)}
-              ></input>
-              {loading ? <Loading /> : <Button>Svar</Button>}
-            </StyledLabelInputPair>
-          </form>
-        )}
-      </div>
-      <Spacer />
+    <div className="rounded-[10px] bg-primary px-16 py-12 text-text">
+      <p className="font-semibold">{question.question}</p>
+      {question.answer ? (
+        <p>Svar: {question.answer}</p>
+      ) : (
+        <form className="mt-8" onSubmit={handleSaveQuestion}>
+          <StyledLabelInputPair>
+            <StyledInput
+              placeholder="Skriv et svar"
+              value={answer}
+              onChange={(e) => setAnswer(e.target.value)}
+            />
+            {loading ? <Loading /> : <Button>Svar</Button>}
+          </StyledLabelInputPair>
+        </form>
+      )}
       {element}
-    </>
+    </div>
   );
 };
 
 export const ListMyQuestions = ({ myUid, wishId, questions }: Props) => {
+  if (!questions?.length) {
+    return null;
+  }
+
   return (
-    <div>
+    <div className="mb-24">
       <StyledSubHeader>Spørsmål og svar</StyledSubHeader>
-      <div className="flex flex-wrap">
+      <div className="flex flex-col gap-10">
         {questions?.map((el) => {
           return (
             <Question
@@ -101,7 +102,6 @@ export const ListMyQuestions = ({ myUid, wishId, questions }: Props) => {
           );
         })}
       </div>
-      <Spacer />
     </div>
   );
 };

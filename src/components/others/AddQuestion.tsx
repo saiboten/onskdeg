@@ -84,7 +84,7 @@ export const AddQuestion = ({ myUid, wishOwnerUid, wishId }: Props) => {
   }
 
   return (
-    <div>
+    <div className="mb-16">
       <StyledSubHeader>Still spørsmål</StyledSubHeader>
       {loading ? (
         <Loading />

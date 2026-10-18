@@ -135,4 +135,19 @@
     font-family: var(--font-sans);
     font-size: 1rem;
   }
+
+  select,
+  button {
+    font-family: var(--font-sans);
+  }
+
+  h1,
+  h2,
+  h3 {
+    line-height: 1.3;
+  }
+
+  img {
+    max-width: 100%;
+  }
 }

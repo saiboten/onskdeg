@@ -12,7 +12,7 @@ export const Container = ({
 }: ContainerProps) => (
   <div
     className={cn(
-      "mx-auto max-w-870 rounded-[3px] p-5 text-[1.6rem]",
+      "mx-auto w-full max-w-870 px-16 py-8 text-[1.6rem] sm:px-24",
       textLeft ? "text-left" : "text-center",
       className
     )}

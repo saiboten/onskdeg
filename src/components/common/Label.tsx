@@ -5,5 +5,11 @@ export const StyledLabel = ({
   className,
   ...props
 }: ComponentProps<"label">) => (
-  <label className={cn("text-[1.6rem] text-text", className)} {...props} />
+  <label
+    className={cn(
+      "mb-4 block text-[1.4rem] font-semibold text-text opacity-75",
+      className
+    )}
+    {...props}
+  />
 );

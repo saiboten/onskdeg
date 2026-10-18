@@ -1,5 +1,13 @@
 import { ComponentProps } from "react";
+import { cn } from "../../util/cn";
 
-export const StyledLabelInputPair = (props: ComponentProps<"div">) => (
-  <div className="flex justify-between" {...props} />
+/** An input with its submit button (or spinner) on the same line. */
+export const StyledLabelInputPair = ({
+  className,
+  ...props
+}: ComponentProps<"div">) => (
+  <div
+    className={cn("flex items-center gap-8 [&>button]:h-48", className)}
+    {...props}
+  />
 );

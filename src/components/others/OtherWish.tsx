@@ -10,15 +10,13 @@ import { StyledNotification } from "../common/StyledNotification";
 import { format } from "date-fns";
 import { StyledLink, StyledLinkIcon } from "../common/StyledLink";
 import { useSettings } from "../../hooks/useSettings";
+import { IconButton } from "../common/Button";
 
 interface P {
   wishInfo: Wish;
   user: string;
   myUid: string;
 }
-
-const confirmButton =
-  "flex cursor-pointer items-center justify-center rounded-[4px] border-none p-7.5 text-white transition-transform duration-200 ease-[ease] hover:scale-110";
 
 const OtherWish = ({ wishInfo, user, myUid }: P) => {
   const navigate = useNavigate();
@@ -88,20 +86,14 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
       <div
         onClick={handleCardClick}
         className={cn(
-          "relative mb-16 cursor-pointer rounded-[8px] border-2 border-solid border-secondary bg-primary p-16 transition-[transform,box-shadow] duration-200 ease-[ease] hover:-translate-y-2 hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)]",
+          "mb-16 cursor-pointer rounded-[10px] border-2 border-solid border-secondary bg-primary p-16 text-left transition-[transform,box-shadow] duration-200 ease-[ease] hover:-translate-y-2 hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)]",
           isTaken ? "opacity-70" : "opacity-100"
         )}
       >
-        {isTaken && (
-          <div className="absolute top-10 right-10 z-1 rounded-[4px] bg-negative px-10 py-5 text-[1.2rem] font-semibold text-text">
-            Kjøpt
-          </div>
-        )}
-
-        <div className="mb-10 flex items-start justify-between">
+        <div className="flex items-start justify-between gap-10">
           <h3
             className={cn(
-              "m-0 flex items-center gap-5 text-[1.8rem] text-text",
+              "m-0 flex min-w-0 items-center gap-6 text-[1.8rem] leading-[1.3] wrap-break-word text-text",
               isTaken ? "line-through" : "no-underline"
             )}
           >
@@ -110,105 +102,95 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
             )}
             {wishInfo.name}
           </h3>
-          {wishInfo.date && (
-            <div className="ml-10 text-[1.2rem] whitespace-nowrap text-text">
-              {format(wishInfo.date.toDate(), "dd.MM.yyyy")}
-            </div>
-          )}
+          <div className="flex shrink-0 items-center gap-8 pt-2">
+            {isTaken && (
+              <span className="rounded-[4px] bg-negative px-8 py-2 text-[1.2rem] font-semibold text-white">
+                Kjøpt
+              </span>
+            )}
+            {wishInfo.date && (
+              <span className="text-[1.2rem] whitespace-nowrap text-text opacity-75">
+                {format(wishInfo.date.toDate(), "dd.MM.yyyy")}
+              </span>
+            )}
+          </div>
         </div>
 
         {wishInfo.price && (
-          <div className="mb-10 text-[1.6rem] font-semibold text-secondary">
+          <div className="mt-4 text-[1.6rem] font-semibold text-secondary">
             Kr {wishInfo.price},-
           </div>
         )}
 
-        <div className="relative mb-10 w-full">
-          {wishInfo.image ? (
-            <img
-              className="h-auto w-full rounded-[4px] object-cover"
-              src={wishInfo.image}
-              alt={wishInfo.name}
-            />
-          ) : (
-            <div className="flex h-200 w-full items-center justify-center rounded-[4px] bg-primary text-[1.4rem] text-text">
-              Ingen bilde
-            </div>
-          )}
-        </div>
+        {wishInfo.image && (
+          <img
+            className="mx-auto mt-12 h-auto max-h-400 w-auto max-w-full rounded-[6px] object-contain"
+            src={wishInfo.image}
+            alt={wishInfo.name}
+          />
+        )}
 
         {wishInfo.description && (
-          <p className="mb-10 text-[1.4rem] leading-[1.6] wrap-break-word text-text">
+          <p className="mt-10 text-[1.4rem] leading-[1.6] wrap-break-word text-text">
             {wishInfo.description}
           </p>
         )}
 
         <div
-          className="mt-10 flex items-center justify-end gap-10 [border-top:1px_solid_var(--color-secondary)] pt-10"
+          className="mt-12 flex items-center justify-end gap-6 [border-top:1px_solid_var(--color-secondary)] pt-8"
           onClick={(e) => e.stopPropagation()}
         >
           {wishInfo.link && (
-            <StyledLink href={wishInfo.link} target="_blank">
+            <StyledLink
+              href={wishInfo.link}
+              target="_blank"
+              aria-label="Åpne lenke"
+            >
               <StyledLinkIcon />
             </StyledLink>
           )}
 
           {confirm ? (
-            <div className="flex gap-5">
-              <button
-                className={cn(confirmButton, "bg-contrast")}
-                type="button"
+            <div className="flex gap-6">
+              <IconButton
+                className="bg-contrast text-white"
+                aria-label="Avbryt"
                 onClick={(e) => {
                   e.stopPropagation();
                   setConfirm(false);
                 }}
               >
-                <X size={24} />
-              </button>
-              <button
-                className={cn(confirmButton, "bg-negative")}
-                type="button"
+                <X size={22} />
+              </IconButton>
+              <IconButton
+                className="bg-negative text-white"
+                aria-label="Bekreft sletting"
                 onClick={handleDeleteItem}
               >
-                <Check size={24} />
-              </button>
+                <Check size={22} />
+              </IconButton>
             </div>
           ) : (
             wishSuggestedByMe && (
-              <button
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  cursor: "pointer",
-                  padding: "0.5rem",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-                type="button"
+              <IconButton
+                aria-label="Slett"
                 onClick={(e) => {
                   e.stopPropagation();
                   setConfirm(true);
                 }}
               >
-                <Trash2 size={24} className="text-text" />
-              </button>
+                <Trash2 size={24} />
+              </IconButton>
             )
           )}
 
-          <button
-            style={{
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
-              padding: "0.5rem",
-              display: "flex",
-              alignItems: "center",
-            }}
-            type="button"
+          <IconButton
+            aria-label={isTaken ? "Angre kjøp" : "Marker som kjøpt"}
+            title={isTaken ? "Angre kjøp" : "Marker som kjøpt"}
             onClick={handleBuyItem}
           >
-            <ShoppingCart size={24} className="text-text" />
-          </button>
+            <ShoppingCart size={24} />
+          </IconButton>
         </div>
       </div>
     </>

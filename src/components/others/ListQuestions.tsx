@@ -1,7 +1,7 @@
-import React from "react";
 import { invalidate } from "../../queryClient";
 import { Question } from "../../types/types";
-import { Spacer } from "../common/Spacer";
+import { X } from "lucide-react";
+import { IconButton } from "../common/Button";
 import { StyledSubHeader } from "../common/StyledHeading";
 import { useNotification } from "../common/StyledNotification";
 import firebase from "../firebase/firebase";
@@ -21,31 +21,37 @@ export const ListQuestions = ({ myUid, wishId, questions }: Props) => {
     invalidate(["question", wishId]);
   }
 
+  if (!questions?.length) {
+    return null;
+  }
+
   return (
-    <div>
+    <div className="mb-24">
       <StyledSubHeader>Spørsmål og svar</StyledSubHeader>
-      <div className="flex flex-wrap">
-        {questions?.map((el) => {
-          return (
-            <React.Fragment key={el.question}>
-              <div className="relative inline-block rounded-[1rem] bg-white p-15 text-black not-last:mr-10 not-last:mb-10">
-                {el.question}
-                {el.answer && <div>Svar: {el.answer}</div>}
-                {el.questionOwner === myUid && (
-                  <button
-                    className="absolute top-0 right-0 h-20 w-20 cursor-pointer border-none bg-transparent outline-none"
-                    onClick={() => handleDeleteQuestion(el.questionId)}
-                  >
-                    X
-                  </button>
-                )}
-              </div>
-              <Spacer />
-            </React.Fragment>
-          );
-        })}
+      <div className="flex flex-col gap-10">
+        {questions.map((el) => (
+          <div
+            key={el.questionId}
+            className="flex items-start gap-8 rounded-[10px] bg-primary py-12 pr-8 pl-16 text-text"
+          >
+            <div className="min-w-0 flex-1 wrap-break-word">
+              <p className="font-semibold">{el.question}</p>
+              <p className={el.answer ? "" : "opacity-60"}>
+                {el.answer ? `Svar: ${el.answer}` : "Ikke besvart enda"}
+              </p>
+            </div>
+            {el.questionOwner === myUid && (
+              <IconButton
+                className="h-28 w-28"
+                aria-label="Slett spørsmål"
+                onClick={() => handleDeleteQuestion(el.questionId)}
+              >
+                <X size={18} />
+              </IconButton>
+            )}
+          </div>
+        ))}
       </div>
-      <Spacer />
       {element}
     </div>
   );

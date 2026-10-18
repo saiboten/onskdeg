@@ -2,12 +2,12 @@ import React, { useState } from "react";
 
 import { Button } from "../common/Button";
 import { Kohort } from "../../types/types";
-import { StyledLabel } from "../common/Label";
 import { StyledInput } from "../common/StyledInput";
 import { StyledLabelInputPair } from "../common/StyledLabelInputPair";
 import firebase from "../firebase/firebase";
 import { invalidate } from "../../queryClient";
 import Loading from "../common/Loading";
+import { StyledSubHeader } from "../common/StyledHeading";
 
 interface AddUserByUidProps {
   kohort: Kohort;
@@ -49,13 +49,13 @@ export const AddUserByUid = ({ kohort, kohortId }: AddUserByUidProps) => {
 
   return (
     <>
-      <h3>Legg til bruker med ID</h3>
+      <StyledSubHeader>Legg til bruker med ID</StyledSubHeader>
       <form onSubmit={handleAddUid}>
-        <StyledLabel htmlFor="email">Bruker-ID</StyledLabel>
         <StyledLabelInputPair>
           <StyledInput
             autoComplete="off"
             id="uid"
+            placeholder="Bruker-ID"
             value={newUid}
             onChange={(e) => setNewUid(e.target.value)}
           ></StyledInput>

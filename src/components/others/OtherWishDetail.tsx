@@ -7,8 +7,8 @@ import { useParams } from "react-router-dom";
 import { useUser } from "../../hooks/useUser";
 import { usePurchase } from "../../hooks/usePurchase";
 import { format } from "date-fns";
-import { StyledBigHeader } from "../common/StyledHeading";
-import { Spacer } from "../common/Spacer";
+import { StyledBigHeader, StyledSubHeader } from "../common/StyledHeading";
+import { BorderButton, Button } from "../common/Button";
 import { useQuestions } from "../../hooks/useQuestions";
 import { AddQuestion } from "./AddQuestion";
 import { ListQuestions } from "./ListQuestions";
@@ -49,103 +49,92 @@ export function OtherWishDetail({ myUid }: { myUid: string }) {
 
   return (
     <Container textLeft>
-      <StyledBigHeader>{wish.name}</StyledBigHeader>
+      <StyledBigHeader className="mb-4">{wish.name}</StyledBigHeader>
       <ALink
         target="_blank"
-        href={`https://www.google.com/search?q=${wish.name}`}
+        href={`https://www.google.com/search?q=${encodeURIComponent(wish.name)}`}
       >
         Søk etter dette på Google
       </ALink>
 
-      <Spacer />
-
       {wish.image && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <img className="w-full max-w-400" src={wish.image} />
+        <div className="mt-20 flex justify-center">
+          <img
+            className="w-full max-w-400 rounded-[10px]"
+            src={wish.image}
+            alt={wish.name}
+          />
         </div>
       )}
 
-      {wish.date && (
-        <div className="text-[16px]">
-          <StyledLabel>Lagt inn</StyledLabel>
-          <p>{format(wish.date?.toDate() || new Date(), "dd.MM.yyyy")}</p>
-        </div>
-      )}
-
-      {wish.description !== "" && (
-        <>
-          <StyledLabel>Beskrivelse</StyledLabel>
-          <div>{wish.description}</div>
-        </>
-      )}
-
-      {wish.link !== "" && (
-        <>
-          <StyledLabel>Link</StyledLabel>
+      <div className="my-24 flex flex-col gap-16">
+        {wish.date && (
           <div>
-            <ALink href={wish.link}>{wish.name}</ALink>
+            <StyledLabel>Lagt inn</StyledLabel>
+            <p>{format(wish.date?.toDate() || new Date(), "dd.MM.yyyy")}</p>
           </div>
-        </>
-      )}
-      {wish.price !== undefined && (
-        <>
-          <StyledLabel>Pris</StyledLabel>
-          <div>{wish.price}</div>
-        </>
-      )}
+        )}
+
+        {wish.description && (
+          <div>
+            <StyledLabel>Beskrivelse</StyledLabel>
+            <p className="wrap-break-word">{wish.description}</p>
+          </div>
+        )}
+
+        {wish.link && (
+          <div>
+            <StyledLabel>Link</StyledLabel>
+            <ALink target="_blank" href={wish.link}>
+              {wish.name}
+            </ALink>
+          </div>
+        )}
+
+        {!!wish.price && (
+          <div>
+            <StyledLabel>Pris</StyledLabel>
+            <p>Kr {wish.price},-</p>
+          </div>
+        )}
+
+        {purchase?.checked && (
+          <div>
+            <StyledLabel>Kjøpt</StyledLabel>
+            {showPurchaser ? (
+              <p>Dette ble kjøpt av {purchaseUser?.name}</p>
+            ) : (
+              <div className="flex flex-wrap items-center gap-12">
+                <p>Dette ønsket er kjøpt av noen</p>
+                <BorderButton onClick={handleRevealClick}>
+                  Vis hvem som kjøpte dette
+                </BorderButton>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
 
       {purchase?.checked && (
-        <>
-          {showPurchaser ? (
-            <div>Dette ble kjøpt av {purchaseUser?.name}</div>
-          ) : (
-            <>
-              <div>Dette ønsket er kjøpt av noen</div>
-              <button
-                className="cursor-pointer rounded-[4px] border-2 border-solid border-secondary bg-secondary px-16 py-8 text-[1.4rem] text-text transition-[transform,box-shadow] duration-200 ease-[ease] hover:-translate-y-2 hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)]"
-                onClick={handleRevealClick}
-              >
-                Vis hvem som kjøpte dette
-              </button>
-            </>
-          )}
-
-          <dialog
-            className="max-w-500 rounded-[8px] border-2 border-solid border-secondary bg-primary p-20 text-text backdrop:bg-[rgba(0,0,0,0.7)]"
-            ref={dialogRef}
-          >
-            <div className="flex flex-col gap-15">
-              <h3>Bekreft visning</h3>
-              <p>
-                Er du sikker på at du vil se hvem som har kjøpt dette ønsket?
-                Dette kan ødelegge overraskelsen!
-              </p>
-              <div className="flex justify-end gap-10">
-                <button
-                  className="cursor-pointer rounded-[4px] border-none px-16 py-8 text-[1.4rem] text-text transition-transform duration-200 ease-[ease] hover:-translate-y-2 bg-contrast"
-                  onClick={handleCancel}
-                >
-                  Avbryt
-                </button>
-                <button
-                  className="cursor-pointer rounded-[4px] border-none px-16 py-8 text-[1.4rem] text-text transition-transform duration-200 ease-[ease] hover:-translate-y-2 bg-secondary"
-                  onClick={handleConfirm}
-                >
-                  Ja, vis hvem
-                </button>
-              </div>
+        <dialog
+          className="m-auto w-[calc(100%-3.2rem)] max-w-500 rounded-[12px] border-2 border-solid border-secondary bg-primary-dark p-24 text-text backdrop:bg-[rgba(0,0,0,0.7)]"
+          ref={dialogRef}
+        >
+          <div className="flex flex-col gap-12">
+            <StyledSubHeader className="mb-0 font-medium">
+              Bekreft visning
+            </StyledSubHeader>
+            <p>
+              Er du sikker på at du vil se hvem som har kjøpt dette ønsket?
+              Dette kan ødelegge overraskelsen!
+            </p>
+            <div className="mt-8 flex justify-end gap-10">
+              <BorderButton onClick={handleCancel}>Avbryt</BorderButton>
+              <Button onClick={handleConfirm}>Ja, vis hvem</Button>
             </div>
-          </dialog>
-        </>
+          </div>
+        </dialog>
       )}
-
-      <Spacer />
 
       {!wish.isSuggestion && (
         <>

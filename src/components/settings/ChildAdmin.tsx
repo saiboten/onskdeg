@@ -8,6 +8,8 @@ import Loading from "../common/Loading";
 import { StyledBigHeader, StyledSubHeader } from "../common/StyledHeading";
 import firebase from "../firebase/firebase";
 import { useNotification } from "../common/StyledNotification";
+import { Checkbox } from "../common/Checkbox";
+import { Link } from "../common/Link";
 
 interface KohortMemberProps {
   uid: string;
@@ -51,7 +53,7 @@ const KohortMember = ({ childId, uid }: KohortMemberProps) => {
       });
     } else {
       childDocRef.update({
-        parent: childData.data()?.parent.filter((m: string) => m !== childId),
+        parent: childData.data()?.parent.filter((m: string) => m !== uid),
       });
 
       newParentDocRef.update({
@@ -68,15 +70,13 @@ const KohortMember = ({ childId, uid }: KohortMemberProps) => {
 
   return (
     <div>
-      {user?.name}
       {loading ? (
         <Loading />
       ) : (
-        <input
-          className="ml-10"
+        <Checkbox
+          label={user?.name}
           name="isParent"
-          type="checkbox"
-          checked={isParent}
+          checked={isParent ?? false}
           onChange={handleInputChange}
         />
       )}
@@ -113,11 +113,16 @@ export const ChildAdmin = ({ myUid }: Props) => {
 
   return (
     <Container textLeft>
+      <Link className="mb-16 inline-block text-[1.4rem]" to="/settings">
+        ← Tilbake til innstillinger
+      </Link>
       <StyledBigHeader>{user?.name}</StyledBigHeader>
       <StyledSubHeader>Hvem andre skal styre {user?.name}?</StyledSubHeader>
-      {filteredUserList?.map((user) => (
-        <KohortMember uid={user} childId={childId ?? ""} />
-      ))}
+      <div className="mt-12 flex flex-col gap-12">
+        {filteredUserList?.map((user) => (
+          <KohortMember key={user} uid={user} childId={childId ?? ""} />
+        ))}
+      </div>
     </Container>
   );
 };

@@ -19,16 +19,13 @@ import { getOgData, OgResponseData } from "../../util/getOgData";
 import { redirect } from "react-router-dom";
 import { Notifications } from "./Notifications";
 import { Check, Upload } from "lucide-react";
-import { EmptyButton } from "../common/EmptyButton";
+import { BorderButton, Button } from "../common/Button";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { InvitePopup } from "./InvitePopup";
 import { TabContainer, Tab } from "../common/Tabs";
 
 export const StyledWrapper = (props: ComponentProps<"form">) => (
-  <form
-    className="mx-auto mb-8 flex w-[60%] items-center gap-8 max-[450px]:w-full"
-    {...props}
-  />
+  <form className="mb-16 flex items-center gap-8" {...props} />
 );
 
 interface Props {
@@ -199,24 +196,31 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
           onChange={(e) => setNewWish(e.target.value)}
         />
 
-        <EmptyButton type="submit" name="check">
-          <span className="flex items-center justify-center text-text">
-            <Check size={24} />
-          </span>
-        </EmptyButton>
+        <Button
+          className="h-48 w-48 shrink-0 px-0"
+          type="submit"
+          name="check"
+          aria-label="Legg til ønske"
+        >
+          <Check size={24} />
+        </Button>
 
-        <EmptyButton
+        <BorderButton
+          className="h-48 w-48 shrink-0 px-0"
           type="button"
           name="upload"
+          aria-label="Last opp bilder"
+          title="Last opp bilder"
           onClick={() => navigate("/upload-wishes")}
         >
-          <span className="flex items-center justify-center text-text">
-            <Upload size={24} />
-          </span>
-        </EmptyButton>
-
-        {feedback && <div>{feedback}</div>}
+          <Upload size={22} />
+        </BorderButton>
       </StyledWrapper>
+      {feedback && (
+        <p className="-mt-8 mb-16 text-left text-[1.4rem] text-negative">
+          {feedback}
+        </p>
+      )}
       <div>{sortedWishes?.map(wishToElement) ?? []}</div>
       <Spacer />
     </Container>

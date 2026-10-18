@@ -7,20 +7,23 @@ import {
 import { cn } from "../../util/cn";
 
 const underlined =
-  "[border-bottom:2px_solid_var(--color-secondary)] font-normal text-text no-underline";
+  "[border-bottom:2px_solid_var(--color-secondary)] font-normal text-text no-underline wrap-break-word";
 
 export const Link = ({
   className,
   ...props
 }: ComponentProps<typeof RouterLink>) => (
   <RouterLink
-    className={cn(underlined, "hover:text-[grey]", className)}
+    className={cn(underlined, "hover:opacity-75", className)}
     {...props}
   />
 );
 
 export const ALink = ({ className, ...props }: ComponentProps<"a">) => (
-  <a className={cn(underlined, "hover:text-primary", className)} {...props} />
+  <a
+    className={cn(underlined, "cursor-pointer hover:opacity-75", className)}
+    {...props}
+  />
 );
 
 export const UnstyledLink = ({
@@ -40,19 +43,9 @@ type StyledNavLinkProps = Omit<NavLinkProps, "className"> & {
 export const NavLink = ({ className, ...props }: StyledNavLinkProps) => (
   <RouterNavLink
     className={cn(
-      "rounded-[1.5rem] bg-secondary-dark px-15 py-8 text-[2rem] font-normal text-text no-underline transition-all duration-200 ease-in-out",
-      "max-[450px]:flex-1 max-[450px]:rounded-none max-[450px]:rounded-l-[1rem]",
-      "[&.selected]:scale-105 [&.selected]:bg-secondary [&.selected]:font-bold [&.selected]:text-text [&.selected]:shadow-[0_4px_8px_rgba(0,0,0,0.3)]",
-      className
-    )}
-    {...props}
-  />
-);
-
-export const NavLinkRight = ({ className, ...props }: StyledNavLinkProps) => (
-  <NavLink
-    className={cn(
-      "max-[450px]:rounded-none max-[450px]:rounded-r-[1rem]",
+      "rounded-[1.5rem] bg-secondary-dark px-20 py-8 text-center text-[2rem] font-normal text-text no-underline transition-all duration-200 ease-in-out",
+      "max-[450px]:flex-1 max-[450px]:px-12 max-[450px]:text-[1.8rem]",
+      "[&.selected]:bg-secondary [&.selected]:font-bold [&.selected]:text-text [&.selected]:shadow-[0_4px_8px_rgba(0,0,0,0.3)]",
       className
     )}
     {...props}

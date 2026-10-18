@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Container } from "../common/Container";
 
-import { Button } from "../common/Button";
+import { BorderButton } from "../common/Button";
+import ListRow from "../common/ListRow";
 import { Link } from "../common/Link";
 import { Spacer } from "../common/Spacer";
 import { useKohort } from "../../hooks/useKohort";
@@ -41,35 +42,28 @@ const KohortMember = ({
   }
 
   return (
-    <div className="mb-10 flex items-center justify-between">
-      <div
-        style={{
-          flex: "1",
-          overflowWrap: "break-word",
-          wordWrap: "break-word",
-          wordBreak: "break-word",
-          hyphens: "auto",
-        }}
-      >
-        {user?.name || "Ukent bruker"} (
+    <ListRow>
+      <div className="min-w-0 flex-1 wrap-break-word">
+        {user?.name || "Ukjent bruker"}{" "}
         {showUid ? (
-          uid
+          <span className="text-[1.3rem] opacity-60">({uid})</span>
         ) : (
           <button
-            className="inline cursor-pointer border-none bg-transparent text-white outline-none"
+            className="cursor-pointer border-none bg-transparent p-0 text-[1.3rem] text-text underline opacity-60 hover:opacity-100"
             onClick={() => setShowUid(true)}
           >
             Vis ID
           </button>
         )}
-        )
       </div>
       {myUid !== uid ? (
-        <Button onClick={handleRemoveUser}>Fjern bruker</Button>
+        <BorderButton className="min-h-36 py-2" onClick={handleRemoveUser}>
+          Fjern
+        </BorderButton>
       ) : (
-        <div>Administrator</div>
+        <span className="px-8 text-[1.4rem] font-semibold">Administrator</span>
       )}
-    </div>
+    </ListRow>
   );
 };
 
@@ -107,14 +101,16 @@ const KohortInvite = ({
   }
 
   return (
-    <div className="mb-10 flex items-center justify-between">
-      {invite}
+    <ListRow>
+      <span className="min-w-0 wrap-break-word">{invite}</span>
       {removeInviteLoading ? (
         <Loading />
       ) : (
-        <Button onClick={handleRemoveInvite}>Fjern invitasjon</Button>
+        <BorderButton className="min-h-36 py-2" onClick={handleRemoveInvite}>
+          Fjern
+        </BorderButton>
       )}
-    </div>
+    </ListRow>
   );
 };
 
@@ -127,8 +123,14 @@ export const GroupAdmin = ({ myUid }: { myUid: string }) => {
 
   return (
     <Container textLeft>
+      <Link className="mb-16 inline-block text-[1.4rem]" to="/settings">
+        ← Tilbake til innstillinger
+      </Link>
       <StyledBigHeader>Administrer gruppe {kohort.groupName}</StyledBigHeader>
       <StyledSubHeader>Invitasjoner</StyledSubHeader>
+      {kohort.invites.length === 0 && (
+        <p className="mb-10 opacity-75">Ingen ventende invitasjoner.</p>
+      )}
       {kohort.invites.map((invite) => {
         return (
           <KohortInvite
@@ -144,6 +146,7 @@ export const GroupAdmin = ({ myUid }: { myUid: string }) => {
       {kohort.members.map((member) => {
         return (
           <KohortMember
+            key={member}
             kohort={kohort}
             kohortId={kohortId ?? ""}
             myUid={myUid}
@@ -155,8 +158,6 @@ export const GroupAdmin = ({ myUid }: { myUid: string }) => {
       <AddInvite kohort={kohort} kohortId={kohortId ?? ""} user={user} />
       <Spacer />
       <AddUserByUid kohort={kohort} kohortId={kohortId ?? ""} />
-      <Spacer />
-      <Link to="/settings">Tilbake til innstillinger</Link>
     </Container>
   );
 };

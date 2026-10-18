@@ -1,8 +1,11 @@
 import { Container } from "./common/Container";
 
+const legalPage =
+  "[&_h1]:mt-24 [&_h1]:mb-8 [&_h1]:text-[2.6rem] [&_h1]:font-medium [&_h1:first-child]:mt-0 [&_h2]:mt-20 [&_h2]:mb-6 [&_h2]:text-[2rem] [&_h2]:font-medium [&_p]:mb-10 [&_ul]:mb-10 [&_ul]:pl-24 [&_ul]:list-disc";
+
 export const PrivacyPolicy = () => {
   return (
-    <Container textLeft>
+    <Container textLeft className={legalPage}>
       <h1>Privacy Policy</h1>
       <p>Last updated: November 02, 2022</p>
       <p>

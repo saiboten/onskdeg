@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Container } from "./common/Container";
+import { StyledBigHeader } from "./common/StyledHeading";
 import firebase from "./firebase/firebase";
 
 export const LegacyWishes = ({ uid }: { uid: string }) => {
@@ -17,8 +18,8 @@ export const LegacyWishes = ({ uid }: { uid: string }) => {
   }, [uid]);
   return (
     <Container textLeft>
-      <h1>Ønsker fra gamledager</h1>
-      <ul>
+      <StyledBigHeader>Ønsker fra gamledager</StyledBigHeader>
+      <ul className="list-disc pl-24">
         {wishes?.map((wish, index) => (
           <li key={index}>{wish}</li>
         ))}

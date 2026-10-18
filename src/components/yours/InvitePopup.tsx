@@ -2,9 +2,8 @@ import { useState } from "react";
 import { invalidate } from "../../queryClient";
 import { useKohort } from "../../hooks/useKohort";
 import { useUser } from "../../hooks/useUser";
-import { BorderButton } from "../common/Button";
+import { BorderButton, Button } from "../common/Button";
 import Loading from "../common/Loading";
-import { Spacer } from "../common/Spacer";
 import { StyledBigHeader } from "../common/StyledHeading";
 import firebase from "../firebase/firebase";
 
@@ -102,35 +101,34 @@ export const InvitePopup = ({ invites, uid, firebaseUser }: Props) => {
   }
 
   return (
-    <div className="fixed top-0 left-0 z-3000 h-screen w-full backdrop-blur-[10px] transition-all duration-1000 ease-[ease]">
-      <div className="absolute top-1/2 left-1/2 h-1/2 w-1/2 -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[3px] bg-black text-white opacity-100 transition-all delay-250 duration-600 ease-[ease] max-[450px]:h-[70vh] max-[450px]:w-full">
-        <Spacer />
-        <StyledBigHeader>
+    <div className="fixed inset-0 z-3000 flex items-center justify-center bg-[rgba(0,0,0,0.4)] p-16 backdrop-blur-[10px]">
+      <div
+        role="dialog"
+        aria-modal="true"
+        className="flex w-full max-w-560 flex-col gap-12 rounded-[16px] border-2 border-solid border-secondary bg-primary-dark px-24 py-32 text-center text-text shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+      >
+        <StyledBigHeader className="mb-8">
           Du er invitert til en gruppe med navn:{" "}
           <strong>{kohort?.groupName}</strong>
         </StyledBigHeader>
-        <Spacer />
 
         <p>
           Hvis du takker nei til invitasjonen må du få en ny invitasjon av
           eieren av gruppen.
         </p>
 
-        <p>Her kommer en liste med de som er med fra før.</p>
-
-        <p>Vil du være med?</p>
-        <div className="absolute bottom-0 flex w-full justify-center">
+        <p className="font-semibold">Vil du være med?</p>
+        <div className="mt-12 flex justify-center gap-12">
           {loading ? (
             <Loading />
           ) : (
             <>
-              <BorderButton
-                style={{ marginRight: "1rem" }}
-                onClick={declineGroupInvite}
-              >
+              <BorderButton className="min-w-100" onClick={declineGroupInvite}>
                 Niks
               </BorderButton>
-              <BorderButton onClick={joinGroup}>OK</BorderButton>
+              <Button className="min-w-100" onClick={joinGroup}>
+                Bli med
+              </Button>
             </>
           )}
         </div>

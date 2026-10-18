@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Container } from "../common/Container";
 
-import { BorderButton, Button } from "../common/Button";
-import { Link } from "../common/Link";
-import { Spacer } from "../common/Spacer";
+import { BorderButton, borderButton } from "../common/Button";
+import { Link, UnstyledLink } from "../common/Link";
+import ListRow from "../common/ListRow";
+import { Plus } from "lucide-react";
 import { useKohort } from "../../hooks/useKohort";
 import { useUser } from "../../hooks/useUser";
 import { StyledBigHeader, StyledSubHeader } from "../common/StyledHeading";
@@ -16,16 +17,15 @@ const ChildSetting = ({ childUid }: { childUid: string }) => {
   const { user } = useUser(childUid);
 
   return (
-    <Link
-      style={{
-        marginRight: "1rem",
-      }}
-      to={`/settings/child/${user?.uid || ""}`}
-    >
-      <StyledSubHeader>
-        {user?.name} ({childUid})
-      </StyledSubHeader>
-    </Link>
+    <ListRow className="pr-16">
+      <span className="min-w-0 wrap-break-word">
+        {user?.name}{" "}
+        <span className="text-[1.3rem] opacity-60">({childUid})</span>
+      </span>
+      <Link className="shrink-0" to={`/settings/child/${user?.uid || ""}`}>
+        Administrer
+      </Link>
+    </ListRow>
   );
 };
 
@@ -70,26 +70,24 @@ const GroupSetting = ({
   }
 
   return (
-    <div className="flex items-start justify-start max-[450px]:flex-col">
-      <StyledSubHeader style={{ marginRight: "1rem" }}>
+    <ListRow className="flex-wrap py-8">
+      <span className="min-w-0 font-semibold wrap-break-word">
         {kohort?.groupName}
-      </StyledSubHeader>
-      {kohort?.admin === myUid && (
-        <Link
-          style={{ marginRight: "1rem" }}
-          to={`/settings/kohort/${kohort.id}`}
-        >
-          Administrer gruppe
-        </Link>
-      )}
-      <Spacer />
-      {loading ? (
-        <Loading />
-      ) : (
-        <Button onClick={handleDeleteUser}>Forlate gruppen?</Button>
-      )}
+      </span>
+      <div className="flex flex-wrap items-center gap-16">
+        {kohort?.admin === myUid && (
+          <Link to={`/settings/kohort/${kohort.id}`}>Administrer</Link>
+        )}
+        {loading ? (
+          <Loading />
+        ) : (
+          <BorderButton className="min-h-36 py-2" onClick={handleDeleteUser}>
+            Forlat gruppen
+          </BorderButton>
+        )}
+      </div>
       <StyledNotification active={notification !== ""} text={notification} />
-    </div>
+    </ListRow>
   );
 };
 
@@ -104,38 +102,54 @@ export const Settings = ({ uid, firebaseUser }: Props) => {
 
   return (
     <Container textLeft>
-      <h1>Innstillinger</h1>
-      <Spacer />
-      <p>Din bruker-id er: {uid}</p>
-      <p>Din epost er: {firebaseUser?.email || "Ukjent"}</p>
+      <StyledBigHeader>Innstillinger</StyledBigHeader>
+      <div className="mb-24 flex flex-col gap-4">
+        <p>
+          Din bruker-id er: <span className="font-semibold">{uid}</span>
+        </p>
+        <p>
+          Din epost er:{" "}
+          <span className="font-semibold">
+            {firebaseUser?.email || "Ukjent"}
+          </span>
+        </p>
+      </div>
 
       {showNoEmailDisclaimer && (
-        <div className="m-10 rounded-[5px] border-5 border-solid border-[red] bg-white p-10 text-black">
+        <div className="mb-24 rounded-[10px] border-2 border-solid border-negative px-16 py-12">
           Vi kunne ikke finne eposten din. Dette betyr at du ikke kan inviteres
           til grupper. Send din id til administrator slik at vedkommende kan
           legge deg inn manuelt. Din id er: {uid}.
         </div>
       )}
 
-      <Spacer />
-      <BorderButton>
-        <Link to={`/addgroup`}>Opprett ny gruppe</Link>
-      </BorderButton>
-      <StyledBigHeader>Administrer grupper</StyledBigHeader>
-      {user?.groups.map((group) => (
-        <React.Fragment key={group}>
-          <GroupSetting myUid={uid} group={group} />
-          <Spacer />
-        </React.Fragment>
-      ))}
-      <StyledBigHeader>Brukere</StyledBigHeader>
-      <div className="flex items-start justify-start max-[450px]:flex-col">
-        {user?.childs?.map((childUid) => (
-          <ChildSetting childUid={childUid} />
+      <div className="mb-8 flex flex-wrap items-center justify-between gap-12">
+        <StyledSubHeader className="mb-0">Grupper</StyledSubHeader>
+        <UnstyledLink className={borderButton} to="/addgroup">
+          <Plus size={18} />
+          Opprett ny gruppe
+        </UnstyledLink>
+      </div>
+      <div className="mt-12 mb-24">
+        {user?.groups.map((group) => (
+          <GroupSetting key={group} myUid={uid} group={group} />
         ))}
+        {user?.groups.length === 0 && <p>Du er ikke med i noen grupper.</p>}
       </div>
 
-      <Spacer />
+      <div className="mb-8 flex flex-wrap items-center justify-between gap-12">
+        <StyledSubHeader className="mb-0">Ekstra brukere</StyledSubHeader>
+        <UnstyledLink className={borderButton} to="/addchild">
+          <Plus size={18} />
+          Legg til ekstra bruker
+        </UnstyledLink>
+      </div>
+      <div className="mt-12">
+        {user?.childs?.map((childUid) => (
+          <ChildSetting key={childUid} childUid={childUid} />
+        ))}
+        {!user?.childs?.length && <p>Ingen ekstra brukere.</p>}
+      </div>
     </Container>
   );
 };

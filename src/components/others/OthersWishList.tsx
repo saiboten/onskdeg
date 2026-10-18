@@ -5,15 +5,14 @@ import OtherWish from "./OtherWish";
 import { useWishes } from "../../hooks/useWishes";
 import { useParams } from "react-router-dom";
 import { useUser } from "../../hooks/useUser";
-import { StyledBigHeader } from "../common/StyledHeading";
+import { StyledBigHeader, StyledSubHeader } from "../common/StyledHeading";
 import { StyledInput } from "../common/StyledInput";
-import { Spacer } from "../common/Spacer";
 import firebase from "../firebase/firebase";
 import { NewsEntryType, Wish } from "../../types/types";
 import { StyledNotification } from "../common/StyledNotification";
 import { invalidate } from "../../queryClient";
 import { getOgData, OgResponseData } from "../../util/getOgData";
-import { EmptyButton } from "../common/EmptyButton";
+import { Button } from "../common/Button";
 import { Check } from "lucide-react";
 
 interface Params {
@@ -105,7 +104,7 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
     <Container>
       <StyledNotification active={feedback !== ""} text={feedback} />
       <StyledBigHeader>{`Ønskelisten til ${user?.name}`}</StyledBigHeader>
-      {ownWishes?.length === 0 && <p>Ingen ønsker enda.</p>}
+      {ownWishes?.length === 0 && <p className="mb-16">Ingen ønsker enda.</p>}
       {ownWishes?.map((wish) => (
         <OtherWish
           myUid={myUid}
@@ -114,36 +113,43 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
           wishInfo={wish}
         />
       ))}
-      <Spacer />
 
-      <h3>Legg inn forslag til {user?.name}</h3>
-      <Spacer />
-      <form className="relative mb-8" onSubmit={handleAddSuggestion}>
-        <StyledInput
-          type="text"
-          placeholder="Legg inn forslag her"
-          value={suggestion}
-          onChange={(e) => setSuggestion(e.target.value)}
-        />
-        <EmptyButton type="submit" name="check">
-          <span className="flex items-center justify-center text-text">
+      <section className="mt-32">
+        <StyledSubHeader>Legg inn forslag til {user?.name}</StyledSubHeader>
+        <form
+          className="mb-24 flex items-center gap-8"
+          onSubmit={handleAddSuggestion}
+        >
+          <StyledInput
+            type="text"
+            placeholder="Legg inn forslag her"
+            value={suggestion}
+            onChange={(e) => setSuggestion(e.target.value)}
+          />
+          <Button
+            className="h-48 w-48 shrink-0 px-0"
+            type="submit"
+            name="check"
+            aria-label="Legg til forslag"
+          >
             <Check size={24} />
-          </span>
-        </EmptyButton>
-      </form>
+          </Button>
+        </form>
+      </section>
 
-      <Spacer />
-
-      <StyledBigHeader>Forslag for {user?.name}</StyledBigHeader>
-      {suggestions?.map((wish) => (
-        <OtherWish
-          myUid={myUid}
-          key={wish.id}
-          user={uid ?? ""}
-          wishInfo={wish}
-        />
-      ))}
-      <Spacer />
+      {(suggestions?.length ?? 0) > 0 && (
+        <section>
+          <StyledSubHeader>Forslag for {user?.name}</StyledSubHeader>
+          {suggestions?.map((wish) => (
+            <OtherWish
+              myUid={myUid}
+              key={wish.id}
+              user={uid ?? ""}
+              wishInfo={wish}
+            />
+          ))}
+        </section>
+      )}
     </Container>
   );
 };

@@ -9,6 +9,7 @@ import { StyledBigHeader } from "./common/StyledHeading";
 import { ALink } from "./common/Link";
 import firebase from "./firebase/firebase";
 import { Link } from "./yours/Wish";
+import ListRow, { LeftSection } from "./common/ListRow";
 
 interface Props {
   uid: string;
@@ -19,29 +20,36 @@ const PurchaseInfo = ({ purchase }: { purchase: PurchaseType }) => {
   const { wish } = useWish(purchase.wishOwner || "", purchase.wishId || "");
 
   return (
-    <div>
-      {format(purchase?.date?.toDate() || new Date(), "dd.MM.yyyy")}:{" "}
-      {user?.name}:{" "}
-      <Link to={`/other/${user?.uid}/${wish?.id}`}>{wish?.name}</Link>
+    <ListRow className="pr-16">
+      <LeftSection className="flex-col items-start py-6">
+        <Link
+          className="py-0 font-semibold"
+          to={`/other/${user?.uid}/${wish?.id}`}
+        >
+          {wish?.name}
+        </Link>
+        <span className="text-[1.3rem] opacity-75">
+          Til {user?.name} ·{" "}
+          {format(purchase?.date?.toDate() || new Date(), "dd.MM.yyyy")}
+        </span>
+      </LeftSection>
       {wish?.link && (
-        <ALink style={{ marginLeft: "1rem" }} href={wish.link}>
+        <ALink className="shrink-0" target="_blank" href={wish.link}>
           Link
         </ALink>
       )}
-    </div>
+    </ListRow>
   );
 };
 
 const Purchase = ({ purchaseId }: { purchaseId: string }) => {
   const { purchase } = usePurchase(purchaseId);
 
-  return (
-    <div>{purchase?.wishOwner && <PurchaseInfo purchase={purchase} />}</div>
-  );
+  return purchase?.wishOwner ? <PurchaseInfo purchase={purchase} /> : null;
 };
 
 export const MyPurchases = ({ uid }: Props) => {
-  const [purchases, setPurchases] = useState<string[]>([]);
+  const [purchases, setPurchases] = useState<string[]>();
 
   useEffect(() => {
     const data = firebase
@@ -57,8 +65,9 @@ export const MyPurchases = ({ uid }: Props) => {
   return (
     <Container textLeft>
       <StyledBigHeader>Mine kjøp</StyledBigHeader>
-      {purchases.map((id) => (
-        <Purchase purchaseId={id} />
+      {purchases?.length === 0 && <p>Du har ikke kjøpt noe enda.</p>}
+      {purchases?.map((id) => (
+        <Purchase key={id} purchaseId={id} />
       ))}
     </Container>
   );

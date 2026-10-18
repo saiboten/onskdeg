@@ -1,13 +1,18 @@
 import { useState } from "react";
 import { useUser } from "../hooks/useUser";
 import { Container } from "./common/Container";
-import { StyledBigHeader } from "./common/StyledHeading";
-import { BorderButton, ButtonNavigation, DangerButton } from "./common/Button";
+import { StyledBigHeader, StyledSubHeader } from "./common/StyledHeading";
+import {
+  BorderButton,
+  borderButton,
+  DangerButton,
+} from "./common/Button";
+import { Checkbox } from "./common/Checkbox";
+import { LogOut, Settings, ShoppingCart, UserPlus } from "lucide-react";
 import { UnstyledLink } from "./common/Link";
 import firebase from "./firebase/firebase";
 import { useSettings } from "../hooks/useSettings";
 import { invalidate } from "../queryClient";
-import { Spacer } from "./common/Spacer";
 
 function logOut(setFeedback: (n: string) => void, logout: () => void) {
   firebase
@@ -24,12 +29,6 @@ function logOut(setFeedback: (n: string) => void, logout: () => void) {
       }
     );
 }
-
-const checkboxLabel =
-  "flex cursor-pointer items-center gap-12 text-[1.6rem] text-text select-none";
-
-const checkbox =
-  "relative h-24 w-24 cursor-pointer appearance-none rounded-[4px] border-2 border-solid border-secondary bg-primary-dark transition-all duration-200 ease-[ease] checked:border-secondary checked:bg-secondary checked:after:absolute checked:after:top-1/2 checked:after:left-1/2 checked:after:-translate-x-1/2 checked:after:-translate-y-1/2 checked:after:text-[1.8rem] checked:after:font-bold checked:after:text-text checked:after:content-['✓'] hover:border-primary-light hover:shadow-[0_0_0_2px_var(--color-secondary-dark)]";
 
 export const Profile = ({ uid }: { uid: string }) => {
   const { user } = useUser(uid);
@@ -76,109 +75,79 @@ export const Profile = ({ uid }: { uid: string }) => {
 
   return (
     <Container textLeft>
-      <StyledBigHeader>Profil for {user?.name}</StyledBigHeader>
-      <p>{user?.email}</p>
-      <Spacer />
+      <StyledBigHeader className="mb-4">Profil for {user?.name}</StyledBigHeader>
+      <p className="opacity-75">{user?.email}</p>
 
-      <div className="my-20 flex flex-col gap-15">
-        <label className={checkboxLabel}>
-          <input
-            className={checkbox}
-            name="darkMode"
-            type="checkbox"
-            onChange={toggleDarkMode}
-            checked={settings?.darkMode ? true : false}
-          />
-          <span>Dark mode?</span>
-        </label>
-
-        <label className={checkboxLabel}>
-          <input
-            className={checkbox}
-            name="festivitasTheme"
-            type="checkbox"
-            onChange={toggleFestivitasTheme}
-            checked={settings?.festivitasThemesEnabled ? true : false}
-          />
-          <span>Vil du ha årstidsbasert tema?</span>
-        </label>
-
-        <label className={checkboxLabel}>
-          <input
-            className={checkbox}
-            name="hideGifts"
-            type="checkbox"
-            onChange={toggleHideGifts}
-            checked={settings?.hideGifts ? true : false}
-          />
-          <span>Skjul avkryssede gaver?</span>
-        </label>
+      <div className="my-24 flex flex-wrap gap-10">
+        <UnstyledLink className={borderButton} to="/settings">
+          <Settings size={18} />
+          Innstillinger
+        </UnstyledLink>
+        <UnstyledLink className={borderButton} to="/addchild">
+          <UserPlus size={18} />
+          Legg til ekstra bruker
+        </UnstyledLink>
+        <UnstyledLink className={borderButton} to="/mypurchases">
+          <ShoppingCart size={18} />
+          Mine kjøp
+        </UnstyledLink>
       </div>
 
-      {feedback}
-      <Spacer />
-      <h1>Sletting av brukerdata</h1>
-      <p>
-        Dersom du ønsker å slette dine brukerdata kan du trykke på knappen
-        under. Dine data vil bli slettet i løpet av få virkedager.
-      </p>
-      <Spacer />
-      {deleteConfirm ? (
-        <p>
-          Er du sikker på at du vil slette brukerdata? Det er ingen vei tilbake!
-        </p>
-      ) : null}
-      <Spacer />
-      {userDeleted ? null : (
-        <DangerButton onClick={handleDelete}>Slett bruker</DangerButton>
-      )}
-
-      {userDeleted ? (
-        <p>
-          Brukeren din vil bli slettet i løpet av få virkedager. Takk for at du
-          brukte gaveønske.no!
-        </p>
-      ) : null}
-
-      <Spacer />
-
-      <div className="flex gap-10">
-        <BorderButton>
-          <UnstyledLink
-            className="flex h-full w-full items-center justify-center"
-            to="/settings"
-          >
-            Innstillinger
-          </UnstyledLink>
-        </BorderButton>
-
-        <BorderButton>
-          <UnstyledLink
-            className="flex h-full w-full items-center justify-center"
-            to={`/addchild`}
-          >
-            Legg til ekstra bruker
-          </UnstyledLink>
-        </BorderButton>
-        <BorderButton
-          style={{
-            marginLeft: "1rem",
-          }}
-        >
-          <UnstyledLink
-            className="flex h-full w-full items-center justify-center"
-            to={`/mypurchases`}
-          >
-            Mine kjøp
-          </UnstyledLink>
-        </BorderButton>
+      <StyledSubHeader>Visning</StyledSubHeader>
+      <div className="mt-12 mb-32 flex flex-col gap-16">
+        <Checkbox
+          label="Dark mode"
+          name="darkMode"
+          onChange={toggleDarkMode}
+          checked={settings?.darkMode ? true : false}
+        />
+        <Checkbox
+          label="Årstidsbasert tema"
+          name="festivitasTheme"
+          onChange={toggleFestivitasTheme}
+          checked={settings?.festivitasThemesEnabled ? true : false}
+        />
+        <Checkbox
+          label="Skjul avkryssede gaver"
+          name="hideGifts"
+          onChange={toggleHideGifts}
+          checked={settings?.hideGifts ? true : false}
+        />
       </div>
-      <ButtonNavigation
+
+      <BorderButton
+        className="mb-32"
         type="button"
         onClick={() => logOut(setFeedback, logout)}
       >
+        <LogOut size={18} />
         Logg ut
-      </ButtonNavigation>
+      </BorderButton>
+      {feedback && <p className="-mt-20 mb-32">{feedback}</p>}
+
+      <section className="rounded-[10px] border-2 border-solid border-negative p-16">
+        <StyledSubHeader>Sletting av brukerdata</StyledSubHeader>
+        <p className="mb-16">
+          Dersom du ønsker å slette dine brukerdata kan du trykke på knappen
+          under. Dine data vil bli slettet i løpet av få virkedager.
+        </p>
+        {deleteConfirm && !userDeleted && (
+          <p className="mb-16 font-semibold">
+            Er du sikker på at du vil slette brukerdata? Det er ingen vei
+            tilbake!
+          </p>
+        )}
+        {userDeleted ? (
+          <p>
+            Brukeren din vil bli slettet i løpet av få virkedager. Takk for at
+            du brukte gaveønske.no!
+          </p>
+        ) : (
+          <DangerButton onClick={handleDelete}>
+            {deleteConfirm ? "Ja, slett bruker" : "Slett bruker"}
+          </DangerButton>
+        )}
+      </section>
     </Container>
   );
 };

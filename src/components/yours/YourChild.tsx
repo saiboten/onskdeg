@@ -9,7 +9,8 @@ import { invalidate, queryClient } from "../../queryClient";
 import Loading from "../common/Loading";
 import { useUser } from "../../hooks/useUser";
 import { getOgData, OgResponseData } from "../../util/getOgData";
-import { EmptyButton } from "../common/EmptyButton";
+import { Button } from "../common/Button";
+import { StyledSubHeader } from "../common/StyledHeading";
 import { Check } from "lucide-react";
 
 interface Props {
@@ -95,7 +96,7 @@ export const YourChild = ({ child, myUid }: Props) => {
 
   return (
     <div className="mb-24">
-      <h2>{child.name}</h2>
+      <StyledSubHeader>{child.name}</StyledSubHeader>
       <StyledWrapper onSubmit={handleSaveWish}>
         <StyledInput
           type="text"
@@ -103,11 +104,14 @@ export const YourChild = ({ child, myUid }: Props) => {
           value={newWish}
           onChange={(e) => setNewWish(e.target.value)}
         />
-        <EmptyButton type="submit" name="check">
-          <span className="flex items-center justify-center text-text">
-            <Check size={24} />
-          </span>
-        </EmptyButton>
+        <Button
+          className="h-48 w-48 shrink-0 px-0"
+          type="submit"
+          name="check"
+          aria-label="Legg til ønske"
+        >
+          <Check size={24} />
+        </Button>
       </StyledWrapper>
       {(wishes ?? []).length > 0 ? (
         (wishes ?? []).map(wishToElement)

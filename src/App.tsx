@@ -107,13 +107,13 @@ const App = () => {
     <HashRouter>
       <ScrollToTop />
       <Suspense fallback={<GlobalLoading />}>
-        <div className="mx-auto mt-105 max-w-1030 rounded-[25px] bg-primary-dark shadow-[0px_4px_4px_rgba(0,0,0,0.25),0px_4px_4px_rgba(0,0,0,0.25)]">
-          <div className="fixed top-45 right-30 -z-1 text-[1.6rem] text-contrast">
-            <span>gaveønske.no</span>
-            <NavLink to="/profile">
-              <UserIcon className="ml-12 h-32 w-32 translate-y-5 text-contrast" />
-            </NavLink>
-          </div>
+        <div className="mx-auto flex max-w-1030 items-center justify-end gap-12 px-16 pt-24 pb-16 text-[1.6rem] text-contrast sm:px-30 sm:pt-36">
+          <span>gaveønske.no</span>
+          <NavLink to="/profile" aria-label="Profil">
+            <UserIcon className="h-32 w-32 text-contrast" />
+          </NavLink>
+        </div>
+        <div className="mx-auto mb-40 max-w-1030 rounded-[25px] bg-primary-dark pb-24 shadow-[0px_4px_4px_rgba(0,0,0,0.25),0px_4px_4px_rgba(0,0,0,0.25)] max-[1062px]:mx-16 max-[450px]:mx-8 max-[450px]:rounded-[18px]">
           <HeaderComponent uid={uid} />
           <Routes>
             <Route
@@ -165,8 +165,10 @@ const App = () => {
               element={<YourWishList firebaseUser={firebaseUser} uid={uid} />}
             ></Route>
           </Routes>
-          <Link to="/privacypolicy">Privacy Policy</Link> -{" "}
-          <Link to="/tos">Terms of Service</Link>
+          <footer className="mt-24 flex justify-center gap-24 text-[1.3rem]">
+            <Link to="/privacypolicy">Privacy Policy</Link>
+            <Link to="/tos">Terms of Service</Link>
+          </footer>
         </div>
       </Suspense>
     </HashRouter>

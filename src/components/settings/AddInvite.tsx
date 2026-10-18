@@ -6,6 +6,7 @@ import { StyledLabelInputPair } from "../common/StyledLabelInputPair";
 import firebase from "../firebase/firebase";
 import { invalidate } from "../../queryClient";
 import Loading from "../common/Loading";
+import { StyledSubHeader } from "../common/StyledHeading";
 import { Kohort, User } from "../../types/types";
 import { StyledNotification } from "../common/StyledNotification";
 
@@ -78,11 +79,13 @@ export const AddInvite = ({ kohort, user }: AddInviteProps) => {
 
   return (
     <>
-      <h3>Legg til ny invitasjon</h3>
+      <StyledSubHeader>Inviter med epost</StyledSubHeader>
       <form onSubmit={handleAddEmail}>
         <StyledLabelInputPair>
           <StyledInput
             autoComplete="off"
+            type="email"
+            placeholder="navn@eksempel.no"
             id="email"
             value={newInvite}
             onChange={(e) => setNewInvite(e.target.value)}

@@ -15,7 +15,10 @@ export const GroupUser = ({ uid }: { uid: string }) => {
   const navigate = useNavigate();
 
   return (
-    <Button onClick={() => navigate(`/other/${user?.uid}`)}>
+    <Button
+      className="h-44 px-20 text-[1.5rem]"
+      onClick={() => navigate(`/other/${user?.uid}`)}
+    >
       {user?.name}
     </Button>
   );
@@ -53,33 +56,27 @@ const NewsFeedEntry = ({
   const { user: suggestedByUser } = useUser(suggestedBy || "");
 
   return (
-    <div
-      style={{
-        overflowWrap: "break-word",
-        wordWrap: "break-word",
-        wordBreak: "break-word",
-        hyphens: "auto",
-      }}
-    >
-      {isSuggestion
-        ? `${format(date.toDate(), "dd.MM 'kl' HH:mm")}: ${
-            suggestedByUser?.name
-          } foreslo et ønske for ${user?.name}`
-        : `${format(date.toDate(), "dd.MM 'kl' HH:mm")}: ${
-            user?.name
-          } ønsker seg ${wish}`}
-    </div>
+    <li className="flex gap-12 wrap-break-word hyphens-auto">
+      <span className="shrink-0 text-[1.4rem] leading-[2.7rem] opacity-75">
+        {format(date.toDate(), "dd.MM 'kl' HH:mm")}
+      </span>
+      <span>
+        {isSuggestion
+          ? `${suggestedByUser?.name} foreslo et ønske for ${user?.name}`
+          : `${user?.name} ønsker seg ${wish}`}
+      </span>
+    </li>
   );
 };
 
 const LatestNews = ({ newsFeed }: { newsFeed: NewsEntryType[] }) => {
   return (
-    <div>
-      {newsFeed?.length === 0 && <div>Intet nytt under solen ...</div>}
+    <ul className="flex list-none flex-col gap-4">
+      {newsFeed?.length === 0 && <li>Intet nytt under solen ...</li>}
       {newsFeed.map((props) => (
         <NewsFeedEntry key={`${props.date}-${props.wish || ""}`} {...props} />
       ))}
-    </div>
+    </ul>
   );
 };
 
@@ -93,20 +90,19 @@ export const GroupUsers = ({
   const { kohort } = useKohort(groupId);
 
   return (
-    <div className="p-10">
-      <StyledBigHeader>
+    <div>
+      <StyledBigHeader className="mb-24">
         Gruppe: <strong>{kohort?.groupName}</strong>
       </StyledBigHeader>
-      <Spacer />
-      <StyledSubHeader>Siste nytt!</StyledSubHeader>
-      <LatestNews newsFeed={kohort?.newsFeed ?? []}></LatestNews>
-      <Spacer />
       <StyledSubHeader>Brukere</StyledSubHeader>
       <ul className="flex list-none flex-wrap gap-10">
         {kohort?.members && (
           <SortedGroupUsers members={kohort.members} uid={uid} />
         )}
       </ul>
+      <Spacer />
+      <StyledSubHeader>Siste nytt!</StyledSubHeader>
+      <LatestNews newsFeed={kohort?.newsFeed ?? []}></LatestNews>
     </div>
   );
 };
@@ -145,11 +141,11 @@ export const SelectWishList = function ({ uid }: Props) {
   return (
     <Container textLeft>
       {user?.groups.length === 0 && (
-        <div>
+        <p>
           Du er ikke med i noen grupper enda. Enten må du få en invitasjon fra
           administrator i en annen gruppe, eller{" "}
-          <Link to="/settings">opprett en gruppe her</Link>
-        </div>
+          <Link to="/addgroup">opprett en gruppe her</Link>
+        </p>
       )}
 
       {user?.groups && user.groups.length > 1 && (

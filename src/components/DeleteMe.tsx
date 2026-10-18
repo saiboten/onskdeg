@@ -1,4 +1,4 @@
-import { Button } from "./common/Button";
+import { DangerButton } from "./common/Button";
 import { Container } from "./common/Container";
 import { StyledBigHeader } from "./common/StyledHeading";
 
@@ -12,16 +12,16 @@ export const DeleteMe = () => {
   return (
     <Container textLeft>
       <StyledBigHeader>Slett meg</StyledBigHeader>
-      <p>
+      <p className="mb-10">
         I følge Europas Personvernforordningen GDPR har du krav på å få dine
         personlige data slettet. Dersom du ønsker dette, trykk bekreft under.
       </p>
-      <p>Da vil din bruker slettes for alltid.</p>
-      <p>
+      <p className="mb-10">Da vil din bruker slettes for alltid.</p>
+      <p className="mb-20">
         PS: Det er ingen vei tilbake, så vær sikker på at dette er noe du
         ønsker.
       </p>
-      <Button onClick={handleDelete}>Slett</Button>
+      <DangerButton onClick={handleDelete}>Slett</DangerButton>
     </Container>
   );
 };

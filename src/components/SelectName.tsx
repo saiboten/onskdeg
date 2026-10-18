@@ -3,6 +3,7 @@ import { Button } from "./common/Button";
 import { Container } from "./common/Container";
 import { StyledLabel } from "./common/Label";
 import { StyledInput } from "./common/StyledInput";
+import { StyledLabelInputPair } from "./common/StyledLabelInputPair";
 import firebase from "./firebase/firebase";
 import { invalidate } from "../queryClient";
 import { StyledBigHeader } from "./common/StyledHeading";
@@ -30,11 +31,11 @@ export const SelectName = ({ firebaseUser, uid }: Props) => {
   return (
     <Container textLeft>
       <StyledBigHeader>Navn</StyledBigHeader>
-      <p>Hei, hva heter du?</p>
+      <p className="mb-16">Hei, hva heter du?</p>
 
       <form onSubmit={handleSetName}>
         <StyledLabel htmlFor="name">Navn</StyledLabel>
-        <div className="flex justify-between">
+        <StyledLabelInputPair>
           <StyledInput
             autoComplete="off"
             id="name"
@@ -42,7 +43,7 @@ export const SelectName = ({ firebaseUser, uid }: Props) => {
             onChange={(e) => setName(e.target.value)}
           ></StyledInput>
           <Button type="submit">Lagre</Button>
-        </div>
+        </StyledLabelInputPair>
       </form>
     </Container>
   );

@@ -5,9 +5,10 @@ import { StyledLabel } from "../common/Label";
 import { Button } from "../common/Button";
 import firebase from "../firebase/firebase";
 import { useUser } from "../../hooks/useUser";
-import { Spacer } from "../common/Spacer";
-import { redirect } from "react-router-dom";
-import { StyledBigHeader } from "../common/StyledHeading";
+import { useNavigate } from "react-router-dom";
+import { StyledBigHeader, StyledSubHeader } from "../common/StyledHeading";
+import { StyledLabelInputPair } from "../common/StyledLabelInputPair";
+import { invalidate } from "../../queryClient";
 
 interface Props {
   uid: string;
@@ -19,6 +20,7 @@ export const AddKohort: React.FC<Props> = ({ uid }) => {
   const [invites, setInvites] = useState<string[]>([]);
 
   const { user } = useUser(uid);
+  const navigate = useNavigate();
 
   async function handleAddGroup() {
     const db = firebase.firestore();
@@ -64,53 +66,62 @@ export const AddKohort: React.FC<Props> = ({ uid }) => {
       });
     });
 
-    redirect("/others?groupCreated=true");
+    invalidate(["user", uid]);
+    navigate(`/others?group=${docRef.id}`);
   }
 
   return (
     <Container textLeft>
       <StyledBigHeader>Opprett gruppe</StyledBigHeader>
-      <StyledLabel>Navn på gruppe</StyledLabel>
+      <StyledLabel htmlFor="groupName">Navn på gruppe</StyledLabel>
       <StyledInput
         autoComplete="off"
         id="groupName"
+        placeholder="F.eks. Familien"
         value={groupName}
         onChange={(e) => setGroupName(e.target.value)}
       ></StyledInput>
-      <Spacer />
-      <h2>Legg til gruppemedlem</h2>
+
+      <StyledSubHeader className="mt-32">
+        Inviter gruppemedlemmer
+      </StyledSubHeader>
       <form
         onSubmit={(e) => {
           e.preventDefault();
+          if (!email.trim()) return;
           setEmail("");
           setInvites([email.toLowerCase(), ...invites]);
         }}
       >
         <StyledLabel htmlFor="email">Epost</StyledLabel>
-        <div className="flex justify-between">
+        <StyledLabelInputPair>
           <StyledInput
             autoComplete="off"
+            type="email"
             id="email"
+            placeholder="navn@eksempel.no"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           ></StyledInput>
           <Button type="submit">Legg til</Button>
-        </div>
+        </StyledLabelInputPair>
       </form>
-      <Spacer />
-      <div>Inviterte brukere:</div>
 
-      {invites.length > 0 ? (
-        <ul className="pl-20">
-          {invites.map((email: string) => {
-            return <li key={email}>{email}</li>;
-          })}
-        </ul>
-      ) : (
-        <div>Ingen brukere lagt til</div>
-      )}
-      <Spacer />
-      <Button onClick={handleAddGroup}>Lagre gruppe</Button>
+      <div className="mt-20 mb-32">
+        <StyledLabel>Inviterte brukere</StyledLabel>
+        {invites.length > 0 ? (
+          <ul className="list-disc pl-20">
+            {invites.map((email: string) => {
+              return <li key={email}>{email}</li>;
+            })}
+          </ul>
+        ) : (
+          <p className="opacity-75">Ingen brukere lagt til</p>
+        )}
+      </div>
+      <Button onClick={handleAddGroup} disabled={!groupName.trim()}>
+        Lagre gruppe
+      </Button>
     </Container>
   );
 };

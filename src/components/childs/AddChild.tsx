@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useUser } from "../../hooks/useUser";
-import { BorderButton } from "../common/Button";
+import { Button } from "../common/Button";
+import { StyledLabelInputPair } from "../common/StyledLabelInputPair";
+import { StyledBigHeader } from "../common/StyledHeading";
 import { Container } from "../common/Container";
 import { StyledInput } from "../common/StyledInput";
 import firebase from "../firebase/firebase";
 import { invalidate } from "../../queryClient";
 import { Child } from "../../types/types";
-import { Spacer } from "../common/Spacer";
 import Spinner from "../common/Spinner";
 
 interface Props {
@@ -18,6 +19,7 @@ export function AddChild({ uid }: Props) {
   const [name, setName] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const { user } = useUser(uid);
+  const navigate = useNavigate();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -60,24 +62,19 @@ export function AddChild({ uid }: Props) {
     });
 
     invalidate(["user", uid]);
-    redirect("/");
+    navigate("/");
   }
 
   return (
     <Container textLeft>
-      <h1>Legg til ekstra bruker</h1>
-      <Spacer />
-      <p>
+      <StyledBigHeader>Legg til ekstra bruker</StyledBigHeader>
+      <p className="mb-20">
         Har du barn som du ønsker å legge inn ønsker for, eller ønsker en felles
         ønskeliste for deg og din bedre halvdel? Opprett en ekstra bruker da
         vel! Du kan dele brukeren etter opprettelse.
       </p>
-      <Spacer />
-      <form
-        className="flex flex-col items-start justify-center text-left text-[3rem]"
-        onSubmit={handleSubmit}
-      >
-        <div className="flex items-center gap-10 [&_button]:mb-0">
+      <form onSubmit={handleSubmit}>
+        <StyledLabelInputPair className="max-w-500">
           <StyledInput
             type="text"
             placeholder="Navn"
@@ -89,9 +86,11 @@ export function AddChild({ uid }: Props) {
           {submitting ? (
             <Spinner />
           ) : (
-            <BorderButton type="submit">OK</BorderButton>
+            <Button type="submit" disabled={!name.trim()}>
+              Opprett
+            </Button>
           )}
-        </div>
+        </StyledLabelInputPair>
       </form>
     </Container>
   );
