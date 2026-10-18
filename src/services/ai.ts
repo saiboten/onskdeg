@@ -18,12 +18,16 @@ import firebase from "../components/firebase/firebase";
 const TEMPLATE_ID = "blank-template";
 
 // getAI() captures the auth and App Check instances when it is first called,
-// so start auth before creating the model.
+// so start auth before creating the model. AI Logic enforces App Check replay
+// protection, which only accepts limited-use tokens.
 let model: ReturnType<typeof getTemplateGenerativeModel> | undefined;
 const getModel = () => {
   firebase.auth();
   model ??= getTemplateGenerativeModel(
-    getAI(getApp(), { backend: new AgentPlatformBackend() })
+    getAI(getApp(), {
+      backend: new AgentPlatformBackend(),
+      useLimitedUseAppCheckTokens: true,
+    })
   );
   return model;
 };

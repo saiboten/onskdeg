@@ -17,6 +17,9 @@ import { useQuestions } from "../../hooks/useQuestions";
 import { ListMyQuestions } from "./ListMyQuestions";
 import { compressImage } from "../../util/imageCompression";
 import Spinner from "../common/Spinner";
+import { BorderButton } from "../common/Button";
+import { generateWishDescription } from "../../services/ai";
+import { Sparkles } from "lucide-react";
 
 interface Params {
   wishid: string | undefined;
@@ -27,6 +30,8 @@ interface Params {
 export function YourWishDetails() {
   const { wishid, uid } = useParams<Params>();
   const [uploading, setUploading] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analyzeError, setAnalyzeError] = useState("");
 
   const { user } = useUser(uid ?? "");
 
@@ -55,6 +60,37 @@ export function YourWishDetails() {
     const fileToUpload = fileList ? fileList[0] : undefined;
     if (fileToUpload) {
       handleUpload(fileToUpload);
+    }
+  }
+
+  async function handleAnalyze() {
+    if (!wish?.image) {
+      return;
+    }
+
+    setAnalyzing(true);
+    setAnalyzeError("");
+    try {
+      const response = await fetch(wish.image);
+      if (!response.ok) {
+        throw new Error(`Could not download image: ${response.status}`);
+      }
+      const { title, description } = await generateWishDescription(
+        await response.blob()
+      );
+      if (!title) {
+        throw new Error("AI analysis returned no title");
+      }
+      await firebase.firestore().collection("wish").doc(wish.id).update({
+        name: title,
+        description,
+      });
+      await invalidate(["wish", uid]);
+    } catch (error) {
+      console.error("AI analysis failed:", error);
+      setAnalyzeError("AI-analysen feilet. Prøv igjen senere.");
+    } finally {
+      setAnalyzing(false);
     }
   }
 
@@ -119,14 +155,19 @@ export function YourWishDetails() {
           </div>
         ) : (
           wish.image && (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
+            <div className="flex flex-col items-center gap-10">
               <img className="w-full max-w-400" src={wish.image} />
+              <BorderButton
+                className="mb-0 flex items-center gap-8 font-sans disabled:pointer-events-none disabled:opacity-60"
+                onClick={handleAnalyze}
+                disabled={analyzing}
+              >
+                {analyzing ? <Spinner /> : <Sparkles size={18} />}
+                {analyzing ? "Analyserer..." : "Analyser med AI"}
+              </BorderButton>
+              {analyzeError && (
+                <p className="text-[1.4rem] text-negative">{analyzeError}</p>
+              )}
             </div>
           )
         )}
