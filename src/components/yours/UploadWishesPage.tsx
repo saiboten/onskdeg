@@ -8,7 +8,7 @@ import { invalidate } from "../../queryClient";
 import { Wish as WishType, NewsEntryType } from "../../types/types";
 import { Button } from "../common/Button";
 import { Spacer } from "../common/Spacer";
-import { generateWishDescription } from "../../services/openai";
+import { generateWishDescription } from "../../services/ai";
 import { compressImage } from "../../util/imageCompression";
 
 interface Props {
@@ -87,13 +87,13 @@ export const UploadWishesPage = ({ uid }: Props) => {
         await imagePath.put(compressedBlob);
         const imageUrl = await imagePath.getDownloadURL();
 
-        // Analyze image with OpenAI
+        // Analyze image with Gemini
         setProgress((prev) => [...prev, `Analyserer ${file.name} med AI...`]);
         let wishName = tempWishName;
         let wishDescription = "";
 
         try {
-          const analysis = await generateWishDescription(imageUrl);
+          const analysis = await generateWishDescription(compressedBlob);
           wishName = analysis.title || tempWishName;
           wishDescription = analysis.description || "";
           setProgress((prev) => [
@@ -101,7 +101,7 @@ export const UploadWishesPage = ({ uid }: Props) => {
             `AI-analyse fullført: "${wishName}"`,
           ]);
         } catch (error) {
-          console.error("OpenAI analysis failed:", error);
+          console.error("AI analysis failed:", error);
           setProgress((prev) => [
             ...prev,
             `⚠ AI-analyse feilet, bruker standardnavn`,
