@@ -5,8 +5,8 @@ import { StyledInput } from "../common/StyledInput";
 import { StyledLabelInputPair } from "../common/StyledLabelInputPair";
 import firebase from "../firebase/firebase";
 import { invalidate } from "../../queryClient";
-import Loading from "../common/Loading";
-import { StyledSubHeader } from "../common/StyledHeading";
+import Spinner from "../common/Spinner";
+import { StyledLabel } from "../common/Label";
 import { Kohort, User } from "../../types/types";
 import { StyledNotification } from "../common/StyledNotification";
 
@@ -79,8 +79,8 @@ export const AddInvite = ({ kohort, user }: AddInviteProps) => {
 
   return (
     <>
-      <StyledSubHeader>Inviter med epost</StyledSubHeader>
       <form onSubmit={handleAddEmail}>
+        <StyledLabel htmlFor="email">E-post</StyledLabel>
         <StyledLabelInputPair>
           <StyledInput
             autoComplete="off"
@@ -90,13 +90,12 @@ export const AddInvite = ({ kohort, user }: AddInviteProps) => {
             value={newInvite}
             onChange={(e) => setNewInvite(e.target.value)}
           ></StyledInput>
-          {addEmailLoading ? (
-            <Loading />
-          ) : (
-            <Button disabled={!emailIsValid(newInvite)} type="submit">
-              Legg til
-            </Button>
-          )}
+          <Button
+            disabled={addEmailLoading || !emailIsValid(newInvite)}
+            type="submit"
+          >
+            {addEmailLoading ? <Spinner /> : "Inviter"}
+          </Button>
         </StyledLabelInputPair>
         <StyledNotification
           active={showInviteAdded !== ""}

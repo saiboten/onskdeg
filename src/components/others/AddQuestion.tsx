@@ -4,8 +4,7 @@ import { useUser } from "../../hooks/useUser";
 import { useWish } from "../../hooks/useWish";
 import { Notification, Question } from "../../types/types";
 import { Button } from "../common/Button";
-import Loading from "../common/Loading";
-import { StyledSubHeader } from "../common/StyledHeading";
+import Spinner from "../common/Spinner";
 import { StyledInput } from "../common/StyledInput";
 import { StyledLabelInputPair } from "../common/StyledLabelInputPair";
 import { useNotification } from "../common/StyledNotification";
@@ -84,22 +83,21 @@ export const AddQuestion = ({ myUid, wishOwnerUid, wishId }: Props) => {
   }
 
   return (
-    <div className="mb-16">
-      <StyledSubHeader>Still spørsmål</StyledSubHeader>
-      {loading ? (
-        <Loading />
-      ) : (
-        <form onSubmit={handleAddQuestion}>
-          <StyledLabelInputPair>
-            <StyledInput
-              placeholder="Legg til spørsmål her"
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-            ></StyledInput>
-            <Button type="submit">Legg til</Button>
-          </StyledLabelInputPair>
-        </form>
-      )}
+    <div>
+      <form onSubmit={handleAddQuestion}>
+        <StyledLabelInputPair>
+          <StyledInput
+            aria-label="Spørsmål"
+            placeholder="F.eks. Hvilken størrelse bruker du?"
+            value={question}
+            disabled={loading}
+            onChange={(e) => setQuestion(e.target.value)}
+          ></StyledInput>
+          <Button type="submit" disabled={loading || !question.trim()}>
+            {loading ? <Spinner /> : "Spør"}
+          </Button>
+        </StyledLabelInputPair>
+      </form>
       {element}
     </div>
   );

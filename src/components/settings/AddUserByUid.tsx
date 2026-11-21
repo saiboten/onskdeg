@@ -6,8 +6,7 @@ import { StyledInput } from "../common/StyledInput";
 import { StyledLabelInputPair } from "../common/StyledLabelInputPair";
 import firebase from "../firebase/firebase";
 import { invalidate } from "../../queryClient";
-import Loading from "../common/Loading";
-import { StyledSubHeader } from "../common/StyledHeading";
+import Spinner from "../common/Spinner";
 
 interface AddUserByUidProps {
   kohort: Kohort;
@@ -49,7 +48,6 @@ export const AddUserByUid = ({ kohort, kohortId }: AddUserByUidProps) => {
 
   return (
     <>
-      <StyledSubHeader>Legg til bruker med ID</StyledSubHeader>
       <form onSubmit={handleAddUid}>
         <StyledLabelInputPair>
           <StyledInput
@@ -59,13 +57,9 @@ export const AddUserByUid = ({ kohort, kohortId }: AddUserByUidProps) => {
             value={newUid}
             onChange={(e) => setNewUid(e.target.value)}
           ></StyledInput>
-          {addUidLoading ? (
-            <Loading />
-          ) : (
-            <Button disabled={newUid === ""} type="submit">
-              Legg til
-            </Button>
-          )}
+          <Button disabled={addUidLoading || !newUid.trim()} type="submit">
+            {addUidLoading ? <Spinner /> : "Legg til"}
+          </Button>
         </StyledLabelInputPair>
       </form>
     </>

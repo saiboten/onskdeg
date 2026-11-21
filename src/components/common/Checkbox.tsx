@@ -1,21 +1,32 @@
 import { ComponentProps, ReactNode } from "react";
 import { cn } from "../../util/cn";
 
-const checkbox =
-  "relative h-24 w-24 shrink-0 cursor-pointer appearance-none rounded-[4px] border-2 border-solid border-secondary bg-primary-dark transition-all duration-200 ease-[ease] checked:border-secondary checked:bg-secondary checked:after:absolute checked:after:top-1/2 checked:after:left-1/2 checked:after:-translate-x-1/2 checked:after:-translate-y-1/2 checked:after:text-[1.8rem] checked:after:font-bold checked:after:text-text checked:after:content-['✓'] hover:border-primary-light hover:shadow-[0_0_0_2px_var(--color-secondary-dark)]";
-
+/** A toggle switch (a styled checkbox) with a label and optional hint. */
 export const Checkbox = ({
   label,
+  description,
   className,
   ...props
-}: Omit<ComponentProps<"input">, "type"> & { label: ReactNode }) => (
+}: Omit<ComponentProps<"input">, "type"> & {
+  label: ReactNode;
+  description?: ReactNode;
+}) => (
   <label
     className={cn(
-      "flex cursor-pointer items-center gap-12 text-[1.6rem] text-text select-none",
-      className
+      "flex cursor-pointer items-center justify-between gap-16 text-[1.6rem] text-text select-none",
+      className,
     )}
   >
-    <input className={checkbox} type="checkbox" {...props} />
-    <span>{label}</span>
+    <span className="min-w-0">
+      <span className="block">{label}</span>
+      {description && (
+        <span className="block text-[1.3rem] opacity-70">{description}</span>
+      )}
+    </span>
+    <span className="relative inline-flex shrink-0">
+      <input className="peer sr-only" type="checkbox" {...props} />
+      <span className="h-28 w-48 rounded-full bg-primary-dark shadow-[inset_0_0_0_2px_var(--color-secondary-dark)] transition-colors duration-200 peer-checked:bg-secondary peer-checked:shadow-none peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-secondary" />
+      <span className="pointer-events-none absolute top-4 left-4 h-20 w-20 rounded-full bg-text opacity-60 transition-all duration-200 peer-checked:translate-x-20 peer-checked:bg-white peer-checked:opacity-100" />
+    </span>
   </label>
 );

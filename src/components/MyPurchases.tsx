@@ -1,15 +1,17 @@
 import { format } from "date-fns";
+import { nb } from "date-fns/locale";
 import { useEffect, useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
+import { ExternalLink, ShoppingCart } from "lucide-react";
 import { usePurchase } from "../hooks/usePurchase";
 import { useUser } from "../hooks/useUser";
 import { useWish } from "../hooks/useWish";
 import { Purchase as PurchaseType } from "../types/types";
 import { Container } from "./common/Container";
-import { StyledBigHeader } from "./common/StyledHeading";
-import { ALink } from "./common/Link";
+import Loading from "./common/Loading";
 import firebase from "./firebase/firebase";
-import { Link } from "./yours/Wish";
-import ListRow, { LeftSection } from "./common/ListRow";
+import { EmptyState, PageHeader, WishThumb } from "./common/Page";
+import { displayWishName, formatPrice } from "../util/format";
 
 interface Props {
   uid: string;
@@ -19,26 +21,45 @@ const PurchaseInfo = ({ purchase }: { purchase: PurchaseType }) => {
   const { user } = useUser(purchase.wishOwner || "");
   const { wish } = useWish(purchase.wishOwner || "", purchase.wishId || "");
 
+  if (!wish) return null;
+
+  const meta = [
+    `Til ${user?.name ?? "ukjent"}`,
+    formatPrice(wish.price),
+    purchase.date
+      ? format(purchase.date.toDate(), "d. MMM yyyy", { locale: nb })
+      : "",
+  ].filter(Boolean);
+
   return (
-    <ListRow className="pr-16">
-      <LeftSection className="flex-col items-start py-6">
-        <Link
-          className="py-0 font-semibold"
-          to={`/other/${user?.uid}/${wish?.id}`}
-        >
-          {wish?.name}
-        </Link>
-        <span className="text-[1.3rem] opacity-75">
-          Til {user?.name} ·{" "}
-          {format(purchase?.date?.toDate() || new Date(), "dd.MM.yyyy")}
+    <li className="flex items-center gap-8 rounded-[12px] bg-primary p-8 pr-8">
+      <RouterLink
+        className="flex min-w-0 flex-1 items-center gap-12 text-text no-underline hover:opacity-80"
+        to={`/other/${user?.uid}/${wish.id}`}
+      >
+        <WishThumb src={wish.image} />
+        <span className="flex min-w-0 flex-col">
+          <span className="line-clamp-2 font-semibold wrap-break-word">
+            {displayWishName(wish.name)}
+          </span>
+          <span className="truncate text-[1.3rem] opacity-70">
+            {meta.join(" · ")}
+          </span>
         </span>
-      </LeftSection>
-      {wish?.link && (
-        <ALink className="shrink-0" target="_blank" href={wish.link}>
-          Link
-        </ALink>
+      </RouterLink>
+      {wish.link && (
+        <a
+          className="flex h-36 w-36 shrink-0 items-center justify-center text-text opacity-60 hover:opacity-100"
+          target="_blank"
+          rel="noreferrer"
+          href={wish.link}
+          aria-label="Åpne i nettbutikk"
+          title="Åpne i nettbutikk"
+        >
+          <ExternalLink size={20} />
+        </a>
       )}
-    </ListRow>
+    </li>
   );
 };
 
@@ -52,23 +73,42 @@ export const MyPurchases = ({ uid }: Props) => {
   const [purchases, setPurchases] = useState<string[]>();
 
   useEffect(() => {
-    const data = firebase
+    firebase
       .firestore()
       .collection("purchase")
       .where("checkedBy", "==", uid)
-      .where("checked", "==", true);
-    data.get().then((snapshot) => {
-      setPurchases(snapshot.docs.map((doc) => doc.id));
-    });
+      .where("checked", "==", true)
+      .get()
+      .then((snapshot) => {
+        setPurchases(snapshot.docs.map((doc) => doc.id));
+      });
   }, [uid]);
 
   return (
-    <Container textLeft>
-      <StyledBigHeader>Mine kjøp</StyledBigHeader>
-      {purchases?.length === 0 && <p>Du har ikke kjøpt noe enda.</p>}
-      {purchases?.map((id) => (
-        <Purchase key={id} purchaseId={id} />
-      ))}
+    <Container>
+      <PageHeader
+        back={{ to: "/profile", label: "Profil" }}
+        title="Mine kjøp"
+        subtitle="Gaver du har merket som kjøpt. Bare du ser denne listen."
+      />
+      {purchases === undefined ? (
+        <div className="flex justify-center">
+          <Loading />
+        </div>
+      ) : purchases.length === 0 ? (
+        <EmptyState
+          icon={<ShoppingCart size={32} />}
+          title="Du har ikke kjøpt noe ennå"
+        >
+          Trykk «Kjøp» på et ønske hos noen andre, så havner det her.
+        </EmptyState>
+      ) : (
+        <ul className="flex list-none flex-col gap-8">
+          {purchases.map((id) => (
+            <Purchase key={id} purchaseId={id} />
+          ))}
+        </ul>
+      )}
     </Container>
   );
 };

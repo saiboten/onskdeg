@@ -4,12 +4,11 @@ import { useKohorts } from "../../hooks/useKohorts";
 import { useUser } from "../../hooks/useUser";
 import { Kohort } from "../../types/types";
 import { Container } from "../common/Container";
-import Loading from "../common/Loading";
-import { StyledBigHeader, StyledSubHeader } from "../common/StyledHeading";
+import Spinner from "../common/Spinner";
+import { Avatar, Divided, PageHeader, Panel, Section } from "../common/Page";
 import firebase from "../firebase/firebase";
 import { useNotification } from "../common/StyledNotification";
 import { Checkbox } from "../common/Checkbox";
-import { Link } from "../common/Link";
 
 interface KohortMemberProps {
   uid: string;
@@ -20,7 +19,7 @@ const KohortMember = ({ childId, uid }: KohortMemberProps) => {
   const { user } = useUser(uid);
   const [loading, setLoading] = useState(false);
   const [notificationText, setNotificationText] = useState(
-    "Bruker bla er nå admin"
+    "Bruker bla er nå admin",
   );
   const { flash, element } = useNotification(notificationText);
 
@@ -35,7 +34,7 @@ const KohortMember = ({ childId, uid }: KohortMemberProps) => {
     setNotificationText(
       value
         ? `${user?.name} er nå administrator.`
-        : `${user?.name} er nå fjernet som administrator.`
+        : `${user?.name} er nå fjernet som administrator.`,
     );
 
     const childDocRef = firebase.firestore().collection("user").doc(childId);
@@ -69,12 +68,17 @@ const KohortMember = ({ childId, uid }: KohortMemberProps) => {
   }
 
   return (
-    <div>
+    <div className="px-8 py-10">
       {loading ? (
-        <Loading />
+        <Spinner />
       ) : (
         <Checkbox
-          label={user?.name}
+          label={
+            <span className="flex items-center gap-12">
+              <Avatar name={user?.name} className="h-32 w-32 text-[1.2rem]" />
+              {user?.name}
+            </span>
+          }
           name="isParent"
           checked={isParent ?? false}
           onChange={handleInputChange}
@@ -102,7 +106,7 @@ export const ChildAdmin = ({ myUid }: Props) => {
 
       return sum;
     },
-    []
+    [],
   );
 
   const userSet = new Set<string>();
@@ -112,17 +116,34 @@ export const ChildAdmin = ({ myUid }: Props) => {
     .filter((m) => m !== myUid);
 
   return (
-    <Container textLeft>
-      <Link className="mb-16 inline-block text-[1.4rem]" to="/settings">
-        ← Tilbake til innstillinger
-      </Link>
-      <StyledBigHeader>{user?.name}</StyledBigHeader>
-      <StyledSubHeader>Hvem andre skal styre {user?.name}?</StyledSubHeader>
-      <div className="mt-12 flex flex-col gap-12">
-        {filteredUserList?.map((user) => (
-          <KohortMember key={user} uid={user} childId={childId ?? ""} />
-        ))}
-      </div>
+    <Container>
+      <PageHeader
+        back={{ to: "/settings", label: "Innstillinger" }}
+        title={
+          <span className="flex items-center gap-12">
+            <Avatar name={user?.name} className="h-44 w-44 text-[1.6rem]" />
+            {user?.name}
+          </span>
+        }
+      />
+      <Section
+        title="Hvem kan styre ønskelisten?"
+        description={`De du slår på her kan legge til og endre ønskene til ${user?.name ?? "brukeren"}.`}
+      >
+        <Panel className="p-8 sm:p-8">
+          {filteredUserList.length ? (
+            <Divided>
+              {filteredUserList.map((user) => (
+                <KohortMember key={user} uid={user} childId={childId ?? ""} />
+              ))}
+            </Divided>
+          ) : (
+            <p className="p-8 opacity-70">
+              Ingen andre i gruppene dine å velge mellom.
+            </p>
+          )}
+        </Panel>
+      </Section>
     </Container>
   );
 };

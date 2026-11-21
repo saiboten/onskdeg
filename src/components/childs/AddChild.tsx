@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "../../hooks/useUser";
 import { Button } from "../common/Button";
 import { StyledLabelInputPair } from "../common/StyledLabelInputPair";
-import { StyledBigHeader } from "../common/StyledHeading";
+import { PageHeader, Panel } from "../common/Page";
+import { StyledLabel } from "../common/Label";
 import { Container } from "../common/Container";
 import { StyledInput } from "../common/StyledInput";
 import firebase from "../firebase/firebase";
@@ -66,32 +67,34 @@ export function AddChild({ uid }: Props) {
   }
 
   return (
-    <Container textLeft>
-      <StyledBigHeader>Legg til ekstra bruker</StyledBigHeader>
-      <p className="mb-20">
-        Har du barn som du ønsker å legge inn ønsker for, eller ønsker en felles
-        ønskeliste for deg og din bedre halvdel? Opprett en ekstra bruker da
-        vel! Du kan dele brukeren etter opprettelse.
-      </p>
-      <form onSubmit={handleSubmit}>
-        <StyledLabelInputPair className="max-w-500">
-          <StyledInput
-            type="text"
-            placeholder="Navn"
-            autoComplete={"off"}
-            name="name"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-          />
-          {submitting ? (
-            <Spinner />
-          ) : (
-            <Button type="submit" disabled={!name.trim()}>
-              Opprett
+    <Container>
+      <PageHeader
+        back={{ to: "/settings", label: "Innstillinger" }}
+        title="Legg til ekstra bruker"
+        subtitle="For barn, eller en felles ønskeliste med partneren din. Du kan dele styringen med andre etterpå."
+      />
+      <Panel>
+        <form onSubmit={handleSubmit}>
+          <StyledLabel htmlFor="child-name">Navn</StyledLabel>
+          <StyledLabelInputPair>
+            <StyledInput
+              type="text"
+              id="child-name"
+              placeholder="F.eks. Emma"
+              autoComplete={"off"}
+              name="name"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+            />
+            <Button type="submit" disabled={submitting || !name.trim()}>
+              {submitting ? <Spinner /> : "Opprett"}
             </Button>
-          )}
-        </StyledLabelInputPair>
-      </form>
+          </StyledLabelInputPair>
+          <p className="mt-8 text-[1.3rem] opacity-70">
+            Brukeren blir med i alle gruppene dine.
+          </p>
+        </form>
+      </Panel>
     </Container>
   );
 }

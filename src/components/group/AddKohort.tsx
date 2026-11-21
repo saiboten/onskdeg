@@ -6,7 +6,9 @@ import { Button } from "../common/Button";
 import firebase from "../firebase/firebase";
 import { useUser } from "../../hooks/useUser";
 import { useNavigate } from "react-router-dom";
-import { StyledBigHeader, StyledSubHeader } from "../common/StyledHeading";
+import { PageHeader, Panel, Section } from "../common/Page";
+import Spinner from "../common/Spinner";
+import { X } from "lucide-react";
 import { StyledLabelInputPair } from "../common/StyledLabelInputPair";
 import { invalidate } from "../../queryClient";
 
@@ -18,11 +20,13 @@ export const AddKohort: React.FC<Props> = ({ uid }) => {
   const [groupName, setGroupName] = useState("");
   const [email, setEmail] = useState("");
   const [invites, setInvites] = useState<string[]>([]);
+  const [saving, setSaving] = useState(false);
 
   const { user } = useUser(uid);
   const navigate = useNavigate();
 
   async function handleAddGroup() {
+    setSaving(true);
     const db = firebase.firestore();
 
     const docRef = await db.collection("groups").add({
@@ -71,56 +75,85 @@ export const AddKohort: React.FC<Props> = ({ uid }) => {
   }
 
   return (
-    <Container textLeft>
-      <StyledBigHeader>Opprett gruppe</StyledBigHeader>
-      <StyledLabel htmlFor="groupName">Navn på gruppe</StyledLabel>
-      <StyledInput
-        autoComplete="off"
-        id="groupName"
-        placeholder="F.eks. Familien"
-        value={groupName}
-        onChange={(e) => setGroupName(e.target.value)}
-      ></StyledInput>
-
-      <StyledSubHeader className="mt-32">
-        Inviter gruppemedlemmer
-      </StyledSubHeader>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          if (!email.trim()) return;
-          setEmail("");
-          setInvites([email.toLowerCase(), ...invites]);
-        }}
-      >
-        <StyledLabel htmlFor="email">Epost</StyledLabel>
-        <StyledLabelInputPair>
+    <Container>
+      <PageHeader
+        back={{ to: "/settings", label: "Innstillinger" }}
+        title="Opprett gruppe"
+        subtitle="Alle i gruppen kan se hverandres ønskelister."
+      />
+      <Section title="1. Gi gruppen et navn">
+        <Panel>
+          <StyledLabel htmlFor="groupName">Navn på gruppe</StyledLabel>
           <StyledInput
             autoComplete="off"
-            type="email"
-            id="email"
-            placeholder="navn@eksempel.no"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            id="groupName"
+            placeholder="F.eks. Familien"
+            value={groupName}
+            onChange={(e) => setGroupName(e.target.value)}
           ></StyledInput>
-          <Button type="submit">Legg til</Button>
-        </StyledLabelInputPair>
-      </form>
+        </Panel>
+      </Section>
 
-      <div className="mt-20 mb-32">
-        <StyledLabel>Inviterte brukere</StyledLabel>
-        {invites.length > 0 ? (
-          <ul className="list-disc pl-20">
-            {invites.map((email: string) => {
-              return <li key={email}>{email}</li>;
-            })}
-          </ul>
-        ) : (
-          <p className="opacity-75">Ingen brukere lagt til</p>
-        )}
-      </div>
-      <Button onClick={handleAddGroup} disabled={!groupName.trim()}>
-        Lagre gruppe
+      <Section
+        title="2. Inviter medlemmer"
+        description="Valgfritt – du kan også invitere folk senere."
+      >
+        <Panel>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const clean = email.trim().toLowerCase();
+              if (!clean || invites.includes(clean)) return;
+              setEmail("");
+              setInvites([...invites, clean]);
+            }}
+          >
+            <StyledLabel htmlFor="email">Epost</StyledLabel>
+            <StyledLabelInputPair>
+              <StyledInput
+                autoComplete="off"
+                type="email"
+                id="email"
+                placeholder="navn@eksempel.no"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              ></StyledInput>
+              <Button type="submit" disabled={!email.trim()}>
+                Legg til
+              </Button>
+            </StyledLabelInputPair>
+          </form>
+
+          {invites.length > 0 && (
+            <ul className="mt-16 flex list-none flex-wrap gap-8">
+              {invites.map((email: string) => (
+                <li
+                  key={email}
+                  className="flex items-center gap-4 rounded-full bg-primary-dark py-4 pr-4 pl-12 text-[1.4rem]"
+                >
+                  {email}
+                  <button
+                    type="button"
+                    aria-label={`Fjern ${email}`}
+                    className="flex h-24 w-24 cursor-pointer items-center justify-center rounded-full border-none bg-transparent text-text opacity-60 hover:opacity-100"
+                    onClick={() =>
+                      setInvites(invites.filter((i) => i !== email))
+                    }
+                  >
+                    <X size={14} />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Panel>
+      </Section>
+      <Button
+        className="h-48 w-full sm:w-auto sm:px-32"
+        onClick={handleAddGroup}
+        disabled={saving || !groupName.trim()}
+      >
+        {saving ? <Spinner /> : "Opprett gruppe"}
       </Button>
     </Container>
   );

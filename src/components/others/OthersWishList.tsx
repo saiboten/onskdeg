@@ -5,7 +5,7 @@ import OtherWish from "./OtherWish";
 import { useWishes } from "../../hooks/useWishes";
 import { useParams } from "react-router-dom";
 import { useUser } from "../../hooks/useUser";
-import { StyledBigHeader, StyledSubHeader } from "../common/StyledHeading";
+import { Avatar, EmptyState, PageHeader, Panel, Section } from "../common/Page";
 import { StyledInput } from "../common/StyledInput";
 import firebase from "../firebase/firebase";
 import { NewsEntryType, Wish } from "../../types/types";
@@ -16,7 +16,7 @@ import {
   prefillFromInput,
 } from "../../services/wishFromLink";
 import { Button } from "../common/Button";
-import { Check } from "lucide-react";
+import { Plus } from "lucide-react";
 
 interface Params {
   uid: string;
@@ -62,7 +62,7 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
     if (link) {
       const owner = uid;
       enrichWishFromLink(docRef.id, link, data, input).then((changed) => {
-        if (changed) invalidate(["wish", owner]);
+        if (changed === "changed") invalidate(["wish", owner]);
       });
     }
 
@@ -106,47 +106,35 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
       return 0;
     });
 
+  const count = ownWishes?.length ?? 0;
+
   return (
     <Container>
       <StyledNotification active={feedback !== ""} text={feedback} />
-      <StyledBigHeader>{`Ønskelisten til ${user?.name}`}</StyledBigHeader>
-      {ownWishes?.length === 0 && <p className="mb-16">Ingen ønsker enda.</p>}
-      {ownWishes?.map((wish) => (
-        <OtherWish
-          myUid={myUid}
-          key={wish.id}
-          user={uid ?? ""}
-          wishInfo={wish}
-        />
-      ))}
+      <PageHeader
+        back={{ to: "/others", label: "Grupper" }}
+        title={
+          <span className="flex items-center gap-12">
+            <Avatar name={user?.name} className="h-44 w-44 text-[1.6rem]" />
+            {`Ønskelisten til ${user?.name ?? ""}`}
+          </span>
+        }
+        subtitle={
+          count === 0
+            ? "Ingen ønsker ennå"
+            : `${count} ${count === 1 ? "ønske" : "ønsker"}`
+        }
+      />
 
-      <section className="mt-32">
-        <StyledSubHeader>Legg inn forslag til {user?.name}</StyledSubHeader>
-        <form
-          className="mb-24 flex items-center gap-8"
-          onSubmit={handleAddSuggestion}
+      {count === 0 ? (
+        <EmptyState
+          title={`${user?.name ?? "Personen"} har ikke lagt inn noen ønsker ennå`}
         >
-          <StyledInput
-            type="text"
-            placeholder="Legg inn forslag her"
-            value={suggestion}
-            onChange={(e) => setSuggestion(e.target.value)}
-          />
-          <Button
-            className="h-48 w-48 shrink-0 px-0"
-            type="submit"
-            name="check"
-            aria-label="Legg til forslag"
-          >
-            <Check size={24} />
-          </Button>
-        </form>
-      </section>
-
-      {(suggestions?.length ?? 0) > 0 && (
-        <section>
-          <StyledSubHeader>Forslag for {user?.name}</StyledSubHeader>
-          {suggestions?.map((wish) => (
+          Du kan legge inn et forslag lenger ned.
+        </EmptyState>
+      ) : (
+        <ul className="flex list-none flex-col gap-8">
+          {ownWishes?.map((wish) => (
             <OtherWish
               myUid={myUid}
               key={wish.id}
@@ -154,8 +142,51 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
               wishInfo={wish}
             />
           ))}
-        </section>
+        </ul>
       )}
+
+      <Section
+        className="mt-40"
+        title="Forslag"
+        description={`Tips de andre om gaveideer. ${user?.name ?? "Personen"} ser ikke forslagene.`}
+      >
+        <Panel className="mb-12">
+          <form
+            className="flex items-center gap-8"
+            onSubmit={handleAddSuggestion}
+          >
+            <StyledInput
+              type="text"
+              aria-label="Nytt forslag"
+              placeholder="Skriv et forslag eller lim inn en lenke"
+              value={suggestion}
+              onChange={(e) => setSuggestion(e.target.value)}
+            />
+            <Button
+              className="h-48 shrink-0 px-16 max-[450px]:w-48 max-[450px]:px-0"
+              type="submit"
+              name="check"
+              aria-label="Legg til forslag"
+            >
+              <Plus size={22} />
+              <span className="max-[450px]:hidden">Foreslå</span>
+            </Button>
+          </form>
+        </Panel>
+
+        {(suggestions?.length ?? 0) > 0 && (
+          <ul className="flex list-none flex-col gap-8">
+            {suggestions?.map((wish) => (
+              <OtherWish
+                myUid={myUid}
+                key={wish.id}
+                user={uid ?? ""}
+                wishInfo={wish}
+              />
+            ))}
+          </ul>
+        )}
+      </Section>
     </Container>
   );
 };

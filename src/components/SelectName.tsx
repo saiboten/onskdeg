@@ -6,7 +6,7 @@ import { StyledInput } from "./common/StyledInput";
 import { StyledLabelInputPair } from "./common/StyledLabelInputPair";
 import firebase from "./firebase/firebase";
 import { invalidate } from "../queryClient";
-import { StyledBigHeader } from "./common/StyledHeading";
+import { PageHeader, Panel } from "./common/Page";
 
 interface Props {
   firebaseUser?: firebase.User;
@@ -29,22 +29,28 @@ export const SelectName = ({ firebaseUser, uid }: Props) => {
   }
 
   return (
-    <Container textLeft>
-      <StyledBigHeader>Navn</StyledBigHeader>
-      <p className="mb-16">Hei, hva heter du?</p>
+    <Container className="max-w-520">
+      <PageHeader
+        title="Velkommen! 👋"
+        subtitle="Hva heter du? Navnet vises for de andre i gruppene dine."
+      />
 
-      <form onSubmit={handleSetName}>
-        <StyledLabel htmlFor="name">Navn</StyledLabel>
-        <StyledLabelInputPair>
-          <StyledInput
-            autoComplete="off"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          ></StyledInput>
-          <Button type="submit">Lagre</Button>
-        </StyledLabelInputPair>
-      </form>
+      <Panel>
+        <form onSubmit={handleSetName}>
+          <StyledLabel htmlFor="name">Navn</StyledLabel>
+          <StyledLabelInputPair>
+            <StyledInput
+              autoComplete="off"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            ></StyledInput>
+            <Button type="submit" disabled={!name.trim()}>
+              Fortsett
+            </Button>
+          </StyledLabelInputPair>
+        </form>
+      </Panel>
     </Container>
   );
 };

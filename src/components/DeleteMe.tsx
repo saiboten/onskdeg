@@ -1,17 +1,20 @@
 import { DangerButton } from "./common/Button";
 import { Container } from "./common/Container";
-import { StyledBigHeader } from "./common/StyledHeading";
+import { PageHeader } from "./common/Page";
 
 export const DeleteMe = () => {
   function handleDelete() {
     alert(
-      "Erhm, denne funksjonen finnes egentlig, men send en melding til @saiboten på twitter, så kan jeg fikse!"
+      "Erhm, denne funksjonen finnes egentlig, men send en melding til @saiboten på twitter, så kan jeg fikse!",
     );
   }
 
   return (
-    <Container textLeft>
-      <StyledBigHeader>Slett meg</StyledBigHeader>
+    <Container>
+      <PageHeader
+        back={{ to: "/profile", label: "Profil" }}
+        title="Slett meg"
+      />
       <p className="mb-10">
         I følge Europas Personvernforordningen GDPR har du krav på å få dine
         personlige data slettet. Dersom du ønsker dette, trykk bekreft under.

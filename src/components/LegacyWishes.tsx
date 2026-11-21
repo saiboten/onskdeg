@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Container } from "./common/Container";
-import { StyledBigHeader } from "./common/StyledHeading";
+import { PageHeader } from "./common/Page";
 import firebase from "./firebase/firebase";
 
 export const LegacyWishes = ({ uid }: { uid: string }) => {
@@ -17,11 +17,13 @@ export const LegacyWishes = ({ uid }: { uid: string }) => {
       });
   }, [uid]);
   return (
-    <Container textLeft>
-      <StyledBigHeader>Ønsker fra gamledager</StyledBigHeader>
-      <ul className="list-disc pl-24">
+    <Container>
+      <PageHeader title="Ønsker fra gamledager" />
+      <ul className="flex list-none flex-col gap-8">
         {wishes?.map((wish, index) => (
-          <li key={index}>{wish}</li>
+          <li key={index} className="rounded-[12px] bg-primary px-16 py-12">
+            {wish}
+          </li>
         ))}
       </ul>
     </Container>

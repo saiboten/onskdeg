@@ -3,8 +3,9 @@ import { invalidate } from "../../queryClient";
 import { useUser } from "../../hooks/useUser";
 import { Notification, Question as QuestionType } from "../../types/types";
 import { Button } from "../common/Button";
-import Loading from "../common/Loading";
-import { StyledSubHeader } from "../common/StyledHeading";
+import Spinner from "../common/Spinner";
+import { Section } from "../common/Page";
+import { MessageCircleQuestion } from "lucide-react";
 import { StyledLabelInputPair } from "../common/StyledLabelInputPair";
 import { StyledInput } from "../common/StyledInput";
 import { useNotification } from "../common/StyledNotification";
@@ -61,10 +62,13 @@ const Question = ({ myUid, question, wishId }: QuestionProps) => {
   }
 
   return (
-    <div className="rounded-[10px] bg-primary px-16 py-12 text-text">
-      <p className="font-semibold">{question.question}</p>
+    <div className="rounded-[12px] bg-primary px-16 py-12 text-text">
+      <p className="flex items-start gap-8 font-semibold">
+        <MessageCircleQuestion size={18} className="mt-3 shrink-0 opacity-70" />
+        {question.question}
+      </p>
       {question.answer ? (
-        <p>Svar: {question.answer}</p>
+        <p className="mt-4 pl-26 opacity-85">{question.answer}</p>
       ) : (
         <form className="mt-8" onSubmit={handleSaveQuestion}>
           <StyledLabelInputPair>
@@ -73,7 +77,13 @@ const Question = ({ myUid, question, wishId }: QuestionProps) => {
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
             />
-            {loading ? <Loading /> : <Button>Svar</Button>}
+            {loading ? (
+              <Spinner />
+            ) : (
+              <Button type="submit" disabled={!answer.trim()}>
+                Svar
+              </Button>
+            )}
           </StyledLabelInputPair>
         </form>
       )}
@@ -88,9 +98,11 @@ export const ListMyQuestions = ({ myUid, wishId, questions }: Props) => {
   }
 
   return (
-    <div className="mb-24">
-      <StyledSubHeader>Spørsmål og svar</StyledSubHeader>
-      <div className="flex flex-col gap-10">
+    <Section
+      title="Spørsmål fra andre"
+      description="Svarene dine vises for den som spurte."
+    >
+      <div className="flex flex-col gap-8">
         {questions?.map((el) => {
           return (
             <Question
@@ -102,6 +114,6 @@ export const ListMyQuestions = ({ myUid, wishId, questions }: Props) => {
           );
         })}
       </div>
-    </div>
+    </Section>
   );
 };

@@ -8,12 +8,13 @@ export const useNotification = (text: string) => {
     setActive(true);
     setTimeout(() => {
       setActive(false);
-    }, 2000);
+    }, 2500);
   }
 
   return { flash, element: <StyledNotification active={active} text={text} /> };
 };
 
+/** A toast at the bottom of the screen. */
 export const StyledNotification = ({
   text,
   active,
@@ -22,9 +23,11 @@ export const StyledNotification = ({
   active: boolean;
 }) => (
   <div
+    role="status"
+    aria-live="polite"
     className={cn(
-      "fixed top-0 left-0 z-10 flex w-screen items-center justify-center border border-solid border-black bg-contrast py-10 text-text transition-all duration-500 ease-[ease]",
-      active ? "translate-y-0" : "-translate-y-50"
+      "pointer-events-none fixed bottom-24 left-1/2 z-50 max-w-[calc(100vw-3.2rem)] -translate-x-1/2 rounded-full bg-secondary px-20 py-10 text-center text-[1.5rem] font-semibold text-white shadow-[0_8px_24px_rgba(0,0,0,0.35)] transition-all duration-300 ease-out",
+      active ? "translate-y-0 opacity-100" : "translate-y-16 opacity-0",
     )}
   >
     {text}

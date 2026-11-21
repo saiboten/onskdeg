@@ -1,16 +1,47 @@
 import { cn } from "../../util/cn";
 import { useState } from "react";
 import firebase from "../firebase/firebase";
-import { Trash2, ShoppingCart, X, Check } from "lucide-react";
+import {
+  Trash2,
+  ShoppingCart,
+  X,
+  Check,
+  ExternalLink,
+  Star,
+} from "lucide-react";
 import { Wish, Purchase } from "../../types/types";
 import { useNavigate } from "react-router-dom";
 import { usePurchase } from "../../hooks/usePurchase";
 import { invalidate } from "../../queryClient";
 import { StyledNotification } from "../common/StyledNotification";
 import { format } from "date-fns";
-import { StyledLink, StyledLinkIcon } from "../common/StyledLink";
+import { nb } from "date-fns/locale";
+import { WishThumb } from "../common/Page";
+import { displayUrl, displayWishName, formatPrice } from "../../util/format";
 import { useSettings } from "../../hooks/useSettings";
 import { IconButton } from "../common/Button";
+
+/** Flips the purchase state of a wish. Resolves to true if it is now bought. */
+export async function togglePurchase(
+  wishId: string,
+  wishOwner: string,
+  myUid: string,
+): Promise<boolean> {
+  const purchaseRef = firebase.firestore().collection("purchase").doc(wishId);
+  const purchaseData = await purchaseRef.get();
+  const isChecked = purchaseData.exists && purchaseData.data()?.checked;
+
+  const newPurchase: Purchase = {
+    checked: !isChecked,
+    checkedBy: myUid,
+    date: firebase.firestore.Timestamp.now(),
+    wishId,
+    wishOwner,
+  };
+  await purchaseRef.set(newPurchase);
+  invalidate(["purchase", wishId]);
+  return !isChecked;
+}
 
 interface P {
   wishInfo: Wish;
@@ -30,30 +61,12 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
 
   async function handleBuyItem(e: React.MouseEvent) {
     e.stopPropagation();
-    const purchaseRef = firebase
-      .firestore()
-      .collection("purchase")
-      .doc(wishInfo.id);
-
-    const purchaseData = await purchaseRef.get();
-
-    const isChecked = purchaseData.exists && purchaseData.data()?.checked;
-
-    const newPurchase: Purchase = {
-      checked: isChecked ? false : true,
-      checkedBy: myUid,
-      date: firebase.firestore.Timestamp.now(),
-      wishId: wishInfo.id,
-      wishOwner: user,
-    };
-
-    await purchaseRef.set(newPurchase);
-
-    if (isChecked) {
-      setFeedback(`Du solgte ${wishInfo.name}`);
-    } else {
-      setFeedback(`Du kjøpte ${wishInfo.name}`);
-    }
+    const bought = await togglePurchase(wishInfo.id, user, myUid);
+    setFeedback(
+      bought
+        ? `Merket «${displayWishName(wishInfo.name)}» som kjøpt`
+        : `Angret kjøp av «${displayWishName(wishInfo.name)}»`,
+    );
 
     setTimeout(() => {
       setFeedback("");
@@ -62,8 +75,7 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
     invalidate(["purchase", wishInfo.id]);
   }
 
-  async function handleDeleteItem(e: React.MouseEvent) {
-    e.stopPropagation();
+  async function handleDeleteItem() {
     await firebase.firestore().collection("wish").doc(wishInfo.id).delete();
     invalidate(["wish", user]);
   }
@@ -78,122 +90,120 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
     navigate(`/${wishSuggestedByMe ? "wish" : "other"}/${user}/${wishInfo.id}`);
   };
 
+  const meta = [
+    formatPrice(wishInfo.price),
+    wishInfo.link ? displayUrl(wishInfo.link) : "",
+    wishInfo.date
+      ? format(wishInfo.date.toDate(), "d. MMM yyyy", { locale: nb })
+      : "",
+  ].filter(Boolean);
+
   return (
-    <>
-      {feedback && (
-        <StyledNotification active={feedback !== ""} text={feedback} />
+    <li
+      onClick={handleCardClick}
+      className={cn(
+        "flex cursor-pointer gap-12 rounded-[12px] bg-primary p-12 text-left text-text transition-colors hover:bg-secondary-dark",
+        isTaken && "opacity-60",
       )}
-      <div
-        onClick={handleCardClick}
-        className={cn(
-          "mb-16 cursor-pointer rounded-[10px] border-2 border-solid border-secondary bg-primary p-16 text-left transition-[transform,box-shadow] duration-200 ease-[ease] hover:-translate-y-2 hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)]",
-          isTaken ? "opacity-70" : "opacity-100"
-        )}
-      >
-        <div className="flex items-start justify-between gap-10">
-          <h3
-            className={cn(
-              "m-0 flex min-w-0 items-center gap-6 text-[1.8rem] leading-[1.3] wrap-break-word text-text",
-              isTaken ? "line-through" : "no-underline"
-            )}
-          >
-            {wishInfo.favorite && (
-              <span className="text-[1.8rem] text-[#FFD700]">★</span>
-            )}
-            {wishInfo.name}
-          </h3>
-          <div className="flex shrink-0 items-center gap-8 pt-2">
-            {isTaken && (
-              <span className="rounded-[4px] bg-negative px-8 py-2 text-[1.2rem] font-semibold text-white">
-                Kjøpt
-              </span>
-            )}
-            {wishInfo.date && (
-              <span className="text-[1.2rem] whitespace-nowrap text-text opacity-75">
-                {format(wishInfo.date.toDate(), "dd.MM.yyyy")}
-              </span>
-            )}
-          </div>
-        </div>
+    >
+      <StyledNotification active={feedback !== ""} text={feedback} />
+      <WishThumb
+        src={wishInfo.image}
+        className="h-72 w-72 max-[450px]:h-56 max-[450px]:w-56"
+      />
 
-        {wishInfo.price && (
-          <div className="mt-4 text-[1.6rem] font-semibold text-secondary">
-            Kr {wishInfo.price},-
-          </div>
-        )}
-
-        {wishInfo.image && (
-          <img
-            className="mx-auto mt-12 h-auto max-h-400 w-auto max-w-full rounded-[6px] object-contain"
-            src={wishInfo.image}
-            alt={wishInfo.name}
-          />
-        )}
+      <div className="flex min-w-0 flex-1 flex-col gap-4">
+        <h3
+          className={cn(
+            "flex items-start gap-6 text-[1.7rem] leading-[1.3] font-semibold wrap-break-word",
+            isTaken && "line-through",
+          )}
+        >
+          {wishInfo.favorite && (
+            <Star
+              size={16}
+              fill="#FFD700"
+              color="#FFD700"
+              className="mt-3 shrink-0"
+              aria-label="Favoritt"
+            />
+          )}
+          <span className="line-clamp-2">{displayWishName(wishInfo.name)}</span>
+        </h3>
 
         {wishInfo.description && (
-          <p className="mt-10 text-[1.4rem] leading-[1.6] wrap-break-word text-text">
+          <p className="line-clamp-2 text-[1.4rem] leading-[1.5] opacity-80">
             {wishInfo.description}
           </p>
         )}
 
         <div
-          className="mt-12 flex items-center justify-end gap-6 [border-top:1px_solid_var(--color-secondary)] pt-8"
+          className="mt-auto flex flex-wrap items-center justify-between gap-x-12 gap-y-6 pt-4"
           onClick={(e) => e.stopPropagation()}
         >
-          {wishInfo.link && (
-            <StyledLink
-              href={wishInfo.link}
-              target="_blank"
-              aria-label="Åpne lenke"
+          <span className="text-[1.3rem] opacity-70">{meta.join(" · ")}</span>
+
+          <div className="ml-auto flex items-center gap-4">
+            {wishInfo.link && (
+              <a
+                href={wishInfo.link}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Åpne i nettbutikk"
+                title="Åpne i nettbutikk"
+                className="flex h-36 w-36 items-center justify-center text-text opacity-70 transition-opacity hover:opacity-100"
+              >
+                <ExternalLink size={20} />
+              </a>
+            )}
+
+            {wishSuggestedByMe &&
+              (confirm ? (
+                <>
+                  <IconButton
+                    className="bg-primary-dark"
+                    aria-label="Avbryt"
+                    onClick={() => setConfirm(false)}
+                  >
+                    <X size={20} />
+                  </IconButton>
+                  <IconButton
+                    className="bg-negative text-white"
+                    aria-label="Bekreft sletting"
+                    onClick={handleDeleteItem}
+                  >
+                    <Check size={20} />
+                  </IconButton>
+                </>
+              ) : (
+                <IconButton
+                  aria-label="Slett forslag"
+                  title="Slett forslag"
+                  className="opacity-70 hover:opacity-100"
+                  onClick={() => setConfirm(true)}
+                >
+                  <Trash2 size={20} />
+                </IconButton>
+              ))}
+
+            <button
+              type="button"
+              onClick={handleBuyItem}
+              title={isTaken ? "Angre kjøp" : "Marker som kjøpt"}
+              className={cn(
+                "inline-flex h-36 cursor-pointer items-center gap-6 rounded-full border-2 border-solid px-14 font-sans text-[1.4rem] font-semibold transition-colors",
+                isTaken
+                  ? "border-transparent bg-negative text-white"
+                  : "border-secondary bg-transparent text-text hover:bg-secondary",
+              )}
             >
-              <StyledLinkIcon />
-            </StyledLink>
-          )}
-
-          {confirm ? (
-            <div className="flex gap-6">
-              <IconButton
-                className="bg-contrast text-white"
-                aria-label="Avbryt"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setConfirm(false);
-                }}
-              >
-                <X size={22} />
-              </IconButton>
-              <IconButton
-                className="bg-negative text-white"
-                aria-label="Bekreft sletting"
-                onClick={handleDeleteItem}
-              >
-                <Check size={22} />
-              </IconButton>
-            </div>
-          ) : (
-            wishSuggestedByMe && (
-              <IconButton
-                aria-label="Slett"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setConfirm(true);
-                }}
-              >
-                <Trash2 size={24} />
-              </IconButton>
-            )
-          )}
-
-          <IconButton
-            aria-label={isTaken ? "Angre kjøp" : "Marker som kjøpt"}
-            title={isTaken ? "Angre kjøp" : "Marker som kjøpt"}
-            onClick={handleBuyItem}
-          >
-            <ShoppingCart size={24} />
-          </IconButton>
+              {isTaken ? <Check size={16} /> : <ShoppingCart size={16} />}
+              {isTaken ? "Kjøpt" : "Kjøp"}
+            </button>
+          </div>
         </div>
       </div>
-    </>
+    </li>
   );
 };
 

@@ -10,24 +10,23 @@ import { StyledInput } from "../common/StyledInput";
 import { useUser } from "../../hooks/useUser";
 import { useWishes } from "../../hooks/useWishes";
 import { useInvites } from "../../hooks/useInvites";
-import { Spacer } from "../common/Spacer";
 import { useChilds } from "../../hooks/useChilds";
 import Loading from "../common/Loading";
 import { SelectName } from "../SelectName";
-import { StyledBigHeader } from "../common/StyledHeading";
+import { EmptyState, PageHeader, Panel } from "../common/Page";
 import {
   enrichWishFromLink,
   prefillFromInput,
 } from "../../services/wishFromLink";
 import { Notifications } from "./Notifications";
-import { Check, Upload } from "lucide-react";
+import { ImagePlus, Plus, Sparkles } from "lucide-react";
 import { BorderButton, Button } from "../common/Button";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { InvitePopup } from "./InvitePopup";
 import { TabContainer, Tab } from "../common/Tabs";
 
 export const StyledWrapper = (props: ComponentProps<"form">) => (
-  <form className="mb-16 flex items-center gap-8" {...props} />
+  <form className="flex items-center gap-8" {...props} />
 );
 
 interface Props {
@@ -74,7 +73,7 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
 
     queryClient.setQueryData(
       ["wish", activeTab],
-      [{ name: newWish }, ...(wishes || [])]
+      [{ name: newWish }, ...(wishes || [])],
     );
     setNewWish("");
 
@@ -107,7 +106,7 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
     if (link) {
       const owner = activeTab;
       enrichWishFromLink(newWishRef.id, link, data, input).then((changed) => {
-        if (changed) invalidate(["wish", owner]);
+        if (changed === "changed") invalidate(["wish", owner]);
       });
     }
 
@@ -138,7 +137,14 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
   }
 
   const wishToElement = (el: WishType) => {
-    return <Wish user={activeTab} key={el.id} delete={deleteThis} wish={el} />;
+    return (
+      <Wish
+        user={activeTab}
+        key={el.id || el.name}
+        delete={deleteThis}
+        wish={el}
+      />
+    );
   };
 
   const sortedWishes = wishes
@@ -157,6 +163,9 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
     );
   }
 
+  const isMe = activeTab === uid;
+  const count = sortedWishes?.length ?? 0;
+
   return (
     <Container>
       {(invites?.myInvites.length || 0) > 0 && (
@@ -169,11 +178,9 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
 
       <Notifications myUid={uid} />
 
-      <StyledBigHeader>Mine ønsker</StyledBigHeader>
-
       {childs && childs.length > 0 && (
         <TabContainer>
-          <Tab $active={activeTab === uid} onClick={() => handleTabChange(uid)}>
+          <Tab $active={isMe} onClick={() => handleTabChange(uid)}>
             {user?.name}
           </Tab>
           {childs.map((child) => (
@@ -188,41 +195,72 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
         </TabContainer>
       )}
 
-      <StyledWrapper onSubmit={addWish}>
-        <StyledInput
-          type="text"
-          placeholder={`Legg inn ønske ${activeUser?.name ? `for ${activeUser.name}` : "her"}`}
-          value={newWish}
-          onChange={(e) => setNewWish(e.target.value)}
-        />
+      <PageHeader
+        title={isMe ? "Mine ønsker" : `Ønskene til ${activeUser?.name ?? ""}`}
+        subtitle={
+          count === 0
+            ? "Ingen ønsker ennå"
+            : `${count} ${count === 1 ? "ønske" : "ønsker"}`
+        }
+      />
 
-        <Button
-          className="h-48 w-48 shrink-0 px-0"
-          type="submit"
-          name="check"
-          aria-label="Legg til ønske"
-        >
-          <Check size={24} />
-        </Button>
+      <Panel className="mb-24">
+        <StyledWrapper onSubmit={addWish}>
+          <StyledInput
+            type="text"
+            aria-label="Nytt ønske"
+            placeholder={
+              isMe
+                ? "Hva ønsker du deg?"
+                : `Hva ønsker ${activeUser?.name ?? "du"} seg?`
+            }
+            value={newWish}
+            onChange={(e) => {
+              setNewWish(e.target.value);
+              setFeedback("");
+            }}
+          />
 
-        <BorderButton
-          className="h-48 w-48 shrink-0 px-0"
-          type="button"
-          name="upload"
-          aria-label="Last opp bilder"
-          title="Last opp bilder"
-          onClick={() => navigate("/upload-wishes")}
-        >
-          <Upload size={22} />
-        </BorderButton>
-      </StyledWrapper>
-      {feedback && (
-        <p className="-mt-8 mb-16 text-left text-[1.4rem] text-negative">
-          {feedback}
-        </p>
+          <Button
+            className="h-48 shrink-0 px-16 max-[450px]:w-48 max-[450px]:px-0"
+            type="submit"
+            name="check"
+            aria-label="Legg til ønske"
+          >
+            <Plus size={22} />
+            <span className="max-[450px]:hidden">Legg til</span>
+          </Button>
+
+          <BorderButton
+            className="h-48 w-48 shrink-0 px-0"
+            type="button"
+            name="upload"
+            aria-label="Last opp bilder"
+            title="Last opp bilder"
+            onClick={() => navigate("/upload-wishes")}
+          >
+            <ImagePlus size={22} />
+          </BorderButton>
+        </StyledWrapper>
+        {feedback ? (
+          <p className="mt-8 text-[1.4rem] text-negative">{feedback}</p>
+        ) : (
+          <p className="mt-8 flex items-center gap-6 text-[1.3rem] opacity-70">
+            <Sparkles size={14} className="shrink-0" />
+            Lim inn en lenke, så henter vi navn, bilde og pris automatisk.
+          </p>
+        )}
+      </Panel>
+
+      {count === 0 ? (
+        <EmptyState title="Ønskelisten er tom">
+          Skriv inn et ønske eller lim inn en lenke over for å komme i gang.
+        </EmptyState>
+      ) : (
+        <ul className="flex list-none flex-col gap-8">
+          {sortedWishes?.map(wishToElement)}
+        </ul>
       )}
-      <div>{sortedWishes?.map(wishToElement) ?? []}</div>
-      <Spacer />
     </Container>
   );
 };

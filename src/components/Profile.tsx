@@ -1,34 +1,13 @@
 import { useState } from "react";
 import { useUser } from "../hooks/useUser";
 import { Container } from "./common/Container";
-import { StyledBigHeader, StyledSubHeader } from "./common/StyledHeading";
-import {
-  BorderButton,
-  borderButton,
-  DangerButton,
-} from "./common/Button";
+import { BorderButton, DangerButton } from "./common/Button";
 import { Checkbox } from "./common/Checkbox";
 import { LogOut, Settings, ShoppingCart, UserPlus } from "lucide-react";
-import { UnstyledLink } from "./common/Link";
 import firebase from "./firebase/firebase";
 import { useSettings } from "../hooks/useSettings";
 import { invalidate } from "../queryClient";
-
-function logOut(setFeedback: (n: string) => void, logout: () => void) {
-  firebase
-    .auth()
-    .signOut()
-    .then(
-      () => {
-        setFeedback("Du er nå logget ut");
-        logout();
-      },
-      (e) => {
-        console.log(e);
-        setFeedback("Noe gikk galt under utlogging.");
-      }
-    );
-}
+import { Avatar, Divided, LinkRow, Panel, Section } from "./common/Page";
 
 export const Profile = ({ uid }: { uid: string }) => {
   const { user } = useUser(uid);
@@ -37,117 +16,143 @@ export const Profile = ({ uid }: { uid: string }) => {
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [userDeleted, setUserDeleted] = useState(false);
 
-  function logout() {
-    console.log("Logged out");
-  }
-
-  async function toggleDarkMode(event: React.ChangeEvent<HTMLInputElement>) {
-    await firebase.firestore().collection("settings").doc(uid).update({
-      darkMode: event.target.checked,
-    });
-    invalidate(["settings", uid]);
-  }
-
-  async function toggleHideGifts(event: React.ChangeEvent<HTMLInputElement>) {
-    await firebase.firestore().collection("settings").doc(uid).update({
-      hideGifts: event.target.checked,
-    });
-    invalidate(["settings", uid]);
-  }
-
-  async function toggleFestivitasTheme(
-    event: React.ChangeEvent<HTMLInputElement>
+  async function updateSetting(
+    field: "darkMode" | "hideGifts" | "festivitasThemesEnabled",
+    value: boolean,
   ) {
-    await firebase.firestore().collection("settings").doc(uid).update({
-      festivitasThemesEnabled: event.target.checked,
-    });
+    await firebase
+      .firestore()
+      .collection("settings")
+      .doc(uid)
+      .update({ [field]: value });
     invalidate(["settings", uid]);
+  }
+
+  function logOut() {
+    firebase
+      .auth()
+      .signOut()
+      .catch((e) => {
+        console.log(e);
+        setFeedback("Noe gikk galt under utlogging.");
+      });
   }
 
   function handleDelete() {
     if (!deleteConfirm) {
       setDeleteConfirm(true);
     } else {
-      console.log("Deleting user");
       setUserDeleted(true);
     }
   }
 
   return (
-    <Container textLeft>
-      <StyledBigHeader className="mb-4">Profil for {user?.name}</StyledBigHeader>
-      <p className="opacity-75">{user?.email}</p>
+    <Container>
+      <header className="mb-32 flex items-center gap-16">
+        <Avatar name={user?.name} className="h-64 w-64 text-[2.2rem]" />
+        <div className="min-w-0">
+          <h1 className="text-[2.8rem] leading-[1.2] font-semibold wrap-break-word">
+            {user?.name}
+          </h1>
+          {user?.email && (
+            <p className="truncate text-[1.5rem] opacity-70">{user.email}</p>
+          )}
+        </div>
+      </header>
 
-      <div className="my-24 flex flex-wrap gap-10">
-        <UnstyledLink className={borderButton} to="/settings">
-          <Settings size={18} />
-          Innstillinger
-        </UnstyledLink>
-        <UnstyledLink className={borderButton} to="/addchild">
-          <UserPlus size={18} />
-          Legg til ekstra bruker
-        </UnstyledLink>
-        <UnstyledLink className={borderButton} to="/mypurchases">
-          <ShoppingCart size={18} />
-          Mine kjøp
-        </UnstyledLink>
-      </div>
+      <Section>
+        <Panel className="p-8 sm:p-8">
+          <Divided>
+            <LinkRow
+              to="/mypurchases"
+              icon={<ShoppingCart size={18} />}
+              label="Mine kjøp"
+              description="Gaver du har merket som kjøpt"
+            />
+            <LinkRow
+              to="/settings"
+              icon={<Settings size={18} />}
+              label="Innstillinger"
+              description="Grupper, ekstra brukere og konto"
+            />
+            <LinkRow
+              to="/addchild"
+              icon={<UserPlus size={18} />}
+              label="Legg til ekstra bruker"
+              description="For barn eller en felles ønskeliste"
+            />
+          </Divided>
+        </Panel>
+      </Section>
 
-      <StyledSubHeader>Visning</StyledSubHeader>
-      <div className="mt-12 mb-32 flex flex-col gap-16">
-        <Checkbox
-          label="Dark mode"
-          name="darkMode"
-          onChange={toggleDarkMode}
-          checked={settings?.darkMode ? true : false}
-        />
-        <Checkbox
-          label="Årstidsbasert tema"
-          name="festivitasTheme"
-          onChange={toggleFestivitasTheme}
-          checked={settings?.festivitasThemesEnabled ? true : false}
-        />
-        <Checkbox
-          label="Skjul avkryssede gaver"
-          name="hideGifts"
-          onChange={toggleHideGifts}
-          checked={settings?.hideGifts ? true : false}
-        />
-      </div>
+      <Section title="Visning">
+        <Panel>
+          <Divided className="[&>*]:py-12 [&>*:first-child]:pt-0 [&>*:last-child]:pb-0">
+            <Checkbox
+              label="Mørk modus"
+              name="darkMode"
+              onChange={(e) => updateSetting("darkMode", e.target.checked)}
+              checked={!!settings?.darkMode}
+            />
+            <Checkbox
+              label="Årstidsbasert tema"
+              description="F.eks. juletema i desember"
+              name="festivitasTheme"
+              onChange={(e) =>
+                updateSetting("festivitasThemesEnabled", e.target.checked)
+              }
+              checked={!!settings?.festivitasThemesEnabled}
+            />
+            <Checkbox
+              label="Skjul kjøpte gaver"
+              description="Gjelder ønskelistene til andre"
+              name="hideGifts"
+              onChange={(e) => updateSetting("hideGifts", e.target.checked)}
+              checked={!!settings?.hideGifts}
+            />
+          </Divided>
+        </Panel>
+      </Section>
 
-      <BorderButton
-        className="mb-32"
-        type="button"
-        onClick={() => logOut(setFeedback, logout)}
+      <Section>
+        <BorderButton type="button" onClick={logOut}>
+          <LogOut size={18} />
+          Logg ut
+        </BorderButton>
+        {feedback && <p className="mt-8 text-negative">{feedback}</p>}
+      </Section>
+
+      <Section
+        title="Slett bruker"
+        description="Dine data slettes i løpet av noen få virkedager."
       >
-        <LogOut size={18} />
-        Logg ut
-      </BorderButton>
-      {feedback && <p className="-mt-20 mb-32">{feedback}</p>}
-
-      <section className="rounded-[10px] border-2 border-solid border-negative p-16">
-        <StyledSubHeader>Sletting av brukerdata</StyledSubHeader>
-        <p className="mb-16">
-          Dersom du ønsker å slette dine brukerdata kan du trykke på knappen
-          under. Dine data vil bli slettet i løpet av få virkedager.
-        </p>
-        {deleteConfirm && !userDeleted && (
-          <p className="mb-16 font-semibold">
-            Er du sikker på at du vil slette brukerdata? Det er ingen vei
-            tilbake!
-          </p>
-        )}
-        {userDeleted ? (
-          <p>
-            Brukeren din vil bli slettet i løpet av få virkedager. Takk for at
-            du brukte gaveønske.no!
-          </p>
-        ) : (
-          <DangerButton onClick={handleDelete}>
-            {deleteConfirm ? "Ja, slett bruker" : "Slett bruker"}
-          </DangerButton>
-        )}
-      </section>
+        <Panel className="shadow-[inset_0_0_0_2px_var(--color-negative)]">
+          {userDeleted ? (
+            <p>
+              Brukeren din vil bli slettet i løpet av få virkedager. Takk for at
+              du brukte gaveønske.no!
+            </p>
+          ) : (
+            <div className="flex flex-wrap items-center justify-between gap-12">
+              <p className="min-w-0 flex-1">
+                {deleteConfirm
+                  ? "Er du helt sikker? Det er ingen vei tilbake."
+                  : "Be om at brukeren din og dataene dine slettes."}
+              </p>
+              <div className="flex gap-8">
+                {deleteConfirm && (
+                  <BorderButton onClick={() => setDeleteConfirm(false)}>
+                    Avbryt
+                  </BorderButton>
+                )}
+                <DangerButton onClick={handleDelete}>
+                  {deleteConfirm ? "Ja, slett bruker" : "Slett bruker"}
+                </DangerButton>
+              </div>
+            </div>
+          )}
+        </Panel>
+      </Section>
     </Container>
   );
 };

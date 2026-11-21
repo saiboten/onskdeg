@@ -1,8 +1,15 @@
 import { ComponentProps } from "react";
 import { cn } from "../../util/cn";
 
-export const TabContainer = (props: ComponentProps<"div">) => (
-  <div className="mb-20 flex flex-wrap justify-center gap-8" {...props} />
+export const TabContainer = ({
+  className,
+  ...props
+}: ComponentProps<"div">) => (
+  <div
+    role="tablist"
+    className={cn("mb-24 flex flex-wrap gap-8", className)}
+    {...props}
+  />
 );
 
 export const Tab = ({
@@ -11,10 +18,15 @@ export const Tab = ({
   ...props
 }: ComponentProps<"button"> & { $active: boolean }) => (
   <button
+    type="button"
+    role="tab"
+    aria-selected={$active}
     className={cn(
-      "min-h-40 cursor-pointer rounded-[8px] border-2 border-solid border-secondary px-16 py-6 font-sans text-[1.5rem] text-text transition-all duration-200 ease-[ease] hover:-translate-y-1 hover:shadow-[0_2px_8px_rgba(0,0,0,0.2)] active:translate-y-0",
-      $active ? "bg-secondary font-semibold" : "bg-transparent font-normal",
-      className
+      "min-h-36 cursor-pointer rounded-full border-2 border-solid px-16 py-4 font-sans text-[1.4rem] text-text transition-colors duration-200",
+      $active
+        ? "border-secondary bg-secondary font-semibold"
+        : "border-secondary-dark bg-transparent hover:border-secondary",
+      className,
     )}
     {...props}
   />

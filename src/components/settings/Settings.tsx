@@ -1,31 +1,34 @@
 import { useState } from "react";
 import { Container } from "../common/Container";
-
-import { BorderButton, borderButton } from "../common/Button";
-import { Link, UnstyledLink } from "../common/Link";
-import ListRow from "../common/ListRow";
-import { Plus } from "lucide-react";
+import { BorderButton, borderButton, DangerButton } from "../common/Button";
+import { UnstyledLink } from "../common/Link";
+import { Check, Copy, Plus, Settings as SettingsIcon } from "lucide-react";
 import { useKohort } from "../../hooks/useKohort";
 import { useUser } from "../../hooks/useUser";
-import { StyledBigHeader, StyledSubHeader } from "../common/StyledHeading";
 import firebase from "../firebase/firebase";
 import { invalidate } from "../../queryClient";
-import Loading from "../common/Loading";
+import Spinner from "../common/Spinner";
+import { cn } from "../../util/cn";
 import { StyledNotification } from "../common/StyledNotification";
+import {
+  Avatar,
+  Divided,
+  LinkRow,
+  PageHeader,
+  Panel,
+  Section,
+} from "../common/Page";
 
 const ChildSetting = ({ childUid }: { childUid: string }) => {
   const { user } = useUser(childUid);
 
   return (
-    <ListRow className="pr-16">
-      <span className="min-w-0 wrap-break-word">
-        {user?.name}{" "}
-        <span className="text-[1.3rem] opacity-60">({childUid})</span>
-      </span>
-      <Link className="shrink-0" to={`/settings/child/${user?.uid || ""}`}>
-        Administrer
-      </Link>
-    </ListRow>
+    <LinkRow
+      to={`/settings/child/${user?.uid || childUid}`}
+      icon={<Avatar name={user?.name} className="h-36 w-36 text-[1.3rem]" />}
+      label={user?.name ?? "Ukjent"}
+      description="Velg hvem som kan styre ønskelisten"
+    />
   );
 };
 
@@ -39,15 +42,16 @@ const GroupSetting = ({
   const { kohort } = useKohort(groupId);
   const { user } = useUser(myUid);
   const [loading, setLoading] = useState(false);
+  const [confirm, setConfirm] = useState(false);
   const [notification, setNotification] = useState("");
+  const isAdmin = kohort?.admin === myUid;
 
-  async function handleDeleteUser() {
+  async function handleLeaveGroup() {
     setLoading(true);
     const docRef = firebase.firestore().collection("groups").doc(groupId);
-
     const existingData = await docRef.get();
 
-    docRef.update({
+    await docRef.update({
       members: existingData.data()?.members.filter((m: string) => myUid !== m),
     });
 
@@ -62,32 +66,81 @@ const GroupSetting = ({
     invalidate(["groups", groupId]);
     invalidate(["user", myUid]);
     setLoading(false);
-    setNotification(`Du er fjernet fra gruppe ${kohort?.groupName}`);
-
-    setTimeout(() => {
-      setNotification("");
-    }, 2000);
+    setNotification(`Du har forlatt ${kohort?.groupName}`);
+    setTimeout(() => setNotification(""), 2500);
   }
 
   return (
-    <ListRow className="flex-wrap py-8">
-      <span className="min-w-0 font-semibold wrap-break-word">
-        {kohort?.groupName}
-      </span>
-      <div className="flex flex-wrap items-center gap-16">
-        {kohort?.admin === myUid && (
-          <Link to={`/settings/kohort/${kohort.id}`}>Administrer</Link>
-        )}
+    <div className="flex flex-wrap items-center gap-12 px-8 py-10">
+      <div className="min-w-0 flex-1">
+        <p className="font-semibold wrap-break-word">{kohort?.groupName}</p>
+        <p className="text-[1.3rem] opacity-70">
+          {kohort?.members.length ?? 0} medlemmer
+          {isAdmin && " · Du er administrator"}
+        </p>
+      </div>
+      <div className="flex flex-wrap items-center gap-8">
         {loading ? (
-          <Loading />
+          <Spinner />
+        ) : confirm ? (
+          <>
+            <span className="text-[1.4rem]">Forlate gruppen?</span>
+            <BorderButton
+              className="min-h-36 py-2"
+              onClick={() => setConfirm(false)}
+            >
+              Avbryt
+            </BorderButton>
+            <DangerButton className="min-h-36 py-2" onClick={handleLeaveGroup}>
+              Forlat
+            </DangerButton>
+          </>
         ) : (
-          <BorderButton className="min-h-36 py-2" onClick={handleDeleteUser}>
-            Forlat gruppen
-          </BorderButton>
+          <>
+            {isAdmin && (
+              <UnstyledLink
+                className={cn(borderButton, "min-h-36 py-2")}
+                to={`/settings/kohort/${kohort.id}`}
+              >
+                <SettingsIcon size={16} />
+                Administrer
+              </UnstyledLink>
+            )}
+            <BorderButton
+              className="min-h-36 border-transparent py-2 opacity-75 hover:opacity-100"
+              onClick={() => setConfirm(true)}
+            >
+              Forlat
+            </BorderButton>
+          </>
         )}
       </div>
       <StyledNotification active={notification !== ""} text={notification} />
-    </ListRow>
+    </div>
+  );
+};
+
+const CopyValue = ({ value }: { value: string }) => {
+  const [copied, setCopied] = useState(false);
+  return (
+    <span className="flex items-center gap-8">
+      <code className="min-w-0 truncate rounded-[6px] bg-primary-dark px-8 py-2 text-[1.4rem]">
+        {value}
+      </code>
+      <button
+        type="button"
+        aria-label="Kopier"
+        title="Kopier"
+        className="flex h-32 w-32 shrink-0 cursor-pointer items-center justify-center rounded-[8px] border-none bg-transparent text-text opacity-70 hover:opacity-100"
+        onClick={async () => {
+          await navigator.clipboard?.writeText(value);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 1500);
+        }}
+      >
+        {copied ? <Check size={16} /> : <Copy size={16} />}
+      </button>
+    </span>
   );
 };
 
@@ -101,55 +154,79 @@ export const Settings = ({ uid, firebaseUser }: Props) => {
   const showNoEmailDisclaimer = !firebaseUser?.email;
 
   return (
-    <Container textLeft>
-      <StyledBigHeader>Innstillinger</StyledBigHeader>
-      <div className="mb-24 flex flex-col gap-4">
-        <p>
-          Din bruker-id er: <span className="font-semibold">{uid}</span>
-        </p>
-        <p>
-          Din epost er:{" "}
-          <span className="font-semibold">
-            {firebaseUser?.email || "Ukjent"}
-          </span>
-        </p>
-      </div>
+    <Container>
+      <PageHeader
+        back={{ to: "/profile", label: "Profil" }}
+        title="Innstillinger"
+      />
 
-      {showNoEmailDisclaimer && (
-        <div className="mb-24 rounded-[10px] border-2 border-solid border-negative px-16 py-12">
-          Vi kunne ikke finne eposten din. Dette betyr at du ikke kan inviteres
-          til grupper. Send din id til administrator slik at vedkommende kan
-          legge deg inn manuelt. Din id er: {uid}.
-        </div>
-      )}
+      <Section
+        title="Grupper"
+        description="Gruppene du deler ønskelister med."
+        actions={
+          <UnstyledLink className={borderButton} to="/addgroup">
+            <Plus size={18} />
+            Ny gruppe
+          </UnstyledLink>
+        }
+      >
+        <Panel className="p-8 sm:p-8">
+          {user?.groups.length ? (
+            <Divided>
+              {user.groups.map((group) => (
+                <GroupSetting key={group} myUid={uid} group={group} />
+              ))}
+            </Divided>
+          ) : (
+            <p className="p-8 opacity-70">Du er ikke med i noen grupper.</p>
+          )}
+        </Panel>
+      </Section>
 
-      <div className="mb-8 flex flex-wrap items-center justify-between gap-12">
-        <StyledSubHeader className="mb-0">Grupper</StyledSubHeader>
-        <UnstyledLink className={borderButton} to="/addgroup">
-          <Plus size={18} />
-          Opprett ny gruppe
-        </UnstyledLink>
-      </div>
-      <div className="mt-12 mb-24">
-        {user?.groups.map((group) => (
-          <GroupSetting key={group} myUid={uid} group={group} />
-        ))}
-        {user?.groups.length === 0 && <p>Du er ikke med i noen grupper.</p>}
-      </div>
+      <Section
+        title="Ekstra brukere"
+        description="Ønskelister du styrer for andre, for eksempel barn."
+        actions={
+          <UnstyledLink className={borderButton} to="/addchild">
+            <Plus size={18} />
+            Legg til
+          </UnstyledLink>
+        }
+      >
+        <Panel className="p-8 sm:p-8">
+          {user?.childs?.length ? (
+            <Divided>
+              {user.childs.map((childUid) => (
+                <ChildSetting key={childUid} childUid={childUid} />
+              ))}
+            </Divided>
+          ) : (
+            <p className="p-8 opacity-70">Ingen ekstra brukere.</p>
+          )}
+        </Panel>
+      </Section>
 
-      <div className="mb-8 flex flex-wrap items-center justify-between gap-12">
-        <StyledSubHeader className="mb-0">Ekstra brukere</StyledSubHeader>
-        <UnstyledLink className={borderButton} to="/addchild">
-          <Plus size={18} />
-          Legg til ekstra bruker
-        </UnstyledLink>
-      </div>
-      <div className="mt-12">
-        {user?.childs?.map((childUid) => (
-          <ChildSetting key={childUid} childUid={childUid} />
-        ))}
-        {!user?.childs?.length && <p>Ingen ekstra brukere.</p>}
-      </div>
+      <Section title="Konto">
+        <Panel className="flex flex-col gap-12">
+          <div className="flex flex-wrap items-center justify-between gap-8">
+            <span className="opacity-70">E-post</span>
+            <span className="font-semibold">
+              {firebaseUser?.email || "Ukjent"}
+            </span>
+          </div>
+          <div className="flex flex-wrap items-center justify-between gap-8">
+            <span className="opacity-70">Bruker-ID</span>
+            <CopyValue value={uid} />
+          </div>
+          {showNoEmailDisclaimer && (
+            <p className="rounded-[10px] bg-primary-dark px-12 py-10 text-[1.4rem] shadow-[inset_0_0_0_2px_var(--color-negative)]">
+              Vi fant ikke e-posten din, så du kan ikke inviteres til grupper
+              med e-post. Send bruker-ID-en din til en gruppeadministrator, så
+              kan de legge deg til manuelt.
+            </p>
+          )}
+        </Panel>
+      </Section>
     </Container>
   );
 };

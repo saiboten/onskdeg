@@ -5,21 +5,22 @@ import { Wish } from "../../types/types";
 import Loading from "../common/Loading";
 import firebase from "../firebase/firebase";
 import { Detail } from "./Detail";
-import { StyledLabel } from "../common/Label";
 import { useWish } from "../../hooks/useWish";
 import { useParams } from "react-router-dom";
 import { useUser } from "../../hooks/useUser";
 import { invalidate } from "../../queryClient";
-import { ALink } from "../common/Link";
 import { format } from "date-fns";
-import { StyledBigHeader } from "../common/StyledHeading";
+import { nb } from "date-fns/locale";
+import { PageHeader, Panel } from "../common/Page";
+import { displayUrl, displayWishName, formatPrice } from "../../util/format";
+import { enrichWishFromLink } from "../../services/wishFromLink";
 import { useQuestions } from "../../hooks/useQuestions";
 import { ListMyQuestions } from "./ListMyQuestions";
 import { compressImage } from "../../util/imageCompression";
 import Spinner from "../common/Spinner";
 import { BorderButton, borderButton } from "../common/Button";
 import { generateWishDescription } from "../../services/ai";
-import { ImageUp, Sparkles } from "lucide-react";
+import { ExternalLink, ImageUp, Sparkles } from "lucide-react";
 
 interface Params {
   wishid: string | undefined;
@@ -32,6 +33,8 @@ export function YourWishDetails() {
   const [uploading, setUploading] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [analyzeError, setAnalyzeError] = useState("");
+  const [fetching, setFetching] = useState(false);
+  const [fetchMessage, setFetchMessage] = useState("");
 
   const { user } = useUser(uid ?? "");
 
@@ -76,7 +79,7 @@ export function YourWishDetails() {
         throw new Error(`Could not download image: ${response.status}`);
       }
       const { title, description } = await generateWishDescription(
-        await response.blob()
+        await response.blob(),
       );
       if (!title) {
         throw new Error("AI analysis returned no title");
@@ -121,24 +124,55 @@ export function YourWishDetails() {
   const storeData = async (
     field: string,
     newData: string | number,
-    toggle: (hm: boolean) => void
+    toggle: (hm: boolean) => void,
   ) => {
-    const storeThis = {
-      ...wish,
-      [field]: newData,
-    };
+    const value =
+      field === "price"
+        ? Number(
+            String(newData)
+              .replace(/[^\d.,]/g, "")
+              .replace(",", "."),
+          ) || 0
+        : typeof newData === "string"
+          ? newData.trim()
+          : newData;
 
-    await storeWishDetails(storeThis);
+    await storeWishDetails({ ...wish, [field]: value });
     toggle(false);
     invalidate(["wish", uid]);
   };
+
+  async function handleFetchFromLink() {
+    if (!wish?.link) return;
+    setFetching(true);
+    setFetchMessage("");
+    try {
+      const result = await enrichWishFromLink(
+        wish.id,
+        wish.link,
+        {},
+        wish.link,
+      );
+      await invalidate(["wish", uid]);
+      setFetchMessage(
+        result === "changed"
+          ? "Fylte inn info fra lenken."
+          : result === "unchanged"
+            ? "Fant ingen ny info om dette produktet."
+            : "Klarte ikke å hente info akkurat nå. Prøv igjen senere.",
+      );
+    } finally {
+      setFetching(false);
+    }
+  }
 
   const uploadButton = (
     <label
       htmlFor="file-upload"
       className={cn(
         borderButton,
-        uploading && "pointer-events-none cursor-not-allowed opacity-60"
+        "flex-1",
+        uploading && "pointer-events-none cursor-not-allowed opacity-60",
       )}
     >
       <ImageUp size={18} />
@@ -146,98 +180,154 @@ export function YourWishDetails() {
     </label>
   );
 
-  return (
-    <Container textLeft>
-      <Detail fieldName="name" storeData={storeData} initialValue={name}>
-        <StyledBigHeader className="mb-0">{name}</StyledBigHeader>
-      </Detail>
+  const me = firebase.auth().currentUser?.uid;
+  const back = wish.isSuggestion
+    ? { to: `/other/${uid}`, label: `Ønskelisten til ${user?.name ?? ""}` }
+    : uid === me
+      ? { to: "/", label: "Mine ønsker" }
+      : { to: `/?tab=${uid}`, label: `Ønskene til ${user?.name ?? ""}` };
 
-      <input
-        className="hidden"
-        type="file"
-        id="file-upload"
-        onChange={handleChange}
-        accept="image/*"
-        disabled={uploading}
+  const subtitle = [
+    date && `Lagt inn ${format(date.toDate(), "d. MMMM yyyy", { locale: nb })}`,
+    wish.isSuggestion &&
+      suggestedByUser?.name &&
+      `Foreslått av ${suggestedByUser.name}`,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+
+  return (
+    <Container wide>
+      <PageHeader
+        className="mb-20"
+        back={back}
+        title={
+          <Detail
+            fieldName="name"
+            storeData={storeData}
+            initialValue={name}
+            placeholder="Gi ønsket et navn"
+          >
+            {displayWishName(name)}
+          </Detail>
+        }
+        subtitle={subtitle || undefined}
       />
 
-      <div className="my-20 flex flex-col items-center gap-12">
-        {uploading ? (
-          <div className="flex min-h-200 items-center justify-center gap-8 text-[1.4rem]">
-            <Spinner />
-            <span>Laster opp bilde...</span>
+      <div className="grid gap-24 md:grid-cols-[300px_1fr]">
+        <div className="flex flex-col gap-12">
+          <input
+            className="hidden"
+            type="file"
+            id="file-upload"
+            onChange={handleChange}
+            accept="image/*"
+            disabled={uploading}
+          />
+          <div className="flex aspect-square w-full items-center justify-center overflow-hidden rounded-[14px] bg-primary">
+            {uploading ? (
+              <div className="flex items-center gap-8 text-[1.4rem]">
+                <Spinner />
+                <span>Laster opp bilde …</span>
+              </div>
+            ) : wish.image ? (
+              <img
+                className="h-full w-full bg-white object-contain"
+                src={wish.image}
+                alt={name}
+              />
+            ) : (
+              <label
+                htmlFor="file-upload"
+                className="flex h-full w-full cursor-pointer flex-col items-center justify-center gap-8 text-[1.4rem] opacity-60 transition-opacity hover:opacity-100"
+              >
+                <ImageUp size={36} />
+                Legg til bilde
+              </label>
+            )}
           </div>
-        ) : (
-          wish.image && (
-            <img
-              className="w-full max-w-400 rounded-[10px]"
-              src={wish.image}
-              alt={name}
-            />
-          )
-        )}
-        <div className="flex flex-wrap justify-center gap-10">
-          {wish.image && !uploading && (
-            <BorderButton onClick={handleAnalyze} disabled={analyzing}>
-              {analyzing ? <Spinner /> : <Sparkles size={18} />}
-              {analyzing ? "Analyserer..." : "Analyser med AI"}
-            </BorderButton>
+          <div className="flex flex-wrap gap-8">
+            {uploadButton}
+            {wish.image && !uploading && (
+              <BorderButton
+                className="flex-1"
+                onClick={handleAnalyze}
+                disabled={analyzing}
+              >
+                {analyzing ? <Spinner /> : <Sparkles size={18} />}
+                {analyzing ? "Analyserer …" : "Beskriv med AI"}
+              </BorderButton>
+            )}
+          </div>
+          {analyzeError && (
+            <p className="text-[1.4rem] text-negative">{analyzeError}</p>
           )}
-          {uploadButton}
         </div>
-        {analyzeError && (
-          <p className="text-[1.4rem] text-negative">{analyzeError}</p>
-        )}
-      </div>
 
-      {wish.isSuggestion && (
-        <p className="mb-16">Foreslått av: {suggestedByUser?.name}</p>
-      )}
+        <div className="flex min-w-0 flex-col gap-24">
+          <Panel className="flex flex-col gap-20">
+            <Detail
+              label="Pris"
+              fieldName="price"
+              type="number"
+              storeData={storeData}
+              initialValue={price || ""}
+              placeholder="Legg til pris"
+            >
+              <span className="text-[2rem] font-semibold">
+                {formatPrice(price)}
+              </span>
+            </Detail>
+            <Detail
+              label="Lenke"
+              fieldName="link"
+              type="url"
+              storeData={storeData}
+              initialValue={link}
+              placeholder="Lim inn lenke til nettbutikk"
+            >
+              <a
+                className="inline-flex items-center gap-6 font-semibold text-text no-underline [border-bottom:2px_solid_var(--color-secondary)] hover:opacity-75"
+                target="_blank"
+                rel="noreferrer"
+                href={link}
+              >
+                {displayUrl(link)}
+                <ExternalLink size={16} />
+              </a>
+            </Detail>
+            <Detail
+              label="Beskrivelse"
+              fieldName="description"
+              multiline
+              storeData={storeData}
+              initialValue={wishDescription}
+              placeholder="Legg til beskrivelse, størrelse, farge …"
+            >
+              <p className="whitespace-pre-line">{wishDescription}</p>
+            </Detail>
+            {link && (
+              <div className="flex flex-wrap items-center gap-12 [border-top:1px_solid_var(--color-secondary-dark)] pt-16">
+                <BorderButton onClick={handleFetchFromLink} disabled={fetching}>
+                  {fetching ? <Spinner /> : <Sparkles size={18} />}
+                  {fetching ? "Henter info …" : "Hent info fra lenken"}
+                </BorderButton>
+                {fetchMessage && (
+                  <span className="text-[1.4rem] opacity-75">
+                    {fetchMessage}
+                  </span>
+                )}
+              </div>
+            )}
+          </Panel>
 
-      {!wish.isSuggestion && (
-        <ListMyQuestions
-          wishId={wishid ?? ""}
-          myUid={uid ?? ""}
-          questions={questions}
-        />
-      )}
-
-      <div className="flex flex-col gap-16">
-        {date && (
-          <div>
-            <StyledLabel>Lagt inn</StyledLabel>
-            <p className="flex min-h-40 items-center">
-              {format(wish.date?.toDate() || new Date(), "dd.MM.yyyy")}
-            </p>
-          </div>
-        )}
-        <div>
-          <StyledLabel>Beskrivelse</StyledLabel>
-          <Detail
-            fieldName="description"
-            storeData={storeData}
-            initialValue={wishDescription}
-          >
-            <p>{wishDescription}</p>
-          </Detail>
-        </div>
-        <div>
-          <StyledLabel>Link</StyledLabel>
-          <Detail fieldName="link" storeData={storeData} initialValue={link}>
-            <ALink target="_blank" href={link}>
-              {link}
-            </ALink>
-          </Detail>
-        </div>
-        <div>
-          <StyledLabel>Pris</StyledLabel>
-          <Detail
-            fieldName="price"
-            storeData={storeData}
-            initialValue={price || 0}
-          >
-            <p>Kr {price},-</p>
-          </Detail>
+          {!wish.isSuggestion && (
+            <ListMyQuestions
+              wishId={wishid ?? ""}
+              myUid={uid ?? ""}
+              questions={questions}
+            />
+          )}
         </div>
       </div>
     </Container>

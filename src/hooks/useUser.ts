@@ -34,11 +34,13 @@ async function fetchUser(userId: string): Promise<User> {
   return newUser;
 }
 
+export const userQuery = (user: string) => ({
+  queryKey: ["user", user],
+  queryFn: () => fetchUser(user),
+});
+
 export function useUser(user: string) {
-  const { data, error } = useSuspenseQuery({
-    queryKey: ["user", user],
-    queryFn: () => fetchUser(user),
-  });
+  const { data, error } = useSuspenseQuery(userQuery(user));
   return {
     user: data,
     isLoading: false,

@@ -1,47 +1,52 @@
-import { format } from "date-fns";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { formatDistanceToNow } from "date-fns";
+import { nb } from "date-fns/locale";
+import { Link as RouterLink, useSearchParams } from "react-router-dom";
+import { useSuspenseQueries } from "@tanstack/react-query";
+import { ChevronRight, Plus, Settings, Users } from "lucide-react";
 import { Container } from "../common/Container";
 import { NewsEntryType } from "../../types/types";
-import { useUser } from "../../hooks/useUser";
+import { userQuery, useUser } from "../../hooks/useUser";
 import { useKohort } from "../../hooks/useKohort";
-import { Link } from "../common/Link";
-import { StyledBigHeader, StyledSubHeader } from "../common/StyledHeading";
-import { Spacer } from "../common/Spacer";
-import { Button } from "../common/Button";
+import { UnstyledLink } from "../common/Link";
+import { borderButton, filledButton } from "../common/Button";
 import { TabContainer, Tab } from "../common/Tabs";
+import { Avatar, EmptyState, PageHeader, Panel, Section } from "../common/Page";
+import { displayUrl, isUrl } from "../../util/format";
 
-export const GroupUser = ({ uid }: { uid: string }) => {
-  const { user } = useUser(uid);
-  const navigate = useNavigate();
+const MemberGrid = ({ members, uid }: { members: string[]; uid: string }) => {
+  const results = useSuspenseQueries({
+    queries: members.filter((m) => m !== uid).map(userQuery),
+  });
+  const users = results
+    .map((r) => r.data)
+    .filter((u) => u.uid)
+    .sort((a, b) => (a.name ?? "").localeCompare(b.name ?? "", "nb"));
 
-  return (
-    <Button
-      className="h-44 px-20 text-[1.5rem]"
-      onClick={() => navigate(`/other/${user?.uid}`)}
-    >
-      {user?.name}
-    </Button>
-  );
-};
-
-const SortedGroupUsers = ({
-  members,
-  uid,
-}: {
-  members: string[];
-  uid: string;
-}) => {
-  // Filter out current user and sort by UID for consistent rendering
-  const filteredMembers = members.filter((member) => member !== uid).sort();
+  if (!users.length) {
+    return (
+      <p className="opacity-70">
+        Ingen andre i gruppen ennå. Inviter noen fra innstillingene.
+      </p>
+    );
+  }
 
   return (
-    <>
-      {filteredMembers.map((memberId) => (
-        <li key={memberId}>
-          <GroupUser uid={memberId} />
+    <ul className="grid list-none grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
+      {users.map((user) => (
+        <li key={user.uid}>
+          <RouterLink
+            to={`/other/${user.uid}`}
+            className="flex items-center gap-12 rounded-[12px] bg-primary p-10 pr-12 text-text no-underline transition-colors hover:bg-secondary-dark"
+          >
+            <Avatar name={user.name} />
+            <span className="min-w-0 flex-1 truncate font-semibold">
+              {user.name ?? "Ukjent"}
+            </span>
+            <ChevronRight size={18} className="shrink-0 opacity-50" />
+          </RouterLink>
         </li>
       ))}
-    </>
+    </ul>
   );
 };
 
@@ -56,27 +61,30 @@ const NewsFeedEntry = ({
   const { user: suggestedByUser } = useUser(suggestedBy || "");
 
   return (
-    <li className="flex gap-12 wrap-break-word hyphens-auto">
-      <span className="shrink-0 text-[1.4rem] leading-[2.7rem] opacity-75">
-        {format(date.toDate(), "dd.MM 'kl' HH:mm")}
-      </span>
-      <span>
-        {isSuggestion
-          ? `${suggestedByUser?.name} foreslo et ønske for ${user?.name}`
-          : `${user?.name} ønsker seg ${wish}`}
-      </span>
+    <li className="flex items-start gap-12 py-10 [&+&]:[border-top:1px_solid_var(--color-secondary-dark)]">
+      <Avatar
+        name={isSuggestion ? suggestedByUser?.name : user?.name}
+        className="h-32 w-32 text-[1.2rem]"
+      />
+      <div className="min-w-0 flex-1 wrap-break-word">
+        <p>
+          {isSuggestion ? (
+            <>
+              <strong>{suggestedByUser?.name}</strong> foreslo et ønske for{" "}
+              <strong>{user?.name}</strong>
+            </>
+          ) : (
+            <>
+              <strong>{user?.name}</strong> ønsker seg{" "}
+              {isUrl(wish) ? `noe fra ${displayUrl(wish!)}` : wish}
+            </>
+          )}
+        </p>
+        <p className="text-[1.3rem] opacity-60">
+          {formatDistanceToNow(date.toDate(), { addSuffix: true, locale: nb })}
+        </p>
+      </div>
     </li>
-  );
-};
-
-const LatestNews = ({ newsFeed }: { newsFeed: NewsEntryType[] }) => {
-  return (
-    <ul className="flex list-none flex-col gap-4">
-      {newsFeed?.length === 0 && <li>Intet nytt under solen ...</li>}
-      {newsFeed.map((props) => (
-        <NewsFeedEntry key={`${props.date}-${props.wish || ""}`} {...props} />
-      ))}
-    </ul>
   );
 };
 
@@ -88,22 +96,49 @@ export const GroupUsers = ({
   groupId: string;
 }) => {
   const { kohort } = useKohort(groupId);
+  const memberCount = kohort.members.length;
+  const newsFeed = kohort.newsFeed ?? [];
 
   return (
-    <div>
-      <StyledBigHeader className="mb-24">
-        Gruppe: <strong>{kohort?.groupName}</strong>
-      </StyledBigHeader>
-      <StyledSubHeader>Brukere</StyledSubHeader>
-      <ul className="flex list-none flex-wrap gap-10">
-        {kohort?.members && (
-          <SortedGroupUsers members={kohort.members} uid={uid} />
-        )}
-      </ul>
-      <Spacer />
-      <StyledSubHeader>Siste nytt!</StyledSubHeader>
-      <LatestNews newsFeed={kohort?.newsFeed ?? []}></LatestNews>
-    </div>
+    <>
+      <PageHeader
+        title={kohort.groupName}
+        subtitle={`${memberCount} ${memberCount === 1 ? "medlem" : "medlemmer"}`}
+        actions={
+          kohort.admin === uid && (
+            <UnstyledLink
+              className={borderButton}
+              to={`/settings/kohort/${groupId}`}
+            >
+              <Settings size={18} />
+              Administrer
+            </UnstyledLink>
+          )
+        }
+      />
+      <Section
+        title="Ønskelister"
+        description="Velg hvem du vil se ønskene til."
+      >
+        <MemberGrid members={kohort.members} uid={uid} />
+      </Section>
+      <Section title="Siste nytt">
+        <Panel className="py-6 sm:py-8">
+          {newsFeed.length === 0 ? (
+            <p className="py-10 opacity-70">Ingenting nytt ennå.</p>
+          ) : (
+            <ul className="list-none">
+              {newsFeed.map((props) => (
+                <NewsFeedEntry
+                  key={`${props.date?.seconds}-${props.wish || ""}`}
+                  {...props}
+                />
+              ))}
+            </ul>
+          )}
+        </Panel>
+      </Section>
+    </>
   );
 };
 
@@ -138,17 +173,30 @@ export const SelectWishList = function ({ uid }: Props) {
     setSearchParams({ group: groupId });
   };
 
-  return (
-    <Container textLeft>
-      {user?.groups.length === 0 && (
-        <p>
-          Du er ikke med i noen grupper enda. Enten må du få en invitasjon fra
-          administrator i en annen gruppe, eller{" "}
-          <Link to="/addgroup">opprett en gruppe her</Link>
-        </p>
-      )}
+  if (!user?.groups.length) {
+    return (
+      <Container>
+        <PageHeader title="Grupper" />
+        <EmptyState
+          icon={<Users size={32} />}
+          title="Du er ikke med i noen grupper ennå"
+        >
+          <p className="mb-16">
+            Få en invitasjon fra noen i en gruppe, eller opprett din egen og
+            inviter familie og venner.
+          </p>
+          <UnstyledLink className={filledButton} to="/addgroup">
+            <Plus size={18} />
+            Opprett gruppe
+          </UnstyledLink>
+        </EmptyState>
+      </Container>
+    );
+  }
 
-      {user?.groups && user.groups.length > 1 && (
+  return (
+    <Container>
+      {user.groups.length > 1 && (
         <TabContainer>
           {user.groups.map((groupId) => (
             <GroupTab

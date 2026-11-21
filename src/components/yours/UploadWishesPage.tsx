@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { Container } from "../common/Container";
-import { StyledBigHeader } from "../common/StyledHeading";
+import { PageHeader, Panel } from "../common/Page";
+import Spinner from "../common/Spinner";
+import { Link } from "../common/Link";
+import { CheckCircle2, ImagePlus, Upload } from "lucide-react";
 import { useChilds } from "../../hooks/useChilds";
 import { useUser } from "../../hooks/useUser";
 import firebase from "../firebase/firebase";
@@ -145,7 +148,7 @@ export const UploadWishesPage = ({ uid }: Props) => {
       setFiles(null);
       // Reset file input
       const fileInput = document.getElementById(
-        "file-input"
+        "file-input",
       ) as HTMLInputElement;
       if (fileInput) fileInput.value = "";
     } catch (err) {
@@ -156,64 +159,100 @@ export const UploadWishesPage = ({ uid }: Props) => {
     }
   };
 
+  const fileCount = files?.length ?? 0;
+
   return (
     <Container>
-      <StyledBigHeader>Last opp ønsker</StyledBigHeader>
+      <PageHeader
+        back={{ to: "/", label: "Mine ønsker" }}
+        title="Last opp bilder"
+        subtitle="Ta bilde av ting du ønsker deg. AI gir hvert bilde et navn og en beskrivelse, og de blir lagt til som ønsker."
+      />
 
-      <form
-        className="mx-auto flex max-w-600 flex-col gap-20 text-left"
-        onSubmit={handleSubmit}
-      >
-        <div>
-          <StyledLabel htmlFor="user-select">Last opp til</StyledLabel>
-          <select
-            className={cn(inputStyle, "w-full cursor-pointer")}
-            id="user-select"
-            value={selectedUser}
-            onChange={(e) => setSelectedUser(e.target.value)}
-            disabled={uploading}
+      <form className="flex flex-col gap-16" onSubmit={handleSubmit}>
+        <Panel className="flex flex-col gap-20">
+          {(childs?.length ?? 0) > 0 && (
+            <div>
+              <StyledLabel htmlFor="user-select">Legg til hos</StyledLabel>
+              <select
+                className={cn(inputStyle, "w-full cursor-pointer")}
+                id="user-select"
+                value={selectedUser}
+                onChange={(e) => setSelectedUser(e.target.value)}
+                disabled={uploading}
+              >
+                <option value={uid}>{user?.name || "Meg selv"}</option>
+                {childs?.map((child) => (
+                  <option key={child.uid} value={child.uid}>
+                    {child.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          <label
+            htmlFor="file-input"
+            className={cn(
+              "flex cursor-pointer flex-col items-center justify-center gap-8 rounded-[14px] border-2 border-dashed border-secondary px-16 py-32 text-center transition-colors hover:bg-secondary-dark",
+              uploading && "pointer-events-none opacity-60",
+            )}
           >
-            <option value={uid}>{user?.name || "Meg selv"}</option>
-            {childs?.map((child) => (
-              <option key={child.uid} value={child.uid}>
-                {child.name}
-              </option>
-            ))}
-          </select>
-        </div>
+            <ImagePlus size={36} className="text-secondary" />
+            <span className="font-semibold">
+              {fileCount > 0
+                ? `${fileCount} ${fileCount === 1 ? "bilde" : "bilder"} valgt`
+                : "Velg bilder"}
+            </span>
+            <span className="text-[1.3rem] opacity-70">
+              {fileCount > 0
+                ? "Trykk for å velge på nytt"
+                : "Du kan velge flere på en gang"}
+            </span>
+            <input
+              className="sr-only"
+              id="file-input"
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleFileChange}
+              disabled={uploading}
+            />
+          </label>
+        </Panel>
 
-        <div>
-          <StyledLabel htmlFor="file-input">Velg bilder</StyledLabel>
-          <input
-            className="w-full rounded-[10px] border-2 border-dashed border-secondary p-12 text-[1.4rem] file:mr-12 file:cursor-pointer file:rounded-[8px] file:border-0 file:bg-secondary file:px-14 file:py-8 file:font-sans file:font-semibold file:text-text"
-            id="file-input"
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handleFileChange}
-            disabled={uploading}
-          />
-        </div>
-
-        <Button className="h-48" type="submit" disabled={uploading || !files}>
-          {uploading ? "Laster opp..." : "Last opp bilder"}
+        <Button
+          className="h-48"
+          type="submit"
+          disabled={uploading || fileCount === 0}
+        >
+          {uploading ? <Spinner /> : <Upload size={18} />}
+          {uploading
+            ? "Laster opp …"
+            : fileCount > 1
+              ? `Last opp ${fileCount} bilder`
+              : "Last opp"}
         </Button>
 
-        {error && (
-          <div className="mt-10 text-[1.4rem] text-negative">{error}</div>
-        )}
+        {error && <p className="text-[1.4rem] text-negative">{error}</p>}
         {success && (
-          <div className="mt-10 text-[1.4rem] text-secondary">{success}</div>
+          <p className="flex items-center gap-8 font-semibold">
+            <CheckCircle2 size={18} className="text-secondary" />
+            {success}{" "}
+            <Link to={selectedUser === uid ? "/" : `/?tab=${selectedUser}`}>
+              Se ønskelisten
+            </Link>
+          </p>
         )}
 
         {progress.length > 0 && (
-          <div className="mt-20">
+          <Panel className="flex flex-col gap-4 text-[1.4rem]">
             {progress.map((msg, idx) => (
-              <div className="p-5 text-[1.4rem]" key={idx}>
+              <div key={idx} className="opacity-80">
                 {msg}
               </div>
             ))}
-          </div>
+          </Panel>
         )}
       </form>
     </Container>

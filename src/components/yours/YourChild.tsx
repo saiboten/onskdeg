@@ -40,7 +40,7 @@ export const YourChild = ({ child, myUid }: Props) => {
 
     queryClient.setQueryData(
       ["wish", child?.uid],
-      [{ name: newWish }, ...(wishes || [])]
+      [{ name: newWish }, ...(wishes || [])],
     );
     setNewWish("");
 
@@ -71,7 +71,7 @@ export const YourChild = ({ child, myUid }: Props) => {
     if (link) {
       const owner = child.uid;
       enrichWishFromLink(newWishRef.id, link, data, input).then((changed) => {
-        if (changed) invalidate(["wish", owner]);
+        if (changed === "changed") invalidate(["wish", owner]);
       });
     }
 

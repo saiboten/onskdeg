@@ -26,12 +26,10 @@ import ScrollToTop from "./components/ScrollToTop";
 import { MyPurchases } from "./components/MyPurchases";
 import { FixWishes } from "./components/FixWishes";
 import { Profile } from "./components/Profile";
-import { NavLink } from "react-router-dom";
-import { User as UserIcon } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { settingsQuery } from "./hooks/useSettings";
 import { LoginWrapper } from "./components/login/LoginWrapper";
-import { Link } from "./components/common/Link";
+import { UnstyledLink } from "./components/common/Link";
 
 const App = () => {
   const [uid, setUid] = useState<string | undefined>();
@@ -73,7 +71,11 @@ const App = () => {
   }
 
   if (isError) {
-    return <div>Noe har gått galt.</div>;
+    return (
+      <div className="flex min-h-screen items-center justify-center p-24 text-[1.6rem] text-text">
+        Noe har gått galt. Prøv å laste siden på nytt.
+      </div>
+    );
   }
 
   if (!uid) {
@@ -107,14 +109,8 @@ const App = () => {
     <HashRouter>
       <ScrollToTop />
       <Suspense fallback={<GlobalLoading />}>
-        <div className="mx-auto flex max-w-1030 items-center justify-end gap-12 px-16 pt-24 pb-16 text-[1.6rem] text-contrast sm:px-30 sm:pt-36">
-          <span>gaveønske.no</span>
-          <NavLink to="/profile" aria-label="Profil">
-            <UserIcon className="h-32 w-32 text-contrast" />
-          </NavLink>
-        </div>
-        <div className="mx-auto mb-40 max-w-1030 rounded-[25px] bg-primary-dark pb-24 shadow-[0px_4px_4px_rgba(0,0,0,0.25),0px_4px_4px_rgba(0,0,0,0.25)] max-[1062px]:mx-16 max-[450px]:mx-8 max-[450px]:rounded-[18px]">
-          <HeaderComponent uid={uid} />
+        <HeaderComponent uid={uid} />
+        <main className="mx-auto max-w-1030 rounded-[24px] bg-primary-dark py-32 shadow-[0_8px_30px_rgba(0,0,0,0.25)] max-[1062px]:mx-16 max-[450px]:mx-8 max-[450px]:rounded-[18px] max-[450px]:py-24">
           <Routes>
             <Route
               path="/wish/:uid/:wishid"
@@ -165,11 +161,18 @@ const App = () => {
               element={<YourWishList firebaseUser={firebaseUser} uid={uid} />}
             ></Route>
           </Routes>
-          <footer className="mt-24 flex justify-center gap-24 text-[1.3rem]">
-            <Link to="/privacypolicy">Privacy Policy</Link>
-            <Link to="/tos">Terms of Service</Link>
-          </footer>
-        </div>
+        </main>
+        <footer className="flex justify-center gap-24 px-16 pt-20 pb-32 text-[1.3rem]">
+          <UnstyledLink
+            className="opacity-60 hover:opacity-100"
+            to="/privacypolicy"
+          >
+            Personvern
+          </UnstyledLink>
+          <UnstyledLink className="opacity-60 hover:opacity-100" to="/tos">
+            Vilkår
+          </UnstyledLink>
+        </footer>
       </Suspense>
     </HashRouter>
   );

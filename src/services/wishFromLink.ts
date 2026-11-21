@@ -2,6 +2,8 @@ import firebase from "../components/firebase/firebase";
 import { extractUrl, getOgData, OgResponseData } from "../util/getOgData";
 import { generateWishFromLink } from "./ai";
 
+export type EnrichResult = "changed" | "unchanged" | "failed";
+
 export type LinkPrefill = {
   /** The URL found in the input, if any. */
   link?: string;
@@ -19,19 +21,19 @@ export async function prefillFromInput(input: string): Promise<LinkPrefill> {
  * Runs in the background after a link wish is saved: asks Gemini for the
  * details the meta tags didn't give us (often price, sometimes everything)
  * and fills only fields that are still empty, so it never overwrites what
- * the user edited in the meantime. Resolves to true if the wish changed.
+ * the user edited in the meantime.
  */
 export async function enrichWishFromLink(
   wishId: string,
   link: string,
   og: OgResponseData,
   input: string,
-): Promise<boolean> {
+): Promise<EnrichResult> {
   try {
     const ai = await generateWishFromLink(link, og);
     const ref = firebase.firestore().collection("wish").doc(wishId);
     const current = (await ref.get()).data();
-    if (!current) return false;
+    if (!current) return "unchanged";
 
     const update: Record<string, unknown> = {};
     const nameIsPlaceholder =
@@ -42,11 +44,11 @@ export async function enrichWishFromLink(
     if (ai.image && !current.image) update.image = ai.image;
     if (ai.price && !current.price) update.price = ai.price;
 
-    if (Object.keys(update).length === 0) return false;
+    if (Object.keys(update).length === 0) return "unchanged";
     await ref.update(update);
-    return true;
+    return "changed";
   } catch (e) {
     console.warn("AI lookup for link failed", link, e);
-    return false;
+    return "failed";
   }
 }
