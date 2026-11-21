@@ -27,7 +27,7 @@ const getModel = () => {
     getAI(getApp(), {
       backend: new AgentPlatformBackend(),
       useLimitedUseAppCheckTokens: true,
-    })
+    }),
   );
   return model;
 };
@@ -54,4 +54,69 @@ export async function generateWishDescription(image: Blob): Promise<{
   });
   const { title, description } = JSON.parse(result.response.text());
   return { title: title?.trim() ?? "", description: description?.trim() ?? "" };
+}
+
+/**
+ * Server prompt template that looks up a product from a link (URL context +
+ * Google Search). See README for its definition.
+ */
+const LINK_TEMPLATE_ID = "wish-from-link";
+
+export type LinkDetails = {
+  title?: string;
+  description?: string;
+  price?: number;
+  image?: string;
+};
+
+/** Pulls the first JSON object out of a model reply (tolerates ``` fences). */
+const parseJsonObject = (text: string): Record<string, unknown> => {
+  const start = text.indexOf("{");
+  const end = text.lastIndexOf("}");
+  if (start === -1 || end <= start) return {};
+  try {
+    return JSON.parse(text.slice(start, end + 1));
+  } catch {
+    return {};
+  }
+};
+
+const str = (v: unknown) =>
+  typeof v === "string" && v.trim() ? v.trim() : undefined;
+
+const num = (v: unknown) => {
+  const n =
+    typeof v === "number"
+      ? v
+      : typeof v === "string"
+        ? Number(v.replace(/[^\d.,]/g, "").replace(",", "."))
+        : NaN;
+  return Number.isFinite(n) && n > 0 ? Math.round(n) : undefined;
+};
+
+/**
+ * Asks Gemini to read the page (or search for it) and fill in product
+ * details. `known` is what we already have from meta tags, so the model can
+ * focus on the gaps.
+ */
+export async function generateWishFromLink(
+  url: string,
+  known: LinkDetails = {},
+): Promise<LinkDetails> {
+  const result = await getModel().generateContent({
+    templateId: LINK_TEMPLATE_ID,
+    templateVariables: {
+      url,
+      knownTitle: known.title ?? "",
+      knownDescription: known.description ?? "",
+    },
+  });
+  const data = parseJsonObject(result.response.text());
+  const image = str(data.image);
+  return {
+    title: str(data.title),
+    description: str(data.description),
+    price: num(data.price),
+    image: image && /^https:\/\//i.test(image) ? image : undefined,
+  };
 }

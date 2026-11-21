@@ -8,7 +8,10 @@ import { useWishes } from "../../hooks/useWishes";
 import { invalidate, queryClient } from "../../queryClient";
 import Loading from "../common/Loading";
 import { useUser } from "../../hooks/useUser";
-import { getOgData, OgResponseData } from "../../util/getOgData";
+import {
+  enrichWishFromLink,
+  prefillFromInput,
+} from "../../services/wishFromLink";
 import { Button } from "../common/Button";
 import { StyledSubHeader } from "../common/StyledHeading";
 import { Check } from "lucide-react";
@@ -41,13 +44,8 @@ export const YourChild = ({ child, myUid }: Props) => {
     );
     setNewWish("");
 
-    let data: OgResponseData | undefined = undefined;
-    let link: string | undefined = undefined;
-
-    if (newWish.startsWith("https")) {
-      data = await getOgData(newWish);
-      link = newWish;
-    }
+    const input = newWish;
+    const { link, og: data } = await prefillFromInput(input);
 
     const emptyWish: WishType = {
       owner: child.uid,
@@ -69,6 +67,13 @@ export const YourChild = ({ child, myUid }: Props) => {
     await newWishRef.update({
       id: newWishRef.id,
     });
+
+    if (link) {
+      const owner = child.uid;
+      enrichWishFromLink(newWishRef.id, link, data, input).then((changed) => {
+        if (changed) invalidate(["wish", owner]);
+      });
+    }
 
     user?.groups.forEach(async (group) => {
       const groupRef = firebase.firestore().collection("groups").doc(group);

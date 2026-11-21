@@ -15,8 +15,10 @@ import { useChilds } from "../../hooks/useChilds";
 import Loading from "../common/Loading";
 import { SelectName } from "../SelectName";
 import { StyledBigHeader } from "../common/StyledHeading";
-import { getOgData, OgResponseData } from "../../util/getOgData";
-import { redirect } from "react-router-dom";
+import {
+  enrichWishFromLink,
+  prefillFromInput,
+} from "../../services/wishFromLink";
 import { Notifications } from "./Notifications";
 import { Check, Upload } from "lucide-react";
 import { BorderButton, Button } from "../common/Button";
@@ -76,13 +78,8 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
     );
     setNewWish("");
 
-    let data: OgResponseData | undefined = undefined;
-    let link: string | undefined;
-
-    if (newWish.startsWith("https")) {
-      data = await getOgData(newWish);
-      link = newWish;
-    }
+    const input = newWish;
+    const { link, og: data } = await prefillFromInput(input);
 
     const newWishObject: WishType = {
       owner: activeTab,
@@ -101,11 +98,18 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
       .collection("wish")
       .add(newWishObject);
 
-    newWishRef.update({
+    await newWishRef.update({
       id: newWishRef.id,
     });
 
     invalidate(["wish", activeTab]);
+
+    if (link) {
+      const owner = activeTab;
+      enrichWishFromLink(newWishRef.id, link, data, input).then((changed) => {
+        if (changed) invalidate(["wish", owner]);
+      });
+    }
 
     user?.groups.forEach(async (group) => {
       const groupRef = firebase.firestore().collection("groups").doc(group);
@@ -126,10 +130,6 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
 
     setFeedback("");
     setNewWish("");
-
-    if (data) {
-      redirect(`wish/${activeTab}/${newWishRef.id}`);
-    }
   }
 
   async function deleteThis(deleteId: string) {

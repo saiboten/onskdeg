@@ -11,7 +11,10 @@ import firebase from "../firebase/firebase";
 import { NewsEntryType, Wish } from "../../types/types";
 import { StyledNotification } from "../common/StyledNotification";
 import { invalidate } from "../../queryClient";
-import { getOgData, OgResponseData } from "../../util/getOgData";
+import {
+  enrichWishFromLink,
+  prefillFromInput,
+} from "../../services/wishFromLink";
 import { Button } from "../common/Button";
 import { Check } from "lucide-react";
 
@@ -33,13 +36,10 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
 
     // queryClient.setQueryData(["wish", uid], [{ name: suggestion }, ...(wishes || [])]);
 
-    let data: OgResponseData | undefined = undefined;
-    let link: string | undefined = undefined;
-
-    if (suggestion.startsWith("https")) {
-      data = await getOgData(suggestion);
-      link = suggestion;
-    }
+    const input = suggestion;
+    if (!input.trim()) return;
+    setSuggestion("");
+    const { link, og: data } = await prefillFromInput(input);
 
     const newWish: Wish = {
       owner: uid ?? "",
@@ -59,6 +59,13 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
       id: docRef.id,
     });
 
+    if (link) {
+      const owner = uid;
+      enrichWishFromLink(docRef.id, link, data, input).then((changed) => {
+        if (changed) invalidate(["wish", owner]);
+      });
+    }
+
     user?.groups.forEach(async (group) => {
       const groupRef = firebase.firestore().collection("groups").doc(group);
       const groupData = await groupRef.get();
@@ -76,8 +83,7 @@ export const OthersWishList = ({ myUid }: { myUid: string }) => {
       });
     });
 
-    setFeedback(`La til forslag ${suggestion}`);
-    setSuggestion("");
+    setFeedback(`La til forslag ${data.title || input}`);
     invalidate(["wish", uid]);
 
     setTimeout(() => {
