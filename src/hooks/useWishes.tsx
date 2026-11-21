@@ -35,7 +35,10 @@ export function useWishes(user: string) {
   });
 
   return {
-    wishes: data,
+    /** Active wishes; archived and received ones are left out. */
+    wishes: data.filter((wish) => !wish.archived),
+    /** Every wish, including archived ones. */
+    allWishes: data,
     isLoading: false,
     isError: error,
   };

@@ -1,10 +1,19 @@
-import { ComponentProps, useState } from "react";
+import { ComponentProps, Suspense, useState } from "react";
 import { Wish as WishType } from "../../types/types";
 import { IconButton } from "../common/Button";
 import { Link as RouterLink } from "react-router-dom";
 import firebase from "../firebase/firebase";
 import { invalidate } from "../../queryClient";
-import { Star, Trash2, X, Check, ExternalLink } from "lucide-react";
+import {
+  Archive,
+  Check,
+  ExternalLink,
+  PackageCheck,
+  Star,
+  X,
+} from "lucide-react";
+import { archiveWish } from "../../services/wishArchive";
+import { ReceivedDialog } from "./ReceivedDialog";
 import { cn } from "../../util/cn";
 import { WishThumb } from "../common/Page";
 import {
@@ -30,7 +39,6 @@ export const Link = ({
 interface P {
   user: string;
   wish: WishType;
-  delete: (wishId: string) => void;
 }
 
 /** Secondary line under a wish name: price · shop, or a lookup hint. */
@@ -59,8 +67,9 @@ export const WishMeta = ({ wish }: { wish: WishType }) => {
   );
 };
 
-export const Wish = ({ wish, delete: deleteProp, user }: P) => {
+export const Wish = ({ wish, user }: P) => {
   const [confirm, setConfirm] = useState(false);
+  const [receiving, setReceiving] = useState(false);
   const saved = !!wish.id;
 
   async function toggleFavorite(e: React.MouseEvent) {
@@ -92,7 +101,7 @@ export const Wish = ({ wish, delete: deleteProp, user }: P) => {
     <li
       className={cn(
         "flex items-center gap-8 rounded-[12px] bg-primary p-8 pr-8 text-text transition-colors",
-        confirm && "shadow-[inset_0_0_0_2px_var(--color-negative)]",
+        confirm && "shadow-[inset_0_0_0_2px_var(--color-secondary)]",
         !saved && "opacity-60",
       )}
     >
@@ -111,7 +120,9 @@ export const Wish = ({ wish, delete: deleteProp, user }: P) => {
 
       {confirm ? (
         <div className="flex shrink-0 items-center gap-6">
-          <span className="mr-4 hidden text-[1.3rem] sm:inline">Slette?</span>
+          <span className="mr-4 hidden text-[1.3rem] sm:inline">
+            Fjerne fra listen?
+          </span>
           <IconButton
             className="bg-primary-dark"
             aria-label="Avbryt"
@@ -120,9 +131,9 @@ export const Wish = ({ wish, delete: deleteProp, user }: P) => {
             <X size={20} />
           </IconButton>
           <IconButton
-            className="bg-negative text-white"
-            aria-label="Bekreft sletting"
-            onClick={() => deleteProp(wish.id)}
+            className="bg-secondary"
+            aria-label="Bekreft arkivering"
+            onClick={() => archiveWish(wish.id, user)}
           >
             <Check size={20} />
           </IconButton>
@@ -151,21 +162,38 @@ export const Wish = ({ wish, delete: deleteProp, user }: P) => {
                 rel="noreferrer"
                 aria-label="Åpne i nettbutikk"
                 title="Åpne i nettbutikk"
-                className="flex h-36 w-36 items-center justify-center text-text opacity-60 transition-opacity hover:opacity-100"
+                className="flex h-36 w-36 items-center justify-center text-text opacity-60 transition-opacity hover:opacity-100 max-[450px]:hidden"
               >
                 <ExternalLink size={20} />
               </a>
             )}
             <IconButton
-              aria-label="Slett"
-              title="Slett"
+              aria-label="Jeg fikk denne!"
+              title="Jeg fikk denne!"
+              className="opacity-60 hover:opacity-100"
+              onClick={() => setReceiving(true)}
+            >
+              <PackageCheck size={20} />
+            </IconButton>
+            <IconButton
+              aria-label="Arkiver"
+              title="Fjern fra listen (arkiver)"
               className="opacity-60 hover:opacity-100"
               onClick={() => setConfirm(true)}
             >
-              <Trash2 size={20} />
+              <Archive size={20} />
             </IconButton>
           </div>
         )
+      )}
+      {receiving && (
+        <Suspense fallback={null}>
+          <ReceivedDialog
+            wish={wish}
+            owner={user}
+            onClose={() => setReceiving(false)}
+          />
+        </Suspense>
       )}
     </li>
   );

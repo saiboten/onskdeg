@@ -1,12 +1,12 @@
 import { cn } from "../../util/cn";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { Container } from "../common/Container";
 import { Wish } from "../../types/types";
 import Loading from "../common/Loading";
 import firebase from "../firebase/firebase";
 import { Detail } from "./Detail";
 import { useWish } from "../../hooks/useWish";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useUser } from "../../hooks/useUser";
 import { invalidate } from "../../queryClient";
 import { format } from "date-fns";
@@ -18,9 +18,19 @@ import { useQuestions } from "../../hooks/useQuestions";
 import { ListMyQuestions } from "./ListMyQuestions";
 import { compressImage } from "../../util/imageCompression";
 import Spinner from "../common/Spinner";
-import { BorderButton, borderButton } from "../common/Button";
+import { BorderButton, Button, borderButton } from "../common/Button";
+import { archiveWish, restoreWish } from "../../services/wishArchive";
+import { ReceivedDialog } from "./ReceivedDialog";
 import { generateWishDescription } from "../../services/ai";
-import { ExternalLink, ImageUp, Sparkles } from "lucide-react";
+import {
+  Archive,
+  ExternalLink,
+  ImageUp,
+  PackageCheck,
+  PartyPopper,
+  Sparkles,
+  Undo2,
+} from "lucide-react";
 
 interface Params {
   wishid: string | undefined;
@@ -41,6 +51,11 @@ export function YourWishDetails() {
   const { wish } = useWish(user?.uid || "?", wishid ?? "");
   const { user: suggestedByUser } = useUser(wish?.suggestedBy || "");
   const { questions } = useQuestions(wishid ?? "");
+  const { user: giver } = useUser(wish?.receivedFrom || "");
+  const navigate = useNavigate();
+  const [receiving, setReceiving] = useState(false);
+  const [confirmArchive, setConfirmArchive] = useState(false);
+  const [restoring, setRestoring] = useState(false);
 
   async function storeWishDetails(updatedWish: Wish) {
     await firebase
@@ -214,6 +229,40 @@ export function YourWishDetails() {
         subtitle={subtitle || undefined}
       />
 
+      {wish.archived && (
+        <Panel className="mb-24 flex flex-wrap items-center gap-12 shadow-[inset_0_0_0_2px_var(--color-secondary)]">
+          <span className="flex h-40 w-40 shrink-0 items-center justify-center rounded-full bg-secondary">
+            {wish.received ? <PartyPopper size={20} /> : <Archive size={20} />}
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="font-semibold">
+              {wish.received
+                ? `Du fikk denne${giver?.name ? ` fra ${giver.name}` : ""}!`
+                : "Dette ønsket er arkivert"}
+            </p>
+            <p className="text-[1.4rem] opacity-70">
+              {wish.received && wish.receivedAt
+                ? `Merket som mottatt ${format(wish.receivedAt.toDate(), "d. MMMM yyyy", { locale: nb })}. Det vises ikke lenger på ønskelisten.`
+                : "Det vises ikke på ønskelisten."}
+            </p>
+          </div>
+          <BorderButton
+            disabled={restoring}
+            onClick={async () => {
+              setRestoring(true);
+              try {
+                await restoreWish(wish.id, uid ?? "");
+              } finally {
+                setRestoring(false);
+              }
+            }}
+          >
+            {restoring ? <Spinner /> : <Undo2 size={18} />}
+            Legg tilbake på listen
+          </BorderButton>
+        </Panel>
+      )}
+
       <div className="grid gap-24 md:grid-cols-[300px_1fr]">
         <div className="flex flex-col gap-12">
           <input
@@ -320,6 +369,52 @@ export function YourWishDetails() {
               </div>
             )}
           </Panel>
+
+          {!wish.archived && (
+            <div className="flex flex-wrap items-center gap-8">
+              {confirmArchive ? (
+                <>
+                  <span className="mr-4 text-[1.4rem]">
+                    Fjerne fra listen? Du finner det igjen under «Gaver jeg har
+                    fått».
+                  </span>
+                  <BorderButton onClick={() => setConfirmArchive(false)}>
+                    Avbryt
+                  </BorderButton>
+                  <Button
+                    onClick={async () => {
+                      await archiveWish(wish.id, uid ?? "");
+                      navigate(back.to);
+                    }}
+                  >
+                    Ja, fjern
+                  </Button>
+                </>
+              ) : (
+                <>
+                  {!wish.isSuggestion && (
+                    <Button onClick={() => setReceiving(true)}>
+                      <PackageCheck size={18} />
+                      Jeg fikk denne!
+                    </Button>
+                  )}
+                  <BorderButton onClick={() => setConfirmArchive(true)}>
+                    <Archive size={18} />
+                    Fjern fra listen
+                  </BorderButton>
+                </>
+              )}
+            </div>
+          )}
+          {receiving && (
+            <Suspense fallback={null}>
+              <ReceivedDialog
+                wish={wish}
+                owner={uid ?? ""}
+                onClose={() => setReceiving(false)}
+              />
+            </Suspense>
+          )}
 
           {!wish.isSuggestion && (
             <ListMyQuestions

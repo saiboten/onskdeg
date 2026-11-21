@@ -26,13 +26,8 @@ export const YourChild = ({ child, myUid }: Props) => {
   const { wishes, isLoading } = useWishes(child.uid);
   const { user } = useUser(myUid);
 
-  async function deleteWish(deleteId: string) {
-    await firebase.firestore().collection("wish").doc(deleteId).delete();
-    invalidate(["wish", child?.uid]);
-  }
-
   const wishToElement = (el: WishType) => {
-    return <Wish user={child.uid} key={el.id} delete={deleteWish} wish={el} />;
+    return <Wish user={child.uid} key={el.id} wish={el} />;
   };
 
   const handleSaveWish = async (e: React.FormEvent<HTMLFormElement>) => {

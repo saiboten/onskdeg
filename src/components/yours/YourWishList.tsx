@@ -19,8 +19,10 @@ import {
   prefillFromInput,
 } from "../../services/wishFromLink";
 import { Notifications } from "./Notifications";
-import { ImagePlus, Plus, Sparkles } from "lucide-react";
-import { BorderButton, Button } from "../common/Button";
+import { ImagePlus, PartyPopper, Plus, Sparkles } from "lucide-react";
+import { BorderButton, Button, borderButton } from "../common/Button";
+import { UnstyledLink } from "../common/Link";
+import { cn } from "../../util/cn";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { InvitePopup } from "./InvitePopup";
 import { TabContainer, Tab } from "../common/Tabs";
@@ -131,20 +133,8 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
     setNewWish("");
   }
 
-  async function deleteThis(deleteId: string) {
-    await firebase.firestore().collection("wish").doc(deleteId).delete();
-    invalidate(["wish", activeTab]);
-  }
-
   const wishToElement = (el: WishType) => {
-    return (
-      <Wish
-        user={activeTab}
-        key={el.id || el.name}
-        delete={deleteThis}
-        wish={el}
-      />
-    );
+    return <Wish user={activeTab} key={el.id || el.name} wish={el} />;
   };
 
   const sortedWishes = wishes
@@ -201,6 +191,15 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
           count === 0
             ? "Ingen ønsker ennå"
             : `${count} ${count === 1 ? "ønske" : "ønsker"}`
+        }
+        actions={
+          <UnstyledLink
+            className={cn(borderButton, "min-h-36 py-2 text-[1.4rem]")}
+            to={isMe ? "/received" : `/received?tab=${activeTab}`}
+          >
+            <PartyPopper size={16} />
+            Har fått
+          </UnstyledLink>
         }
       />
 

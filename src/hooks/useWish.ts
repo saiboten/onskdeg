@@ -1,8 +1,9 @@
 import { useWishes } from "./useWishes";
 
 export function useWish(user: string, wishId: string) {
-  const { wishes, isError, isLoading } = useWishes(user);
-  const wish = wishes?.find((m) => m.id === wishId);
+  // Look in all wishes so archived ones still open (e.g. from purchases).
+  const { allWishes, isError, isLoading } = useWishes(user);
+  const wish = allWishes?.find((m) => m.id === wishId);
   return {
     wish,
     isLoading,

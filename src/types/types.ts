@@ -33,6 +33,14 @@ export interface Wish {
   date?: firebase.firestore.Timestamp;
   wishes?: any;
   favorite?: boolean;
+  /** Hidden from all lists (replaces deleting). Still shown in purchases. */
+  archived?: boolean;
+  archivedAt?: firebase.firestore.Timestamp;
+  /** The owner got this gift. Received wishes are also archived. */
+  received?: boolean;
+  receivedAt?: firebase.firestore.Timestamp;
+  /** uid of whoever gave it, if known. */
+  receivedFrom?: string;
 }
 
 export interface Question {

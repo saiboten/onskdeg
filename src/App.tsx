@@ -4,6 +4,7 @@ import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
 import { YourWishList } from "./components/yours/YourWishList";
 import { YourWishDetails } from "./components/yours/YourWishDetails";
 import { UploadWishesPage } from "./components/yours/UploadWishesPage";
+import { ReceivedGifts } from "./components/yours/ReceivedGifts";
 
 import { SelectWishList } from "./components/selectwishlist/SelectWishList";
 import { OthersWishList } from "./components/others/OthersWishList";
@@ -138,6 +139,10 @@ const App = () => {
             ></Route>
             <Route path="/addchild" element={<AddChild uid={uid} />}></Route>
             <Route path="/profile" element={<Profile uid={uid} />}></Route>
+            <Route
+              path="/received"
+              element={<ReceivedGifts uid={uid} />}
+            ></Route>
             <Route
               path="/settings/kohort/:kohortId"
               element={<GroupAdmin myUid={uid} />}

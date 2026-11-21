@@ -16,7 +16,14 @@ import { PageHeader, Panel, Section } from "../common/Page";
 import { displayUrl, displayWishName, formatPrice } from "../../util/format";
 import { cn } from "../../util/cn";
 import { togglePurchase } from "./OtherWish";
-import { ExternalLink, Search, ShoppingCart, Undo2 } from "lucide-react";
+import {
+  Archive,
+  ExternalLink,
+  PartyPopper,
+  Search,
+  ShoppingCart,
+  Undo2,
+} from "lucide-react";
 import { useQuestions } from "../../hooks/useQuestions";
 import { AddQuestion } from "./AddQuestion";
 import { ListQuestions } from "./ListQuestions";
@@ -37,6 +44,7 @@ export function OtherWishDetail({ myUid }: { myUid: string }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [buying, setBuying] = useState(false);
   const { user: owner } = useUser(uid ?? "");
+  const { user: giver } = useUser(wish?.receivedFrom || "");
 
   const { user: purchaseUser } = useUser(purchase?.checkedBy || "");
 
@@ -89,6 +97,19 @@ export function OtherWishDetail({ myUid }: { myUid: string }) {
         title={displayWishName(wish.name)}
         subtitle={subtitle || undefined}
       />
+
+      {wish.archived && (
+        <Panel className="mb-24 flex items-center gap-12 shadow-[inset_0_0_0_2px_var(--color-secondary)]">
+          <span className="flex h-40 w-40 shrink-0 items-center justify-center rounded-full bg-secondary">
+            {wish.received ? <PartyPopper size={20} /> : <Archive size={20} />}
+          </span>
+          <p className="min-w-0 flex-1">
+            {wish.received
+              ? `${owner?.name ?? "Eieren"} har fått denne${giver?.name ? ` fra ${giver.name}` : ""}.`
+              : "Dette ønsket er fjernet fra ønskelisten."}
+          </p>
+        </Panel>
+      )}
 
       <div
         className={cn("grid gap-24", wish.image && "md:grid-cols-[300px_1fr]")}

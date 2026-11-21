@@ -3,7 +3,13 @@ import { useUser } from "../hooks/useUser";
 import { Container } from "./common/Container";
 import { BorderButton, DangerButton } from "./common/Button";
 import { Checkbox } from "./common/Checkbox";
-import { LogOut, Settings, ShoppingCart, UserPlus } from "lucide-react";
+import {
+  LogOut,
+  PartyPopper,
+  Settings,
+  ShoppingCart,
+  UserPlus,
+} from "lucide-react";
 import firebase from "./firebase/firebase";
 import { useSettings } from "../hooks/useSettings";
 import { invalidate } from "../queryClient";
@@ -68,6 +74,12 @@ export const Profile = ({ uid }: { uid: string }) => {
               icon={<ShoppingCart size={18} />}
               label="Mine kjøp"
               description="Gaver du har merket som kjøpt"
+            />
+            <LinkRow
+              to="/received"
+              icon={<PartyPopper size={18} />}
+              label="Gaver jeg har fått"
+              description="Ønsker du har fått, og hvem de var fra"
             />
             <LinkRow
               to="/settings"

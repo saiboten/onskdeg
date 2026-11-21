@@ -2,7 +2,7 @@ import { cn } from "../../util/cn";
 import { useState } from "react";
 import firebase from "../firebase/firebase";
 import {
-  Trash2,
+  Archive,
   ShoppingCart,
   X,
   Check,
@@ -17,6 +17,7 @@ import { StyledNotification } from "../common/StyledNotification";
 import { format } from "date-fns";
 import { nb } from "date-fns/locale";
 import { WishThumb } from "../common/Page";
+import { archiveWish } from "../../services/wishArchive";
 import { displayUrl, displayWishName, formatPrice } from "../../util/format";
 import { useSettings } from "../../hooks/useSettings";
 import { IconButton } from "../common/Button";
@@ -76,8 +77,7 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
   }
 
   async function handleDeleteItem() {
-    await firebase.firestore().collection("wish").doc(wishInfo.id).delete();
-    invalidate(["wish", user]);
+    await archiveWish(wishInfo.id, user);
   }
 
   const wishSuggestedByMe = wishInfo.suggestedBy === myUid;
@@ -169,7 +169,7 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
                   </IconButton>
                   <IconButton
                     className="bg-negative text-white"
-                    aria-label="Bekreft sletting"
+                    aria-label="Bekreft fjerning"
                     onClick={handleDeleteItem}
                   >
                     <Check size={20} />
@@ -177,12 +177,12 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
                 </>
               ) : (
                 <IconButton
-                  aria-label="Slett forslag"
-                  title="Slett forslag"
+                  aria-label="Fjern forslag"
+                  title="Fjern forslag"
                   className="opacity-70 hover:opacity-100"
                   onClick={() => setConfirm(true)}
                 >
-                  <Trash2 size={20} />
+                  <Archive size={20} />
                 </IconButton>
               ))}
 
