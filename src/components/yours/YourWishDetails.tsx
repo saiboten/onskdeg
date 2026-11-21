@@ -14,6 +14,7 @@ import { nb } from "date-fns/locale";
 import { PageHeader, Panel } from "../common/Page";
 import { displayUrl, displayWishName, formatPrice } from "../../util/format";
 import { enrichWishFromLink } from "../../services/wishFromLink";
+import { getOgData } from "../../util/getOgData";
 import { useQuestions } from "../../hooks/useQuestions";
 import { ListMyQuestions } from "./ListMyQuestions";
 import { compressImage } from "../../util/imageCompression";
@@ -162,10 +163,12 @@ export function YourWishDetails() {
     setFetching(true);
     setFetchMessage("");
     try {
+      // Meta tags are quick and free; Gemini fills in the rest.
+      const og = await getOgData(wish.link);
       const result = await enrichWishFromLink(
         wish.id,
         wish.link,
-        {},
+        og,
         wish.link,
       );
       await invalidate(["wish", uid]);
