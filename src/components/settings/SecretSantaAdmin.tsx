@@ -60,7 +60,7 @@ export const SecretSantaAdmin = ({
   kohort: Kohort;
   kohortId: string;
 }) => {
-  const { draw } = useSecretSanta(kohortId);
+  const { draw, unavailable } = useSecretSanta(kohortId);
   // Members still in the group; a redraw starts from the current participants.
   const members = kohort.members;
   const [picking, setPicking] = useState(false);
@@ -94,6 +94,18 @@ export const SecretSantaAdmin = ({
   }
 
   const selectedMembers = members.filter((m) => selected.has(m));
+
+  if (unavailable) {
+    return (
+      <Section title="Hemmelig nisse">
+        <Panel>
+          <p className="text-[1.4rem] opacity-80">
+            Hemmelig nisse er ikke tilgjengelig akkurat nå. Prøv igjen senere.
+          </p>
+        </Panel>
+      </Section>
+    );
+  }
 
   return (
     <Section
