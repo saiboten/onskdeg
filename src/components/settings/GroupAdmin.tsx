@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import { SecretSantaAdmin } from "./SecretSantaAdmin";
 import { Container } from "../common/Container";
 import { BorderButton, DangerButton } from "../common/Button";
 import { useKohort } from "../../hooks/useKohort";
@@ -209,6 +210,16 @@ export const GroupAdmin = ({ myUid }: { myUid: string }) => {
           </Divided>
         </Panel>
       </Section>
+
+      <Suspense
+        fallback={
+          <div className="flex justify-center">
+            <Spinner />
+          </div>
+        }
+      >
+        <SecretSantaAdmin kohort={kohort} kohortId={kohortId ?? ""} />
+      </Suspense>
     </Container>
   );
 };

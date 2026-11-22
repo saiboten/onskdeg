@@ -19,6 +19,7 @@ import {
   prefillFromInput,
 } from "../../services/wishFromLink";
 import { Notifications } from "./Notifications";
+import { SecretSantaBanner } from "./SecretSantaBanner";
 import { ImagePlus, PartyPopper, Plus, Sparkles } from "lucide-react";
 import { BorderButton, Button, borderButton } from "../common/Button";
 import { UnstyledLink } from "../common/Link";
@@ -167,6 +168,12 @@ export const YourWishList = ({ uid, firebaseUser }: Props) => {
       )}
 
       <Notifications myUid={uid} />
+
+      {isMe && (
+        <Suspense fallback={null}>
+          <SecretSantaBanner uid={uid} />
+        </Suspense>
+      )}
 
       {childs && childs.length > 0 && (
         <TabContainer>

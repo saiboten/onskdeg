@@ -101,6 +101,25 @@ export type NewsEntryType = {
   date: firebase.firestore.Timestamp;
 };
 
+/** A Secret Santa draw in a group (one per group). Holds no pairings. */
+export interface SecretSanta {
+  groupId: string;
+  groupName: string;
+  admin: string;
+  participants: string[];
+  createdAt: firebase.firestore.Timestamp;
+  endsAt: firebase.firestore.Timestamp;
+}
+
+/** One pairing: `giver` buys a gift for `receiver`. */
+export interface SecretSantaAssignment {
+  groupId: string;
+  groupName: string;
+  giver: string;
+  receiver: string;
+  endsAt: firebase.firestore.Timestamp;
+}
+
 export interface Kohort {
   id: string;
   groupName: string;
