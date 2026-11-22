@@ -5,14 +5,17 @@ import { Link as RouterLink } from "react-router-dom";
 import firebase from "../firebase/firebase";
 import { invalidate } from "../../queryClient";
 import {
-  Archive,
   Check,
   ExternalLink,
   PackageCheck,
   Star,
+  Trash2,
   X,
 } from "lucide-react";
-import { archiveWish } from "../../services/wishArchive";
+import {
+  deleteWish,
+  markReceivedIfBought,
+} from "../../services/wishArchive";
 import { ReceivedDialog } from "./ReceivedDialog";
 import { cn } from "../../util/cn";
 import { WishThumb } from "../common/Page";
@@ -70,7 +73,18 @@ export const WishMeta = ({ wish }: { wish: WishType }) => {
 export const Wish = ({ wish, user }: P) => {
   const [confirm, setConfirm] = useState(false);
   const [receiving, setReceiving] = useState(false);
+  const [busy, setBusy] = useState(false);
   const saved = !!wish.id;
+
+  // Bought wishes are marked as received right away; otherwise ask who gave it.
+  async function handleReceived() {
+    setBusy(true);
+    try {
+      if (!(await markReceivedIfBought(wish.id, user))) setReceiving(true);
+    } finally {
+      setBusy(false);
+    }
+  }
 
   async function toggleFavorite(e: React.MouseEvent) {
     e.preventDefault();
@@ -121,7 +135,7 @@ export const Wish = ({ wish, user }: P) => {
       {confirm ? (
         <div className="flex shrink-0 items-center gap-6">
           <span className="mr-4 hidden text-[1.3rem] sm:inline">
-            Fjerne fra listen?
+            Slette ønsket?
           </span>
           <IconButton
             className="bg-primary-dark"
@@ -131,9 +145,9 @@ export const Wish = ({ wish, user }: P) => {
             <X size={20} />
           </IconButton>
           <IconButton
-            className="bg-secondary"
-            aria-label="Bekreft arkivering"
-            onClick={() => archiveWish(wish.id, user)}
+            className="bg-negative text-white"
+            aria-label="Bekreft sletting"
+            onClick={() => deleteWish(wish.id, user)}
           >
             <Check size={20} />
           </IconButton>
@@ -171,17 +185,18 @@ export const Wish = ({ wish, user }: P) => {
               aria-label="Jeg fikk denne!"
               title="Jeg fikk denne!"
               className="opacity-60 hover:opacity-100"
-              onClick={() => setReceiving(true)}
+              disabled={busy}
+              onClick={handleReceived}
             >
               <PackageCheck size={20} />
             </IconButton>
             <IconButton
-              aria-label="Arkiver"
-              title="Fjern fra listen (arkiver)"
+              aria-label="Slett"
+              title="Slett ønsket"
               className="opacity-60 hover:opacity-100"
               onClick={() => setConfirm(true)}
             >
-              <Archive size={20} />
+              <Trash2 size={20} />
             </IconButton>
           </div>
         )

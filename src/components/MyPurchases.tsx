@@ -12,7 +12,6 @@ import Loading from "./common/Loading";
 import firebase from "./firebase/firebase";
 import { EmptyState, PageHeader, WishThumb } from "./common/Page";
 import { displayWishName, formatPrice } from "../util/format";
-import { cn } from "../util/cn";
 
 interface Props {
   uid: string;
@@ -22,7 +21,8 @@ const PurchaseInfo = ({ purchase }: { purchase: PurchaseType }) => {
   const { user } = useUser(purchase.wishOwner || "");
   const { wish } = useWish(purchase.wishOwner || "", purchase.wishId || "");
 
-  if (!wish) return null;
+  // Deleted wishes (and ones removed with the old "Arkiver" button) are gone.
+  if (!wish || (wish.archived && !wish.received)) return null;
 
   const meta = [
     `Til ${user?.name ?? "ukjent"}`,
@@ -42,16 +42,9 @@ const PurchaseInfo = ({ purchase }: { purchase: PurchaseType }) => {
         <span className="flex min-w-0 flex-col">
           <span className="line-clamp-2 font-semibold wrap-break-word">
             {displayWishName(wish.name)}
-            {wish.archived && (
-              <span
-                className={cn(
-                  "ml-8 inline-block rounded-full px-8 py-1 align-middle text-[1.1rem] font-semibold",
-                  wish.received
-                    ? "bg-secondary text-text"
-                    : "bg-primary-dark opacity-80",
-                )}
-              >
-                {wish.received ? "Mottatt" : "Fjernet fra listen"}
+            {wish.received && (
+              <span className="ml-8 inline-block rounded-full bg-secondary px-8 py-1 align-middle text-[1.1rem] font-semibold text-text">
+                Mottatt
               </span>
             )}
           </span>

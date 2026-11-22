@@ -20,7 +20,11 @@ import { ListMyQuestions } from "./ListMyQuestions";
 import { compressImage } from "../../util/imageCompression";
 import Spinner from "../common/Spinner";
 import { BorderButton, Button, borderButton } from "../common/Button";
-import { archiveWish, restoreWish } from "../../services/wishArchive";
+import {
+  deleteWish,
+  markReceivedIfBought,
+  restoreWish,
+} from "../../services/wishArchive";
 import { ReceivedDialog } from "./ReceivedDialog";
 import { generateWishDescription } from "../../services/ai";
 import {
@@ -30,6 +34,7 @@ import {
   PackageCheck,
   PartyPopper,
   Sparkles,
+  Trash2,
   Undo2,
 } from "lucide-react";
 
@@ -55,7 +60,8 @@ export function YourWishDetails() {
   const { user: giver } = useUser(wish?.receivedFrom || "");
   const navigate = useNavigate();
   const [receiving, setReceiving] = useState(false);
-  const [confirmArchive, setConfirmArchive] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [markingReceived, setMarkingReceived] = useState(false);
   const [restoring, setRestoring] = useState(false);
 
   async function storeWishDetails(updatedWish: Wish) {
@@ -375,35 +381,54 @@ export function YourWishDetails() {
 
           {!wish.archived && (
             <div className="flex flex-wrap items-center gap-8">
-              {confirmArchive ? (
+              {confirmDelete ? (
                 <>
                   <span className="mr-4 text-[1.4rem]">
-                    Fjerne fra listen? Du finner det igjen under «Gaver jeg har
-                    fått».
+                    Slette ønsket? Dette kan ikke angres.
                   </span>
-                  <BorderButton onClick={() => setConfirmArchive(false)}>
+                  <BorderButton onClick={() => setConfirmDelete(false)}>
                     Avbryt
                   </BorderButton>
                   <Button
+                    className="bg-negative text-white"
                     onClick={async () => {
-                      await archiveWish(wish.id, uid ?? "");
+                      await deleteWish(wish.id, uid ?? "");
                       navigate(back.to);
                     }}
                   >
-                    Ja, fjern
+                    Ja, slett
                   </Button>
                 </>
               ) : (
                 <>
                   {!wish.isSuggestion && (
-                    <Button onClick={() => setReceiving(true)}>
-                      <PackageCheck size={18} />
+                    <Button
+                      disabled={markingReceived}
+                      onClick={async () => {
+                        // Bought: mark right away. Otherwise ask who gave it.
+                        setMarkingReceived(true);
+                        try {
+                          const done = await markReceivedIfBought(
+                            wish.id,
+                            uid ?? "",
+                          );
+                          if (!done) setReceiving(true);
+                        } finally {
+                          setMarkingReceived(false);
+                        }
+                      }}
+                    >
+                      {markingReceived ? (
+                        <Spinner />
+                      ) : (
+                        <PackageCheck size={18} />
+                      )}
                       Jeg fikk denne!
                     </Button>
                   )}
-                  <BorderButton onClick={() => setConfirmArchive(true)}>
-                    <Archive size={18} />
-                    Fjern fra listen
+                  <BorderButton onClick={() => setConfirmDelete(true)}>
+                    <Trash2 size={18} />
+                    Slett
                   </BorderButton>
                 </>
               )}

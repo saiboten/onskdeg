@@ -2,7 +2,7 @@ import { cn } from "../../util/cn";
 import { useState } from "react";
 import firebase from "../firebase/firebase";
 import {
-  Archive,
+  Trash2,
   ShoppingCart,
   X,
   Check,
@@ -17,7 +17,7 @@ import { StyledNotification } from "../common/StyledNotification";
 import { format } from "date-fns";
 import { nb } from "date-fns/locale";
 import { WishThumb } from "../common/Page";
-import { archiveWish } from "../../services/wishArchive";
+import { deleteWish } from "../../services/wishArchive";
 import { displayUrl, displayWishName, formatPrice } from "../../util/format";
 import { useSettings } from "../../hooks/useSettings";
 import { IconButton } from "../common/Button";
@@ -77,7 +77,7 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
   }
 
   async function handleDeleteItem() {
-    await archiveWish(wishInfo.id, user);
+    await deleteWish(wishInfo.id, user);
   }
 
   const wishSuggestedByMe = wishInfo.suggestedBy === myUid;
@@ -182,7 +182,7 @@ const OtherWish = ({ wishInfo, user, myUid }: P) => {
                   className="opacity-70 hover:opacity-100"
                   onClick={() => setConfirm(true)}
                 >
-                  <Archive size={20} />
+                  <Trash2 size={20} />
                 </IconButton>
               ))}
 
